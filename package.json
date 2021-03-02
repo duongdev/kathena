@@ -13,6 +13,7 @@
     "reinstall": "yarn clean && yarn install",
     "lint": "yarn workspaces run lint",
     "build": "sh ./scripts/build.sh",
+    "start": "yarn workspace server start:prod",
     "prepare": "husky install"
   },
   "devDependencies": {
