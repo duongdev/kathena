@@ -1,0 +1,15 @@
+# .kodiak.toml
+# Minimal config. version is the only required field.
+version = 1
+
+[merge]
+automerge_label = "🚀 merge it!"
+method = "squash"
+delete_branch_on_merge = true
+prioritize_ready_to_merge = true
+
+[update]
+always = true
+
+[approve]
+auto_approve_usernames = ["renovate", "duongdev"]

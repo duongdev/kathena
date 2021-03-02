@@ -1,0 +1,1 @@
+yarn concurrently "yarn build:web" "yarn build:server"

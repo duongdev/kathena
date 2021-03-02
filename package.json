@@ -12,12 +12,14 @@
     "clean": "rm -rf {packages/*/,}node_modules yarn.lock",
     "reinstall": "yarn clean && yarn install",
     "lint": "yarn workspaces run lint",
+    "build": "sh ./scripts/build.sh",
     "prepare": "husky install"
   },
   "devDependencies": {
     "husky": "5.1.3",
     "lint-staged": "10.5.4",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "vercel": "21.3.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "yarn prettier --write",
