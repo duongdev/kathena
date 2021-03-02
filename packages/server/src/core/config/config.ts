@@ -1,12 +1,14 @@
 /* eslint-disable no-process-env */
 import { loadEnv, normalizePort } from './config.utils'
 
-const nodeEnv = process.env.NODE_ENV || 'development'
+const NODE_ENV = process.env.NODE_ENV || 'development'
+const IS_PROD = NODE_ENV === 'production'
 
-const env = loadEnv(nodeEnv)
+const env = loadEnv(NODE_ENV)
 
 const config = {
-  nodeEnv,
+  NODE_ENV,
+  IS_PROD,
   PORT: normalizePort(),
   MONGODB_URI: env.MONGODB_URI,
 }

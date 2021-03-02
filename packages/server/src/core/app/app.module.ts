@@ -10,9 +10,13 @@ const appModules = [UsersModule]
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../../web', 'build'),
-    }),
+    ...(config.IS_PROD
+      ? [
+          ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '../../../../web', 'build'),
+          }),
+        ]
+      : []),
 
     TypegooseModule.forRoot(config.MONGODB_URI, {
       useNewUrlParser: true,
@@ -21,8 +25,9 @@ const appModules = [UsersModule]
       useFindAndModify: true,
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: config.nodeEnv === 'production' ? true : 'schema.gql',
+      autoSchemaFile: config.IS_PROD ? true : 'schema.gql',
       introspection: true,
+      playground: !config.IS_PROD,
     }),
 
     ...appModules,
