@@ -1,1 +1,1 @@
-yarn concurrently "yarn build:web" "yarn build:server"
+yarn workspace server build
