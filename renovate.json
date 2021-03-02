@@ -1,0 +1,9 @@
+{
+  "extends": ["config:base"],
+  "automerge": true,
+  "automergeType": "pr",
+  "assignees": ["duongdev"],
+  "labels": ["type: dependencies"],
+  "ignoreDeps": ["mongoose"],
+  "semanticCommits": false
+}
