@@ -5,6 +5,11 @@
     "typescript",
     "typescriptreact"
   ],
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+  "editor.rulers": [80, 100, 120],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["kmin"]
+  "cSpell.words": ["kmin"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
