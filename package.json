@@ -4,6 +4,7 @@
   "description": "Kmin Athena Learning Management System",
   "repository": "git@github.com:withDustin/kmin-athena.git",
   "author": "Dustin Do <dustin.do95@gmail.com>",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
