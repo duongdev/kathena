@@ -4,5 +4,25 @@
   "description": "Kmin Athena Learning Management System",
   "repository": "git@github.com:withDustin/kmin-athena.git",
   "author": "Dustin Do <dustin.do95@gmail.com>",
-  "license": "MIT"
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "husky": "5.1.3",
+    "lint-staged": "10.5.4",
+    "prettier": "2.2.1"
+  },
+  "scripts": {
+    "clean": "rm -rf {packages/*/,}node_modules yarn.lock",
+    "reinstall": "yarn clean && yarn install",
+    "postinstall": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write"
+  }
 }
