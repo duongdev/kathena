@@ -5,7 +5,7 @@ import { config } from 'core'
 
 const logger = new Logger('bootstrap')
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   const port = config.PORT
 

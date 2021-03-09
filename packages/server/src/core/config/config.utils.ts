@@ -2,7 +2,7 @@
 import { Logger } from 'core/Logger'
 import * as dotenv from 'dotenv'
 
-export const loadEnv = (nodeEnv = 'development') => {
+export const loadEnv = (nodeEnv = 'development'): NodeJS.ProcessEnv => {
   const logger = new Logger('config:loadEnv')
 
   let env = {}
@@ -29,7 +29,7 @@ export const loadEnv = (nodeEnv = 'development') => {
   return process.env
 }
 
-export const normalizePort = () => {
+export const normalizePort = (): number => {
   const DEFAULT_PORT = 4000
   const port = +(process.env.PORT ?? DEFAULT_PORT)
 

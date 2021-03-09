@@ -3,6 +3,7 @@
 import { Field, ID, InterfaceType } from '@nestjs/graphql'
 import { modelOptions } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
+import { ANY } from 'types'
 
 /** Used to define a Typegoose model with default config. */
 @modelOptions({
@@ -11,7 +12,7 @@ import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
     toJSON: {
       getters: true,
       virtuals: true,
-      transform: (_doc: any, ret: any) => {
+      transform: (_doc: ANY, ret: ANY): void => {
         ret.id = ret._id
         delete ret._id
       },

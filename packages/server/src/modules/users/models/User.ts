@@ -9,4 +9,6 @@ export class User extends TypegooseModel {
   @prop({ required: true })
   @Field()
   email: string
+
+  username: string
 }
