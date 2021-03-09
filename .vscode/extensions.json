@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "apollographql.vscode-apollo",
+    "formulahendry.auto-close-tag",
+    "aaron-bond.better-comments",
+    "coenraads.bracket-pair-colorizer-2",
+    "streetsidesoftware.code-spell-checker",
+    "jasonnutter.vscode-codeowners",
+    "mikestead.dotenv",
+    "dsznajder.es7-react-js-snippets",
+    "dbaeumer.vscode-eslint",
+    "waderyan.gitblame",
+    "mhutchie.git-graph",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig"
+  ]
+}
