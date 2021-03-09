@@ -4,6 +4,7 @@ import { Field, ID, InterfaceType } from '@nestjs/graphql'
 import { modelOptions } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
+/** Used to define a Typegoose model with default config. */
 @modelOptions({
   schemaOptions: {
     timestamps: true,
