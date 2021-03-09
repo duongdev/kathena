@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { Logger } from 'core/Logger'
-import { AppModule } from 'core/app'
+
 import { config } from 'core'
+import { AppModule } from 'core/app'
+import { Logger } from 'core/Logger'
 
 const logger = new Logger('bootstrap')
 

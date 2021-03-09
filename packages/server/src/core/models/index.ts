@@ -1,1 +1,2 @@
-export * from './TypegooseModel'
+export * from './BaseModel'
+export * from './models.util'

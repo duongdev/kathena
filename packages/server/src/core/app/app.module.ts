@@ -1,12 +1,14 @@
-import { Module } from '@nestjs/common'
-import { config } from 'core'
-import { TypegooseModule } from 'nestjs-typegoose'
-import { GraphQLModule } from '@nestjs/graphql'
-import { UsersModule } from 'modules/users/users.module'
-import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 
-const appModules = [UsersModule]
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { TypegooseModule } from 'nestjs-typegoose'
+
+import { config } from 'core'
+import { AccountModule } from 'modules/account/account.module'
+
+const appModules = [AccountModule]
 
 @Module({
   imports: [

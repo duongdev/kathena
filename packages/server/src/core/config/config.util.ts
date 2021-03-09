@@ -1,6 +1,7 @@
 /* eslint-disable no-process-env */
-import { Logger } from 'core/Logger'
 import * as dotenv from 'dotenv'
+
+import { Logger } from 'core/Logger'
 
 export const loadEnv = (nodeEnv = 'development'): NodeJS.ProcessEnv => {
   const logger = new Logger('config:loadEnv')
