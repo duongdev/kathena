@@ -2,17 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User implements TypegooseModel {
+type Account {
   id: ID!
+  orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  username: String!
   email: String!
-}
-
-interface TypegooseModel {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  status: AccountStatus!
 }
 
 """
@@ -20,10 +17,51 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""Status of an account."""
+enum AccountStatus {
+  Pending
+  Active
+  Deactivated
+}
+
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
+}
+
+interface BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthenticatePayload {
+  account: Account!
+  org: Org!
+}
+
 type Query {
-  users: [User!]!
+  authenticate: AuthenticatePayload!
 }
 
 type Mutation {
-  createUser: [User!]!
+  createAccount(input: CreateAccountInput!): Account!
+  signIn(
+    password: String!
+
+    """Could be username or email"""
+    identity: String!
+    orgId: String!
+  ): String!
+}
+
+input CreateAccountInput {
+  username: String!
+  email: String!
+  password: String!
 }

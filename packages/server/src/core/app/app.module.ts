@@ -1,12 +1,17 @@
-import { Module } from '@nestjs/common'
-import { config } from 'core'
-import { TypegooseModule } from 'nestjs-typegoose'
-import { GraphQLModule } from '@nestjs/graphql'
-import { UsersModule } from 'modules/users/users.module'
-import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 
-const appModules = [UsersModule]
+import { Module } from '@nestjs/common'
+import { GraphQLModule } from '@nestjs/graphql'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { TypegooseModule } from 'nestjs-typegoose'
+
+import { config } from 'core'
+import { AccountModule } from 'modules/account/account.module'
+import { AuthModule } from 'modules/auth/auth.module'
+import { DevtoolModule } from 'modules/devtool/devtool.module'
+import { OrgModule } from 'modules/org/org.module'
+
+const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
 
 @Module({
   imports: [
@@ -26,8 +31,19 @@ const appModules = [UsersModule]
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: config.IS_PROD ? true : 'schema.gql',
-      introspection: true,
+      introspection: !config.IS_PROD,
       playground: !config.IS_PROD,
+      context: ({ req, connection }) =>
+        connection
+          ? {
+              req: {
+                ...connection.context,
+                headers: {
+                  authorization: connection.context?.authToken,
+                },
+              },
+            }
+          : { req },
     }),
 
     ...appModules,

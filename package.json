@@ -14,16 +14,16 @@
     "lint": "yarn workspaces run lint",
     "build": "sh ./scripts/build.sh",
     "start": "yarn workspace server start:prod",
+    "test": "sh ./scripts/test.sh",
     "prepare": "husky install"
   },
   "devDependencies": {
     "husky": "5.1.3",
     "lint-staged": "10.5.4",
-    "prettier": "2.2.1",
-    "vercel": "21.3.3"
+    "prettier": "2.2.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "yarn prettier --write",
-    "*.{js,jsx,ts,tsx}": "yarn lint"
+    "*.{js,jsx,ts,tsx}": "yarn lint --fix"
   }
 }

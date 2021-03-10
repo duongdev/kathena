@@ -10,6 +10,16 @@
   "editor.trimAutoWhitespace": true,
   "editor.rulers": [80, 100, 120],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["fastify", "kmin", "nestjs", "typegoose"],
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "cSpell.words": [
+    "fastify",
+    "kmin",
+    "mongod",
+    "nestjs",
+    "typegoose",
+    "virtuals"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
