@@ -64,4 +64,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['*.service.spec.ts'],
+      rules: {
+        '@typescript-eslint/dot-notation': 'off',
+      },
+    },
+  ],
 }

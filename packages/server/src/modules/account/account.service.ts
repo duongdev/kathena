@@ -22,7 +22,17 @@ export class AccountService {
     this.logger.log(`[${this.createAccount.name}] Creating new account`)
     this.logger.verbose(accountInput)
 
-    // TODO: Check if email or username existing
+    if (
+      await this.accountModel.exists({
+        orgId: accountInput.orgId,
+        $or: [
+          { username: accountInput.username },
+          { email: accountInput.email },
+        ],
+      })
+    ) {
+      throw new Error(`Email or username has been taken`)
+    }
 
     const account = await this.accountModel.create({
       username: accountInput.username,
