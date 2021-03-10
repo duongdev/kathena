@@ -15,8 +15,10 @@ export class CreateAccountInput {
   @Field()
   password: string
 
+  /** Overrides default PENDING status on creation */
   status?: AccountStatus
 
+  /** Referrals to another accountId who creates the new account */
   createdByAccountId?: string
 
   orgId: string
