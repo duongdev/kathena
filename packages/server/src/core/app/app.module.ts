@@ -7,8 +7,11 @@ import { TypegooseModule } from 'nestjs-typegoose'
 
 import { config } from 'core'
 import { AccountModule } from 'modules/account/account.module'
+import { AuthModule } from 'modules/auth/auth.module'
+import { DevtoolModule } from 'modules/devtool/devtool.module'
+import { OrgModule } from 'modules/org/org.module'
 
-const appModules = [AccountModule]
+const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
 
 @Module({
   imports: [

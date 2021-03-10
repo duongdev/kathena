@@ -30,6 +30,13 @@ type Query {
 
 type Mutation {
   createAccount(input: CreateAccountInput!): Account!
+  signIn(
+    password: String!
+
+    """Could be username or email"""
+    identity: String!
+    orgId: String!
+  ): String!
 }
 
 input CreateAccountInput {

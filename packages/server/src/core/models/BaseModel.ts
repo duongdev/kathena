@@ -1,6 +1,7 @@
 import { Field, ID, InterfaceType } from '@nestjs/graphql'
-import { modelOptions } from '@typegoose/typegoose'
+import { modelOptions, prop } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
+import { Types } from 'mongoose'
 
 import { ANY } from 'types'
 
@@ -27,6 +28,7 @@ export class BaseModel extends TimeStamps {
   id: string
 
   @Field((_type) => ID)
+  @prop({ type: Types.ObjectId })
   orgId: string
 
   @Field()

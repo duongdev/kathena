@@ -1,6 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql'
 import { IsEmail } from 'class-validator'
 
+import { AccountStatus } from './models/Account'
+
 @InputType()
 export class CreateAccountInput {
   @Field()
@@ -13,7 +15,9 @@ export class CreateAccountInput {
   @Field()
   password: string
 
-  createdByAccountId: string
+  status?: AccountStatus
+
+  createdByAccountId?: string
 
   orgId: string
 }

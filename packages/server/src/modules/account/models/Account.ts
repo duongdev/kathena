@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { prop } from '@typegoose/typegoose'
+import { index, prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
 import { BaseModel } from 'core'
@@ -15,6 +15,8 @@ registerEnumType(AccountStatus, {
   description: 'Status of an account.',
 })
 
+@index({ username: 1, orgId: 1 }, { unique: true })
+@index({ email: 1, orgId: 1 }, { unique: true })
 @ObjectType({})
 export class Account extends BaseModel {
   @Field()
