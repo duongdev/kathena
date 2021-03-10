@@ -56,7 +56,7 @@ export class DevtoolService implements OnApplicationBootstrap {
         status: AccountStatus.Active,
       }))
 
-    await org.update(
+    await org.updateOne(
       {
         $set: {
           name: kminOrgConfig.orgName,
@@ -65,7 +65,7 @@ export class DevtoolService implements OnApplicationBootstrap {
       },
       { new: true },
     )
-    await account.update(
+    await account.updateOne(
       {
         $set: {
           email: kminOrgConfig.adminEmail,

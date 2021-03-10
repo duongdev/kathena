@@ -31,8 +31,19 @@ const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: config.IS_PROD ? true : 'schema.gql',
-      introspection: true,
+      introspection: !config.IS_PROD,
       playground: !config.IS_PROD,
+      context: ({ req, connection }) =>
+        connection
+          ? {
+              req: {
+                ...connection.context,
+                headers: {
+                  authorization: connection.context?.authToken,
+                },
+              },
+            }
+          : { req },
     }),
 
     ...appModules,

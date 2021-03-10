@@ -24,8 +24,29 @@ enum AccountStatus {
   Deactivated
 }
 
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
+}
+
+interface BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthenticatePayload {
+  account: Account!
+  org: Org!
+}
+
 type Query {
-  ok: String!
+  authenticate: AuthenticatePayload!
 }
 
 type Mutation {

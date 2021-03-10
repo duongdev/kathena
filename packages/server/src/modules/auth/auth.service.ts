@@ -1,11 +1,13 @@
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
 import { UnauthorizedError } from 'type-graphql'
 
 import { config, Logger, Service } from 'core'
 import { AccountService } from 'modules/account/account.service'
 import { Account } from 'modules/account/models/Account'
 import { OrgService } from 'modules/org/org.service'
+
+import { AuthData } from './auth.type'
 
 @Service()
 export class AuthService {
@@ -56,18 +58,13 @@ export class AuthService {
   }
 
   async signAccountToken(
-    account: Pick<Account, 'id' | 'orgId' | 'username' | 'password' | 'email'>,
+    account: Pick<Account, 'id' | 'orgId'>,
   ): Promise<string> {
-    const token = jwt.sign(
-      {
-        id: account.id,
-        orgId: account.orgId,
-        username: account.username,
-        password: account.password,
-        email: account.email,
-      },
-      config.JWT_SECRET,
-    )
+    const authData: AuthData = {
+      accountId: account.id,
+      orgId: account.orgId,
+    }
+    const token = jwt.sign(authData, config.JWT_SECRET)
 
     return token
   }
