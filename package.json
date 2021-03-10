@@ -14,6 +14,7 @@
     "lint": "yarn workspaces run lint",
     "build": "sh ./scripts/build.sh",
     "start": "yarn workspace server start:prod",
+    "test": "sh ./scripts/test.sh",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -23,6 +24,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "yarn prettier --write",
-    "*.{js,jsx,ts,tsx}": "yarn lint"
+    "*.{js,jsx,ts,tsx}": "yarn lint --fix"
   }
 }
