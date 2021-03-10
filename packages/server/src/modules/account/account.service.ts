@@ -2,6 +2,7 @@ import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
 
 import { Service, InjectModel, Logger } from 'core'
+import { isObjectId } from 'core/utils/db'
 import { Nullable } from 'types'
 
 import { CreateAccountInput } from './account.type'
@@ -34,6 +35,8 @@ export class AccountService {
       throw new Error(`Email or username has been taken`)
     }
 
+    // TODO: Throw error if orgId doesn't exist
+
     const account = await this.accountModel.create({
       username: accountInput.username,
       email: accountInput.email,
@@ -57,6 +60,14 @@ export class AccountService {
       `[${this.findAccountByUsernameOrEmail.name}] Finding account with username or email`,
     )
     this.logger.log(args)
+
+    if (!(args.orgId && isObjectId(args.orgId) && args.usernameOrEmail)) {
+      this.logger.verbose(
+        `Neither orgId or usernameOrEmail are provided. Return null`,
+      )
+      this.logger.verbose(args)
+      return null
+    }
 
     const { orgId, usernameOrEmail } = args
     const account = await this.accountModel.findOne({

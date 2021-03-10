@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { objectId } from 'core/utils/db'
-import { initTestDb } from 'core/utils/db-testing'
+import { createTestingModule, initTestDb } from 'core/utils/testing'
 
 import { AccountService } from './account.service'
 import { CreateAccountInput } from './account.type'
@@ -18,7 +18,7 @@ describe('account.service', () => {
     const testDb = await initTestDb()
     mongooseConnection = testDb.mongooseConnection
 
-    module = await Test.createTestingModule({
+    module = await createTestingModule({
       imports: [
         TypegooseModule.forRoot(testDb.uri, {
           useUnifiedTopology: true,
@@ -28,7 +28,7 @@ describe('account.service', () => {
         TypegooseModule.forFeature([Account]),
       ],
       providers: [AccountService],
-    }).compile()
+    })
 
     accountService = module.get<AccountService>(AccountService)
   })
@@ -79,6 +79,65 @@ describe('account.service', () => {
         username: 'duongdev',
       })
       expect(account.orgId).toBeDefined()
+    })
+  })
+
+  describe('findAccountByUsernameOrEmail', () => {
+    it(`returns null if neither usernameOrEmail or orgId is provided`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        accountService.findAccountByUsernameOrEmail({
+          orgId: 'tao_lao',
+          usernameOrEmail: 'not_exist',
+        }),
+      ).resolves.toBeNull()
+    })
+
+    it(`return null if nothing found`, async () => {
+      expect.assertions(1)
+
+      const result = await accountService.findAccountByUsernameOrEmail({
+        orgId: objectId(),
+        usernameOrEmail: 'not_exist',
+      })
+
+      expect(result).toBeNull()
+    })
+
+    it(`be able to find by username or email`, async () => {
+      expect.assertions(2)
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: objectId(),
+      })
+
+      await expect(
+        accountService.findAccountByUsernameOrEmail({
+          orgId: account.orgId,
+          usernameOrEmail: 'duongdev',
+        }),
+      ).resolves.toMatchObject({
+        id: account.id,
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        orgId: account.orgId,
+      })
+
+      await expect(
+        accountService.findAccountByUsernameOrEmail({
+          orgId: account.orgId,
+          usernameOrEmail: 'dustin.do95@gmail.com',
+        }),
+      ).resolves.toMatchObject({
+        id: account.id,
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        orgId: account.orgId,
+      })
     })
   })
 })
