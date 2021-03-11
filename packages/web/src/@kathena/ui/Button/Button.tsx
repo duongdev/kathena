@@ -2,6 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FC, Fragment, useMemo } from 'react'
 
+import { ANY, TODO } from '@kathena/types'
 import {
   // eslint-disable-next-line no-restricted-imports
   Button as MuiButton,
@@ -12,7 +13,6 @@ import {
   Tooltip,
   TooltipProps,
 } from '@material-ui/core'
-import { ANY, TODO } from 'core/types'
 
 import withComponentHocs from '../hocs/withComponentHocs'
 import Link, { LinkProps } from '../Link'

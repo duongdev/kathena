@@ -4,8 +4,8 @@ import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter } from 'react-router-dom'
 
-import Spinner from '../src/core/components/Spinner'
-import theme from '../src/core/theme'
+import Spinner from '../src/@kathena/ui/Spinner'
+import theme from '../src/@kathena/theme'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

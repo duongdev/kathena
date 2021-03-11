@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { FC } from 'react'
 
+import { ANY } from '@kathena/types'
 import {
   Box,
   BoxProps,
@@ -12,7 +13,6 @@ import {
   makeStyles,
 } from '@material-ui/core'
 import clsx from 'clsx'
-import { ANY } from 'core/types'
 
 export type SpinnerProps = {
   /**
