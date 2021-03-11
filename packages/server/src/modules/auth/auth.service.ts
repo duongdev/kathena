@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
+import { keyBy, uniq } from 'lodash'
 import { UnauthorizedError } from 'type-graphql'
 
 import { config, Logger, Service } from 'core'
@@ -8,6 +9,9 @@ import { Account } from 'modules/account/models/Account'
 import { OrgService } from 'modules/org/org.service'
 
 import { AuthData } from './auth.type'
+import { Permission } from './models/Permission'
+import { Role } from './models/Role'
+import { orgRoles } from './orgRolesMap'
 
 @Service()
 export class AuthService {
@@ -18,6 +22,7 @@ export class AuthService {
     private readonly orgService: OrgService,
   ) {}
 
+  /** Returns json web token if success */
   async signIn(args: {
     usernameOrEmail: string
     password: string
@@ -57,6 +62,7 @@ export class AuthService {
     return token
   }
 
+  /** Signs some account's data into json web token */
   async signAccountToken(
     account: Pick<Account, 'id' | 'orgId'>,
   ): Promise<string> {
@@ -67,5 +73,44 @@ export class AuthService {
     const token = jwt.sign(authData, config.JWT_SECRET)
 
     return token
+  }
+
+  /** Returns a list of roles of an org */
+  async getOrgRoles(_orgId: string): Promise<Role[]> {
+    return orgRoles
+  }
+
+  /** Returns all account's permissions */
+  async getAccountPermissions(accountId: string): Promise<Permission[]> {
+    const account = await this.accountService.findAccountById(accountId)
+
+    if (!account) return []
+
+    const accountOrgRoles = keyBy(await this.getOrgRoles(account.orgId), 'name')
+
+    const permissions: Permission[] = uniq(
+      account.roles.reduce(
+        (permissionValues: Permission[], role) =>
+          permissionValues.concat(accountOrgRoles[role].permissions),
+        [],
+      ),
+    )
+
+    return permissions
+  }
+
+  /** Checks whether that account has that permission */
+  async accountHasPermission({
+    accountId,
+    permission,
+  }: {
+    accountId: string
+    permission: string
+  }): Promise<boolean> {
+    const accountPermissions = (await this.getAccountPermissions(
+      accountId,
+    )) as string[]
+
+    return accountPermissions.includes(permission)
   }
 }

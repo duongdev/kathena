@@ -1,0 +1,7 @@
+{
+  "Enum item": {
+    "prefix": "enit",
+    "scope": "typescript,typescriptreact",
+    "body": "$1 = '$1',"
+  }
+}

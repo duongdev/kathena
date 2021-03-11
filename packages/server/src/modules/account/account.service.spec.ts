@@ -53,6 +53,7 @@ describe('account.service', () => {
       email: 'dustin.do95@gmail.com',
       password: '123456',
       username: 'duongdev',
+      roles: ['owner', 'admin', 'admin'],
     }
 
     it(`throws error if username or email has been taken`, async () => {
@@ -68,7 +69,7 @@ describe('account.service', () => {
     })
 
     it(`returns the created account`, async () => {
-      expect.assertions(2)
+      expect.assertions(3)
 
       const account = await accountService.createAccount(createAccountInput)
 
@@ -79,6 +80,7 @@ describe('account.service', () => {
         username: 'duongdev',
       })
       expect(account.orgId).toBeDefined()
+      expect(account.roles.length).toBe(2) // removes duplicated roles
     })
   })
 
@@ -113,6 +115,7 @@ describe('account.service', () => {
         email: 'dustin.do95@gmail.com',
         password: 'rawPass',
         orgId: objectId(),
+        roles: ['admin'],
       })
 
       await expect(
