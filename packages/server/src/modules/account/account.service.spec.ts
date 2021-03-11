@@ -1,4 +1,5 @@
 import { TestingModule } from '@nestjs/testing'
+import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
 import { TypegooseModule } from 'nestjs-typegoose'
 
@@ -6,7 +7,7 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 
 import { AccountService } from './account.service'
-import { CreateAccountInput } from './account.type'
+import { CreateAccountServiceInput } from './account.type'
 import { Account } from './models/Account'
 
 describe('account.service', () => {
@@ -48,7 +49,7 @@ describe('account.service', () => {
   })
 
   describe('createAccount', () => {
-    const createAccountInput: CreateAccountInput = {
+    const createAccountServiceInput: CreateAccountServiceInput = {
       orgId: objectId(),
       email: 'dustin.do95@gmail.com',
       password: '123456',
@@ -64,14 +65,42 @@ describe('account.service', () => {
         .mockResolvedValueOnce(true as never)
 
       await expect(
-        accountService.createAccount(createAccountInput),
+        accountService.createAccount(createAccountServiceInput),
       ).rejects.toThrow('Email or username has been taken')
+    })
+
+    it.todo(`throws error if orgId is not provided`)
+
+    it.todo(`throws error if orgId doesn't exist`)
+
+    it.todo(`sets default password as email`)
+
+    it.todo(`sets default status as ACTIVE`)
+
+    it.todo(`throws error if a staff creates staff or admin`)
+
+    it.todo(`allows staff to create lecturer or student`)
+
+    it.todo(`allows admin to create staff or admin`)
+
+    it(`encrypts the password`, async () => {
+      expect.assertions(2)
+      const account = await accountService.createAccount(
+        createAccountServiceInput,
+      )
+
+      expect(account.password).not.toBe(createAccountServiceInput.password)
+      expect(
+        compareSync(createAccountServiceInput.password, account.password),
+      ).toBe(true)
     })
 
     it(`returns the created account`, async () => {
       expect.assertions(3)
 
-      const account = await accountService.createAccount(createAccountInput)
+      const account = await accountService.createAccount(
+        createAccountServiceInput,
+      )
 
       expect(account).toMatchObject({
         email: 'dustin.do95@gmail.com',

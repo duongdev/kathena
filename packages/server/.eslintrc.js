@@ -63,6 +63,7 @@ module.exports = {
         paths: [],
       },
     ],
+    'max-classes-per-file': 'off',
   },
   overrides: [
     {

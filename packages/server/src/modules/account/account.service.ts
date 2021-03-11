@@ -6,7 +6,7 @@ import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
 import { Nullable } from 'types'
 
-import { CreateAccountInput } from './account.type'
+import { CreateAccountServiceInput } from './account.type'
 import { Account } from './models/Account'
 
 @Service()
@@ -19,7 +19,7 @@ export class AccountService {
   ) {}
 
   async createAccount(
-    accountInput: CreateAccountInput,
+    accountInput: CreateAccountServiceInput,
   ): Promise<DocumentType<Account>> {
     this.logger.log(`[${this.createAccount.name}] Creating new account`)
     this.logger.verbose(accountInput)
