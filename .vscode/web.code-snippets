@@ -1,0 +1,35 @@
+{
+  "React functional component": {
+    "prefix": "rfc",
+    "scope": "typescript,typescriptreact",
+    "body": [
+      "import { FC } from 'react'",
+      "",
+      "import { makeStyles } from '@material-ui/core'",
+      "",
+      "export type ${1:$TM_FILENAME_BASE}Props = {}",
+      "",
+      "const ${1:$TM_FILENAME_BASE}: FC<${1:$TM_FILENAME_BASE}Props> = (props) => {",
+      "  const classes = useStyles(props)",
+      "",
+      "  return <div className={classes.root}>${3:$TM_FILENAME_BASE}</div>",
+      "}",
+      "",
+      "const useStyles = makeStyles(() => ({",
+      "  root: {},",
+      "}))",
+      "",
+      "export default ${1:$TM_FILENAME_BASE}",
+      ""
+    ],
+    "description": "Creates a React functional component"
+  },
+  "Export react component": {
+    "prefix": "erfc",
+    "scope": "typescript,typescriptreact",
+    "body": [
+      "export { default } from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}'",
+      "export * from './${TM_DIRECTORY/^.+\\/(.*)$/$1/}'"
+    ]
+  }
+}

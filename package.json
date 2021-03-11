@@ -1,6 +1,6 @@
 {
   "name": "kmin-athena",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Kmin Athena Learning Management System",
   "repository": "git@github.com:withDustin/kmin-athena.git",
   "author": "Dustin Do <dustin.do95@gmail.com>",
