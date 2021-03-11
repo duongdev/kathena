@@ -8,4 +8,5 @@ module.exports = {
   },
   globalSetup: './tests/globalSetup.ts',
   moduleDirectories: ['node_modules', 'src'],
+  collectCoverageFrom: ['**/*.service.ts'],
 }
