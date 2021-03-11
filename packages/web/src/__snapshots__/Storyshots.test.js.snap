@@ -1,0 +1,3494 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Example/Button Large 1`] = `
+<button
+  className="storybook-button storybook-button--large storybook-button--secondary"
+  style={
+    Object {
+      "backgroundColor": undefined,
+    }
+  }
+  type="button"
+>
+  Button
+</button>
+`;
+
+exports[`Storyshots Example/Button Primary 1`] = `
+<button
+  className="storybook-button storybook-button--medium storybook-button--primary"
+  style={
+    Object {
+      "backgroundColor": undefined,
+    }
+  }
+  type="button"
+>
+  Button
+</button>
+`;
+
+exports[`Storyshots Example/Button Secondary 1`] = `
+<button
+  className="storybook-button storybook-button--medium storybook-button--secondary"
+  style={
+    Object {
+      "backgroundColor": undefined,
+    }
+  }
+  type="button"
+>
+  Button
+</button>
+`;
+
+exports[`Storyshots Example/Button Small 1`] = `
+<button
+  className="storybook-button storybook-button--small storybook-button--secondary"
+  style={
+    Object {
+      "backgroundColor": undefined,
+    }
+  }
+  type="button"
+>
+  Button
+</button>
+`;
+
+exports[`Storyshots Example/Header Logged In 1`] = `
+<header>
+  <div
+    className="wrapper"
+  >
+    <div>
+      <svg
+        height="32"
+        viewBox="0 0 32 32"
+        width="32"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          fillRule="evenodd"
+        >
+          <path
+            d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
+            fill="#FFF"
+          />
+          <path
+            d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
+            fill="#555AB9"
+          />
+          <path
+            d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
+            fill="#91BAF8"
+          />
+        </g>
+      </svg>
+      <h1>
+        Acme
+      </h1>
+    </div>
+    <div>
+      <button
+        className="storybook-button storybook-button--small storybook-button--secondary"
+        style={
+          Object {
+            "backgroundColor": undefined,
+          }
+        }
+        type="button"
+      >
+        Log out
+      </button>
+    </div>
+  </div>
+</header>
+`;
+
+exports[`Storyshots Example/Header Logged Out 1`] = `
+<header>
+  <div
+    className="wrapper"
+  >
+    <div>
+      <svg
+        height="32"
+        viewBox="0 0 32 32"
+        width="32"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          fillRule="evenodd"
+        >
+          <path
+            d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
+            fill="#FFF"
+          />
+          <path
+            d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
+            fill="#555AB9"
+          />
+          <path
+            d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
+            fill="#91BAF8"
+          />
+        </g>
+      </svg>
+      <h1>
+        Acme
+      </h1>
+    </div>
+    <div>
+      <button
+        className="storybook-button storybook-button--small storybook-button--secondary"
+        style={
+          Object {
+            "backgroundColor": undefined,
+          }
+        }
+        type="button"
+      >
+        Log in
+      </button>
+      <button
+        className="storybook-button storybook-button--small storybook-button--primary"
+        style={
+          Object {
+            "backgroundColor": undefined,
+          }
+        }
+        type="button"
+      >
+        Sign up
+      </button>
+    </div>
+  </div>
+</header>
+`;
+
+exports[`Storyshots Example/Page Logged In 1`] = `
+<article>
+  <header>
+    <div
+      className="wrapper"
+    >
+      <div>
+        <svg
+          height="32"
+          viewBox="0 0 32 32"
+          width="32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g
+            fill="none"
+            fillRule="evenodd"
+          >
+            <path
+              d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
+              fill="#FFF"
+            />
+            <path
+              d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
+              fill="#555AB9"
+            />
+            <path
+              d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
+              fill="#91BAF8"
+            />
+          </g>
+        </svg>
+        <h1>
+          Acme
+        </h1>
+      </div>
+      <div>
+        <button
+          className="storybook-button storybook-button--small storybook-button--secondary"
+          style={
+            Object {
+              "backgroundColor": undefined,
+            }
+          }
+          type="button"
+        >
+          Log out
+        </button>
+      </div>
+    </div>
+  </header>
+  <section>
+    <h2>
+      Pages in Storybook
+    </h2>
+    <p>
+      We recommend building UIs with a
+       
+      <a
+        href="https://componentdriven.org"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <strong>
+          component-driven
+        </strong>
+      </a>
+       
+      process starting with atomic components and ending with pages.
+    </p>
+    <p>
+      Render pages with mock data. This makes it easy to build and review page states without needing to navigate to them in your app. Here are some handy patterns for managing page data in Storybook:
+    </p>
+    <ul>
+      <li>
+        Use a higher-level connected component. Storybook helps you compose such data from the "args" of child component stories
+      </li>
+      <li>
+        Assemble data in the page component from your services. You can mock these services out using Storybook.
+      </li>
+    </ul>
+    <p>
+      Get a guided tutorial on component-driven development at
+       
+      <a
+        href="https://www.learnstorybook.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn Storybook
+      </a>
+      . Read more in the
+       
+      <a
+        href="https://storybook.js.org/docs"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        docs
+      </a>
+      .
+    </p>
+    <div
+      className="tip-wrapper"
+    >
+      <span
+        className="tip"
+      >
+        Tip
+      </span>
+       Adjust the width of the canvas with the
+       
+      <svg
+        height="10"
+        viewBox="0 0 12 12"
+        width="10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          fillRule="evenodd"
+        >
+          <path
+            d="M1.5 5.2h4.8c.3 0 .5.2.5.4v5.1c-.1.2-.3.3-.4.3H1.4a.5.5 0 01-.5-.4V5.7c0-.3.2-.5.5-.5zm0-2.1h6.9c.3 0 .5.2.5.4v7a.5.5 0 01-1 0V4H1.5a.5.5 0 010-1zm0-2.1h9c.3 0 .5.2.5.4v9.1a.5.5 0 01-1 0V2H1.5a.5.5 0 010-1zm4.3 5.2H2V10h3.8V6.2z"
+            fill="#999"
+            id="a"
+          />
+        </g>
+      </svg>
+      Viewports addon in the toolbar
+    </div>
+  </section>
+</article>
+`;
+
+exports[`Storyshots Example/Page Logged Out 1`] = `
+<article>
+  <header>
+    <div
+      className="wrapper"
+    >
+      <div>
+        <svg
+          height="32"
+          viewBox="0 0 32 32"
+          width="32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g
+            fill="none"
+            fillRule="evenodd"
+          >
+            <path
+              d="M10 0h12a10 10 0 0110 10v12a10 10 0 01-10 10H10A10 10 0 010 22V10A10 10 0 0110 0z"
+              fill="#FFF"
+            />
+            <path
+              d="M5.3 10.6l10.4 6v11.1l-10.4-6v-11zm11.4-6.2l9.7 5.5-9.7 5.6V4.4z"
+              fill="#555AB9"
+            />
+            <path
+              d="M27.2 10.6v11.2l-10.5 6V16.5l10.5-6zM15.7 4.4v11L6 10l9.7-5.5z"
+              fill="#91BAF8"
+            />
+          </g>
+        </svg>
+        <h1>
+          Acme
+        </h1>
+      </div>
+      <div>
+        <button
+          className="storybook-button storybook-button--small storybook-button--secondary"
+          style={
+            Object {
+              "backgroundColor": undefined,
+            }
+          }
+          type="button"
+        >
+          Log in
+        </button>
+        <button
+          className="storybook-button storybook-button--small storybook-button--primary"
+          style={
+            Object {
+              "backgroundColor": undefined,
+            }
+          }
+          type="button"
+        >
+          Sign up
+        </button>
+      </div>
+    </div>
+  </header>
+  <section>
+    <h2>
+      Pages in Storybook
+    </h2>
+    <p>
+      We recommend building UIs with a
+       
+      <a
+        href="https://componentdriven.org"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <strong>
+          component-driven
+        </strong>
+      </a>
+       
+      process starting with atomic components and ending with pages.
+    </p>
+    <p>
+      Render pages with mock data. This makes it easy to build and review page states without needing to navigate to them in your app. Here are some handy patterns for managing page data in Storybook:
+    </p>
+    <ul>
+      <li>
+        Use a higher-level connected component. Storybook helps you compose such data from the "args" of child component stories
+      </li>
+      <li>
+        Assemble data in the page component from your services. You can mock these services out using Storybook.
+      </li>
+    </ul>
+    <p>
+      Get a guided tutorial on component-driven development at
+       
+      <a
+        href="https://www.learnstorybook.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn Storybook
+      </a>
+      . Read more in the
+       
+      <a
+        href="https://storybook.js.org/docs"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        docs
+      </a>
+      .
+    </p>
+    <div
+      className="tip-wrapper"
+    >
+      <span
+        className="tip"
+      >
+        Tip
+      </span>
+       Adjust the width of the canvas with the
+       
+      <svg
+        height="10"
+        viewBox="0 0 12 12"
+        width="10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          fillRule="evenodd"
+        >
+          <path
+            d="M1.5 5.2h4.8c.3 0 .5.2.5.4v5.1c-.1.2-.3.3-.4.3H1.4a.5.5 0 01-.5-.4V5.7c0-.3.2-.5.5-.5zm0-2.1h6.9c.3 0 .5.2.5.4v7a.5.5 0 01-1 0V4H1.5a.5.5 0 010-1zm0-2.1h9c.3 0 .5.2.5.4v9.1a.5.5 0 01-1 0V2H1.5a.5.5 0 010-1zm4.3 5.2H2V10h3.8V6.2z"
+            fill="#999"
+            id="a"
+          />
+        </g>
+      </svg>
+      Viewports addon in the toolbar
+    </div>
+  </section>
+</article>
+`;
+
+exports[`Storyshots components/Button Contained Button 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4 css-kb5iia-MuiGrid-root"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      SMALL
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-105 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeSmall-102 makeStyles-sizeSmall-106 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-1pgdwkd-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-108 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-109 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-110 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-112 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-113 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-114 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-116 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-117 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-118 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-120 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 18,
+                "width": 18,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-121 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-122 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-124 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-125 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-126 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-128 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-129 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-130 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-132 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-101 makeStyles-root-133 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-134 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-104 makeStyles-label-136 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      MEDIUM
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-137 MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-hbbtl9-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-140 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-141 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-144 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-145 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-148 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-149 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-152 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 20,
+                "width": 20,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-153 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-156 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-157 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-160 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-161 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-164 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-101 makeStyles-root-165 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-104 makeStyles-label-168 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      LARGE
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-169 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeLarge-103 makeStyles-sizeLarge-171 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-5dlyqm-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-172 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-173 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-175 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-176 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-177 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-179 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-180 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-181 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-183 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-184 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 22,
+                "width": 22,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-185 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-187 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-188 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-189 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-191 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-192 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-101 makeStyles-root-193 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-195 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-104 makeStyles-label-196 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-101 makeStyles-root-197 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-199 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-104 makeStyles-label-200 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots components/Button Outlined Button 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4 css-kb5iia-MuiGrid-root"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      SMALL
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-205 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeSmall-202 makeStyles-sizeSmall-206 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-agnu4s-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-208 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-209 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-210 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-212 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-213 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-214 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-216 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-217 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-218 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-220 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 18,
+                "width": 18,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-221 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-222 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-224 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-225 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-226 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-228 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-229 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-230 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-232 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-201 makeStyles-root-233 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-234 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-204 makeStyles-label-236 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      MEDIUM
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-237 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-gxc7io-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-240 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-241 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-244 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-245 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-248 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-249 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-252 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 20,
+                "width": 20,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-253 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-256 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-257 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-260 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-261 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-264 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-201 makeStyles-root-265 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-204 makeStyles-label-268 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      LARGE
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-269 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeLarge-203 makeStyles-sizeLarge-271 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-iwk16b-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-272 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-273 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-275 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-276 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-277 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-279 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-280 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-281 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-283 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-284 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 22,
+                "width": 22,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-285 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-287 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-288 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-289 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-291 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-292 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-201 makeStyles-root-293 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-295 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-204 makeStyles-label-296 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-201 makeStyles-root-297 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-299 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-204 makeStyles-label-300 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots components/Button Text Button 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4 css-kb5iia-MuiGrid-root"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      SMALL
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-5 MuiButton-root MuiButton-text MuiButton-textInherit makeStyles-sizeSmall-2 makeStyles-sizeSmall-6 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorInherit MuiButtonBase-root css-176ib5v-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-8 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-9 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-10 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-12 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-13 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-14 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-16 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-17 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-18 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-20 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 18,
+                "width": 18,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-21 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-22 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-24 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-25 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-26 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-28 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-29 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-30 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-32 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-1 makeStyles-root-33 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-34 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-4 makeStyles-label-36 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      MEDIUM
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-37 MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButtonBase-root css-2gzec1-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-40 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-41 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-44 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-45 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-48 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-49 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-52 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 20,
+                "width": 20,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-53 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-56 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-57 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-60 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-61 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-64 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-1 makeStyles-root-65 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-4 makeStyles-label-68 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+    >
+      LARGE
+    </p>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-69 MuiButton-root MuiButton-text MuiButton-textInherit makeStyles-sizeLarge-3 makeStyles-sizeLarge-71 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButton-colorInherit MuiButtonBase-root css-1vaca1z-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-72 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Inherit
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-73 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-75 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-76 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Primary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-77 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-79 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-80 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Secondary
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-81 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-83 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-84 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <span
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            role="progressbar"
+            style={
+              Object {
+                "height": 22,
+                "width": 22,
+              }
+            }
+          >
+            <svg
+              className="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg"
+              viewBox="22 22 44 44"
+            >
+              <circle
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                cx={44}
+                cy={44}
+                fill="none"
+                r={20.2}
+                strokeWidth={3.6}
+                style={Object {}}
+              />
+            </svg>
+          </span>
+        </span>
+        Loading
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-85 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-87 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-88 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-89 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-91 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-92 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <button
+      className="makeStyles-root-1 makeStyles-root-93 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-95 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+    >
+      <span
+        className="makeStyles-label-4 makeStyles-label-96 MuiButton-label css-8xplcm-MuiButton-label"
+      >
+        <span
+          className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+        WithIcon
+      </span>
+    </button>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+    >
+      <button
+        className="makeStyles-root-1 makeStyles-root-97 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-99 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+      >
+        <span
+          className="makeStyles-label-4 makeStyles-label-100 MuiButton-label css-8xplcm-MuiButton-label"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="none"
+              height="256"
+              width="256"
+            />
+            <path
+              d="M132.41106,190.73266l50.43543,31.95385c6.44693,4.08451,14.45124-1.99032,12.53819-9.51579l-14.57192-57.32241a8.75742,8.75742,0,0,1,2.83756-8.87589l45.2273-37.64345c5.94268-4.9462,2.87542-14.80876-4.75965-15.30428l-59.06388-3.83326a8.41836,8.41836,0,0,1-7.24792-5.3506l-22.02834-55.473a8.31887,8.31887,0,0,0-15.55566,0L98.19383,84.84083a8.41836,8.41836,0,0,1-7.24792,5.3506L31.882,94.02469c-7.63507.49552-10.70233,10.35808-4.75965,15.30428l45.2273,37.64345a8.75742,8.75742,0,0,1,2.83756,8.87589L61.6734,209.00846c-2.29566,9.03056,7.30952,16.32036,15.04583,11.41895l46.86971-29.69475A8.21431,8.21431,0,0,1,132.41106,190.73266Z"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="16"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots components/Typography All Variants Demo 1`] = `
+<div
+  className="css-1a8w37c"
+>
+  <h1
+    className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-1gjc1w3-MuiTypography-root"
+  >
+    h1. Heading
+  </h1>
+  <h2
+    className="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom css-13yrxm2-MuiTypography-root"
+  >
+    h2. Heading
+  </h2>
+  <h3
+    className="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1fu581m-MuiTypography-root"
+  >
+    h3. Heading
+  </h3>
+  <h4
+    className="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-11q5crs-MuiTypography-root"
+  >
+    h4. Heading
+  </h4>
+  <h5
+    className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-5t9ycp-MuiTypography-root"
+  >
+    h5. Heading
+  </h5>
+  <h6
+    className="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom css-13u8vlo-MuiTypography-root"
+  >
+    h6. Heading
+  </h6>
+  <h6
+    className="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom css-54lmo9-MuiTypography-root"
+  >
+    subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+  </h6>
+  <h6
+    className="MuiTypography-root MuiTypography-subtitle2 MuiTypography-gutterBottom css-jyl1i1-MuiTypography-root"
+  >
+    subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
+  </h6>
+  <p
+    className="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-15cph3k-MuiTypography-root"
+  >
+    body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+  </p>
+  <p
+    className="MuiTypography-root MuiTypography-body2 MuiTypography-gutterBottom css-p7hu7i-MuiTypography-root"
+  >
+    body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+  </p>
+  <span
+    className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom css-19mhxxn-MuiTypography-root"
+  >
+    button text
+  </span>
+  <span
+    className="MuiTypography-root MuiTypography-caption MuiTypography-gutterBottom css-j14kx6-MuiTypography-root"
+  >
+    caption text
+  </span>
+  <span
+    className="MuiTypography-root MuiTypography-overline MuiTypography-gutterBottom css-1e1g75a-MuiTypography-root"
+  >
+    overline text
+  </span>
+</div>
+`;
