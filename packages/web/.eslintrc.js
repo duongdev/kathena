@@ -64,7 +64,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: '{components}{/**,}',
+            pattern: '{core}{/**,}',
             group: 'internal',
           },
         ],
@@ -81,7 +81,7 @@ module.exports = {
           },
           {
             name: '@material-ui/core',
-            importNames: ['Button'],
+            importNames: ['Button', 'Typography'],
             message: 'Please use customized components instead.',
           },
         ],
@@ -99,6 +99,12 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-use-before-define': 0,
         'import/no-cycle': 0,
+      },
+    },
+    {
+      files: ['*.stories.tsx'],
+      rules: {
+        'react/jsx-props-no-spreading': 0,
       },
     },
   ],
