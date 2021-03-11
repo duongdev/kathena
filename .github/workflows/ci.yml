@@ -35,5 +35,7 @@ jobs:
         run: yarn install --production=false
       - name: Run lint
         run: yarn lint
+      - name: Run server test
+        run: yarn workspace server test:cov
       - name: Build server
         run: yarn workspace server build

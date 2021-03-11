@@ -1,9 +1,11 @@
 import { OnApplicationBootstrap } from '@nestjs/common'
 import { DocumentType } from '@typegoose/typegoose'
+import { uniq } from 'lodash'
 
 import { config, Logger, Service } from 'core'
 import { AccountService } from 'modules/account/account.service'
 import { Account, AccountStatus } from 'modules/account/models/Account'
+import { owner } from 'modules/auth/orgRolesMap'
 import { Org } from 'modules/org/models/Org'
 import { OrgService } from 'modules/org/org.service'
 
@@ -29,6 +31,7 @@ export class DevtoolService implements OnApplicationBootstrap {
       adminUsername: 'duongdev',
       adminEmail: 'dustin.do95@gmail.com',
       adminPassword: config.INIT_ADMIN_PWD,
+      adminRoles: [owner.name],
     }
 
     this.logger.log(
@@ -54,6 +57,7 @@ export class DevtoolService implements OnApplicationBootstrap {
         username: kminOrgConfig.adminUsername,
         password: kminOrgConfig.adminPassword,
         status: AccountStatus.Active,
+        roles: kminOrgConfig.adminRoles,
       }))
 
     await org.updateOne(
@@ -71,6 +75,7 @@ export class DevtoolService implements OnApplicationBootstrap {
           email: kminOrgConfig.adminEmail,
           username: kminOrgConfig.adminUsername,
           status: AccountStatus.Active,
+          roles: uniq([...account.roles, ...kminOrgConfig.adminRoles]),
         },
       },
       { new: true },

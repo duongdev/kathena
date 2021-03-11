@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`orgRolesMap should match snapshot 1`] = `
+Array [
+  Object {
+    "name": "owner",
+    "permissions": Array [
+      "Hr_Access",
+      "Hr_CreateAccount",
+    ],
+  },
+  Object {
+    "name": "admin",
+    "permissions": Array [
+      "Hr_Access",
+      "Hr_CreateAccount",
+    ],
+  },
+  Object {
+    "name": "staff",
+    "permissions": Array [
+      "Hr_Access",
+      "Hr_CreateAccount",
+    ],
+  },
+  Object {
+    "name": "lecturer",
+    "permissions": Array [],
+  },
+  Object {
+    "name": "student",
+    "permissions": Array [],
+  },
+]
+`;

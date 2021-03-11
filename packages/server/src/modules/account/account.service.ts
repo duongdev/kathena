@@ -1,5 +1,6 @@
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
+import { uniq } from 'lodash'
 
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
@@ -44,12 +45,19 @@ export class AccountService {
       orgId: accountInput.orgId,
       createdAt: accountInput.createdByAccountId,
       status: accountInput.status,
+      roles: uniq(accountInput.roles),
     })
 
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
     this.logger.verbose(account.toObject())
 
     return account
+  }
+
+  async findAccountById(
+    accountId: string,
+  ): Promise<Nullable<DocumentType<Account>>> {
+    return this.accountModel.findById(accountId)
   }
 
   async findAccountByUsernameOrEmail(args: {
