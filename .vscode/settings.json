@@ -13,12 +13,14 @@
   "cSpell.words": [
     "Helvetica",
     "Hocs",
+    "Storyshots",
     "clsx",
     "fastify",
     "kmin",
     "mongod",
     "nestjs",
     "typegoose",
+    "unmount",
     "virtuals"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
