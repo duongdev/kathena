@@ -1,5 +1,5 @@
 import { red } from '@material-ui/core/colors'
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, ThemeOptions } from '@material-ui/core/styles'
 
 import {
   PRIMARY_COLOR,
@@ -8,6 +8,34 @@ import {
   TEXT_FONT,
   HEADING_FONT,
 } from './theme.constants'
+
+const shadows: ThemeOptions['shadows'] = [
+  'none',
+  '0px 0px 20px rgba(0, 0, 0, 0.1)',
+  '0px 5px 20px rgba(0, 0, 0, 0.2)',
+  '0px 10px 25px rgba(0, 0, 0, 0.3)',
+  '0px 15px 30px rgba(0, 0, 0, 0.4)',
+  '0px 20px 30px rgba(0, 0, 0, 0.4)',
+  '0px 21px 31px rgba(0, 0, 0, 0.4)',
+  '0px 22px 32px rgba(0, 0, 0, 0.4)',
+  '0px 23px 33px rgba(0, 0, 0, 0.4)',
+  '0px 24px 34px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+  '0px 25px 35px rgba(0, 0, 0, 0.4)',
+]
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -59,35 +87,12 @@ const theme = createMuiTheme({
       lineHeight: 1.218,
     },
   },
-  shadows: [
-    'none',
-    '0px 0px 20px rgba(0, 0, 0, 0.1)',
-    '0px 3px 20px rgba(0, 0, 0, 0.1)',
-    '0px 3px 20px rgba(0, 0, 0, 0.15)',
-    '0px 3px 20px rgba(0, 0, 0, 0.2)',
-    '0px 20px 30px rgba(0, 0, 0, 0.4)',
-    '0px 21px 31px rgba(0, 0, 0, 0.4)',
-    '0px 22px 32px rgba(0, 0, 0, 0.4)',
-    '0px 23px 33px rgba(0, 0, 0, 0.4)',
-    '0px 24px 34px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-    '0px 25px 35px rgba(0, 0, 0, 0.4)',
-  ],
+  shadows,
   components: {
     MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
@@ -98,6 +103,15 @@ const theme = createMuiTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
+        },
+        contained: {
+          boxShadow: shadows[1],
+          '&:hover': {
+            boxShadow: shadows[2],
+          },
+          '&:active': {
+            boxShadow: shadows[3],
+          },
         },
       },
     },

@@ -4,6 +4,7 @@ import { FC, Fragment, useMemo } from 'react'
 
 import { ANY, TODO } from '@kathena/types'
 import {
+  darken,
   // eslint-disable-next-line no-restricted-imports
   Button as MuiButton,
   ButtonProps as MuiButtonProps,
@@ -22,6 +23,7 @@ const SPINNER_SIZE = {
   medium: 20,
   large: 22,
 }
+const ACTIVE_DARKEN = 0.5
 
 export type ButtonProps = MuiButtonProps & {
   rounded?: boolean
@@ -105,9 +107,22 @@ const Button: FC<ButtonProps> = (props) => {
 }
 
 const useStyles = makeStyles<Theme, ButtonProps>(
-  ({ palette, spacing, components }) => ({
+  ({ palette, spacing, components, transitions }) => ({
     root: ({ rounded, iconOnly }) => {
-      const css: ANY = {}
+      const css: ANY = {
+        transition: transitions.create(
+          [
+            'background-color',
+            'box-shadow',
+            'border-color',
+            'color',
+            'opacity',
+          ],
+          {
+            duration: transitions.duration.short,
+          },
+        ),
+      }
 
       if (rounded) {
         css.borderRadius = '1000px !important'
@@ -121,6 +136,26 @@ const useStyles = makeStyles<Theme, ButtonProps>(
       }
 
       return css
+    },
+    containedPrimary: {
+      '&:active': {
+        backgroundColor: darken(palette.primary.main, ACTIVE_DARKEN),
+      },
+    },
+    containedSecondary: {
+      '&:active': {
+        backgroundColor: darken(palette.secondary.main, ACTIVE_DARKEN),
+      },
+    },
+    outlined: {
+      '&:active': {
+        opacity: 0.7,
+      },
+    },
+    text: {
+      '&:active': {
+        opacity: 0.7,
+      },
     },
     sizeSmall: ({ iconOnly }) =>
       iconOnly
