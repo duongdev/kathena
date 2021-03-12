@@ -162,8 +162,22 @@ const useStyles = makeStyles<Theme, ButtonProps>(
         ? {
             width:
               (components?.MuiButton?.styleOverrides?.sizeSmall as ANY)
-                ?.height ?? 44,
+                ?.height ?? 34,
+            height:
+              (components?.MuiButton?.styleOverrides?.sizeSmall as ANY)
+                ?.height ?? 34,
             padding: spacing(0.5),
+          }
+        : {},
+    sizeMedium: ({ iconOnly }) =>
+      iconOnly
+        ? {
+            width:
+              (components?.MuiButton?.styleOverrides?.sizeMedium as ANY)
+                ?.height ?? 40,
+            height:
+              (components?.MuiButton?.styleOverrides?.sizeMedium as ANY)
+                ?.height ?? 40,
           }
         : {},
     sizeLarge: ({ iconOnly }) =>
@@ -171,15 +185,21 @@ const useStyles = makeStyles<Theme, ButtonProps>(
         ? {
             width:
               (components?.MuiButton?.styleOverrides?.sizeLarge as ANY)
-                ?.height ?? 44,
+                ?.height ?? 45,
+            height:
+              (components?.MuiButton?.styleOverrides?.sizeLarge as ANY)
+                ?.height ?? 45,
           }
         : {},
-    label: ({ iconOnly, labelColor, disabled, loading }) => {
+    label: ({ iconOnly, labelColor, disabled, loading, size }) => {
       const isDisabled = disabled || loading
       const css: ANY = {}
 
       if (iconOnly) {
         css.margin = 0
+      } else if (size === 'small') {
+        css.marginTop = -1
+        css.marginBottom = 1
       }
 
       if (!isDisabled) {

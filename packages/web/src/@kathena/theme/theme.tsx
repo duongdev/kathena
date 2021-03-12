@@ -100,6 +100,9 @@ const theme = createMuiTheme({
       fontSize: '1.5625rem', // 25
       lineHeight: 1.218,
     },
+    button: {
+      fontWeight: 500,
+    },
   },
   shadows,
   components: {
@@ -110,29 +113,25 @@ const theme = createMuiTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
+          fontWeight: 500,
         },
       },
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          textTransform: 'none',
-        },
+        root: { textTransform: 'none' },
         contained: {
           boxShadow: shadows[1],
-          '&:hover': {
-            boxShadow: shadows[2],
-          },
-          '&:active': {
-            boxShadow: shadows[3],
-          },
+          '&:hover': { boxShadow: shadows[2] },
+          '&:active': { boxShadow: shadows[3] },
         },
+        sizeSmall: { height: 34 },
+        sizeMedium: { height: 40 },
+        sizeLarge: { height: 45 },
       },
     },
     MuiCircularProgress: {
-      defaultProps: {
-        disableShrink: false,
-      },
+      defaultProps: { disableShrink: false },
     },
   },
 })

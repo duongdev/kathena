@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots components/Alert Basic 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 css-96cyy-MuiGrid-root"
+  >
+    <div
+      className="makeStyles-root-1 makeStyles-info-2"
+    >
+      Alert content
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 css-96cyy-MuiGrid-root"
+  >
+    <div
+      className="makeStyles-root-1 makeStyles-success-3"
+    >
+      Alert content
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 css-96cyy-MuiGrid-root"
+  >
+    <div
+      className="makeStyles-root-1 makeStyles-warning-4"
+    >
+      Alert content
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 css-96cyy-MuiGrid-root"
+  >
+    <div
+      className="makeStyles-root-1 makeStyles-error-5"
+    >
+      Alert content
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots components/Button Contained Button 1`] = `
 <div
   className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4 css-kb5iia-MuiGrid-root"
@@ -8,7 +51,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       SMALL
     </p>
@@ -17,7 +60,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-105 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeSmall-102 makeStyles-sizeSmall-106 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-1pgdwkd-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-144 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeSmall-140 makeStyles-sizeSmall-145 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-16b2ooi-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -34,7 +77,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-108 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-148 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -44,7 +87,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-109 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-110 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-149 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeSmall-140 makeStyles-sizeSmall-150 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-15452uw-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -61,7 +104,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-112 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-153 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -71,7 +114,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-113 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-114 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-154 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeSmall-140 makeStyles-sizeSmall-155 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-17u8wur-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -88,7 +131,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-116 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-158 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -98,7 +141,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-117 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-118 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-159 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeSmall-140 makeStyles-sizeSmall-160 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-15452uw-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -115,13 +158,13 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-120 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-163 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -154,7 +197,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-121 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-122 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-164 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeSmall-140 makeStyles-sizeSmall-165 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root Mui-disabled css-15452uw-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -171,7 +214,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-124 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-168 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -181,7 +224,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-125 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeSmall-102 makeStyles-sizeSmall-126 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1jymh7y-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-169 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeSmall-140 makeStyles-sizeSmall-170 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-15452uw-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -198,7 +241,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-128 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-173 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -233,7 +276,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-129 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-130 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-174 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeSmall-140 makeStyles-sizeSmall-175 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-17u8wur-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -250,7 +293,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-132 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-178 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -288,7 +331,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-101 makeStyles-root-133 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeSmall-102 makeStyles-sizeSmall-134 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-1ijw9y7-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-135 makeStyles-root-179 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeSmall-140 makeStyles-sizeSmall-180 MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButtonBase-root css-17u8wur-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -305,7 +348,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-104 makeStyles-label-136 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-143 makeStyles-label-183 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -336,7 +379,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       MEDIUM
     </p>
@@ -345,7 +388,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-137 MuiButton-root MuiButton-contained MuiButton-containedInherit MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-hbbtl9-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-184 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeMedium-141 makeStyles-sizeMedium-186 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-txlfji-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -362,7 +405,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-140 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-188 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -372,7 +415,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-141 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-189 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeMedium-141 makeStyles-sizeMedium-191 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-unjzuq-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -389,7 +432,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-144 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-193 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -399,7 +442,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-145 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-194 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeMedium-141 makeStyles-sizeMedium-196 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1y8hd5p-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -416,7 +459,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-148 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-198 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -426,7 +469,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-149 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-199 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeMedium-141 makeStyles-sizeMedium-201 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-unjzuq-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -443,13 +486,13 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-152 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-203 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -482,7 +525,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-153 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-204 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeMedium-141 makeStyles-sizeMedium-206 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled css-unjzuq-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -499,7 +542,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-156 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-208 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -509,7 +552,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-157 MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1jgxp3e-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-209 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeMedium-141 makeStyles-sizeMedium-211 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-unjzuq-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -526,7 +569,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-160 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-213 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -561,7 +604,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-161 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-214 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeMedium-141 makeStyles-sizeMedium-216 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1y8hd5p-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -578,7 +621,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-164 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-218 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -616,7 +659,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-101 makeStyles-root-165 MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-zx3o3t-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-135 makeStyles-root-219 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeMedium-141 makeStyles-sizeMedium-221 MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1y8hd5p-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -633,7 +676,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-104 makeStyles-label-168 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-143 makeStyles-label-223 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -664,7 +707,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       LARGE
     </p>
@@ -673,7 +716,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-169 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeLarge-103 makeStyles-sizeLarge-171 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-5dlyqm-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-224 MuiButton-root MuiButton-contained MuiButton-containedInherit makeStyles-sizeLarge-142 makeStyles-sizeLarge-227 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-esuh5y-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -690,7 +733,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-172 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-228 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -700,7 +743,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-173 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-175 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-229 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeLarge-142 makeStyles-sizeLarge-232 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-iehu3f-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -717,7 +760,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-176 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-233 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -727,7 +770,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-177 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-179 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-234 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeLarge-142 makeStyles-sizeLarge-237 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-45swkr-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -744,7 +787,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-180 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-238 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -754,7 +797,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-181 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-183 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-239 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeLarge-142 makeStyles-sizeLarge-242 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-iehu3f-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -771,13 +814,13 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-184 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-243 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -810,7 +853,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-185 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-187 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-244 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeLarge-142 makeStyles-sizeLarge-247 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root Mui-disabled css-iehu3f-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -827,7 +870,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-188 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-248 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -837,7 +880,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-189 MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-sizeLarge-103 makeStyles-sizeLarge-191 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-vw86uj-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-249 MuiButton-root MuiButton-contained makeStyles-containedPrimary-136 MuiButton-containedPrimary makeStyles-sizeLarge-142 makeStyles-sizeLarge-252 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-iehu3f-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -854,7 +897,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-192 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-253 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -889,7 +932,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-101 makeStyles-root-193 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-195 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-135 makeStyles-root-254 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeLarge-142 makeStyles-sizeLarge-257 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-45swkr-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -906,7 +949,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-104 makeStyles-label-196 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-143 makeStyles-label-258 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -944,7 +987,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-101 makeStyles-root-197 MuiButton-root MuiButton-contained MuiButton-containedSecondary makeStyles-sizeLarge-103 makeStyles-sizeLarge-199 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-1d0nknq-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-135 makeStyles-root-259 MuiButton-root MuiButton-contained makeStyles-containedSecondary-137 MuiButton-containedSecondary makeStyles-sizeLarge-142 makeStyles-sizeLarge-262 MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButtonBase-root css-45swkr-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -961,7 +1004,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-104 makeStyles-label-200 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-143 makeStyles-label-263 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -999,7 +1042,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       SMALL
     </p>
@@ -1008,7 +1051,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-205 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeSmall-202 makeStyles-sizeSmall-206 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-agnu4s-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-273 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeSmall-269 makeStyles-sizeSmall-274 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorInherit MuiButtonBase-root css-9ymucm-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1025,7 +1068,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-208 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-277 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -1035,7 +1078,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-209 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-210 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-278 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-269 makeStyles-sizeSmall-279 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-bui4xd-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1052,7 +1095,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-212 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-282 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -1062,7 +1105,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-213 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-214 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-283 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-269 makeStyles-sizeSmall-284 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-xbxq92-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1079,7 +1122,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-216 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-287 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -1089,7 +1132,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-217 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-218 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-288 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-269 makeStyles-sizeSmall-289 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-bui4xd-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1106,13 +1149,13 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-220 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-292 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -1145,7 +1188,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-221 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-222 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-293 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-269 makeStyles-sizeSmall-294 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root Mui-disabled css-bui4xd-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1162,7 +1205,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-224 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-297 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -1172,7 +1215,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-225 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-202 makeStyles-sizeSmall-226 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-1q9nm5l-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-298 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeSmall-269 makeStyles-sizeSmall-299 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-bui4xd-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1189,7 +1232,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-228 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-302 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -1224,7 +1267,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-229 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-230 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-303 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-269 makeStyles-sizeSmall-304 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-xbxq92-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1241,7 +1284,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-232 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-307 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -1279,7 +1322,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-201 makeStyles-root-233 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-202 makeStyles-sizeSmall-234 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-lwee3-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-264 makeStyles-root-308 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeSmall-269 makeStyles-sizeSmall-309 MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButtonBase-root css-xbxq92-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -1296,7 +1339,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-204 makeStyles-label-236 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-272 makeStyles-label-312 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -1327,7 +1370,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       MEDIUM
     </p>
@@ -1336,7 +1379,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-237 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-gxc7io-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-313 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeMedium-270 makeStyles-sizeMedium-315 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root css-1ic2c15-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1353,7 +1396,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-240 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-317 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -1363,7 +1406,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-241 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-318 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeMedium-270 makeStyles-sizeMedium-320 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-st8paq-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1380,7 +1423,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-244 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-322 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -1390,7 +1433,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-245 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-323 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeMedium-270 makeStyles-sizeMedium-325 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1dv02hs-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1407,7 +1450,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-248 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-327 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -1417,7 +1460,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-249 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-328 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeMedium-270 makeStyles-sizeMedium-330 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-st8paq-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1434,13 +1477,13 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-252 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-332 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -1473,7 +1516,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-253 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-333 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeMedium-270 makeStyles-sizeMedium-335 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root Mui-disabled css-st8paq-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1490,7 +1533,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-256 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-337 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -1500,7 +1543,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-257 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1imzsmm-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-338 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeMedium-270 makeStyles-sizeMedium-340 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-st8paq-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1517,7 +1560,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-260 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-342 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -1552,7 +1595,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-261 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-343 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeMedium-270 makeStyles-sizeMedium-345 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1dv02hs-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1569,7 +1612,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-264 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-347 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -1607,7 +1650,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-201 makeStyles-root-265 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1pydler-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-264 makeStyles-root-348 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeMedium-270 makeStyles-sizeMedium-350 MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-1dv02hs-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -1624,7 +1667,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-204 makeStyles-label-268 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-272 makeStyles-label-352 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -1655,7 +1698,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       LARGE
     </p>
@@ -1664,7 +1707,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-269 MuiButton-root MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeLarge-203 makeStyles-sizeLarge-271 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-iwk16b-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-353 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedInherit makeStyles-sizeLarge-271 makeStyles-sizeLarge-356 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButton-colorInherit MuiButtonBase-root css-ltc0ge-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1681,7 +1724,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-272 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-357 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -1691,7 +1734,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-273 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-275 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-358 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-271 makeStyles-sizeLarge-361 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-rr26wt-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1708,7 +1751,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-276 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-362 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -1718,7 +1761,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-277 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-279 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-363 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-271 makeStyles-sizeLarge-366 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-18kaj7f-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1735,7 +1778,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-280 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-367 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -1745,7 +1788,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-281 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-283 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-368 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-271 makeStyles-sizeLarge-371 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-rr26wt-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1762,13 +1805,13 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-284 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-372 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -1801,7 +1844,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-285 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-287 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-373 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-271 makeStyles-sizeLarge-376 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root Mui-disabled css-rr26wt-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1818,7 +1861,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-288 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-377 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -1828,7 +1871,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-289 MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-203 makeStyles-sizeLarge-291 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-1g1h279-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-378 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedPrimary makeStyles-sizeLarge-271 makeStyles-sizeLarge-381 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-rr26wt-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1845,7 +1888,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-292 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-382 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -1880,7 +1923,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-201 makeStyles-root-293 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-295 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-264 makeStyles-root-383 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-271 makeStyles-sizeLarge-386 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-18kaj7f-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -1897,7 +1940,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-204 makeStyles-label-296 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-272 makeStyles-label-387 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -1935,7 +1978,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-201 makeStyles-root-297 MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-203 makeStyles-sizeLarge-299 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-hs6on8-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-264 makeStyles-root-388 MuiButton-root makeStyles-outlined-267 MuiButton-outlined MuiButton-outlinedSecondary makeStyles-sizeLarge-271 makeStyles-sizeLarge-391 MuiButton-sizeLarge MuiButton-outlinedSizeLarge MuiButtonBase-root css-18kaj7f-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -1952,7 +1995,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-204 makeStyles-label-300 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-272 makeStyles-label-392 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -1990,7 +2033,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       SMALL
     </p>
@@ -1999,7 +2042,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-5 MuiButton-root MuiButton-text MuiButton-textInherit makeStyles-sizeSmall-2 makeStyles-sizeSmall-6 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorInherit MuiButtonBase-root css-176ib5v-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-15 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textInherit makeStyles-sizeSmall-11 makeStyles-sizeSmall-16 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorInherit MuiButtonBase-root css-kyh3vd-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2016,7 +2059,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-8 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-19 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -2026,7 +2069,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-9 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-10 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-20 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-11 makeStyles-sizeSmall-21 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-gm557w-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2043,7 +2086,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-12 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-24 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -2053,7 +2096,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-13 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-14 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-25 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-11 makeStyles-sizeSmall-26 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-13upa7k-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2070,7 +2113,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-16 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-29 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -2080,7 +2123,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-17 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-18 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-30 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-11 makeStyles-sizeSmall-31 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-gm557w-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2097,13 +2140,13 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-20 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-34 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -2136,7 +2179,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-21 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-22 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-35 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-11 makeStyles-sizeSmall-36 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root Mui-disabled css-gm557w-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2153,7 +2196,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-24 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-39 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -2163,7 +2206,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-25 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-2 makeStyles-sizeSmall-26 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-kk5wzc-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-40 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeSmall-11 makeStyles-sizeSmall-41 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-gm557w-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2180,7 +2223,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-28 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-44 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -2215,7 +2258,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-29 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-30 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-45 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-11 makeStyles-sizeSmall-46 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-13upa7k-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2232,7 +2275,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-32 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-49 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeSmall css-y6rp3m-MuiButton-startIcon"
@@ -2270,7 +2313,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-1 makeStyles-root-33 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-2 makeStyles-sizeSmall-34 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-ltq94b-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-6 makeStyles-root-50 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeSmall-11 makeStyles-sizeSmall-51 MuiButton-sizeSmall MuiButton-textSizeSmall MuiButtonBase-root css-13upa7k-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -2287,7 +2330,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-4 makeStyles-label-36 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-14 makeStyles-label-54 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -2318,7 +2361,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       MEDIUM
     </p>
@@ -2327,7 +2370,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-37 MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButtonBase-root css-2gzec1-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-55 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textInherit makeStyles-sizeMedium-12 makeStyles-sizeMedium-57 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButtonBase-root css-3t8gi3-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2344,7 +2387,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-40 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-59 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -2354,7 +2397,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-41 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-60 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeMedium-12 makeStyles-sizeMedium-62 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-xey3uz-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2371,7 +2414,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-44 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-64 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -2381,7 +2424,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-45 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-65 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeMedium-12 makeStyles-sizeMedium-67 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-9ot357-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2398,7 +2441,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-48 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-69 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -2408,7 +2451,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-49 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-70 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeMedium-12 makeStyles-sizeMedium-72 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-xey3uz-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2425,13 +2468,13 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-52 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-74 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -2464,7 +2507,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-53 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-75 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeMedium-12 makeStyles-sizeMedium-77 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root Mui-disabled css-xey3uz-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2481,7 +2524,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-56 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-79 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -2491,7 +2534,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-57 MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-wygfbp-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-80 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeMedium-12 makeStyles-sizeMedium-82 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-xey3uz-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2508,7 +2551,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-60 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-84 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -2543,7 +2586,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-61 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-85 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeMedium-12 makeStyles-sizeMedium-87 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-9ot357-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2560,7 +2603,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-64 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-89 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
@@ -2598,7 +2641,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-1 makeStyles-root-65 MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-1f4pw9g-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-6 makeStyles-root-90 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeMedium-12 makeStyles-sizeMedium-92 MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root css-9ot357-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -2615,7 +2658,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-4 makeStyles-label-68 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-14 makeStyles-label-94 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -2646,7 +2689,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 css-6wbyuk-MuiGrid-root"
   >
     <p
-      className="MuiTypography-root MuiTypography-body2 css-15ivwtb-MuiTypography-root"
+      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
     >
       LARGE
     </p>
@@ -2655,7 +2698,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-69 MuiButton-root MuiButton-text MuiButton-textInherit makeStyles-sizeLarge-3 makeStyles-sizeLarge-71 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButton-colorInherit MuiButtonBase-root css-1vaca1z-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-95 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textInherit makeStyles-sizeLarge-13 makeStyles-sizeLarge-98 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButton-colorInherit MuiButtonBase-root css-194te1f-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2672,7 +2715,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-72 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-99 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Inherit
       </span>
@@ -2682,7 +2725,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-73 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-75 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-100 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-13 makeStyles-sizeLarge-103 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1nknw65-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2699,7 +2742,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-76 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-104 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Primary
       </span>
@@ -2709,7 +2752,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-77 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-79 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-105 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-13 makeStyles-sizeLarge-108 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-m6a861-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2726,7 +2769,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-80 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-109 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Secondary
       </span>
@@ -2736,7 +2779,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-81 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-83 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-110 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-13 makeStyles-sizeLarge-113 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1nknw65-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2753,13 +2796,13 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-84 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-114 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
         >
           <span
-            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-1d0ohbr-MuiCircularProgress-root"
+            className="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-8uoaao-MuiCircularProgress-root"
             role="progressbar"
             style={
               Object {
@@ -2792,7 +2835,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-85 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-87 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-115 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-13 makeStyles-sizeLarge-118 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root Mui-disabled css-1nknw65-MuiButtonBase-root-MuiButton-root"
       disabled={true}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2809,7 +2852,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={-1}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-88 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-119 MuiButton-label css-8xplcm-MuiButton-label"
       >
         Disabled
       </span>
@@ -2819,7 +2862,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-89 MuiButton-root MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-3 makeStyles-sizeLarge-91 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1mvot1z-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-120 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textPrimary makeStyles-sizeLarge-13 makeStyles-sizeLarge-123 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-1nknw65-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2836,7 +2879,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-92 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-124 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -2871,7 +2914,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <button
-      className="makeStyles-root-1 makeStyles-root-93 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-95 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+      className="makeStyles-root-6 makeStyles-root-125 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-13 makeStyles-sizeLarge-128 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-m6a861-MuiButtonBase-root-MuiButton-root"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}
@@ -2888,7 +2931,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       tabIndex={0}
     >
       <span
-        className="makeStyles-label-4 makeStyles-label-96 MuiButton-label css-8xplcm-MuiButton-label"
+        className="makeStyles-label-14 makeStyles-label-129 MuiButton-label css-8xplcm-MuiButton-label"
       >
         <span
           className="MuiButton-startIcon MuiButton-iconSizeLarge css-htszrh-MuiButton-startIcon"
@@ -2926,7 +2969,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <button
-        className="makeStyles-root-1 makeStyles-root-97 MuiButton-root MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-3 makeStyles-sizeLarge-99 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-wx7f1w-MuiButtonBase-root-MuiButton-root"
+        className="makeStyles-root-6 makeStyles-root-130 MuiButton-root makeStyles-text-10 MuiButton-text MuiButton-textSecondary makeStyles-sizeLarge-13 makeStyles-sizeLarge-133 MuiButton-sizeLarge MuiButton-textSizeLarge MuiButtonBase-root css-m6a861-MuiButtonBase-root-MuiButton-root"
         disabled={false}
         onBlur={[Function]}
         onContextMenu={[Function]}
@@ -2943,7 +2986,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         tabIndex={0}
       >
         <span
-          className="makeStyles-label-4 makeStyles-label-100 MuiButton-label css-8xplcm-MuiButton-label"
+          className="makeStyles-label-14 makeStyles-label-134 MuiButton-label css-8xplcm-MuiButton-label"
         >
           <svg
             fill="currentColor"
@@ -2978,67 +3021,67 @@ exports[`Storyshots components/Typography All Variants Demo 1`] = `
   className="css-1a8w37c"
 >
   <h1
-    className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-1gjc1w3-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-1kwoyvq-MuiTypography-root"
   >
     h1. Heading
   </h1>
   <h2
-    className="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom css-13yrxm2-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom css-ts0olm-MuiTypography-root"
   >
     h2. Heading
   </h2>
   <h3
-    className="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1fu581m-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-okz3ji-MuiTypography-root"
   >
     h3. Heading
   </h3>
   <h4
-    className="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-11q5crs-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-eah1hu-MuiTypography-root"
   >
     h4. Heading
   </h4>
   <h5
-    className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-5t9ycp-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-xz8hq8-MuiTypography-root"
   >
     h5. Heading
   </h5>
   <h6
-    className="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom css-13u8vlo-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom css-19wokx0-MuiTypography-root"
   >
     h6. Heading
   </h6>
   <h6
-    className="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom css-54lmo9-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom css-1pivn4v-MuiTypography-root"
   >
     subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
   </h6>
   <h6
-    className="MuiTypography-root MuiTypography-subtitle2 MuiTypography-gutterBottom css-jyl1i1-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-subtitle2 MuiTypography-gutterBottom css-5wx6x9-MuiTypography-root"
   >
     subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
   </h6>
   <p
-    className="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-15cph3k-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-znktcu-MuiTypography-root"
   >
     body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
   </p>
   <p
-    className="MuiTypography-root MuiTypography-body2 MuiTypography-gutterBottom css-p7hu7i-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-body2 MuiTypography-gutterBottom css-r3o567-MuiTypography-root"
   >
     body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
   </p>
   <span
-    className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom css-19mhxxn-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-button MuiTypography-gutterBottom css-16crg0l-MuiTypography-root"
   >
     button text
   </span>
   <span
-    className="MuiTypography-root MuiTypography-caption MuiTypography-gutterBottom css-j14kx6-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-caption MuiTypography-gutterBottom css-1tdzess-MuiTypography-root"
   >
     caption text
   </span>
   <span
-    className="MuiTypography-root MuiTypography-overline MuiTypography-gutterBottom css-1e1g75a-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-overline MuiTypography-gutterBottom css-h10m13-MuiTypography-root"
   >
     overline text
   </span>
