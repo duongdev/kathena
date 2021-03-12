@@ -50,8 +50,22 @@ const theme = createMuiTheme({
       main: red.A400,
     },
     background: {
-      default: '#fff',
+      paper: '#FFFFFF',
+      default: '#F0F2F8',
+      dark: '#f4f4f4',
+      grey: '#fafafa',
     },
+    semantic: {
+      yellow: '#FFAB00',
+      green: '#36B37E',
+      red: '#FF5630',
+      purple: '#6554C0',
+      tale: '#00B8D9',
+      smoke: '#CECECE',
+      blue: '#0065FF',
+      pale: '#1582C0',
+    },
+    divider: '#B6B7BC',
   },
   shape: {
     borderRadius: BORDER_RADIUS,
@@ -122,5 +136,29 @@ const theme = createMuiTheme({
     },
   },
 })
+
+export interface SemanticColor {
+  yellow: string
+  green: string
+  red: string
+  purple: string
+  tale: string
+  smoke: string
+  blue: string
+  pale: string
+}
+
+declare module '@material-ui/core/styles/createPalette' {
+  interface PaletteOptions {
+    semantic: SemanticColor
+  }
+  interface Palette {
+    semantic: SemanticColor
+  }
+  interface TypeBackground {
+    dark: string
+    grey: string
+  }
+}
 
 export default theme
