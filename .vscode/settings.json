@@ -17,6 +17,7 @@
     "Stringifiable",
     "clsx",
     "fastify",
+    "formik",
     "kmin",
     "mongod",
     "nestjs",

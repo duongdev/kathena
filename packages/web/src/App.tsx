@@ -9,7 +9,7 @@ import AppRoute from './App.route'
 
 function App() {
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Spinner container="fullscreen" />}>
       <ThemeProvider>
         <HelmetProvider>
           <Router>

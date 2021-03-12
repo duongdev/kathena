@@ -77,7 +77,7 @@ module.exports = {
         paths: [
           {
             name: 'yup',
-            message: 'Please use common/yup instead.',
+            message: 'Please use `@kathena/libs/yup` instead.',
           },
           {
             name: '@material-ui/core',
