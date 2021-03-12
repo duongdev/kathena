@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 import { Typography } from '@kathena/ui'
 import { Container, makeStyles } from '@material-ui/core'
+import { Helmet } from 'react-helmet-async'
 
 import SignInForm from './SignIn.form'
 
@@ -12,6 +13,7 @@ const SignIn: FC<SignInProps> = (props) => {
 
   return (
     <div className={classes.root}>
+      <Helmet title="Đăng nhập" />
       <Container maxWidth="xs">
         <Typography variant="h3" marginBottom={4} align="center">
           Đăng nhập

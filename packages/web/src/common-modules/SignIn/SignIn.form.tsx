@@ -35,6 +35,7 @@ const SignInForm: FC<SignInFormProps> = (props) => {
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
+      // eslint-disable-next-line no-console
       onSubmit={console.log}
     >
       {(formik) => (
@@ -58,7 +59,9 @@ const SignInForm: FC<SignInFormProps> = (props) => {
                 >
                   <Box component="span">{labels.password}</Box>
                   <Box component="span">
-                    <Link to={RESET_PWD}>Quên mật khẩu?</Link>
+                    <Link tabIndex={-1} to={RESET_PWD}>
+                      Quên mật khẩu?
+                    </Link>
                   </Box>
                 </Box>
               }

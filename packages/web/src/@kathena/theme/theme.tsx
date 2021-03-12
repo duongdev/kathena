@@ -65,7 +65,7 @@ const theme = createMuiTheme({
       blue: '#0065FF',
       pale: '#1582C0',
     },
-    divider: '#B6B7BC',
+    divider: '#dee3e6',
   },
   shape: {
     borderRadius: BORDER_RADIUS,
@@ -101,7 +101,8 @@ const theme = createMuiTheme({
       lineHeight: 1.218,
     },
     button: {
-      fontWeight: 500,
+      fontWeight: 700,
+      letterSpacing: '0.05rem',
     },
   },
   shadows,

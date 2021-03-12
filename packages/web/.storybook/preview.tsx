@@ -1,11 +1,10 @@
 import React, { Suspense } from 'react'
 
-import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter } from 'react-router-dom'
 
 import Spinner from '../src/@kathena/ui/Spinner'
-import theme from '../src/@kathena/theme'
+import { ThemeProvider } from '../src/@kathena/theme'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -23,8 +22,7 @@ export const decorators = [
               rel="stylesheet"
             />
           </Helmet>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+          <ThemeProvider>
             <Story />
           </ThemeProvider>
         </HelmetProvider>

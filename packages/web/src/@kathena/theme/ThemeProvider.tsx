@@ -4,6 +4,7 @@ import {
   CssBaseline,
   ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core'
+import StyledEngineProvider from '@material-ui/core/StyledEngineProvider'
 
 import theme from './theme'
 
@@ -13,9 +14,11 @@ export const ThemeProvider: FC<ThemeProviderProps> = (props) => {
   const { children } = props
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </MuiThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </MuiThemeProvider>
+    </StyledEngineProvider>
   )
 }
