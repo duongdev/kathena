@@ -4,6 +4,9 @@ export * from './Alert'
 export { default as Button } from './Button'
 export * from './Button'
 
+export { default as DashboardContainer } from './DashboardContainer'
+export * from './DashboardContainer'
+
 export { default as GridItemContainer } from './GridItemContainer'
 export * from './GridItemContainer'
 

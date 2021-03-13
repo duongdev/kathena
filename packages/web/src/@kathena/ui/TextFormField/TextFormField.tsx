@@ -18,8 +18,8 @@ export type TextFormFieldProps = {
     gridProps?: GridProps
   }
 
-const TextFormField: FC<TextFormFieldProps> = (props) => {
-  return useMemo(() => {
+const TextFormField: FC<TextFormFieldProps> = (props) =>
+  useMemo(() => {
     // if (props.variant === 'currency') {
     //   return <CurrencyFormField {...props} />
     // }
@@ -48,7 +48,6 @@ const TextFormField: FC<TextFormFieldProps> = (props) => {
       </FieldComponent>
     )
   }, [props])
-}
 
 TextFormField.defaultProps = {
   fastField: true,

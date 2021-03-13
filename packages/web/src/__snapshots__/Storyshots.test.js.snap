@@ -3024,15 +3024,15 @@ exports[`Storyshots components/InputField Currency 1`] = `
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
   >
     <div
-      className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-414 makeStyles-root-417 css-1nrlq1o-MuiFormControl-root"
+      className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-415 makeStyles-root-418 css-1nrlq1o-MuiFormControl-root"
     >
       <p
-        className="makeStyles-label-418 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+        className="makeStyles-label-419 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
       >
         Product price
       </p>
       <div
-        className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-415 css-1yr8abg-MuiInputBase-root-MuiInput-root"
+        className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-416 css-1yr8abg-MuiInputBase-root-MuiInput-root"
         onClick={[Function]}
         variant="currency"
       >
@@ -3065,7 +3065,7 @@ exports[`Storyshots components/InputField Quantity 1`] = `
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
   >
     <div
-      className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-419 makeStyles-root-422 css-1nrlq1o-MuiFormControl-root"
+      className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-420 makeStyles-root-423 css-1nrlq1o-MuiFormControl-root"
     >
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-14jsnx1-MuiGrid-root"
@@ -3134,14 +3134,14 @@ exports[`Storyshots components/InputField Quantity 1`] = `
           className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
         >
           <div
-            className="makeStyles-root-423 MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-420 css-1yr8abg-MuiInputBase-root-MuiInput-root"
+            className="makeStyles-root-424 MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-421 css-1yr8abg-MuiInputBase-root-MuiInput-root"
             min={0}
             onClick={[Function]}
             variant="quantity"
           >
             <input
               aria-invalid={false}
-              className="makeStyles-input-424 MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+              className="makeStyles-input-425 MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
               disabled={false}
               onAnimationStart={[Function]}
               onBlur={[Function]}
@@ -3241,15 +3241,15 @@ exports[`Storyshots components/InputField Text 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <div
-        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-404 makeStyles-root-407 css-1nrlq1o-MuiFormControl-root"
+        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-405 makeStyles-root-408 css-1nrlq1o-MuiFormControl-root"
       >
         <p
-          className="makeStyles-label-408 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+          className="makeStyles-label-409 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
         >
           Input field
         </p>
         <div
-          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-405 css-1yr8abg-MuiInputBase-root-MuiInput-root"
+          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-406 css-1yr8abg-MuiInputBase-root-MuiInput-root"
           onClick={[Function]}
           variant="text"
         >
@@ -3272,16 +3272,16 @@ exports[`Storyshots components/InputField Text 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <div
-        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-404 makeStyles-root-409 css-1nrlq1o-MuiFormControl-root"
+        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-405 makeStyles-root-410 css-1nrlq1o-MuiFormControl-root"
       >
         <p
-          className="makeStyles-label-408 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+          className="makeStyles-label-409 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
         >
           Input field
            *
         </p>
         <div
-          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-405 css-1yr8abg-MuiInputBase-root-MuiInput-root"
+          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-406 css-1yr8abg-MuiInputBase-root-MuiInput-root"
           onClick={[Function]}
           variant="text"
         >
@@ -3304,15 +3304,15 @@ exports[`Storyshots components/InputField Text 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <div
-        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-404 makeStyles-root-410 css-1nrlq1o-MuiFormControl-root"
+        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-405 makeStyles-root-411 css-1nrlq1o-MuiFormControl-root"
       >
         <p
-          className="makeStyles-label-408 error MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+          className="makeStyles-label-409 error MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
         >
           Error
         </p>
         <div
-          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-405 error css-1yr8abg-MuiInputBase-root-MuiInput-root"
+          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl makeStyles-input-406 error css-1yr8abg-MuiInputBase-root-MuiInput-root"
           onClick={[Function]}
           variant="text"
         >
@@ -3330,7 +3330,7 @@ exports[`Storyshots components/InputField Text 1`] = `
           />
         </div>
         <span
-          className="MuiTypography-root MuiTypography-caption makeStyles-root-411 error css-128ld7u-MuiTypography-root"
+          className="MuiTypography-root MuiTypography-caption makeStyles-root-412 error css-128ld7u-MuiTypography-root"
         >
           Please try again
         </span>
@@ -3340,15 +3340,15 @@ exports[`Storyshots components/InputField Text 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <div
-        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-404 makeStyles-root-412 css-1nrlq1o-MuiFormControl-root"
+        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-405 makeStyles-root-413 css-1nrlq1o-MuiFormControl-root"
       >
         <p
-          className="makeStyles-label-408 success MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+          className="makeStyles-label-409 success MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
         >
           Success
         </p>
         <div
-          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd makeStyles-input-405 success css-1yr8abg-MuiInputBase-root-MuiInput-root"
+          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-adornedEnd makeStyles-input-406 success css-1yr8abg-MuiInputBase-root-MuiInput-root"
           onClick={[Function]}
           variant="text"
         >
@@ -3391,7 +3391,7 @@ exports[`Storyshots components/InputField Text 1`] = `
           </div>
         </div>
         <span
-          className="MuiTypography-root MuiTypography-caption makeStyles-root-411 success css-128ld7u-MuiTypography-root"
+          className="MuiTypography-root MuiTypography-caption makeStyles-root-412 success css-128ld7u-MuiTypography-root"
         >
           Yeah succeeded!
         </span>
@@ -3401,16 +3401,16 @@ exports[`Storyshots components/InputField Text 1`] = `
       className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
     >
       <div
-        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-404 makeStyles-root-413 css-1nrlq1o-MuiFormControl-root"
+        className="MuiFormControl-root MuiFormControl-marginNone makeStyles-root-405 makeStyles-root-414 css-1nrlq1o-MuiFormControl-root"
       >
         <p
-          className="makeStyles-label-408 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
+          className="makeStyles-label-409 MuiTypography-root MuiTypography-body2 css-1fkr6qh-MuiTypography-root"
         >
           Multiple
            *
         </p>
         <div
-          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline makeStyles-input-405 css-4ofpnz-MuiInputBase-root-MuiInput-root"
+          className="MuiInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline makeStyles-input-406 css-4ofpnz-MuiInputBase-root-MuiInput-root"
           onClick={[Function]}
           variant="text"
         >
@@ -3426,6 +3426,136 @@ exports[`Storyshots components/InputField Text 1`] = `
             required={false}
             rows={3}
           />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots components/SidebarMenu Basic 1`] = `
+<div
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-1vjjj5l-MuiPaper-root"
+>
+  <div
+    className="makeStyles-root-426"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-direction-xs-column MuiGrid-wrap-xs-nowrap css-q682bi-MuiGrid-root"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+      >
+        <div>
+          <div
+            className="makeStyles-menuTitle-427"
+          >
+            <svg
+              className="makeStyles-menuTitleIcon-428"
+              fill="duotone"
+              height={32}
+              viewBox="0 0 256 256"
+              width={32}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                fill="none"
+                height="256"
+                width="256"
+              />
+              <path
+                d="M24,184V161.12886C24,103.65,70.15361,56.19953,127.63214,56.00066A104,104,0,0,1,232,160v24a8,8,0,0,1-8,8H32A8,8,0,0,1,24,184Z"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
+              />
+              <line
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
+                x1="128"
+                x2="128"
+                y1="56"
+                y2="88"
+              />
+              <line
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
+                x1="27.54371"
+                x2="58.45334"
+                y1="133.08282"
+                y2="141.36503"
+              />
+              <line
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
+                x1="228.45629"
+                x2="197.54666"
+                y1="133.08282"
+                y2="141.36503"
+              />
+              <line
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
+                x1="103.44553"
+                x2="171.83082"
+                y1="192.00001"
+                y2="102.87856"
+              />
+            </svg>
+            <span
+              className="MuiTypography-root MuiTypography-button makeStyles-menuTitleText-429 css-1t8gx8x-MuiTypography-root"
+            >
+              Dashboard
+            </span>
+          </div>
+          <div
+            className="makeStyles-menuItems-430"
+          >
+            <div
+              className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-direction-xs-column MuiGrid-wrap-xs-nowrap css-nffy6r-MuiGrid-root"
+            >
+              <div
+                className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+              >
+                <p
+                  className="MuiTypography-root MuiTypography-body2 makeStyles-menuItem-431 active css-fwy1f0-MuiTypography-root"
+                >
+                  My courses
+                </p>
+              </div>
+              <div
+                className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
+              >
+                <p
+                  className="MuiTypography-root MuiTypography-body2 makeStyles-menuItem-431 css-fwy1f0-MuiTypography-root"
+                >
+                  <a
+                    className="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-1s23ra6-MuiTypography-root-MuiLink-root"
+                    href="/stats"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                  >
+                    My stats
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -3619,7 +3749,7 @@ exports[`Storyshots containers/DashboardContainer Basic 1`] = `
                     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
                   >
                     <p
-                      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 makeStyles-menuItem-404 css-fwy1f0-MuiTypography-root"
                     >
                       My courses
                     </p>
@@ -3628,7 +3758,7 @@ exports[`Storyshots containers/DashboardContainer Basic 1`] = `
                     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
                   >
                     <p
-                      className="MuiTypography-root MuiTypography-body2 css-fwy1f0-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 makeStyles-menuItem-404 css-fwy1f0-MuiTypography-root"
                     >
                       My stats
                     </p>

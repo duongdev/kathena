@@ -1,21 +1,24 @@
 import { FC, lazy } from 'react'
 
 import { Route, Switch } from 'react-router-dom'
-import { SIGN_IN } from 'utils/path-builder'
+import { ORG_WORKSPACE, SIGN_IN } from 'utils/path-builder'
 
 const SignIn = lazy(
+  () => import('modules/SignIn' /* webpackChunkName: "modules/SignIn" */),
+)
+
+const OrgWorkspace = lazy(
   () =>
     import(
-      'common-modules/SignIn' /* webpackChunkName: "common-modules/SignIn" */
+      'modules/OrgWorkspace' /* webpackChunkName: "modules/OrgWorkspace" */
     ),
 )
 
-const AppRoute: FC = () => {
-  return (
-    <Switch>
-      <Route path={SIGN_IN} component={SignIn} />
-    </Switch>
-  )
-}
+const AppRoute: FC = () => (
+  <Switch>
+    <Route path={SIGN_IN} component={SignIn} />
+    <Route path={ORG_WORKSPACE} component={OrgWorkspace} />
+  </Switch>
+)
 
 export default AppRoute

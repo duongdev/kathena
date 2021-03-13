@@ -1,13 +1,11 @@
 module.exports = {
   ignorePatterns: ['generated.tsx'],
   extends: [
-    // 'react-app',
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
     // 'plugin:jest/recommended',
     'prettier',
-    'plugin:prettier/recommended',
   ],
   plugins: [
     '@typescript-eslint',

@@ -1,20 +1,27 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { FC } from 'react'
 
 import { Icon } from '@kathena/types'
 import { Grid, GridProps, makeStyles } from '@material-ui/core'
+import clsx from 'clsx'
 
+import Link, { LinkProps } from '../Link'
 import Typography from '../Typography'
 
 const ICON_SIZE = 32
+
+export type MenuItemProps = {
+  key: string
+  label: string
+  link?: LinkProps | string
+  active?: boolean
+}
 
 export type MenuEntity = {
   key: string
   title: string
   icon: Icon
-  items: {
-    key: string
-    label: string
-  }[]
+  items: MenuItemProps[]
 }
 
 export type SidebarMenuProps = {
@@ -56,7 +63,7 @@ const SidebarMenu: FC<SidebarMenuProps> = (props) => {
                 >
                   {menu.items.map((item) => (
                     <Grid item key={item.key}>
-                      <Typography variant="body2">{item.label}</Typography>
+                      <MenuItem {...item} />
                     </Grid>
                   ))}
                 </Grid>
@@ -69,7 +76,39 @@ const SidebarMenu: FC<SidebarMenuProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const MenuItem: FC<MenuItemProps> = (props) => {
+  const classes = useStyles(props)
+  const { label, link, active } = props
+
+  if (link) {
+    if (typeof link === 'string') {
+      return (
+        <Typography
+          variant="body2"
+          className={clsx(classes.menuItem, { active })}
+        >
+          <Link to={link}>{label}</Link>
+        </Typography>
+      )
+    }
+    return (
+      <Typography
+        variant="body2"
+        className={clsx(classes.menuItem, { active })}
+      >
+        <Link {...link}>{label}</Link>
+      </Typography>
+    )
+  }
+
+  return (
+    <Typography variant="body2" className={clsx(classes.menuItem, { active })}>
+      {label}
+    </Typography>
+  )
+}
+
+const useStyles = makeStyles(({ spacing, palette, transitions }) => ({
   root: {
     padding: spacing(4, 2),
   },
@@ -85,6 +124,18 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   menuTitleText: {},
   menuItems: {
     paddingLeft: `calc(${ICON_SIZE}px + ${spacing(2)})`,
+  },
+  menuItem: {
+    color: palette.text.primary,
+    opacity: 0.65,
+    cursor: 'pointer',
+    transition: transitions.create('opacity', {
+      duration: transitions.duration.standard,
+      easing: transitions.easing.easeInOut,
+    }),
+    '& *': { color: palette.text.primary, textDecoration: 'none !important' },
+    '&:hover': { opacity: 0.875 },
+    '&.active': { opacity: 1, color: palette.primary.main },
   },
 }))
 
