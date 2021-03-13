@@ -22,6 +22,9 @@
     "lint-staged": "10.5.4",
     "prettier": "2.2.1"
   },
+  "resolutions": {
+    "prettier": "2.2.1"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "yarn prettier --write",
     "*.{js,jsx,ts,tsx}": "yarn lint --fix"

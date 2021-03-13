@@ -50,8 +50,22 @@ const theme = createMuiTheme({
       main: red.A400,
     },
     background: {
-      default: '#fff',
+      paper: '#FFFFFF',
+      default: '#F0F2F8',
+      dark: '#f4f4f4',
+      grey: '#fafafa',
     },
+    semantic: {
+      yellow: '#FFAB00',
+      green: '#36B37E',
+      red: '#FF5630',
+      purple: '#6554C0',
+      tale: '#00B8D9',
+      smoke: '#CECECE',
+      blue: '#0065FF',
+      pale: '#1582C0',
+    },
+    divider: '#dee3e6',
   },
   shape: {
     borderRadius: BORDER_RADIUS,
@@ -86,6 +100,10 @@ const theme = createMuiTheme({
       fontSize: '1.5625rem', // 25
       lineHeight: 1.218,
     },
+    button: {
+      fontWeight: 700,
+      letterSpacing: '0.05rem',
+    },
   },
   shadows,
   components: {
@@ -96,31 +114,51 @@ const theme = createMuiTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
+          fontWeight: 500,
         },
       },
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          textTransform: 'none',
-        },
+        root: { textTransform: 'none' },
         contained: {
           boxShadow: shadows[1],
-          '&:hover': {
-            boxShadow: shadows[2],
-          },
-          '&:active': {
-            boxShadow: shadows[3],
-          },
+          '&:hover': { boxShadow: shadows[2] },
+          '&:active': { boxShadow: shadows[3] },
         },
+        sizeSmall: { height: 34 },
+        sizeMedium: { height: 40 },
+        sizeLarge: { height: 45 },
       },
     },
     MuiCircularProgress: {
-      defaultProps: {
-        disableShrink: false,
-      },
+      defaultProps: { disableShrink: false },
     },
   },
 })
+
+export interface SemanticColor {
+  yellow: string
+  green: string
+  red: string
+  purple: string
+  tale: string
+  smoke: string
+  blue: string
+  pale: string
+}
+
+declare module '@material-ui/core/styles/createPalette' {
+  interface PaletteOptions {
+    semantic: SemanticColor
+  }
+  interface Palette {
+    semantic: SemanticColor
+  }
+  interface TypeBackground {
+    dark: string
+    grey: string
+  }
+}
 
 export default theme

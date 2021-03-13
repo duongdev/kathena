@@ -1,13 +1,11 @@
 module.exports = {
   ignorePatterns: ['generated.tsx'],
   extends: [
-    // 'react-app',
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
     // 'plugin:jest/recommended',
     'prettier',
-    'plugin:prettier/recommended',
   ],
   plugins: [
     '@typescript-eslint',
@@ -77,7 +75,7 @@ module.exports = {
         paths: [
           {
             name: 'yup',
-            message: 'Please use common/yup instead.',
+            message: 'Please use `@kathena/libs/yup` instead.',
           },
           {
             name: '@material-ui/core',
