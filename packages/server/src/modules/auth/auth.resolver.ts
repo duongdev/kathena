@@ -22,13 +22,13 @@ export class AuthResolver {
 
   @Mutation((_returns) => String)
   async signIn(
-    @Args('orgId') orgId: string,
+    @Args('orgNamespace') orgNamespace: string,
     @Args('identity', { description: `Could be username or email` })
     identity: string,
     @Args('password') password: string,
   ): Promise<string> {
     return this.authService.signIn({
-      orgNamespace: orgId,
+      orgNamespace,
       usernameOrEmail: identity,
       password,
     })
