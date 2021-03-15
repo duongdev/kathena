@@ -23,10 +23,7 @@ const OrgWorkspace: FC<OrgWorkspaceProps> = () => {
   }
 
   return (
-    <DashboardContainer
-      toolbar={<OrgToolbar name={org.name} orgId={org.id} />}
-      sidebar={<OrgSidebar />}
-    >
+    <DashboardContainer toolbar={<OrgToolbar />} sidebar={<OrgSidebar />}>
       <Helmet
         titleTemplate={`%s – ${org.name} | Kathena Platform`}
         defaultTitle={`${org.name} | Kathena Platform`}

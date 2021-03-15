@@ -69,6 +69,12 @@ const useAuthHook = () => {
     signIn,
     signOut,
     loading,
+    /* eslint-disable @typescript-eslint/no-non-null-assertion  */
+    /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+    $account: authData?.account!,
+    $org: authData?.org!,
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+    /* eslint-enable @typescript-eslint/no-non-null-asserted-optional-chain */
   }
 }
 

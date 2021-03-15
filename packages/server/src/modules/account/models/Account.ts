@@ -17,6 +17,14 @@ registerEnumType(AccountStatus, {
   description: 'Status of an account.',
 })
 
+export enum AccountAvailability {
+  Online = 'Online',
+  Offline = 'Offline',
+  Away = 'Away',
+}
+
+registerEnumType(AccountAvailability, { name: 'AccountAvailability' })
+
 @index({ username: 1, orgId: 1 }, { unique: true })
 @index({ email: 1, orgId: 1 }, { unique: true })
 @ObjectType({ implements: [BaseModel] })
@@ -33,6 +41,10 @@ export class Account extends BaseModel {
   @Field()
   @prop({ required: true, index: true, trim: true, validate: isEmail })
   email: string
+
+  @Field()
+  @prop({ required: true, trim: true })
+  displayName: string
 
   @prop({ required: true })
   password: string

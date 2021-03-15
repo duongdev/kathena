@@ -57,14 +57,10 @@ export class AccountService {
     return account
   }
 
-  async findAccountById({
-    accountId,
-    orgId,
-  }: {
-    accountId: string
-    orgId: string
-  }): Promise<Nullable<DocumentType<Account>>> {
-    return this.accountModel.findOne({ _id: accountId, orgId })
+  async findAccountById(
+    accountId: string,
+  ): Promise<Nullable<DocumentType<Account>>> {
+    return this.accountModel.findById(accountId)
   }
 
   async findAccountByUsernameOrEmail(args: {

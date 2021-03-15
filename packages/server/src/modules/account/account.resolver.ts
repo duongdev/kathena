@@ -1,5 +1,14 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  ID,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
+import { differenceInMinutes } from 'date-fns'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
 import { P } from 'modules/auth/models'
@@ -8,7 +17,7 @@ import { Nullable } from 'types'
 
 import { AccountService } from './account.service'
 import { CreateAccountInput } from './account.type'
-import { Account } from './models/Account'
+import { Account, AccountAvailability } from './models/Account'
 
 @Resolver((_of) => Account)
 export class AccountResolver {
@@ -36,5 +45,23 @@ export class AccountResolver {
     @CurrentOrg() org: Org,
   ): Promise<Nullable<Account>> {
     return this.accountService.findOneAccount({ id, orgId: org.id })
+  }
+
+  @ResolveField((_returns) => AccountAvailability)
+  availability(@Parent() account: Account): AccountAvailability {
+    if (!account.lastActivityAt) {
+      return AccountAvailability.Offline
+    }
+
+    const minutesDiff = differenceInMinutes(account.lastActivityAt, new Date())
+
+    if (minutesDiff <= 1) {
+      return AccountAvailability.Online
+    }
+    if (minutesDiff <= 5) {
+      return AccountAvailability.Away
+    }
+
+    return AccountAvailability.Offline
   }
 }

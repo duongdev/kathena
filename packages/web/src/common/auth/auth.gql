@@ -4,6 +4,7 @@ fragment AuthAccount on Account {
   status
   email
   username
+  displayName
 }
 
 fragment AuthOrg on Org {

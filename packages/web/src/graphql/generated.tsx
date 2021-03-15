@@ -30,8 +30,10 @@ export type Account = BaseModel & {
   updatedAt: Scalars['DateTime']
   username: Scalars['String']
   email: Scalars['String']
+  displayName: Scalars['String']
   status: AccountStatus
   roles: Array<Scalars['String']>
+  availability: AccountAvailability
 }
 
 export type BaseModel = {
@@ -46,6 +48,12 @@ export enum AccountStatus {
   Pending = 'Pending',
   Active = 'Active',
   Deactivated = 'Deactivated',
+}
+
+export enum AccountAvailability {
+  Online = 'Online',
+  Offline = 'Offline',
+  Away = 'Away',
 }
 
 export type Org = BaseModel & {
@@ -69,7 +77,12 @@ export type SignInPayload = {
 }
 
 export type Query = {
+  account?: Maybe<Account>
   authenticate: AuthenticatePayload
+}
+
+export type QueryAccountArgs = {
+  id: Scalars['ID']
 }
 
 export type Mutation = {
@@ -90,12 +103,13 @@ export type MutationSignInArgs = {
 export type CreateAccountInput = {
   username: Scalars['String']
   email: Scalars['String']
+  displayName: Scalars['String']
   roles: Array<Scalars['String']>
 }
 
 export type AuthAccountFragment = Pick<
   Account,
-  'id' | 'orgId' | 'status' | 'email' | 'username'
+  'id' | 'orgId' | 'status' | 'email' | 'username' | 'displayName'
 >
 
 export type AuthOrgFragment = Pick<Org, 'id' | 'name' | 'namespace'>
@@ -119,6 +133,16 @@ export type AuthenticateQuery = {
   authenticate: { account: AuthAccountFragment; org: AuthOrgFragment }
 }
 
+export type AccountAvatarQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type AccountAvatarQuery = {
+  account?: Maybe<
+    Pick<Account, 'id' | 'email' | 'username' | 'displayName' | 'availability'>
+  >
+}
+
 export const AuthAccountFragmentDoc: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -137,6 +161,7 @@ export const AuthAccountFragmentDoc: DocumentNode = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
       },
     },
@@ -297,6 +322,7 @@ export const SignInDocument: DocumentNode = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
       },
     },
@@ -455,6 +481,7 @@ export const AuthenticateDocument: DocumentNode = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
       },
     },
@@ -557,4 +584,139 @@ export type AuthenticateLazyQueryHookResult = ReturnType<
 export type AuthenticateQueryResult = Apollo.QueryResult<
   AuthenticateQuery,
   AuthenticateQueryVariables
+>
+export const AccountAvatarDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AccountAvatar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'availability' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AccountAvatarProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AccountAvatarQuery,
+    AccountAvatarQueryVariables
+  >
+} &
+  TChildProps
+export function withAccountAvatar<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AccountAvatarQuery,
+    AccountAvatarQueryVariables,
+    AccountAvatarProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AccountAvatarQuery,
+    AccountAvatarQueryVariables,
+    AccountAvatarProps<TChildProps, TDataName>
+  >(AccountAvatarDocument, {
+    alias: 'accountAvatar',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAccountAvatarQuery__
+ *
+ * To run a query within a React component, call `useAccountAvatarQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountAvatarQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountAvatarQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAccountAvatarQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AccountAvatarQuery,
+    AccountAvatarQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AccountAvatarQuery, AccountAvatarQueryVariables>(
+    AccountAvatarDocument,
+    options,
+  )
+}
+export function useAccountAvatarLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AccountAvatarQuery,
+    AccountAvatarQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AccountAvatarQuery, AccountAvatarQueryVariables>(
+    AccountAvatarDocument,
+    options,
+  )
+}
+export type AccountAvatarQueryHookResult = ReturnType<
+  typeof useAccountAvatarQuery
+>
+export type AccountAvatarLazyQueryHookResult = ReturnType<
+  typeof useAccountAvatarLazyQuery
+>
+export type AccountAvatarQueryResult = Apollo.QueryResult<
+  AccountAvatarQuery,
+  AccountAvatarQueryVariables
 >

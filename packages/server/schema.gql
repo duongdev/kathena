@@ -9,8 +9,10 @@ type Account implements BaseModel {
   updatedAt: DateTime!
   username: String!
   email: String!
+  displayName: String!
   status: AccountStatus!
   roles: [String!]!
+  availability: AccountAvailability!
 }
 
 interface BaseModel {
@@ -30,6 +32,12 @@ enum AccountStatus {
   Pending
   Active
   Deactivated
+}
+
+enum AccountAvailability {
+  Online
+  Offline
+  Away
 }
 
 type Org implements BaseModel {
@@ -53,6 +61,7 @@ type SignInPayload {
 }
 
 type Query {
+  account(id: ID!): Account
   authenticate: AuthenticatePayload!
 }
 
@@ -70,5 +79,6 @@ type Mutation {
 input CreateAccountInput {
   username: String!
   email: String!
+  displayName: String!
   roles: [String!]!
 }

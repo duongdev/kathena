@@ -1,0 +1,9 @@
+query AccountAvatar($id: ID!) {
+  account(id: $id) {
+    id
+    email
+    username
+    displayName
+    availability
+  }
+}
