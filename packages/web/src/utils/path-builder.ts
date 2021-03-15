@@ -6,7 +6,7 @@ export const LANDING_PAGE = `/`
 export const SIGN_IN = `/auth/sign-in`
 export const RESET_PWD = `/auth/reset-password`
 
-export const ORG_WORKSPACE = `/o/:orgNamespace`
+export const ORG_WORKSPACE = `/app`
 
 export const buildPath = (
   path: string,

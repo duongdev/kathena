@@ -20,7 +20,7 @@ export const WithAuth: FC<WithAuthProps> = ({ children }) => {
   const { account, loading } = useAuth()
 
   if (loading) {
-    return <Spinner />
+    return <Spinner center p={1} />
   }
 
   if (!account) {
