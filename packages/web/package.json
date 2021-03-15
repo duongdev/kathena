@@ -44,10 +44,10 @@
   },
   "devDependencies": {
     "@graphql-codegen/add": "2.0.2",
-    "@graphql-codegen/cli": "1.21.2",
+    "@graphql-codegen/cli": "1.21.3",
     "@graphql-codegen/typescript": "1.21.1",
     "@graphql-codegen/typescript-operations": "1.17.15",
-    "@graphql-codegen/typescript-react-apollo": "2.2.2",
+    "@graphql-codegen/typescript-react-apollo": "2.2.3",
     "@testing-library/jest-dom": "5.11.9",
     "@testing-library/react": "11.2.5",
     "@testing-library/user-event": "12.8.3",
