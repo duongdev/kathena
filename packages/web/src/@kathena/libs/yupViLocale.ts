@@ -1,7 +1,8 @@
 /* eslint-disable prefer-const */
 /* eslint-disable import/no-mutable-exports */
-import { ANY } from '@kathena/types'
 import printValue from 'yup/lib/util/printValue'
+
+import { ANY } from '@kathena/types'
 
 /* eslint-disable no-template-curly-in-string */
 

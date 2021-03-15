@@ -1,8 +1,9 @@
 import { FC } from 'react'
 
-import { Typography } from '@kathena/ui'
 import { Container, makeStyles } from '@material-ui/core'
 import { Helmet } from 'react-helmet-async'
+
+import { Typography } from '@kathena/ui'
 
 import SignInForm from './SignIn.form'
 

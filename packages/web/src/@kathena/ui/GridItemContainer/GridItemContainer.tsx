@@ -33,6 +33,7 @@ export const withGridItem = <BaseComponentProps extends object>(
 ) => (
   props: BaseComponentProps & GridItemContainerProps & { children?: ReactNode },
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { gridItem, gridProps, ...baseComponentProps } = props
   return (
     <GridItemContainer {...props}>

@@ -30,6 +30,7 @@ export interface SelectProps extends MuiSelectProps {
 const Select: FC<SelectProps> = (props) => {
   const classes = useStyles(props)
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     classes: _classes,
     className,
     fullWidth,

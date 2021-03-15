@@ -62,7 +62,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: '{core}{/**,}',
+            pattern: '{common,@kathena,modules,utils,graphql}{/**,}',
             group: 'internal',
           },
         ],
@@ -90,6 +90,12 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 0,
     'jsx-a11y/no-static-element-interactions': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-unused-vars': [
+      1,
+      {
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
   overrides: [
     {

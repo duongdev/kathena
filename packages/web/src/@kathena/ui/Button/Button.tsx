@@ -2,7 +2,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FC, Fragment, useMemo } from 'react'
 
-import { ANY, TODO } from '@kathena/types'
 import {
   darken,
   // eslint-disable-next-line no-restricted-imports
@@ -14,6 +13,8 @@ import {
   Tooltip,
   TooltipProps,
 } from '@material-ui/core'
+
+import { ANY, TODO } from '@kathena/types'
 
 import withComponentHocs from '../hocs/withComponentHocs'
 import Link, { LinkProps } from '../Link'
@@ -40,11 +41,11 @@ const Button: FC<ButtonProps> = (props) => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     rounded = false,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     iconOnly = false,
     link,
     loading,
     disabled,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     labelColor,
     tooltip,
     size = 'medium',

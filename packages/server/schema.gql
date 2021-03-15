@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Account {
+type Account implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -10,6 +10,14 @@ type Account {
   username: String!
   email: String!
   status: AccountStatus!
+  roles: [String!]!
+}
+
+interface BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 """
@@ -33,14 +41,13 @@ type Org implements BaseModel {
   name: String!
 }
 
-interface BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+type AuthenticatePayload {
+  account: Account!
+  org: Org!
 }
 
-type AuthenticatePayload {
+type SignInPayload {
+  token: String!
   account: Account!
   org: Org!
 }
@@ -56,12 +63,12 @@ type Mutation {
 
     """Could be username or email"""
     identity: String!
-    orgId: String!
-  ): String!
+    orgNamespace: String!
+  ): SignInPayload!
 }
 
 input CreateAccountInput {
   username: String!
   email: String!
-  password: String!
+  roles: [String!]!
 }
