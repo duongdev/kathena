@@ -30,13 +30,13 @@ const GlobalStyles = () => {
   return null
 }
 
-const useGlobalStyles = makeStyles(({ transitions }) => ({
+const useGlobalStyles = makeStyles(() => ({
   '@global': {
     body: {
-      transition: transitions.create('background-color', {
-        duration: transitions.duration.standard,
-        easing: transitions.easing.easeInOut,
-      }),
+      // transition: transitions.create('background-color', {
+      //   duration: transitions.duration.standard,
+      //   easing: transitions.easing.easeInOut,
+      // }),
     },
   },
 }))

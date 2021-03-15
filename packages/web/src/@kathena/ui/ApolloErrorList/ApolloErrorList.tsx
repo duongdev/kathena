@@ -3,9 +3,10 @@
 import { FC, ReactNode } from 'react'
 
 import { ApolloError as ApolloErrorType } from '@apollo/client'
-import { Alert, Grid, GridProps } from '@material-ui/core'
+import { Grid, GridProps } from '@material-ui/core'
 import get from 'lodash/get'
 
+import Alert from '../Alert'
 import withComponentHocs from '../hocs/withComponentHocs'
 
 export type ApolloErrorListProps = {

@@ -27,6 +27,9 @@ export * from './Select'
 export { default as SelectFormField } from './SelectFormField'
 export * from './SelectFormField'
 
+export { default as SidebarMenu } from './SidebarMenu'
+export * from './SidebarMenu'
+
 export { default as Spinner } from './Spinner'
 export * from './Spinner'
 

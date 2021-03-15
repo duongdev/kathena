@@ -8,6 +8,8 @@ export const RESET_PWD = `/auth/reset-password`
 
 export const ORG_WORKSPACE = `/app`
 
+export const USER_LIST = `${ORG_WORKSPACE}/users`
+
 export const buildPath = (
   path: string,
   params: { [key: string]: string } = {},

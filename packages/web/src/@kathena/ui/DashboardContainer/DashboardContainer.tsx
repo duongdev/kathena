@@ -7,11 +7,12 @@ import { TODO } from '@kathena/types'
 
 export type DashboardContainerProps = {
   sidebar?: ReactNode
+  toolbar?: ReactNode
 }
 
 const DashboardContainer: FC<DashboardContainerProps> = (props) => {
   const classes = useStyles(props)
-  const { children, sidebar } = props
+  const { children, sidebar, toolbar } = props
 
   return (
     <div className={classes.root}>
@@ -21,7 +22,7 @@ const DashboardContainer: FC<DashboardContainerProps> = (props) => {
         color="inherit"
         className={classes.appBar}
       >
-        <Toolbar className={classes.toolbar}>Content</Toolbar>
+        <Toolbar className={classes.toolbar}>{toolbar}</Toolbar>
       </AppBar>
       <Drawer
         className={classes.drawer}
@@ -33,7 +34,7 @@ const DashboardContainer: FC<DashboardContainerProps> = (props) => {
         {sidebar}
       </Drawer>
 
-      <main className={classes.content}>{children}</main>
+      <div className={classes.content}>{children}</div>
     </div>
   )
 }

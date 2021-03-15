@@ -1,22 +1,45 @@
 import { FC } from 'react'
 
-import { makeStyles } from '@material-ui/core'
+import { Container } from '@material-ui/core'
+import { Helmet } from 'react-helmet-async'
 
-import { DashboardContainer } from '@kathena/ui'
-import { useAuth, withAuth } from 'common/auth'
+import { Alert, DashboardContainer } from '@kathena/ui'
+import { useAuth, WithAuth } from 'common/auth'
+
+import OrgSidebar from './components/OrgSidebar'
+import OrgToolbar from './components/OrgToolbar'
 
 export type OrgWorkspaceProps = {}
 
-const OrgWorkspace: FC<OrgWorkspaceProps> = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const classes = useStyles(props)
-  const { account } = useAuth()
+const OrgWorkspace: FC<OrgWorkspaceProps> = () => {
+  const { org } = useAuth()
 
-  return <DashboardContainer>Kmin Org {account?.username}</DashboardContainer>
+  if (!org) {
+    return (
+      <Container maxWidth="sm" sx={{ py: 2 }}>
+        <Alert severity="error">Có lỗi xảy ra. Vui lòng thử lại</Alert>
+      </Container>
+    )
+  }
+
+  return (
+    <DashboardContainer
+      toolbar={<OrgToolbar name={org.name} orgId={org.id} />}
+      sidebar={<OrgSidebar />}
+    >
+      <Helmet
+        titleTemplate={`%s – ${org.name} | Kathena Platform`}
+        defaultTitle={`${org.name} | Kathena Platform`}
+      />
+      Content
+    </DashboardContainer>
+  )
 }
 
-const useStyles = makeStyles(() => ({
-  root: {},
-}))
+const OrgWorkspaceAuth = () => (
+  <WithAuth>
+    <OrgWorkspace />
+  </WithAuth>
+)
 
-export default withAuth()(OrgWorkspace)
+export default OrgWorkspaceAuth

@@ -26,7 +26,7 @@ export class DevtoolService implements OnApplicationBootstrap {
   /** Creates org & first admin user */
   async kminBootstrap(): Promise<void> {
     const kminOrgConfig = {
-      orgName: 'Kmin Education',
+      orgName: 'Kmin Academy',
       orgNamespace: 'kmin-edu',
       adminUsername: 'duongdev',
       adminEmail: 'dustin.do95@gmail.com',

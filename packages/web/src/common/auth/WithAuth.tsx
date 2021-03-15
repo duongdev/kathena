@@ -3,7 +3,7 @@ import { ComponentType, FC } from 'react'
 
 import { Redirect } from 'react-router-dom'
 
-import { OBJECT } from '@kathena/types'
+import { ANY, OBJECT } from '@kathena/types'
 import { Spinner, Typography } from '@kathena/ui'
 import { AccountStatus } from 'graphql/generated'
 import { buildPath, SIGN_IN } from 'utils/path-builder'
@@ -42,7 +42,7 @@ export const WithAuth: FC<WithAuthProps> = ({ children }) => {
     return <Typography>Tài khoản của bạn chưa được kích hoạt</Typography>
   }
 
-  return <>{children}</>
+  return children as ANY
 }
 
 export const withAuth = <Props extends OBJECT>(authProps?: {
