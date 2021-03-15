@@ -1,11 +1,11 @@
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { keyBy, uniq } from 'lodash'
-import { UnauthorizedError } from 'type-graphql'
 
 import { config, Logger, Service } from 'core'
 import { AccountService } from 'modules/account/account.service'
 import { Account } from 'modules/account/models/Account'
+import { Org } from 'modules/org/models/Org'
 import { OrgService } from 'modules/org/org.service'
 
 import { AuthData } from './auth.type'
@@ -27,7 +27,7 @@ export class AuthService {
     usernameOrEmail: string
     password: string
     orgNamespace: string
-  }): Promise<string> {
+  }): Promise<{ token: string; account: Account; org: Org }> {
     this.logger.log(`[${this.signIn.name}] Signing in`)
     this.logger.verbose(args)
 
@@ -49,17 +49,17 @@ export class AuthService {
 
     if (!account) {
       this.logger.log(`[${this.signIn.name}] Account not found`)
-      throw new UnauthorizedError()
+      throw new Error('INVALID_CREDENTIALS')
     }
 
     if (!bcrypt.compareSync(password, account.password)) {
       this.logger.log(`[${this.signIn.name}] Wrong password`)
-      throw new UnauthorizedError()
+      throw new Error('INVALID_CREDENTIALS')
     }
 
     const token = await this.signAccountToken(account)
 
-    return token
+    return { token, account, org }
   }
 
   /** Signs some account's data into json web token */

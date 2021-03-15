@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FC } from 'react'
 
-import { Icon } from '@kathena/types'
 import { Grid, GridProps, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
+
+import { Icon } from '@kathena/types'
 
 import Link, { LinkProps } from '../Link'
 import Typography from '../Typography'

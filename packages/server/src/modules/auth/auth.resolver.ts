@@ -5,7 +5,7 @@ import { Account } from 'modules/account/models/Account'
 import { Org } from 'modules/org/models/Org'
 
 import { AuthService } from './auth.service'
-import { AuthenticatePayload } from './auth.type'
+import { AuthenticatePayload, SignInPayload } from './auth.type'
 
 @Resolver()
 export class AuthResolver {
@@ -20,15 +20,15 @@ export class AuthResolver {
     return { account, org }
   }
 
-  @Mutation((_returns) => String)
+  @Mutation((_returns) => SignInPayload)
   async signIn(
-    @Args('orgId') orgId: string,
+    @Args('orgNamespace') orgNamespace: string,
     @Args('identity', { description: `Could be username or email` })
     identity: string,
     @Args('password') password: string,
-  ): Promise<string> {
+  ): Promise<{ token: string; account: Account }> {
     return this.authService.signIn({
-      orgNamespace: orgId,
+      orgNamespace,
       usernameOrEmail: identity,
       password,
     })

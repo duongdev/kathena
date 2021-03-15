@@ -2,6 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -10,9 +11,11 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.{ts,tsx,js,jsx}\"",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public -o storybook-build"
+    "build-storybook": "build-storybook -s public -o storybook-build",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "3.3.11",
     "@emotion/react": "11.1.5",
     "@emotion/styled": "11.1.5",
     "@material-ui/core": "5.0.0-alpha.27",
@@ -25,6 +28,7 @@
     "@storybook/react": "6.1.21",
     "clsx": "1.1.1",
     "formik": "2.2.6",
+    "graphql": "15.5.0",
     "lodash": "4.17.21",
     "phosphor-react": "1.2.1",
     "query-string": "6.14.1",
@@ -33,13 +37,21 @@
     "react-helmet-async": "1.0.9",
     "react-number-format": "4.4.4",
     "react-router-dom": "5.2.0",
+    "react-use": "17.2.1",
+    "unstated-next": "1.1.0",
     "web-vitals": "1.1.1",
     "yup": "0.32.9"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "2.0.2",
+    "@graphql-codegen/cli": "1.21.2",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/typescript-operations": "1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "2.2.2",
     "@testing-library/jest-dom": "5.11.9",
     "@testing-library/react": "11.2.5",
     "@testing-library/user-event": "12.8.3",
+    "@types/graphql": "14.5.0",
     "@types/jest": "26.0.20",
     "@types/lodash": "4.14.168",
     "@types/node": "14.14.34",

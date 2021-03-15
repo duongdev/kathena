@@ -1,8 +1,9 @@
 import { FC, ReactNode } from 'react'
 
+import { AppBar, Drawer, makeStyles, Toolbar } from '@material-ui/core'
+
 import { APP_BAR_HEIGHT, SIDEBAR_WIDTH } from '@kathena/theme'
 import { TODO } from '@kathena/types'
-import { AppBar, Drawer, makeStyles, Toolbar } from '@material-ui/core'
 
 export type DashboardContainerProps = {
   sidebar?: ReactNode

@@ -1,9 +1,13 @@
-import { FC } from 'react'
+import { FC, useCallback, useState } from 'react'
 
-import { object, SchemaOf, string } from '@kathena/libs/yup'
-import { Button, Link, TextFormField } from '@kathena/ui'
+import { ApolloError } from '@apollo/client'
 import { Box, Grid, makeStyles } from '@material-ui/core'
 import { Form, Formik } from 'formik'
+
+import { object, SchemaOf, string } from '@kathena/libs/yup'
+import { ApolloErrorList, Button, Link, TextFormField } from '@kathena/ui'
+import { useAuth } from 'common/auth'
+import { DEFAULT_ORG_NS } from 'common/constants'
 import { RESET_PWD } from 'utils/path-builder'
 
 export type SignInInput = {
@@ -30,13 +34,30 @@ const validationSchema: SchemaOf<SignInInput> = object({
 
 const SignInForm: FC<SignInFormProps> = (props) => {
   const classes = useStyles(props)
+  const { signIn } = useAuth()
+  const [error, setError] = useState<ApolloError>()
+
+  const handleSignIn = useCallback(
+    async (input: SignInInput) => {
+      try {
+        setError(undefined)
+        await signIn({
+          orgNamespace: DEFAULT_ORG_NS,
+          identity: input.identity,
+          password: input.password,
+        })
+      } catch (signInError) {
+        setError(signInError)
+      }
+    },
+    [signIn],
+  )
 
   return (
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      // eslint-disable-next-line no-console
-      onSubmit={console.log}
+      onSubmit={handleSignIn}
     >
       {(formik) => (
         <Form className={classes.root}>
@@ -44,12 +65,14 @@ const SignInForm: FC<SignInFormProps> = (props) => {
             <TextFormField
               gridItem
               autoFocus
+              disabled={formik.isSubmitting}
               name="identity"
               label={labels.identity}
             />
             <TextFormField
               gridItem
               name="password"
+              disabled={formik.isSubmitting}
               label={
                 <Box
                   component="span"
@@ -67,6 +90,8 @@ const SignInForm: FC<SignInFormProps> = (props) => {
               }
               type="password"
             />
+
+            {error && <ApolloErrorList gridItem error={error} />}
 
             <Button
               gridItem

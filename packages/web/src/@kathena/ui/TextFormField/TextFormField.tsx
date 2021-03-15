@@ -24,6 +24,7 @@ const TextFormField: FC<TextFormFieldProps> = (props) =>
     //   return <CurrencyFormField {...props} />
     // }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { children, fastField, disabled, ...inputProps } = props
     const FieldComponent = fastField ? FastField : Field
 

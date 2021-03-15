@@ -15,7 +15,10 @@
     "build": "sh ./scripts/build.sh",
     "start": "yarn workspace server start:prod",
     "test": "sh ./scripts/test.sh",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start:server": "yarn workspace server start:dev",
+    "start:web": "yarn workspace web start",
+    "start:codegen": "yarn workspace web codegen --watch"
   },
   "devDependencies": {
     "husky": "5.1.3",

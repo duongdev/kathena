@@ -1,6 +1,9 @@
 export { default as Alert } from './Alert'
 export * from './Alert'
 
+export { default as ApolloErrorList } from './ApolloErrorList'
+export * from './ApolloErrorList'
+
 export { default as Button } from './Button'
 export * from './Button'
 

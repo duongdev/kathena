@@ -1,0 +1,44 @@
+fragment AuthAccount on Account {
+  id
+  orgId
+  status
+  email
+  username
+}
+
+fragment AuthOrg on Org {
+  id
+  name
+  namespace
+}
+
+mutation SignIn(
+  $orgNamespace: String!
+  $identity: String!
+  $password: String!
+) {
+  signIn(
+    password: $password
+    identity: $identity
+    orgNamespace: $orgNamespace
+  ) {
+    token
+    account {
+      ...AuthAccount
+    }
+    org {
+      ...AuthOrg
+    }
+  }
+}
+
+query Authenticate {
+  authenticate {
+    account {
+      ...AuthAccount
+    }
+    org {
+      ...AuthOrg
+    }
+  }
+}

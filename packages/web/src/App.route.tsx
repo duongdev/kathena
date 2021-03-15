@@ -1,6 +1,7 @@
 import { FC, lazy } from 'react'
 
 import { Route, Switch } from 'react-router-dom'
+
 import { ORG_WORKSPACE, SIGN_IN } from 'utils/path-builder'
 
 const SignIn = lazy(

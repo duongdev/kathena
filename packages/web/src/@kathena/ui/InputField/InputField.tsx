@@ -3,7 +3,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { FC, ReactNode, useCallback, useMemo, useState } from 'react'
 
-import { ANY } from '@kathena/types'
 import {
   FormControl,
   Input,
@@ -13,6 +12,8 @@ import {
   Theme,
 } from '@material-ui/core'
 import clsx from 'clsx'
+
+import { ANY } from '@kathena/types'
 
 import { withGridItem } from '../GridItemContainer'
 
@@ -59,6 +60,7 @@ const InputField: FC<InputFieldProps> = (props) => {
     onFocus,
     startAdornment,
     className,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     required,
     ...rest
   } = props

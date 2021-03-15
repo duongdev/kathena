@@ -16,6 +16,7 @@
     "Storyshots",
     "Stringifiable",
     "clsx",
+    "codegen",
     "fastify",
     "formik",
     "kmin",
