@@ -55,6 +55,7 @@ describe('account.service', () => {
       password: '123456',
       username: 'duongdev',
       roles: ['owner', 'admin', 'admin'],
+      displayName: 'Dustin Do',
     }
 
     it(`throws error if username or email has been taken`, async () => {
@@ -145,6 +146,7 @@ describe('account.service', () => {
         password: 'rawPass',
         orgId: objectId(),
         roles: ['admin'],
+        displayName: 'Dustin Do',
       })
 
       await expect(

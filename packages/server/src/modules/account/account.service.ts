@@ -49,6 +49,7 @@ export class AccountService {
       createdAt: accountInput.createdByAccountId,
       status: accountInput.status,
       roles: uniq(accountInput.roles),
+      displayName: accountInput.displayName,
     })
 
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
