@@ -21,6 +21,12 @@ export * from './InputField'
 export { default as Link } from './Link'
 export * from './Link'
 
+export { default as PageContainer } from './PageContainer'
+export * from './PageContainer'
+
+export { default as SectionCard } from './SectionCard'
+export * from './SectionCard'
+
 export { default as Select } from './Select'
 export * from './Select'
 

@@ -3648,12 +3648,12 @@ exports[`Storyshots components/Typography All Variants Demo 1`] = `
   className="css-1a8w37c"
 >
   <h1
-    className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-1kwoyvq-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-p2i4lz-MuiTypography-root"
   >
     h1. Heading
   </h1>
   <h2
-    className="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom css-ts0olm-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h2 MuiTypography-gutterBottom css-k49hbg-MuiTypography-root"
   >
     h2. Heading
   </h2>
@@ -3668,7 +3668,7 @@ exports[`Storyshots components/Typography All Variants Demo 1`] = `
     h4. Heading
   </h4>
   <h5
-    className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-xz8hq8-MuiTypography-root"
+    className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1fhusn-MuiTypography-root"
   >
     h5. Heading
   </h5>

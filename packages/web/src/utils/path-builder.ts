@@ -11,7 +11,7 @@ export const ORG_WORKSPACE = `/app`
 export const USER_LIST = `${ORG_WORKSPACE}/users`
 
 export const USER_PROFILE = `${ORG_WORKSPACE}/profile/:username`
-export const USER_SELF_SETTINGS = `${ORG_WORKSPACE}/self-settings`
+export const USER_SELF_SETTINGS = `${ORG_WORKSPACE}/account-settings`
 
 export const buildPath = (
   path: string,

@@ -8,6 +8,7 @@ import { useAuth, WithAuth } from 'common/auth'
 
 import OrgSidebar from './components/OrgSidebar'
 import OrgToolbar from './components/OrgToolbar'
+import OrgWorkspaceRoute from './OrgWorkspace.route'
 
 export type OrgWorkspaceProps = {}
 
@@ -28,7 +29,7 @@ const OrgWorkspace: FC<OrgWorkspaceProps> = () => {
         titleTemplate={`%s – ${org.name} | Kathena Platform`}
         defaultTitle={`${org.name} | Kathena Platform`}
       />
-      Content
+      <OrgWorkspaceRoute />
     </DashboardContainer>
   )
 }
