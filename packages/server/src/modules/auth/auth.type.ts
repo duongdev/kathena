@@ -3,6 +3,8 @@ import { Field, ObjectType } from '@nestjs/graphql'
 import { Account } from 'modules/account/models/Account'
 import { Org } from 'modules/org/models/Org'
 
+import { Permission } from './models'
+
 export type AuthData = {
   accountId: string
   orgId: string
@@ -15,6 +17,9 @@ export class AuthenticatePayload {
 
   @Field((_type) => Org)
   org: Org
+
+  @Field((_type) => [Permission])
+  permissions: Permission[]
 }
 
 @ObjectType()
@@ -27,4 +32,7 @@ export class SignInPayload {
 
   @Field((_type) => Org)
   org: Org
+
+  @Field((_type) => [Permission])
+  permissions: Permission[]
 }

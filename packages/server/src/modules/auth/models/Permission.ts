@@ -7,6 +7,8 @@ export enum Permission {
   /** Invite new member to org */
   Hr_CreateAccount = 'Hr_CreateAccount',
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
+
+  NoPermission = 'NoPermission',
 }
 
 registerEnumType(Permission, { name: 'Permission' })

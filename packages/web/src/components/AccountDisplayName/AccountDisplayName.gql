@@ -1,0 +1,7 @@
+query AccountDisplayName($id: ID!) {
+  account(id: $id) {
+    id
+    username
+    displayName
+  }
+}

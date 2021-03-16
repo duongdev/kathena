@@ -52,12 +52,21 @@ type Org implements BaseModel {
 type AuthenticatePayload {
   account: Account!
   org: Org!
+  permissions: [Permission!]!
+}
+
+enum Permission {
+  Hr_Access
+  Hr_CreateAccount
+  Hr_ListOrgAccounts
+  NoPermission
 }
 
 type SignInPayload {
   token: String!
   account: Account!
   org: Org!
+  permissions: [Permission!]!
 }
 
 type OrgAccountsPayload {

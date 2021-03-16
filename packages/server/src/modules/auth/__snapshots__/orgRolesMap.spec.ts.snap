@@ -7,6 +7,7 @@ Array [
     "permissions": Array [
       "Hr_Access",
       "Hr_CreateAccount",
+      "Hr_ListOrgAccounts",
     ],
   },
   Object {
@@ -14,6 +15,7 @@ Array [
     "permissions": Array [
       "Hr_Access",
       "Hr_CreateAccount",
+      "Hr_ListOrgAccounts",
     ],
   },
   Object {
@@ -21,6 +23,7 @@ Array [
     "permissions": Array [
       "Hr_Access",
       "Hr_CreateAccount",
+      "Hr_ListOrgAccounts",
     ],
   },
   Object {

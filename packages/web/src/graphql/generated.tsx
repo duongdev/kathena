@@ -68,12 +68,21 @@ export type Org = BaseModel & {
 export type AuthenticatePayload = {
   account: Account
   org: Org
+  permissions: Array<Permission>
+}
+
+export enum Permission {
+  Hr_Access = 'Hr_Access',
+  Hr_CreateAccount = 'Hr_CreateAccount',
+  Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
+  NoPermission = 'NoPermission',
 }
 
 export type SignInPayload = {
   token: Scalars['String']
   account: Account
   org: Org
+  permissions: Array<Permission>
 }
 
 export type OrgAccountsPayload = {
@@ -146,7 +155,10 @@ export type SignInMutation = {
 export type AuthenticateQueryVariables = Exact<{ [key: string]: never }>
 
 export type AuthenticateQuery = {
-  authenticate: { account: AuthAccountFragment; org: AuthOrgFragment }
+  authenticate: Pick<AuthenticatePayload, 'permissions'> & {
+    account: AuthAccountFragment
+    org: AuthOrgFragment
+  }
 }
 
 export type AccountAvatarQueryVariables = Exact<{
@@ -157,6 +169,14 @@ export type AccountAvatarQuery = {
   account?: Maybe<
     Pick<Account, 'id' | 'email' | 'username' | 'displayName' | 'availability'>
   >
+}
+
+export type AccountDisplayNameQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type AccountDisplayNameQuery = {
+  account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -499,6 +519,7 @@ export const AuthenticateDocument: DocumentNode = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'permissions' } },
               ],
             },
           },
@@ -758,6 +779,136 @@ export type AccountAvatarLazyQueryHookResult = ReturnType<
 export type AccountAvatarQueryResult = Apollo.QueryResult<
   AccountAvatarQuery,
   AccountAvatarQueryVariables
+>
+export const AccountDisplayNameDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AccountDisplayName' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AccountDisplayNameProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables
+  >
+} &
+  TChildProps
+export function withAccountDisplayName<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables,
+    AccountDisplayNameProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables,
+    AccountDisplayNameProps<TChildProps, TDataName>
+  >(AccountDisplayNameDocument, {
+    alias: 'accountDisplayName',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAccountDisplayNameQuery__
+ *
+ * To run a query within a React component, call `useAccountDisplayNameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountDisplayNameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountDisplayNameQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAccountDisplayNameQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables
+  >(AccountDisplayNameDocument, options)
+}
+export function useAccountDisplayNameLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AccountDisplayNameQuery,
+    AccountDisplayNameQueryVariables
+  >(AccountDisplayNameDocument, options)
+}
+export type AccountDisplayNameQueryHookResult = ReturnType<
+  typeof useAccountDisplayNameQuery
+>
+export type AccountDisplayNameLazyQueryHookResult = ReturnType<
+  typeof useAccountDisplayNameLazyQuery
+>
+export type AccountDisplayNameQueryResult = Apollo.QueryResult<
+  AccountDisplayNameQuery,
+  AccountDisplayNameQueryVariables
 >
 export const OrgAccountListDocument: DocumentNode = {
   kind: 'Document',

@@ -27,7 +27,12 @@ export class AuthService {
     usernameOrEmail: string
     password: string
     orgNamespace: string
-  }): Promise<{ token: string; account: Account; org: Org }> {
+  }): Promise<{
+    token: string
+    account: Account
+    org: Org
+    permissions: Permission[]
+  }> {
     this.logger.log(`[${this.signIn.name}] Signing in`)
     this.logger.verbose(args)
 
@@ -58,8 +63,9 @@ export class AuthService {
     }
 
     const token = await this.signAccountToken(account)
+    const permissions = await this.getAccountPermissions(account.id)
 
-    return { token, account, org }
+    return { token, account, org, permissions }
   }
 
   /** Signs some account's data into json web token */

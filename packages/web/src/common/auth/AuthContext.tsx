@@ -66,6 +66,7 @@ const useAuthHook = () => {
   return {
     account: authData?.account ?? null,
     org: authData?.org ?? null,
+    permissions: authData?.permissions ?? [],
     signIn,
     signOut,
     loading,
