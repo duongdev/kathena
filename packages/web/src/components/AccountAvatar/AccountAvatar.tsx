@@ -6,6 +6,7 @@ import gravatar from 'gravatar'
 
 import { HEADING_FONT } from '@kathena/theme'
 import { withComponentHocs } from '@kathena/ui'
+import { getDevicePixelRatio } from '@kathena/utils'
 import { AccountAvailability, useAccountAvatarQuery } from 'graphql/generated'
 import useAccountUtils from 'utils/useAccountUtils'
 
@@ -33,10 +34,12 @@ const AccountAvatar: FC<AccountAvatarProps> = (props) => {
   ])
 
   const avatarUrl = useMemo(() => {
+    if (!account?.email) return ''
+
     const email = account?.email ?? 'unknown'
 
     const url = gravatar.url(email, {
-      size: (size * 2).toString(),
+      size: (size * getDevicePixelRatio()).toString(),
       protocol: 'https',
       default: '404',
     })

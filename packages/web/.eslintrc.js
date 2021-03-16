@@ -82,6 +82,12 @@ module.exports = {
             importNames: ['Button', 'Typography', 'Alert', 'Link'],
             message: 'Please use customized components instead.',
           },
+
+          {
+            name: 'react-router-dom',
+            importNames: ['Link'],
+            message: 'Please use customized components instead.',
+          },
         ],
       },
     ],

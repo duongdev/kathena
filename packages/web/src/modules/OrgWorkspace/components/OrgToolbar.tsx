@@ -1,7 +1,6 @@
 import { FC } from 'react'
 
 import { Grid, makeStyles } from '@material-ui/core'
-import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import OrgLogo from 'components/OrgLogo'
 
 import { APP_BAR_HEIGHT } from '@kathena/theme'
@@ -9,11 +8,13 @@ import { Link } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { ORG_WORKSPACE } from 'utils/path-builder'
 
+import AccountAvatarMenu from './AccountAvatarMenu'
+
 export type OrgToolbarProps = {}
 
 const OrgToolbar: FC<OrgToolbarProps> = (props) => {
   const classes = useStyles(props)
-  const { $org: org, $account: account } = useAuth()
+  const { $org: org } = useAuth()
 
   return (
     <Grid container spacing={2} alignItems="center" className={classes.root}>
@@ -28,7 +29,7 @@ const OrgToolbar: FC<OrgToolbarProps> = (props) => {
 
       <Grid item xs />
 
-      <AccountAvatar gridItem accountId={account.id} />
+      <AccountAvatarMenu gridItem />
     </Grid>
   )
 }
