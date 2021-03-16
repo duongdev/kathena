@@ -1,0 +1,14 @@
+query OrgAccountList($orgId: ID!, $skip: Int!, $limit: Int!) {
+  orgAccounts(pageOptions: { skip: $skip, limit: $limit}, orgId: $orgId) {
+    accounts {
+      id
+      email
+      displayName
+      username
+      roles
+      availability
+      status
+    }
+    totalCount
+  }
+}

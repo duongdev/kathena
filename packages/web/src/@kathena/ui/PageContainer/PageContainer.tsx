@@ -8,6 +8,7 @@ import {
   Theme,
   Skeleton,
 } from '@material-ui/core'
+import clsx from 'clsx'
 import { CaretLeft } from 'phosphor-react'
 import { Helmet } from 'react-helmet-async'
 import { useHistory } from 'react-router-dom'
@@ -30,6 +31,7 @@ export type PageContainerProps = {
     | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void)
   backButtonLabel?: string
   disableFooter?: boolean
+  className?: string
 }
 
 const PageContainer: FC<PageContainerProps> = (props) => {
@@ -41,6 +43,7 @@ const PageContainer: FC<PageContainerProps> = (props) => {
     subtitle,
     title,
     withBackButton,
+    className,
   } = props
   const classes = useStyles(props)
 
@@ -61,7 +64,7 @@ const PageContainer: FC<PageContainerProps> = (props) => {
   )
 
   return (
-    <div className={classes.root}>
+    <div className={clsx(className, classes.root)}>
       {title && typeof title === 'string' && <Helmet title={title} />}
       <Container maxWidth={maxWidth} className={classes.container}>
         <div className={classes.header}>
@@ -80,7 +83,7 @@ const PageContainer: FC<PageContainerProps> = (props) => {
             </Button>
           )}
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs>
+            <Grid item xs={12} md>
               <Grid container spacing={1} direction="column" wrap="nowrap">
                 <Grid item>
                   <Typography variant="h1">{title}</Typography>

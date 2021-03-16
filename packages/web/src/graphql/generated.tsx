@@ -76,13 +76,29 @@ export type SignInPayload = {
   org: Org
 }
 
+export type OrgAccountsPayload = {
+  accounts: Array<Account>
+  totalCount: Scalars['Int']
+}
+
 export type Query = {
   account?: Maybe<Account>
+  orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
 }
 
 export type QueryAccountArgs = {
   id: Scalars['ID']
+}
+
+export type QueryOrgAccountsArgs = {
+  pageOptions: PageOptionsInput
+  orgId: Scalars['ID']
+}
+
+export type PageOptionsInput = {
+  skip: Scalars['Int']
+  limit: Scalars['Int']
 }
 
 export type Mutation = {
@@ -141,6 +157,29 @@ export type AccountAvatarQuery = {
   account?: Maybe<
     Pick<Account, 'id' | 'email' | 'username' | 'displayName' | 'availability'>
   >
+}
+
+export type OrgAccountListQueryVariables = Exact<{
+  orgId: Scalars['ID']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type OrgAccountListQuery = {
+  orgAccounts: Pick<OrgAccountsPayload, 'totalCount'> & {
+    accounts: Array<
+      Pick<
+        Account,
+        | 'id'
+        | 'email'
+        | 'displayName'
+        | 'username'
+        | 'roles'
+        | 'availability'
+        | 'status'
+      >
+    >
+  }
 }
 
 export const AuthAccountFragmentDoc: DocumentNode = {
@@ -719,4 +758,209 @@ export type AccountAvatarLazyQueryHookResult = ReturnType<
 export type AccountAvatarQueryResult = Apollo.QueryResult<
   AccountAvatarQuery,
   AccountAvatarQueryVariables
+>
+export const OrgAccountListDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'OrgAccountList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orgId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'orgAccounts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orgId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orgId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'accounts' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'username' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'availability' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type OrgAccountListProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    OrgAccountListQuery,
+    OrgAccountListQueryVariables
+  >
+} &
+  TChildProps
+export function withOrgAccountList<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    OrgAccountListQuery,
+    OrgAccountListQueryVariables,
+    OrgAccountListProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    OrgAccountListQuery,
+    OrgAccountListQueryVariables,
+    OrgAccountListProps<TChildProps, TDataName>
+  >(OrgAccountListDocument, {
+    alias: 'orgAccountList',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useOrgAccountListQuery__
+ *
+ * To run a query within a React component, call `useOrgAccountListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrgAccountListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrgAccountListQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useOrgAccountListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    OrgAccountListQuery,
+    OrgAccountListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<OrgAccountListQuery, OrgAccountListQueryVariables>(
+    OrgAccountListDocument,
+    options,
+  )
+}
+export function useOrgAccountListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    OrgAccountListQuery,
+    OrgAccountListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<OrgAccountListQuery, OrgAccountListQueryVariables>(
+    OrgAccountListDocument,
+    options,
+  )
+}
+export type OrgAccountListQueryHookResult = ReturnType<
+  typeof useOrgAccountListQuery
+>
+export type OrgAccountListLazyQueryHookResult = ReturnType<
+  typeof useOrgAccountListLazyQuery
+>
+export type OrgAccountListQueryResult = Apollo.QueryResult<
+  OrgAccountListQuery,
+  OrgAccountListQueryVariables
 >

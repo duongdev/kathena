@@ -1,7 +1,7 @@
-import { Field, InputType } from '@nestjs/graphql'
+import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { ArrayNotEmpty, IsEmail } from 'class-validator'
 
-import { AccountStatus } from './models/Account'
+import { Account, AccountStatus } from './models/Account'
 
 @InputType()
 export class CreateAccountInput {
@@ -28,4 +28,13 @@ export class CreateAccountServiceInput extends CreateAccountInput {
   status?: AccountStatus
 
   createdByAccountId?: string
+}
+
+@ObjectType()
+export class OrgAccountsPayload {
+  @Field((_type) => [Account])
+  accounts: Account[]
+
+  @Field((_type) => Int)
+  totalCount: number
 }

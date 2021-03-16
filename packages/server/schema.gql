@@ -60,9 +60,20 @@ type SignInPayload {
   org: Org!
 }
 
+type OrgAccountsPayload {
+  accounts: [Account!]!
+  totalCount: Int!
+}
+
 type Query {
   account(id: ID!): Account
+  orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+}
+
+input PageOptionsInput {
+  skip: Int!
+  limit: Int!
 }
 
 type Mutation {

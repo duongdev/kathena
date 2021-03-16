@@ -10,6 +10,9 @@ export * from './Button'
 export { default as DashboardContainer } from './DashboardContainer'
 export * from './DashboardContainer'
 
+export { default as DataTable } from './DataTable'
+export * from './DataTable'
+
 export { default as GridItemContainer } from './GridItemContainer'
 export * from './GridItemContainer'
 
