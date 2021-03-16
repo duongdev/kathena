@@ -179,27 +179,26 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
   )
 }
 
-const useStyles = makeStyles<Theme, DataTableProps<any>>(
-  ({ shape, spacing }) => ({
-    root: ({ maxHeight }) => ({
-      position: 'relative',
-      overflow: 'auto',
-      margin: spacing(0, -2),
-      padding: spacing(0, 2),
-      maxHeight: maxHeight ?? 'unset',
-      width: `calc(100% + ${spacing(4)}px)`,
-    }),
-    tableHead: {},
-    rowItem: {
-      // transition: transitions.create('box-shadow', { duration: 300 }),
-      // '&:hover': {
-      //   boxShadow: shadows[2],
-      // },
-    },
-    spinner: {
-      borderRadius: shape.borderRadius,
-    },
+const useStyles = makeStyles<Theme, DataTableProps<any>>(({ shape }) => ({
+  root: ({ maxHeight }) => ({
+    position: 'relative',
+    overflow: 'auto',
+    // margin: spacing(0, -2),
+    // padding: spacing(0, 2),
+    maxHeight: maxHeight ?? 'unset',
+    width: '100%',
+    // width: `calc(100% + ${spacing(4)}px)`,
   }),
-)
+  tableHead: {},
+  rowItem: {
+    // transition: transitions.create('box-shadow', { duration: 300 }),
+    // '&:hover': {
+    //   boxShadow: shadows[2],
+    // },
+  },
+  spinner: {
+    borderRadius: shape.borderRadius,
+  },
+}))
 
 export default DataTable
