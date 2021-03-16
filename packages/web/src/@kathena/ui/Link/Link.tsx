@@ -1,5 +1,6 @@
+/* eslint-disable no-restricted-imports */
 /* eslint-disable react/jsx-props-no-spreading */
-import { FC } from 'react'
+import { FC, forwardRef } from 'react'
 
 import MuiLink, { LinkProps as MuiLinkProps } from '@material-ui/core/Link'
 import {
@@ -11,8 +12,8 @@ import withComponentHocs from '../hocs/withComponentHocs'
 
 export type LinkProps = RouterLinkProps & MuiLinkProps
 
-const Link: FC<LinkProps> = (props) => (
-  <MuiLink component={RouterLink} {...props} />
-)
+const Link: FC<LinkProps> = forwardRef((props, ref) => (
+  <MuiLink ref={ref} component={RouterLink} {...props} />
+))
 
 export default withComponentHocs(Link)

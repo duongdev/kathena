@@ -23,7 +23,7 @@ function App() {
             <HelmetProvider>
               <Helmet
                 defaultTitle="Kathena Platform"
-                titleTemplate="%s – Kathena Platform"
+                titleTemplate="%s | Kathena Platform"
               />
               <Router>
                 <AppRoute />

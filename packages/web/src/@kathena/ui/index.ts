@@ -21,11 +21,20 @@ export * from './InputField'
 export { default as Link } from './Link'
 export * from './Link'
 
+export { default as PageContainer } from './PageContainer'
+export * from './PageContainer'
+
+export { default as SectionCard } from './SectionCard'
+export * from './SectionCard'
+
 export { default as Select } from './Select'
 export * from './Select'
 
 export { default as SelectFormField } from './SelectFormField'
 export * from './SelectFormField'
+
+export { default as SidebarMenu } from './SidebarMenu'
+export * from './SidebarMenu'
 
 export { default as Spinner } from './Spinner'
 export * from './Spinner'

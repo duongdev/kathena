@@ -10,16 +10,16 @@ export default {
 
 const Template: Story<AlertProps> = (args) => (
   <Grid container spacing={2}>
-    <Alert gridItem={{ xs: 12, md: 8 }} variant="info" {...args}>
+    <Alert gridItem={{ xs: 12, md: 8 }} severity="info" {...args}>
       Alert content
     </Alert>
-    <Alert gridItem={{ xs: 12, md: 8 }} variant="success" {...args}>
+    <Alert gridItem={{ xs: 12, md: 8 }} severity="success" {...args}>
       Alert content
     </Alert>
-    <Alert gridItem={{ xs: 12, md: 8 }} variant="warning" {...args}>
+    <Alert gridItem={{ xs: 12, md: 8 }} severity="warning" {...args}>
       Alert content
     </Alert>
-    <Alert gridItem={{ xs: 12, md: 8 }} variant="error" {...args}>
+    <Alert gridItem={{ xs: 12, md: 8 }} severity="error" {...args}>
       Alert content
     </Alert>
   </Grid>

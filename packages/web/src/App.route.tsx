@@ -1,6 +1,6 @@
 import { FC, lazy } from 'react'
 
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import { ORG_WORKSPACE, SIGN_IN } from 'utils/path-builder'
 
@@ -19,6 +19,8 @@ const AppRoute: FC = () => (
   <Switch>
     <Route path={SIGN_IN} component={SignIn} />
     <Route path={ORG_WORKSPACE} component={OrgWorkspace} />
+
+    <Redirect to={ORG_WORKSPACE} />
   </Switch>
 )
 

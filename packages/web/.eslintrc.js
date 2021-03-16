@@ -79,7 +79,13 @@ module.exports = {
           },
           {
             name: '@material-ui/core',
-            importNames: ['Button', 'Typography'],
+            importNames: ['Button', 'Typography', 'Alert', 'Link'],
+            message: 'Please use customized components instead.',
+          },
+
+          {
+            name: 'react-router-dom',
+            importNames: ['Link'],
             message: 'Please use customized components instead.',
           },
         ],

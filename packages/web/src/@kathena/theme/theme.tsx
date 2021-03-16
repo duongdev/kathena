@@ -79,13 +79,13 @@ const theme = createMuiTheme({
     h1: {
       fontFamily: HEADING_FONT,
       fontWeight: 700,
-      fontSize: '3.3125rem', // 53
+      fontSize: '2.6rem', // 53
       lineHeight: 1.2,
     },
     h2: {
       fontFamily: HEADING_FONT,
       fontWeight: 700,
-      fontSize: '2.4375rem', // 39
+      fontSize: '2.2rem', // 39
       lineHeight: 1.2,
     },
     h3: {
@@ -98,6 +98,12 @@ const theme = createMuiTheme({
       fontFamily: HEADING_FONT,
       fontWeight: 700,
       fontSize: '1.5625rem', // 25
+      lineHeight: 1.218,
+    },
+    h5: {
+      fontFamily: HEADING_FONT,
+      fontWeight: 700,
+      fontSize: '1.3rem', // 25
       lineHeight: 1.218,
     },
     button: {

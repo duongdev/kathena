@@ -49,6 +49,7 @@ export class AccountService {
       createdAt: accountInput.createdByAccountId,
       status: accountInput.status,
       roles: uniq(accountInput.roles),
+      displayName: accountInput.displayName,
     })
 
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
@@ -99,5 +100,15 @@ export class AccountService {
     this.logger.verbose(account.toJSON())
 
     return account
+  }
+
+  async findOneAccount({
+    id,
+    orgId,
+  }: {
+    id: string
+    orgId: string
+  }): Promise<Nullable<DocumentType<Account>>> {
+    return this.accountModel.findOne({ _id: id, orgId })
   }
 }

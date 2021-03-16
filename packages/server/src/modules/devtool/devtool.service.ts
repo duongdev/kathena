@@ -26,11 +26,12 @@ export class DevtoolService implements OnApplicationBootstrap {
   /** Creates org & first admin user */
   async kminBootstrap(): Promise<void> {
     const kminOrgConfig = {
-      orgName: 'Kmin Education',
+      orgName: 'Kmin Academy',
       orgNamespace: 'kmin-edu',
       adminUsername: 'duongdev',
       adminEmail: 'dustin.do95@gmail.com',
       adminPassword: config.INIT_ADMIN_PWD,
+      adminName: 'Dương Đỗ',
       adminRoles: [owner.name],
     }
 
@@ -55,6 +56,7 @@ export class DevtoolService implements OnApplicationBootstrap {
         orgId: org.id,
         email: kminOrgConfig.adminEmail,
         username: kminOrgConfig.adminUsername,
+        displayName: kminOrgConfig.adminName,
         password: kminOrgConfig.adminPassword,
         status: AccountStatus.Active,
         roles: kminOrgConfig.adminRoles,
@@ -75,6 +77,7 @@ export class DevtoolService implements OnApplicationBootstrap {
           email: kminOrgConfig.adminEmail,
           username: kminOrgConfig.adminUsername,
           status: AccountStatus.Active,
+          displayName: kminOrgConfig.adminName,
           roles: uniq([...account.roles, ...kminOrgConfig.adminRoles]),
         },
       },
