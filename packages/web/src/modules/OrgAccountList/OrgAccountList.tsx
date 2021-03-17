@@ -8,14 +8,14 @@ import { UserPlus } from 'phosphor-react'
 import { Button, DataTable, PageContainer, Typography } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useOrgAccountListQuery } from 'graphql/generated'
-import CreateAccountDialog from 'modules/CreateUpdateAccount/CreateAccountDialog'
+import { CreateAccountDialog } from 'modules/CreateUpdateAccount'
 
 export type OrgAccountListProps = {}
 
 const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
-  const { data, loading } = useOrgAccountListQuery({
+  const { data, loading, refetch } = useOrgAccountListQuery({
     variables: { orgId: org.id, limit: 1000, skip: 0 },
   })
   const [createAccountDialogOpen, setCreateAccountDialogOpen] = useState(false)
@@ -51,6 +51,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
       <CreateAccountDialog
         open={createAccountDialogOpen}
         onClose={handleCloseCreateAccountDialog}
+        onSuccess={refetch}
       />
 
       <Paper>

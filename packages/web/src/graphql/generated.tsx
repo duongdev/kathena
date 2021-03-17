@@ -129,7 +129,7 @@ export type MutationSignInArgs = {
 export type CreateAccountInput = {
   username: Scalars['String']
   email: Scalars['String']
-  displayName: Scalars['String']
+  displayName?: Maybe<Scalars['String']>
   roles: Array<Scalars['String']>
 }
 
@@ -178,6 +178,14 @@ export type AccountDisplayNameQueryVariables = Exact<{
 
 export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
+}
+
+export type CreateAccountMutationVariables = Exact<{
+  accountInput: CreateAccountInput
+}>
+
+export type CreateAccountMutation = {
+  createOrgAccount: Pick<Account, 'id' | 'displayName' | 'username' | 'email'>
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -910,6 +918,134 @@ export type AccountDisplayNameLazyQueryHookResult = ReturnType<
 export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
+>
+export const CreateAccountDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateAccount' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'accountInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateAccountInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createOrgAccount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'accountInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateAccountMutationFn = Apollo.MutationFunction<
+  CreateAccountMutation,
+  CreateAccountMutationVariables
+>
+export type CreateAccountProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateAccountMutation,
+    CreateAccountMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateAccount<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateAccountMutation,
+    CreateAccountMutationVariables,
+    CreateAccountProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateAccountMutation,
+    CreateAccountMutationVariables,
+    CreateAccountProps<TChildProps, TDataName>
+  >(CreateAccountDocument, {
+    alias: 'createAccount',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateAccountMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountMutation, { data, loading, error }] = useCreateAccountMutation({
+ *   variables: {
+ *      accountInput: // value for 'accountInput'
+ *   },
+ * });
+ */
+export function useCreateAccountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAccountMutation,
+    CreateAccountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateAccountMutation,
+    CreateAccountMutationVariables
+  >(CreateAccountDocument, options)
+}
+export type CreateAccountMutationHookResult = ReturnType<
+  typeof useCreateAccountMutation
+>
+export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>
+export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
+  CreateAccountMutation,
+  CreateAccountMutationVariables
 >
 export const OrgAccountListDocument: DocumentNode = {
   kind: 'Document',

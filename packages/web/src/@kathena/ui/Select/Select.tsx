@@ -43,6 +43,7 @@ const Select: FC<SelectProps> = (props) => {
     value,
     helperText,
     disablePortal,
+    required,
     ...rest
   } = props
   const [isFocused, setFocus] = useState(false)
@@ -80,6 +81,7 @@ const Select: FC<SelectProps> = (props) => {
           }}
         >
           {label}
+          {required && ' *'}
         </Typography>
       )}
       <MuiSelect
@@ -97,6 +99,7 @@ const Select: FC<SelectProps> = (props) => {
         displayEmpty
         value={value || ''}
         {...rest}
+        required={false}
       >
         {placeholder && (
           <MenuItem value="" disabled>

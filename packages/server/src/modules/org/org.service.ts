@@ -56,4 +56,8 @@ export class OrgService {
   async existsOrgByNamespace(namespace: string): Promise<boolean> {
     return this.orgModel.exists({ namespace })
   }
+
+  async existsOrgById(id: string): Promise<boolean> {
+    return this.orgModel.exists({ _id: id })
+  }
 }

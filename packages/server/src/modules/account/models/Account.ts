@@ -54,7 +54,7 @@ export class Account extends BaseModel {
     enum: AccountStatus,
     type: String,
     index: true,
-    default: AccountStatus.Pending,
+    default: AccountStatus.Active,
   })
   status: AccountStatus
 

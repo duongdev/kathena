@@ -4,6 +4,6 @@
   "automergeType": "pr",
   "assignees": ["duongdev"],
   "labels": ["type: dependencies"],
-  "ignoreDeps": ["mongoose"],
+  "ignoreDeps": ["typescript"],
   "semanticCommits": false
 }
