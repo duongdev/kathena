@@ -126,7 +126,11 @@ const FormDialogContent = <Values extends {}>(
           <DialogContent>{childrenContent}</DialogContent>
           <DialogActions>
             {extraDialogActions}
-            <Button onClick={handleClose} disabled={formik.isSubmitting}>
+            <Button
+              onClick={handleClose}
+              disabled={formik.isSubmitting}
+              type="button"
+            >
               Đóng
             </Button>
             <Button
