@@ -112,11 +112,11 @@ export type PageOptionsInput = {
 }
 
 export type Mutation = {
-  createAccount: Account
+  createOrgAccount: Account
   signIn: SignInPayload
 }
 
-export type MutationCreateAccountArgs = {
+export type MutationCreateOrgAccountArgs = {
   input: CreateAccountInput
 }
 

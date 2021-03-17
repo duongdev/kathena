@@ -1,9 +1,11 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
 import { uniq } from 'lodash'
 
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
+import { AuthService } from 'modules/auth/auth.service'
 import { Nullable } from 'types'
 
 import { CreateAccountServiceInput } from './account.type'
@@ -16,6 +18,8 @@ export class AccountService {
   constructor(
     @InjectModel(Account)
     private readonly accountModel: ReturnModelType<typeof Account>,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
   ) {}
 
   async createAccount(
@@ -132,5 +136,31 @@ export class AccountService {
     const totalCount = await this.accountModel.countDocuments({ orgId })
 
     return { accounts, totalCount }
+  }
+
+  async createOrgMemberAccount(
+    /** Account ID of the current account who performs action */
+    creatorId: string,
+    accountInput: CreateAccountServiceInput,
+  ): Promise<DocumentType<Account>> {
+    const targetAccountRoles = await this.authService.mapOrgRolesFromNames({
+      orgId: accountInput.orgId,
+      roleNames: accountInput.roles,
+    })
+    const canCreateMember = await this.authService.canAccountManageRoles(
+      creatorId,
+      targetAccountRoles,
+    )
+
+    if (!canCreateMember) {
+      throw new Error('TARGET_ROLES_FORBIDDEN')
+    }
+
+    const createdAccount = await this.createAccount({
+      ...accountInput,
+      createdByAccountId: creatorId,
+    })
+
+    return createdAccount
   }
 }

@@ -87,7 +87,7 @@ input PageOptionsInput {
 }
 
 type Mutation {
-  createAccount(input: CreateAccountInput!): Account!
+  createOrgAccount(input: CreateAccountInput!): Account!
   signIn(
     password: String!
 
