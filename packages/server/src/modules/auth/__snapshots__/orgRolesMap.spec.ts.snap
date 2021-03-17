@@ -6,33 +6,38 @@ Array [
     "name": "owner",
     "permissions": Array [
       "Hr_Access",
-      "Hr_CreateAccount",
+      "Hr_CreateOrgAccount",
       "Hr_ListOrgAccounts",
     ],
+    "priority": 1,
   },
   Object {
     "name": "admin",
     "permissions": Array [
       "Hr_Access",
-      "Hr_CreateAccount",
+      "Hr_CreateOrgAccount",
       "Hr_ListOrgAccounts",
     ],
+    "priority": 2,
   },
   Object {
     "name": "staff",
     "permissions": Array [
       "Hr_Access",
-      "Hr_CreateAccount",
+      "Hr_CreateOrgAccount",
       "Hr_ListOrgAccounts",
     ],
+    "priority": 3,
   },
   Object {
     "name": "lecturer",
     "permissions": Array [],
+    "priority": 4,
   },
   Object {
     "name": "student",
     "permissions": Array [],
+    "priority": 4,
   },
 ]
 `;
