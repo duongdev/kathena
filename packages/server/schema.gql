@@ -9,7 +9,7 @@ type Account implements BaseModel {
   updatedAt: DateTime!
   username: String!
   email: String!
-  displayName: String!
+  displayName: String
   status: AccountStatus!
   roles: [String!]!
   availability: AccountAvailability!

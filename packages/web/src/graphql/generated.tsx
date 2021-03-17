@@ -30,7 +30,7 @@ export type Account = BaseModel & {
   updatedAt: Scalars['DateTime']
   username: Scalars['String']
   email: Scalars['String']
-  displayName: Scalars['String']
+  displayName?: Maybe<Scalars['String']>
   status: AccountStatus
   roles: Array<Scalars['String']>
   availability: AccountAvailability
