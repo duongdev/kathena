@@ -52,17 +52,38 @@ type Org implements BaseModel {
 type AuthenticatePayload {
   account: Account!
   org: Org!
+  permissions: [Permission!]!
+}
+
+enum Permission {
+  Hr_Access
+  Hr_CreateOrgAccount
+  Hr_ListOrgAccounts
+  Hr_UpdateOrgAccount
+  NoPermission
 }
 
 type SignInPayload {
   token: String!
   account: Account!
   org: Org!
+  permissions: [Permission!]!
+}
+
+type OrgAccountsPayload {
+  accounts: [Account!]!
+  totalCount: Int!
 }
 
 type Query {
   account(id: ID!): Account
+  orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+}
+
+input PageOptionsInput {
+  skip: Int!
+  limit: Int!
 }
 
 type Mutation {

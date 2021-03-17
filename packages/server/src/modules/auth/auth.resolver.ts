@@ -6,6 +6,7 @@ import { Org } from 'modules/org/models/Org'
 
 import { AuthService } from './auth.service'
 import { AuthenticatePayload, SignInPayload } from './auth.type'
+import { Permission } from './models'
 
 @Resolver()
 export class AuthResolver {
@@ -17,7 +18,8 @@ export class AuthResolver {
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<AuthenticatePayload> {
-    return { account, org }
+    const permissions = await this.authService.getAccountPermissions(account.id)
+    return { account, org, permissions }
   }
 
   @Mutation((_returns) => SignInPayload)
@@ -26,7 +28,12 @@ export class AuthResolver {
     @Args('identity', { description: `Could be username or email` })
     identity: string,
     @Args('password') password: string,
-  ): Promise<{ token: string; account: Account }> {
+  ): Promise<{
+    token: string
+    account: Account
+    permissions: Permission[]
+    org: Org
+  }> {
     return this.authService.signIn({
       orgNamespace,
       usernameOrEmail: identity,

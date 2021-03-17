@@ -11,4 +11,6 @@ export class Role {
 
   @Field((_type) => [Permission])
   permissions: Permission[]
+
+  priority: number
 }

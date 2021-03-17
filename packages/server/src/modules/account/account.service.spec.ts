@@ -1,14 +1,12 @@
 import { TestingModule } from '@nestjs/testing'
 import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
-import { TypegooseModule } from 'nestjs-typegoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
-import { Account } from './models/Account'
 
 describe('account.service', () => {
   let module: TestingModule
@@ -19,17 +17,7 @@ describe('account.service', () => {
     const testDb = await initTestDb()
     mongooseConnection = testDb.mongooseConnection
 
-    module = await createTestingModule({
-      imports: [
-        TypegooseModule.forRoot(testDb.uri, {
-          useUnifiedTopology: true,
-          useCreateIndex: true,
-          useNewUrlParser: true,
-        }),
-        TypegooseModule.forFeature([Account]),
-      ],
-      providers: [AccountService],
-    })
+    module = await createTestingModule(testDb.uri)
 
     accountService = module.get<AccountService>(AccountService)
   })

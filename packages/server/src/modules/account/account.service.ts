@@ -111,4 +111,26 @@ export class AccountService {
   }): Promise<Nullable<DocumentType<Account>>> {
     return this.accountModel.findOne({ _id: id, orgId })
   }
+
+  async findAndPaginateAccounts(
+    query: {
+      orgId: string
+    },
+    pageOptions: {
+      limit: number
+      skip: number
+    },
+  ): Promise<{ accounts: DocumentType<Account>[]; totalCount: number }> {
+    const { orgId } = query
+    const { limit, skip } = pageOptions
+
+    const accounts = await this.accountModel
+      .find({ orgId })
+      .skip(skip)
+      .limit(limit)
+
+    const totalCount = await this.accountModel.countDocuments({ orgId })
+
+    return { accounts, totalCount }
+  }
 }
