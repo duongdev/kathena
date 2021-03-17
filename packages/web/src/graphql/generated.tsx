@@ -75,6 +75,7 @@ export enum Permission {
   Hr_Access = 'Hr_Access',
   Hr_CreateAccount = 'Hr_CreateAccount',
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
+  Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
   NoPermission = 'NoPermission',
 }
 
