@@ -6,6 +6,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
+import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
   let module: TestingModule
@@ -60,6 +61,73 @@ describe('auth.service', () => {
         'Hr_CreateOrgAccount',
         'Hr_ListOrgAccounts',
       ])
+    })
+  })
+
+  describe('canAccountManageRoles', () => {
+    it(`runs as my expected results`, async () => {
+      expect.assertions(12)
+      const accountId = objectId()
+
+      // #region  Admin
+      jest
+        .spyOn(authService, 'getAccountRoles')
+        .mockResolvedValue([admin, staff])
+
+      // Can't manage other admin
+      await expect(
+        authService.canAccountManageRoles(accountId, [admin]),
+      ).resolves.toBe(false)
+
+      // Can't manage owner
+      await expect(
+        authService.canAccountManageRoles(accountId, [owner, staff]),
+      ).resolves.toBe(false)
+
+      // Can manage lower roles
+      await expect(
+        authService.canAccountManageRoles(accountId, [student, staff]),
+      ).resolves.toBe(true)
+      await expect(
+        authService.canAccountManageRoles(accountId, [
+          student,
+          lecturer,
+          staff,
+        ]),
+      ).resolves.toBe(true)
+      // #endregion
+
+      // #region Staff
+      jest
+        .spyOn(authService, 'getAccountRoles')
+        .mockResolvedValue([student, staff])
+
+      // can't manage owner, admin & staff
+      await expect(
+        authService.canAccountManageRoles(accountId, [owner]),
+      ).resolves.toBe(false)
+      await expect(
+        authService.canAccountManageRoles(accountId, [admin]),
+      ).resolves.toBe(false)
+      await expect(
+        authService.canAccountManageRoles(accountId, [owner, admin]),
+      ).resolves.toBe(false)
+      await expect(
+        authService.canAccountManageRoles(accountId, [student, admin]),
+      ).resolves.toBe(false)
+      await expect(
+        authService.canAccountManageRoles(accountId, [student, staff]),
+      ).resolves.toBe(false)
+      // can manage student & lecturer
+      await expect(
+        authService.canAccountManageRoles(accountId, [student]),
+      ).resolves.toBe(true)
+      await expect(
+        authService.canAccountManageRoles(accountId, [lecturer]),
+      ).resolves.toBe(true)
+      await expect(
+        authService.canAccountManageRoles(accountId, [student, lecturer]),
+      ).resolves.toBe(true)
     })
   })
 })

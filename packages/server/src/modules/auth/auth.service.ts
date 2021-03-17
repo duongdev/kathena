@@ -119,4 +119,39 @@ export class AuthService {
 
     return accountPermissions.includes(permission)
   }
+
+  async getAccountRoles(accountId: string): Promise<Role[]> {
+    const account = await this.accountService.findAccountById(accountId)
+
+    if (!account) {
+      return []
+    }
+
+    const accountOrgRoles = await this.getOrgRoles(account.orgId)
+    const accountRoles = account.roles
+      .map((role) => accountOrgRoles.find((roleItem) => roleItem.name === role))
+      .filter((role) => !!role) as Role[]
+
+    return accountRoles
+  }
+
+  /** Check if an account has permission to manage other roles */
+  async canAccountManageRoles(
+    accountId: string,
+    roles: Role[],
+  ): Promise<boolean> {
+    const accountRoles = await this.getAccountRoles(accountId)
+
+    const accountTopPriorityRole = accountRoles.reduce(
+      (current, role) => Math.min(current, role.priority),
+      Infinity,
+    )
+
+    const targetRoleTopPriority = roles.reduce(
+      (current, role) => Math.min(current, role.priority),
+      Infinity,
+    )
+
+    return accountTopPriorityRole < targetRoleTopPriority
+  }
 }
