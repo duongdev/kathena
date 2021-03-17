@@ -57,7 +57,7 @@ type AuthenticatePayload {
 
 enum Permission {
   Hr_Access
-  Hr_CreateAccount
+  Hr_CreateOrgAccount
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   NoPermission

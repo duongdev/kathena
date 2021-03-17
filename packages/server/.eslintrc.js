@@ -28,6 +28,10 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'class-methods-use-this': 'off',
     'no-process-env': 'error',
+    'jest/prefer-expect-assertions': [
+      'warn',
+      { onlyFunctionsWithAsyncKeyword: true },
+    ],
     'import/order': [
       'warn',
       {

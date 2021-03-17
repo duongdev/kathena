@@ -25,7 +25,7 @@ export class AccountResolver {
   constructor(private readonly accountService: AccountService) {}
 
   @Mutation((_returns) => Account)
-  @UseAuthGuard(P.Hr_CreateAccount)
+  @UseAuthGuard(P.Hr_CreateOrgAccount)
   @UsePipes(ValidationPipe)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,

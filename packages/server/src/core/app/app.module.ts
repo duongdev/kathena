@@ -11,7 +11,7 @@ import { AuthModule } from 'modules/auth/auth.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { OrgModule } from 'modules/org/org.module'
 
-const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
+export const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
 
 @Module({
   imports: [
