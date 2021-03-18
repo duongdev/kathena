@@ -58,7 +58,7 @@ const useStyles = makeStyles(() => ({
   root: {
     fontWeight: 'bold',
     cursor: 'default',
-    maxWidth: 150,
+    maxWidth: 250,
     overflow: 'hidden',
   },
   skeleton: {
