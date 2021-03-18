@@ -29,7 +29,7 @@ const labels = {
 
 const validationSchema: SchemaOf<SignInInput> = object({
   identity: string().label(labels.identity).trim().required(),
-  password: string().label(labels.password).trim().required(),
+  password: string().label(labels.password).required(),
 })
 
 const SignInForm: FC<SignInFormProps> = (props) => {
