@@ -16,7 +16,11 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
     <div className={classes.root}>
       <PageContainer withBackButton maxWidth="sm" title="Cài đặt tài khoản">
         <Grid container spacing={DASHBOARD_SPACING}>
-          <SectionCard gridItem={{ xs: 12 }} title="Thông tin tài khoản">
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin tài khoản"
+          >
             <CardContent>
               <ProfileSettingsForm />
             </CardContent>

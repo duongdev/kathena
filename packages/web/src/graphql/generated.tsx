@@ -144,6 +144,7 @@ export type UpdateAccountInput = {
   email?: Maybe<Scalars['String']>
   displayName?: Maybe<Scalars['String']>
   roles?: Maybe<Array<Scalars['String']>>
+  password?: Maybe<Scalars['String']>
 }
 
 export type AuthAccountFragment = Pick<
@@ -191,6 +192,15 @@ export type AccountDisplayNameQueryVariables = Exact<{
 
 export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
+}
+
+export type UpdateSelfAccountMutationVariables = Exact<{
+  accountId: Scalars['ID']
+  update: UpdateAccountInput
+}>
+
+export type UpdateSelfAccountMutation = {
+  updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
 }
 
 export type CreateAccountMutationVariables = Exact<{
@@ -931,6 +941,154 @@ export type AccountDisplayNameLazyQueryHookResult = ReturnType<
 export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
+>
+export const UpdateSelfAccountDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateSelfAccount' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'accountId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'update' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateAccountInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateAccount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'update' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'accountId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateSelfAccountMutationFn = Apollo.MutationFunction<
+  UpdateSelfAccountMutation,
+  UpdateSelfAccountMutationVariables
+>
+export type UpdateSelfAccountProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateSelfAccountMutation,
+    UpdateSelfAccountMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateSelfAccount<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateSelfAccountMutation,
+    UpdateSelfAccountMutationVariables,
+    UpdateSelfAccountProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateSelfAccountMutation,
+    UpdateSelfAccountMutationVariables,
+    UpdateSelfAccountProps<TChildProps, TDataName>
+  >(UpdateSelfAccountDocument, {
+    alias: 'updateSelfAccount',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateSelfAccountMutation__
+ *
+ * To run a mutation, you first call `useUpdateSelfAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSelfAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSelfAccountMutation, { data, loading, error }] = useUpdateSelfAccountMutation({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *      update: // value for 'update'
+ *   },
+ * });
+ */
+export function useUpdateSelfAccountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateSelfAccountMutation,
+    UpdateSelfAccountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateSelfAccountMutation,
+    UpdateSelfAccountMutationVariables
+  >(UpdateSelfAccountDocument, options)
+}
+export type UpdateSelfAccountMutationHookResult = ReturnType<
+  typeof useUpdateSelfAccountMutation
+>
+export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAccountMutation>
+export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
+  UpdateSelfAccountMutation,
+  UpdateSelfAccountMutationVariables
 >
 export const CreateAccountDocument: DocumentNode = {
   kind: 'Document',

@@ -72,6 +72,7 @@ export class AccountResolver {
 
   @Mutation((_returns) => Account)
   @UseAuthGuard()
+  @UsePipes(ValidationPipe)
   async updateAccount(
     @Args('id', { type: () => ID }) accountId: string,
     @Args('updateInput') updateInput: UpdateAccountInput,

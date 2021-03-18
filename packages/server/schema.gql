@@ -110,4 +110,5 @@ input UpdateAccountInput {
   email: String
   displayName: String
   roles: [String!]
+  password: String
 }
