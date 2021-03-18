@@ -113,11 +113,17 @@ export type PageOptionsInput = {
 
 export type Mutation = {
   createOrgAccount: Account
+  updateAccount: Account
   signIn: SignInPayload
 }
 
 export type MutationCreateOrgAccountArgs = {
   input: CreateAccountInput
+}
+
+export type MutationUpdateAccountArgs = {
+  updateInput: UpdateAccountInput
+  id: Scalars['ID']
 }
 
 export type MutationSignInArgs = {
@@ -131,6 +137,13 @@ export type CreateAccountInput = {
   email: Scalars['String']
   displayName?: Maybe<Scalars['String']>
   roles: Array<Scalars['String']>
+}
+
+export type UpdateAccountInput = {
+  username?: Maybe<Scalars['String']>
+  email?: Maybe<Scalars['String']>
+  displayName?: Maybe<Scalars['String']>
+  roles?: Maybe<Array<Scalars['String']>>
 }
 
 export type AuthAccountFragment = Pick<

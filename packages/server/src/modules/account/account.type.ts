@@ -20,6 +20,23 @@ export class CreateAccountInput {
   roles: string[]
 }
 
+@InputType()
+export class UpdateAccountInput {
+  @Field({ nullable: true })
+  username?: string
+
+  @Field({ nullable: true })
+  @IsEmail()
+  email?: string
+
+  @Field({ nullable: true })
+  displayName?: string
+
+  @Field((_type) => [String], { nullable: true })
+  @ArrayNotEmpty()
+  roles?: string[]
+}
+
 export class CreateAccountServiceInput extends CreateAccountInput {
   orgId: string
 
