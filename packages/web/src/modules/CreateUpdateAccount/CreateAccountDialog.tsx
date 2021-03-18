@@ -12,6 +12,7 @@ import {
   TextFormField,
 } from '@kathena/ui'
 import { useCreateAccountMutation } from 'graphql/generated'
+import { DISPLAY_NAME_REGEX, USERNAME_REGEX } from 'utils/validators'
 
 export type CreateAccountInput = {
   displayName?: string
@@ -25,6 +26,9 @@ const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
     .string()
     .label('Tên hiển thị')
     .trim()
+    .matches(DISPLAY_NAME_REGEX, {
+      message: 'Tên hiển thị chứa các ký tự không phù hợp',
+    })
     .min(3)
     .max(30)
     .notRequired(),
@@ -33,7 +37,9 @@ const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
     .label('Tên đăng nhập')
     .min(3)
     .max(30)
-    .matches(/^[a-z][a-z0-9_.]{3,30}$/)
+    .matches(USERNAME_REGEX, {
+      message: 'Cho phép chữ, số và dấu chấm; Bắt đầu bằng chữ',
+    })
     .trim()
     .required(),
   email: yup
@@ -113,6 +119,7 @@ export const CreateAccountDialog: FC<CreateAccountDialogProps> = (props) => {
           required
           name="email"
           label="Địa chỉ email"
+          placeholder="someone@somewhere.com"
         />
         <TextFormField
           gridItem={{ xs: 12 }}
