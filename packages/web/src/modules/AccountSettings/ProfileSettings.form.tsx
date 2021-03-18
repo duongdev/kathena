@@ -21,7 +21,7 @@ const ProfileSettingsForm: FC<ProfileSettingsFormProps> = (props) => {
 
   const initialValues: ProfileSettingsInput = useMemo(
     () => ({
-      displayName: account.displayName,
+      displayName: account.displayName ?? '',
       email: account.email,
       username: account.username,
     }),

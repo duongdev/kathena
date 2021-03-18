@@ -55,7 +55,7 @@ describe('account.service', () => {
 
       await expect(
         accountService.createAccount(createAccountServiceInput),
-      ).rejects.toThrow('Email or username has been taken')
+      ).rejects.toThrow('Email dustin.do95@gmail.com has been taken')
     })
 
     it.todo(`throws error if orgId is not provided`)
@@ -71,6 +71,10 @@ describe('account.service', () => {
     it.todo(`allows staff to create lecturer or student`)
 
     it.todo(`allows admin to create staff or admin`)
+
+    it.todo(`replaces duplicated spaces in displayName by single spaces`)
+
+    it.todo(`throws error if displayName contains invalid characters`)
 
     it(`encrypts the password`, async () => {
       expect.assertions(2)
@@ -94,7 +98,7 @@ describe('account.service', () => {
       expect(account).toMatchObject({
         email: 'dustin.do95@gmail.com',
         lastActivityAt: null,
-        status: 'Pending',
+        status: 'Active',
         username: 'duongdev',
       })
       expect(account.orgId).toBeDefined()

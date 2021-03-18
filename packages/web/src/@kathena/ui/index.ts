@@ -13,6 +13,9 @@ export * from './DashboardContainer'
 export { default as DataTable } from './DataTable'
 export * from './DataTable'
 
+export { default as FormDialog } from './FormDialog'
+export * from './FormDialog'
+
 export { default as GridItemContainer } from './GridItemContainer'
 export * from './GridItemContainer'
 

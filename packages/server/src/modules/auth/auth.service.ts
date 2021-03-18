@@ -1,3 +1,4 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { keyBy, uniq } from 'lodash'
@@ -18,6 +19,7 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name)
 
   constructor(
+    @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
     private readonly orgService: OrgService,
   ) {}
@@ -118,5 +120,57 @@ export class AuthService {
     )) as string[]
 
     return accountPermissions.includes(permission)
+  }
+
+  async mapOrgRolesFromNames({
+    orgId,
+    roleNames,
+  }: {
+    orgId: string
+    roleNames: string[]
+  }): Promise<Role[]> {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const orgRoles = await this.getOrgRoles(orgId)
+
+    const roles = roleNames
+      .map((role) => orgRoles.find((roleItem) => roleItem.name === role))
+      .filter((role) => !!role) as Role[]
+
+    return roles
+  }
+
+  async getAccountRoles(accountId: string): Promise<Role[]> {
+    const account = await this.accountService.findAccountById(accountId)
+
+    if (!account) {
+      return []
+    }
+
+    const accountOrgRoles = await this.getOrgRoles(account.orgId)
+    const accountRoles = account.roles
+      .map((role) => accountOrgRoles.find((roleItem) => roleItem.name === role))
+      .filter((role) => !!role) as Role[]
+
+    return accountRoles
+  }
+
+  /** Check if an account has permission to manage other roles */
+  async canAccountManageRoles(
+    accountId: string,
+    roles: Role[],
+  ): Promise<boolean> {
+    const accountRoles = await this.getAccountRoles(accountId)
+
+    const accountTopPriorityRole = accountRoles.reduce(
+      (current, role) => Math.min(current, role.priority),
+      Infinity,
+    )
+
+    const targetRoleTopPriority = roles.reduce(
+      (current, role) => Math.min(current, role.priority),
+      Infinity,
+    )
+
+    return accountTopPriorityRole < targetRoleTopPriority
   }
 }

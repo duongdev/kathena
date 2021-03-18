@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 
+import { SnackbarProvider } from 'notistack'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -20,15 +21,17 @@ function App() {
       <ApolloProvider>
         <AuthProvider>
           <ThemeProvider>
-            <HelmetProvider>
-              <Helmet
-                defaultTitle="Kathena Platform"
-                titleTemplate="%s | Kathena Platform"
-              />
-              <Router>
-                <AppRoute />
-              </Router>
-            </HelmetProvider>
+            <SnackbarProvider maxSnack={3}>
+              <HelmetProvider>
+                <Helmet
+                  defaultTitle="Kathena Platform"
+                  titleTemplate="%s | Kathena Platform"
+                />
+                <Router>
+                  <AppRoute />
+                </Router>
+              </HelmetProvider>
+            </SnackbarProvider>
           </ThemeProvider>
         </AuthProvider>
       </ApolloProvider>

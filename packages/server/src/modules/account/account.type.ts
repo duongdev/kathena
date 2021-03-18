@@ -12,8 +12,8 @@ export class CreateAccountInput {
   @IsEmail()
   email: string
 
-  @Field()
-  displayName: string
+  @Field({ nullable: true })
+  displayName?: string
 
   @Field((_type) => [String])
   @ArrayNotEmpty()

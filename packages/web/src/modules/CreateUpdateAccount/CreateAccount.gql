@@ -1,0 +1,8 @@
+mutation CreateAccount($accountInput: CreateAccountInput!) {
+  createOrgAccount(input: $accountInput) {
+    id
+    displayName
+    username
+    email
+  }
+}

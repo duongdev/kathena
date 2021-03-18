@@ -27,12 +27,12 @@ export class AccountResolver {
   @Mutation((_returns) => Account)
   @UseAuthGuard(P.Hr_CreateOrgAccount)
   @UsePipes(ValidationPipe)
-  async createAccount(
+  async createOrgAccount(
     @Args('input') createAccountInput: CreateAccountInput,
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<Account> {
-    return this.accountService.createAccount({
+    return this.accountService.createOrgMemberAccount(account.id, {
       ...createAccountInput,
       createdByAccountId: account.id,
       orgId: org.id,
