@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { Avatar, Badge, makeStyles } from '@material-ui/core'
+import { Avatar, Badge, makeStyles, Skeleton } from '@material-ui/core'
 import clsx from 'clsx'
 import gravatar from 'gravatar'
 
@@ -98,6 +98,10 @@ const AccountAvatar: FC<AccountAvatarProps> = (props) => {
 
   return avatar
 }
+
+export const AccountAvatarSkeleton: FC<{ size?: number }> = ({ size = 40 }) => (
+  <Skeleton variant="circular" width={size} height={size} />
+)
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {

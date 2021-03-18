@@ -21,6 +21,8 @@ export * from './GridItemContainer'
 
 export { default as withComponentHocs } from './hocs/withComponentHocs'
 
+export * from './hooks'
+
 export { default as InputField } from './InputField'
 export * from './InputField'
 

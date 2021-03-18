@@ -21,6 +21,8 @@ import {
   Theme,
 } from '@material-ui/core'
 
+import { repeatArray } from '@kathena/utils'
+
 import Spinner from '../Spinner'
 
 type Column<RowData> = {
@@ -30,6 +32,7 @@ type Column<RowData> = {
   align?: TableCellProps['align']
   padding?: TableCellProps['padding']
   width?: number | string
+  skeleton?: ReactNode
 }
 
 export type DataTableProps<RowData extends object> = {
@@ -46,6 +49,7 @@ export type DataTableProps<RowData extends object> = {
   columns: Column<RowData>[]
   loading?: boolean
   pagination?: TablePaginationProps
+  skeletonCount?: number
   classes?: Partial<
     Record<'root' | 'tableHead' | 'spinner' | 'rowItem', string>
   >
@@ -147,23 +151,38 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.data.map((row, idx) => (
-              <TableRow
-                key={getRowKey(row, props.rowKey) || idx}
-                className={classes.rowItem}
-              >
-                {props.columns.map((column, idx) => (
-                  <TableCell
-                    align={column.align}
-                    padding={column.padding}
-                    key={`${column.label}-${column.field || idx}`}
-                    style={{ width: column.width }}
+            {props.loading && props.data.length === 0
+              ? repeatArray(props.skeletonCount ?? 5).map((idx) => (
+                  <TableRow className={classes.rowItem} key={idx}>
+                    {props.columns.map((column, idx) => (
+                      <TableCell
+                        align={column.align}
+                        padding={column.padding}
+                        key={`${column.label}-${column.field || idx}`}
+                        style={{ width: column.width }}
+                      >
+                        {column.skeleton}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : props.data.map((row, idx) => (
+                  <TableRow
+                    key={getRowKey(row, props.rowKey) || idx}
+                    className={classes.rowItem}
                   >
-                    {getCellValue(row, column)}
-                  </TableCell>
+                    {props.columns.map((column, idx) => (
+                      <TableCell
+                        align={column.align}
+                        padding={column.padding}
+                        key={`${column.label}-${column.field || idx}`}
+                        style={{ width: column.width }}
+                      >
+                        {getCellValue(row, column)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
           </TableBody>
         </Table>
       </TableContainer>

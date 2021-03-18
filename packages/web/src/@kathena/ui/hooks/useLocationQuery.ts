@@ -7,7 +7,7 @@ import { ANY } from '@kathena/types'
 import { wait } from '@kathena/utils'
 
 // tslint:disable-next-line: typedef
-function useLocationQuery() {
+export function useLocationQuery() {
   const { search } = useLocation()
   const history = useHistory()
   const query = qs.parse(search)
@@ -23,7 +23,10 @@ function useLocationQuery() {
 
   /** Update URL search (one of field) */
   const updateQuery = useCallback(
-    async (update: { [k: string]: string | number }) => {
+    async (
+      update: { [k: string]: string | number },
+      options?: { replace: boolean },
+    ) => {
       const nextQuery = {
         ...query,
         ...update,
@@ -32,10 +35,15 @@ function useLocationQuery() {
       // to improve performance
       await wait(50)
 
-      return history.push({
-        pathname: history.location.pathname,
-        search: qs.stringify(nextQuery),
-      })
+      return options?.replace
+        ? history.replace({
+            pathname: history.location.pathname,
+            search: qs.stringify(nextQuery),
+          })
+        : history.push({
+            pathname: history.location.pathname,
+            search: qs.stringify(nextQuery),
+          })
     },
     [history, query],
   )
@@ -46,5 +54,3 @@ function useLocationQuery() {
     updateQuery,
   }
 }
-
-export default useLocationQuery

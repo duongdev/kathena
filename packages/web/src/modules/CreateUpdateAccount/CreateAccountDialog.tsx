@@ -29,7 +29,7 @@ const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
     .matches(DISPLAY_NAME_REGEX, {
       message: 'Tên hiển thị chứa các ký tự không phù hợp',
     })
-    .min(3)
+    .min(2)
     .max(30)
     .notRequired(),
   username: yup

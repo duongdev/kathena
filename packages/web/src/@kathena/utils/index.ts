@@ -9,3 +9,6 @@ export const getDevicePixelRatio = (): number => {
 }
 
 export const isRetina = (): boolean => getDevicePixelRatio() > 1
+
+export const repeatArray = (times: number) =>
+  Array.from('.'.repeat(times)).map((_, idx) => idx)
