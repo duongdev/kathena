@@ -61,14 +61,14 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
           loading={loading}
           columns={[
             {
-              render: (account) => <AccountAvatar accountId={account.id} />,
+              render: (account) => <AccountAvatar account={account} />,
               width: '1%',
             },
             {
               label: 'Tên người dùng',
               render: (account) => (
                 <>
-                  <AccountDisplayName variant="body1" accountId={account.id} />
+                  <AccountDisplayName variant="body1" account={account} />
                   <Typography variant="body2" color="textSecondary">
                     @{account.username}
                   </Typography>

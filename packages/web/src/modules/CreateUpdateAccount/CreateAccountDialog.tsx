@@ -21,14 +21,28 @@ export type CreateAccountInput = {
 }
 
 const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
-  displayName: yup.string().label('Tên hiển thị').trim().notRequired(),
+  displayName: yup
+    .string()
+    .label('Tên hiển thị')
+    .trim()
+    .min(3)
+    .max(30)
+    .notRequired(),
   username: yup
     .string()
     .label('Tên đăng nhập')
+    .min(3)
+    .max(30)
     .matches(/^[a-z][a-z0-9_.]{3,30}$/)
     .trim()
     .required(),
-  email: yup.string().label('Địa chỉ email').trim().email().required(),
+  email: yup
+    .string()
+    .label('Địa chỉ email')
+    .trim()
+    .lowercase()
+    .email()
+    .required(),
   role: yup.string().label('Phân quyền').trim().required(),
 })
 

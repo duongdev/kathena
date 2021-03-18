@@ -7,26 +7,46 @@ import gravatar from 'gravatar'
 import { HEADING_FONT } from '@kathena/theme'
 import { withComponentHocs } from '@kathena/ui'
 import { getDevicePixelRatio } from '@kathena/utils'
-import { AccountAvailability, useAccountAvatarQuery } from 'graphql/generated'
+import {
+  Account,
+  AccountAvailability,
+  useAccountAvatarQuery,
+} from 'graphql/generated'
 import useAccountUtils from 'utils/useAccountUtils'
 
-export type AccountAvatarProps = {
+export type AccountAvatarNameWithId = {
   accountId: string
+}
+
+export type AccountAvatarNameWithAccount = {
+  account: Pick<
+    Account,
+    'id' | 'username' | 'displayName' | 'email' | 'availability'
+  >
+}
+
+export type AccountAvatarProps = {
   size?: number
   disableLink?: boolean
   availabilityBadge?: boolean
-}
+} & (AccountAvatarNameWithId | AccountAvatarNameWithAccount)
 
 const AccountAvatar: FC<AccountAvatarProps> = (props) => {
-  const classes = useStyles(props)
-  const { accountId, size = 40, availabilityBadge = true } = props
+  const { size = 40, availabilityBadge = true } = props
+  const { accountId } = props as AccountAvatarNameWithId
+  const { account: accountProp } = props as AccountAvatarNameWithAccount
 
+  const classes = useStyles(props)
   const { getDisplayName } = useAccountUtils()
   const { data } = useAccountAvatarQuery({
     variables: { id: accountId },
+    skip: !!accountProp,
   })
 
-  const account = useMemo(() => data?.account, [data?.account])
+  const account = useMemo(() => accountProp || data?.account, [
+    data?.account,
+    accountProp,
+  ])
 
   const displayName = useMemo(() => (account ? getDisplayName(account) : ''), [
     account,
