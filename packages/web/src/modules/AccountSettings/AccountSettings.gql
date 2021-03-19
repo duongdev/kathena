@@ -1,0 +1,8 @@
+mutation UpdateSelfAccount($accountId: ID!, $update: UpdateAccountInput!) {
+  updateAccount(updateInput: $update, id: $accountId) {
+    id
+    displayName
+    email
+    roles
+  }
+}
