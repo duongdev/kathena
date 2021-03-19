@@ -166,4 +166,36 @@ describe('account.service', () => {
       })
     })
   })
+
+  describe('findAccountById', () => {
+    it('return null if Id is not exit', async () => {
+      expect.assertions(1)
+
+      await expect(
+        accountService.findAccountById('60536101b803f71a85798c77'),
+      ).resolves.toBeNull()
+    })
+
+    it('return Account info if Id is exit', async () => {
+      expect.assertions(1)
+
+      const account = await accountService.createAccount({
+        username: 'canhhuynh',
+        email: 'huynhthanhcanh.top@gmail.com',
+        password: 'rawPass',
+        orgId: objectId(),
+        roles: ['admin'],
+        displayName: 'Canh Huynh',
+      })
+
+      await expect(
+        accountService.findAccountById(account.id),
+      ).resolves.toMatchObject({
+        id: account.id,
+        username: 'canhhuynh',
+        email: 'huynhthanhcanh.top@gmail.com',
+        orgId: account.orgId,
+      })
+    })
+  })
 })
