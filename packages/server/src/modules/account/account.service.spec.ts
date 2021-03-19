@@ -168,7 +168,7 @@ describe('account.service', () => {
   })
 
   describe('findAccountById', () => {
-    it(`returns nul if Id doesn't exist`, async () => {
+    it(`returns null if Id doesn't exist`, async () => {
       expect.assertions(1)
 
       await expect(
