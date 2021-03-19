@@ -168,7 +168,7 @@ describe('account.service', () => {
   })
 
   describe('findAccountById', () => {
-    it('return null if Id is not exit', async () => {
+    it('return Account information if Id does not exist', async () => {
       expect.assertions(1)
 
       await expect(
@@ -176,7 +176,7 @@ describe('account.service', () => {
       ).resolves.toBeNull()
     })
 
-    it('return Account info if Id is exit', async () => {
+    it('return Account information if Id exists', async () => {
       expect.assertions(1)
 
       const account = await accountService.createAccount({
