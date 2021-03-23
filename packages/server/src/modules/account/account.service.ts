@@ -33,9 +33,11 @@ export class AccountService {
     this.logger.log(`[${this.createAccount.name}] Creating new account`)
     this.logger.verbose(accountInput)
 
+    // console.log(await this.orgService.existsOrgById(accountInput.orgId))
+
     if (
-      !accountInput.orgId ||
-      !this.orgService.existsOrgById(accountInput.orgId)
+      !accountInput.orgId.trim() ||
+      !(await this.orgService.existsOrgById(accountInput.orgId))
     ) {
       throw new Error(`Org ID is invalid`)
     }
