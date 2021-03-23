@@ -210,8 +210,7 @@ describe('auth.service', () => {
       ).rejects.toThrow('INVALID_CREDENTIALS')
     })
 
-    it(`returns an object{ token, account, org, permissions }
-    if all cases are passed`, async () => {
+    it(`returns an object { token, account, org, permissions } if all cases are passed`, async () => {
       expect.assertions(1)
 
       // Password
