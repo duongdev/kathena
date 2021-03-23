@@ -1,4 +1,5 @@
 import { TestingModule } from '@nestjs/testing'
+import * as bcrypt from 'bcrypt'
 import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
@@ -128,6 +129,130 @@ describe('auth.service', () => {
       await expect(
         authService.canAccountManageRoles(accountId, [student, lecturer]),
       ).resolves.toBe(true)
+    })
+  })
+
+  describe('signIn', () => {
+    it(`returns an error if 'orgNamespace' does not exist`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: '',
+          password: '',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow(`Organization namespace kmin-edu doesn't exist`)
+    })
+
+    it(`returns an error if Account is not found`, async () => {
+      expect.assertions(1)
+
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(null)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '12345',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+    })
+
+    it('returns an error if password is false or not supplied', async () => {
+      expect.assertions(2)
+
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(account as ANY)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '123456',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+    })
+
+    it(`returns an object{ token, account, org, permissions }
+    if all cases are passed`, async () => {
+      expect.assertions(1)
+
+      // Password
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(account as ANY)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '12345',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).resolves.toMatchObject({
+        account: {
+          id: account.id,
+          email: 'dustin.do95@gmail.com',
+          username: 'duongdev',
+        },
+        org: {
+          name: 'Kmin Academy',
+          namespace: 'kmin-edu',
+        },
+      })
     })
   })
 })
