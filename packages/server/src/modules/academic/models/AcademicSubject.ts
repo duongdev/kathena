@@ -1,5 +1,6 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
+import { Types } from 'mongoose'
 
 import { BaseModel } from 'core'
 
@@ -13,7 +14,6 @@ export class AcademicSubject extends BaseModel {
   @prop({ required: true })
   description: string
 
-  @Field((_type) => Float)
-  @prop()
-  tuitionFee: number
+  @prop({ type: Types.ObjectId })
+  createdByAccountId: string
 }

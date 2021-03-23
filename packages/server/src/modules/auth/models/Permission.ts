@@ -9,6 +9,8 @@ export enum Permission {
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
 
+  Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

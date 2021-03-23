@@ -60,6 +60,7 @@ enum Permission {
   Hr_CreateOrgAccount
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
+  Academic_CreateAcademicSubject
   NoPermission
 }
 
@@ -68,6 +69,15 @@ type SignInPayload {
   account: Account!
   org: Org!
   permissions: [Permission!]!
+}
+
+type AcademicSubject implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  description: String!
 }
 
 type OrgAccountsPayload {
@@ -96,6 +106,7 @@ type Mutation {
     identity: String!
     orgNamespace: String!
   ): SignInPayload!
+  createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
 }
 
 input CreateAccountInput {
@@ -111,4 +122,9 @@ input UpdateAccountInput {
   displayName: String
   roles: [String!]
   password: String
+}
+
+input CreateAcademicSubjectInput {
+  name: String!
+  description: String = ""
 }

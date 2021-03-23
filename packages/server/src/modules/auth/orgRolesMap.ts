@@ -4,7 +4,12 @@ import { Role } from './models/Role'
 export const staff: Role = {
   name: 'staff',
   priority: 3,
-  permissions: [P.Hr_Access, P.Hr_CreateOrgAccount, P.Hr_ListOrgAccounts],
+  permissions: [
+    P.Hr_Access,
+    P.Hr_CreateOrgAccount,
+    P.Hr_ListOrgAccounts,
+    P.Academic_CreateAcademicSubject,
+  ],
 }
 
 export const student: Role = {
