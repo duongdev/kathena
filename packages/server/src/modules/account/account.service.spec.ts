@@ -124,7 +124,7 @@ describe('account.service', () => {
         createAccountServiceInput,
       )
 
-      await expect(testAccount.status === AccountStatus.Active).toBe(true)
+      await expect(testAccount.status).toBe(AccountStatus.Active)
     })
 
     it.todo(`throws error if a staff creates staff or admin`)
