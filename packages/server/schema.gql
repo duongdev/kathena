@@ -72,7 +72,7 @@ type SignInPayload {
 
 type OrgAccountsPayload {
   accounts: [Account!]!
-  totalCount: Int!
+  count: Int!
 }
 
 type Query {

@@ -88,7 +88,7 @@ export type SignInPayload = {
 
 export type OrgAccountsPayload = {
   accounts: Array<Account>
-  totalCount: Scalars['Int']
+  count: Scalars['Int']
 }
 
 export type Query = {
@@ -218,7 +218,7 @@ export type OrgAccountListQueryVariables = Exact<{
 }>
 
 export type OrgAccountListQuery = {
-  orgAccounts: Pick<OrgAccountsPayload, 'totalCount'> & {
+  orgAccounts: Pick<OrgAccountsPayload, 'count'> & {
     accounts: Array<
       Pick<
         Account,
@@ -1329,7 +1329,7 @@ export const OrgAccountListDocument: DocumentNode = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
               ],
             },
           },
