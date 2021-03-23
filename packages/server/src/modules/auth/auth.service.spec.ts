@@ -161,7 +161,7 @@ describe('auth.service', () => {
       )
     })
 
-    it('return token', async () => {
+    it('returns a valid json web token', async () => {
       const account = {
         id: objectId(),
         displayName: 'Dustin Do',
