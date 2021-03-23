@@ -76,7 +76,7 @@ export class AuthService {
     account: Pick<Account, 'id' | 'orgId'>,
   ): Promise<string> {
     if (!account.id) {
-      throw new Error(`nothing accountId`)
+      throw new Error(`ACCOUNT_ID_NOT_FOUND`)
     }
     if (!account.orgId) {
       throw new Error(`nothing orgId`)
