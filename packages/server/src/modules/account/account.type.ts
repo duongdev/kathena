@@ -62,5 +62,5 @@ export class OrgAccountsPayload {
   accounts: Account[]
 
   @Field((_type) => Int)
-  totalCount: number
+  count: number
 }

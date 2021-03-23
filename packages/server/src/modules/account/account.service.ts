@@ -143,7 +143,7 @@ export class AccountService {
       limit: number
       skip: number
     },
-  ): Promise<{ accounts: DocumentType<Account>[]; totalCount: number }> {
+  ): Promise<{ accounts: DocumentType<Account>[]; count: number }> {
     const { orgId } = query
     const { limit, skip } = pageOptions
 
@@ -153,9 +153,9 @@ export class AccountService {
       .skip(skip)
       .limit(limit)
 
-    const totalCount = await this.accountModel.countDocuments({ orgId })
+    const count = await this.accountModel.countDocuments({ orgId })
 
-    return { accounts, totalCount }
+    return { accounts, count }
   }
 
   async createOrgMemberAccount(

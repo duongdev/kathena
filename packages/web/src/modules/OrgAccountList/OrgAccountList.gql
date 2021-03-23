@@ -1,5 +1,5 @@
 query OrgAccountList($orgId: ID!, $skip: Int!, $limit: Int!) {
-  orgAccounts(pageOptions: { skip: $skip, limit: $limit}, orgId: $orgId) {
+  orgAccounts(pageOptions: { skip: $skip, limit: $limit }, orgId: $orgId) {
     accounts {
       id
       email
@@ -9,6 +9,6 @@ query OrgAccountList($orgId: ID!, $skip: Int!, $limit: Int!) {
       availability
       status
     }
-    totalCount
+    count
   }
 }
