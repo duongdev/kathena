@@ -79,7 +79,7 @@ export class AuthService {
       throw new Error(`ACCOUNT_ID_NOT_FOUND`)
     }
     if (!account.orgId) {
-      throw new Error(`nothing orgId`)
+      throw new Error(`ORG_ID_NOT_FOUND`)
     }
     const authData: AuthData = {
       accountId: account.id,
