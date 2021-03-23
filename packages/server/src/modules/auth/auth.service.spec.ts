@@ -146,7 +146,7 @@ describe('auth.service', () => {
       }
 
       await expect(authService.signAccountToken(account)).rejects.toThrow(
-        'nothing accountId',
+        'ACCOUNT_ID_NOT_FOUND',
       )
     })
 
