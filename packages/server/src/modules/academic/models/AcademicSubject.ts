@@ -1,4 +1,4 @@
-import { Field, Float, ObjectType } from '@nestjs/graphql'
+import { Field, ObjectType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
