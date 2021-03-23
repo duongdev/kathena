@@ -1,7 +1,8 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { keyBy, uniq } from 'lodash'
+import { isUndefined, keyBy, uniq } from 'lodash'
+import { rejects } from 'node:assert'
 
 import { config, Logger, Service } from 'core'
 import { AccountService } from 'modules/account/account.service'
@@ -74,12 +75,17 @@ export class AuthService {
   async signAccountToken(
     account: Pick<Account, 'id' | 'orgId'>,
   ): Promise<string> {
+    if (!account.id) {
+      throw new Error(`nothing accountId`)
+    }
+    if (!account.orgId) {
+      throw new Error(`nothing orgId`)
+    }
     const authData: AuthData = {
       accountId: account.id,
       orgId: account.orgId,
     }
     const token = jwt.sign(authData, config.JWT_SECRET)
-
     return token
   }
 
