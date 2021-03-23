@@ -33,9 +33,6 @@ describe('account.service', () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
-    jest
-      .spyOn(accountService['orgService'], 'existsOrgById')
-      .mockResolvedValue(true as never)
   })
 
   it('should be defined', () => {
@@ -54,7 +51,9 @@ describe('account.service', () => {
 
     it(`throws error if username or email has been taken`, async () => {
       expect.assertions(1)
-
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
       jest
         .spyOn(accountService['accountModel'], 'exists')
         .mockResolvedValueOnce(true as never)
@@ -65,7 +64,11 @@ describe('account.service', () => {
     })
 
     it(`throws error if orgId is not provided`, async () => {
-      expect.assertions(2)
+      expect.assertions(3)
+
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
 
       const testCreateAccountServiceInput: CreateAccountServiceInput = {
         ...createAccountServiceInput,
@@ -82,26 +85,32 @@ describe('account.service', () => {
       await expect(
         accountService.createAccount(testCreateAccountServiceInput),
       ).rejects.toThrow('Org ID is invalid')
-    })
 
-    it(`throws error if orgId doesn't exist`, async () => {
-      expect.assertions(1)
-
-      const testCreateAccountServiceInput: CreateAccountServiceInput = {
-        ...createAccountServiceInput,
-      }
-
-      jest
-        .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValueOnce(false as never)
+      testCreateAccountServiceInput.orgId = ''
 
       await expect(
         accountService.createAccount(testCreateAccountServiceInput),
       ).rejects.toThrow('Org ID is invalid')
     })
 
+    it(`throws error if orgId doesn't exist`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.createAccount(createAccountServiceInput),
+      ).rejects.toThrow('Org ID is invalid')
+    })
+
     it(`sets default password as email`, async () => {
       expect.assertions(1)
+
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
 
       const testCreateAccountServiceInput: CreateAccountServiceInput = {
         ...createAccountServiceInput,
@@ -111,7 +120,6 @@ describe('account.service', () => {
       const testAccount = await accountService.createAccount(
         testCreateAccountServiceInput,
       )
-
       await expect(
         compareSync(testCreateAccountServiceInput.email, testAccount.password),
       ).toBe(true)
@@ -119,6 +127,10 @@ describe('account.service', () => {
 
     it(`sets default status as ACTIVE`, async () => {
       expect.assertions(1)
+
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
 
       const testAccount = await accountService.createAccount(
         createAccountServiceInput,
@@ -139,6 +151,10 @@ describe('account.service', () => {
 
     it(`encrypts the password`, async () => {
       expect.assertions(2)
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
+
       const account = await accountService.createAccount(
         createAccountServiceInput,
       )
@@ -151,6 +167,10 @@ describe('account.service', () => {
 
     it(`returns the created account`, async () => {
       expect.assertions(3)
+
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
 
       const account = await accountService.createAccount(
         createAccountServiceInput,
@@ -259,4 +279,6 @@ describe('account.service', () => {
       })
     })
   })
+
+  describe('existsOrgByNamespace', () => {})
 })
