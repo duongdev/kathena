@@ -150,7 +150,7 @@ describe('auth.service', () => {
       )
     })
 
-    it(`throw error if nothing orgId`, async () => {
+    it(`throws error if orgId doesn't exist`, async () => {
       const acc: any = {
         id: objectId(),
       }
