@@ -138,7 +138,7 @@ describe('auth.service', () => {
   })
 
   describe('signAccountToken', () => {
-    it(`return error if nothing accountId`, async () => {
+    it(`throw error if nothing accountId`, async () => {
       expect.assertions(1)
 
       const account: any = {
@@ -150,7 +150,7 @@ describe('auth.service', () => {
       )
     })
 
-    it(`return error if nothing orgId`, async () => {
+    it(`throw error if nothing orgId`, async () => {
       const acc: any = {
         id: objectId(),
       }
