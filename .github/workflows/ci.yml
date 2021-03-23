@@ -39,7 +39,13 @@ jobs:
         run: yarn workspace web build
       - name: Test web
         run: yarn workspace web test
-      - name: Run server test
-        run: yarn workspace server test:cov
+      # - name: Run server test
+      #   run: yarn workspace server test:cov
+      - name: Test server
+        uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          working-directory: 'packages/server'
       - name: Build server
         run: yarn workspace server build
