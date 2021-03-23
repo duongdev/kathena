@@ -259,6 +259,9 @@ describe('account.service', () => {
 
     it(`returns Account information if Id exists`, async () => {
       expect.assertions(1)
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
 
       const account = await accountService.createAccount({
         username: 'canhhuynh',
