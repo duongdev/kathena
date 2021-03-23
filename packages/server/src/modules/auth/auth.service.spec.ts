@@ -157,7 +157,7 @@ describe('auth.service', () => {
 
       expect.assertions(1)
       await expect(authService.signAccountToken(acc)).rejects.toThrow(
-        'nothing orgId',
+        'ORG_ID_NOT_FOUND',
       )
     })
 
