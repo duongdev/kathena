@@ -1,11 +1,17 @@
+import { ID } from '@nestjs/graphql'
 import { TestingModule } from '@nestjs/testing'
+import * as jwt from 'jsonwebtoken'
 import { Connection } from 'mongoose'
 
+import { config } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
+import { Org } from '../org/models/Org'
+
 import { AuthService } from './auth.service'
+import { AuthData } from './auth.type'
 import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
@@ -128,6 +134,55 @@ describe('auth.service', () => {
       await expect(
         authService.canAccountManageRoles(accountId, [student, lecturer]),
       ).resolves.toBe(true)
+    })
+  })
+
+  describe('signAccountToken', () => {
+    it(`throws error if accountId doesn't exist`, async () => {
+      expect.assertions(1)
+
+      const account: any = {
+        orgId: objectId(),
+      }
+
+      await expect(authService.signAccountToken(account)).rejects.toThrow(
+        'ACCOUNT_ID_NOT_FOUND',
+      )
+    })
+
+    it(`throws error if orgId doesn't exist`, async () => {
+      const acc: any = {
+        id: objectId(),
+      }
+
+      expect.assertions(1)
+      await expect(authService.signAccountToken(acc)).rejects.toThrow(
+        'ORG_ID_NOT_FOUND',
+      )
+    })
+
+    it('returns a valid json web token', async () => {
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        orgId: objectId(),
+      }
+
+      expect.assertions(1)
+      const result: any = jwt.decode(
+        await authService.signAccountToken(account),
+      )
+      const obj = {
+        id: result.accountId,
+        orgId: result.orgId,
+      }
+      expect(obj).toMatchObject({
+        id: account.id,
+        orgId: account.orgId,
+      })
     })
   })
 })
