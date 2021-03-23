@@ -1,5 +1,5 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
-import { ArrayNotEmpty, IsEmail } from 'class-validator'
+import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
 
 import { Account, AccountStatus } from './models/Account'
 
@@ -20,6 +20,32 @@ export class CreateAccountInput {
   roles: string[]
 }
 
+@InputType()
+export class UpdateAccountInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  username?: string
+
+  @Field({ nullable: true })
+  @IsEmail()
+  @IsOptional()
+  email?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  displayName?: string
+
+  @Field((_type) => [String], { nullable: true })
+  @ArrayNotEmpty()
+  @IsOptional()
+  roles?: string[]
+
+  @Field({ nullable: true })
+  @MinLength(6)
+  @IsOptional()
+  password?: string
+}
+
 export class CreateAccountServiceInput extends CreateAccountInput {
   orgId: string
 
@@ -36,5 +62,5 @@ export class OrgAccountsPayload {
   accounts: Account[]
 
   @Field((_type) => Int)
-  totalCount: number
+  count: number
 }

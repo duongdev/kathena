@@ -3,6 +3,7 @@ import { join } from 'path'
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ServeStaticModule } from '@nestjs/serve-static'
+import { GraphQLError, GraphQLFormattedError } from 'graphql'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { config } from 'core'
@@ -33,6 +34,13 @@ export const appModules = [AccountModule, AuthModule, DevtoolModule, OrgModule]
       autoSchemaFile: config.IS_PROD ? true : 'schema.gql',
       introspection: !config.IS_PROD,
       playground: !config.IS_PROD,
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError: GraphQLFormattedError = {
+          message:
+            error.extensions?.exception?.response?.message || error.message,
+        }
+        return graphQLFormattedError
+      },
       context: ({ req, connection }) =>
         connection
           ? {

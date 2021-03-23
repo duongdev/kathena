@@ -1,11 +1,19 @@
 import { FC, useCallback, useMemo, useState } from 'react'
 
-import { Chip, makeStyles, Paper } from '@material-ui/core'
-import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
+import { Chip, makeStyles, Paper, Skeleton } from '@material-ui/core'
+import AccountAvatar, {
+  AccountAvatarSkeleton,
+} from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import { UserPlus } from 'phosphor-react'
 
-import { Button, DataTable, PageContainer, Typography } from '@kathena/ui'
+import {
+  Button,
+  DataTable,
+  PageContainer,
+  Typography,
+  usePagination,
+} from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useOrgAccountListQuery } from 'graphql/generated'
 import { CreateAccountDialog } from 'modules/CreateUpdateAccount'
@@ -15,8 +23,9 @@ export type OrgAccountListProps = {}
 const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
+  const { page, perPage, setPage, setPerPage } = usePagination()
   const { data, loading, refetch } = useOrgAccountListQuery({
-    variables: { orgId: org.id, limit: 1000, skip: 0 },
+    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
   })
   const [createAccountDialogOpen, setCreateAccountDialogOpen] = useState(false)
 
@@ -31,6 +40,9 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
 
   const accounts = useMemo(() => data?.orgAccounts.accounts ?? [], [
     data?.orgAccounts.accounts,
+  ])
+  const totalCount = useMemo(() => data?.orgAccounts.count ?? 0, [
+    data?.orgAccounts.count,
   ])
 
   return (
@@ -63,6 +75,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
             {
               render: (account) => <AccountAvatar account={account} />,
               width: '1%',
+              skeleton: <AccountAvatarSkeleton />,
             },
             {
               label: 'Tên người dùng',
@@ -74,17 +87,27 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
                   </Typography>
                 </>
               ),
+              skeleton: <Skeleton />,
             },
             {
               label: 'Địa chỉ email',
               field: 'email',
+              skeleton: <Skeleton />,
             },
             {
               label: 'Phân quyền',
               render: (account) =>
                 account.roles.map((role) => <Chip key={role} label={role} />),
+              skeleton: <Skeleton />,
             },
           ]}
+          pagination={{
+            count: totalCount,
+            rowsPerPage: perPage,
+            page,
+            onPageChange: (e, nextPage) => setPage(nextPage),
+            onRowsPerPageChange: (event) => setPerPage(+event.target.value),
+          }}
         />
       </Paper>
     </PageContainer>

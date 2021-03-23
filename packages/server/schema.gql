@@ -72,7 +72,7 @@ type SignInPayload {
 
 type OrgAccountsPayload {
   accounts: [Account!]!
-  totalCount: Int!
+  count: Int!
 }
 
 type Query {
@@ -88,6 +88,7 @@ input PageOptionsInput {
 
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
+  updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
   signIn(
     password: String!
 
@@ -102,4 +103,12 @@ input CreateAccountInput {
   email: String!
   displayName: String
   roles: [String!]!
+}
+
+input UpdateAccountInput {
+  username: String
+  email: String
+  displayName: String
+  roles: [String!]
+  password: String
 }

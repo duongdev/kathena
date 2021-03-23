@@ -2,10 +2,12 @@ import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
 import { uniq } from 'lodash'
+import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
 import { AuthService } from 'modules/auth/auth.service'
+import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 import { Nullable } from 'types'
 
@@ -139,7 +141,7 @@ export class AccountService {
       limit: number
       skip: number
     },
-  ): Promise<{ accounts: DocumentType<Account>[]; totalCount: number }> {
+  ): Promise<{ accounts: DocumentType<Account>[]; count: number }> {
     const { orgId } = query
     const { limit, skip } = pageOptions
 
@@ -149,9 +151,9 @@ export class AccountService {
       .skip(skip)
       .limit(limit)
 
-    const totalCount = await this.accountModel.countDocuments({ orgId })
+    const count = await this.accountModel.countDocuments({ orgId })
 
-    return { accounts, totalCount }
+    return { accounts, count }
   }
 
   async createOrgMemberAccount(
@@ -178,5 +180,133 @@ export class AccountService {
     })
 
     return createdAccount
+  }
+
+  async updateAccount(
+    query: { id: string; orgId: string },
+    update: {
+      displayName?: string
+      email?: string
+      username?: string
+      password?: string
+    },
+  ): Promise<DocumentType<Account>> {
+    const account = await this.accountModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
+
+    if (!account) {
+      throw new Error(`Couldn't find account to update`)
+    }
+
+    if (update.displayName) {
+      account.displayName = update.displayName?.replace(/\s\s+/g, ' ')
+    }
+    if (update.email) {
+      account.email = update.email
+    }
+    if (update.username) {
+      account.username = update.username
+    }
+    if (update.password) {
+      account.password = bcrypt.hashSync(update.password, 10)
+    }
+
+    const updatedAccount = await account.save()
+
+    return updatedAccount
+  }
+
+  async updateOrgMemberAccount(
+    updaterId: string,
+    query: { id: string; orgId: string },
+    update: {
+      displayName?: string
+      email?: string
+      username?: string
+      password?: string
+      roles?: string[]
+    },
+  ): Promise<DocumentType<Account>> {
+    this.logger.log(`[updateOrgMemberAccount] start updating`)
+    this.logger.verbose({ updaterId, query, update })
+
+    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
+      {
+        accountId: updaterId,
+        permission: Permission.Hr_UpdateOrgAccount,
+      },
+    )
+
+    this.logger.verbose({ accountHasPermissionToUpdate })
+
+    // Handle self-update
+    if (updaterId === query.id && !accountHasPermissionToUpdate) {
+      this.logger.verbose('Performing self-update')
+
+      return this.updateAccount(query, {
+        displayName: update.displayName,
+        password: update.password,
+      })
+    }
+
+    if (!accountHasPermissionToUpdate) {
+      this.logger.error(
+        `Not a self-update but doesn't have permission to update other accounts`,
+      )
+      throw new ForbiddenError()
+    }
+
+    const targetAccount = await this.accountModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
+
+    this.logger.verbose({ targetAccount })
+
+    if (!targetAccount) {
+      this.logger.error(
+        `targetAccount ${query.id} not found in orgId ${query.orgId}`,
+      )
+      throw new Error(`Couldn't find account to update`)
+    }
+
+    const targetAccountRoles = await this.authService.mapOrgRolesFromNames({
+      orgId: targetAccount.orgId,
+      roleNames: targetAccount.roles,
+    })
+
+    this.logger.verbose({ targetAccountRoles })
+
+    const canUpdateMember = await this.authService.canAccountManageRoles(
+      updaterId,
+      targetAccountRoles,
+    )
+
+    this.logger.verbose({ canUpdateMember })
+
+    if (!canUpdateMember) {
+      this.logger.error(`cannot update account with target roles`)
+      this.logger.verbose({ targetAccountRoles })
+      throw new ForbiddenError()
+    }
+
+    if (
+      update.roles?.length &&
+      (await this.authService.canAccountManageRoles(
+        updaterId,
+        await this.authService.mapOrgRolesFromNames({
+          orgId: targetAccount.orgId,
+          roleNames: update.roles,
+        }),
+      ))
+    ) {
+      this.logger.error(`wanted to update to permitted roles`)
+      this.logger.verbose({ targetAccountRoles })
+      throw new ForbiddenError()
+    }
+
+    return this.updateAccount(query, update)
   }
 }
