@@ -1,17 +1,12 @@
-import { ID } from '@nestjs/graphql'
 import { TestingModule } from '@nestjs/testing'
 import * as jwt from 'jsonwebtoken'
 import { Connection } from 'mongoose'
 
-import { config } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
-import { Org } from '../org/models/Org'
-
 import { AuthService } from './auth.service'
-import { AuthData } from './auth.type'
 import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
@@ -141,7 +136,7 @@ describe('auth.service', () => {
     it(`throws error if accountId doesn't exist`, async () => {
       expect.assertions(1)
 
-      const account: any = {
+      const account: ANY = {
         orgId: objectId(),
       }
 
@@ -151,7 +146,8 @@ describe('auth.service', () => {
     })
 
     it(`throws error if orgId doesn't exist`, async () => {
-      const acc: any = {
+      expect.assertions(1)
+      const acc: ANY = {
         id: objectId(),
       }
 
@@ -162,6 +158,8 @@ describe('auth.service', () => {
     })
 
     it('returns a valid json web token', async () => {
+      expect.assertions(1)
+
       const account = {
         id: objectId(),
         displayName: 'Dustin Do',
@@ -172,7 +170,7 @@ describe('auth.service', () => {
       }
 
       expect.assertions(1)
-      const result: any = jwt.decode(
+      const result: ANY = jwt.decode(
         await authService.signAccountToken(account),
       )
       const obj = {
