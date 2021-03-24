@@ -53,7 +53,11 @@ export class OrgService {
     if (!namespace) {
       return null
     }
-    return this.orgModel.findOne({ namespace })
+    try {
+      return await this.orgModel.findOne({ namespace })
+    } catch (err) {
+      return null
+    }
   }
 
   async existsOrgByNamespace(namespace: string): Promise<boolean> {
