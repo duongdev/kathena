@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --production=false
       - name: Run lint
-        run: yarn lint
+        run: yarn lint --max-warnings=0
       - name: Build web
         run: yarn workspace web build
       - name: Test web
