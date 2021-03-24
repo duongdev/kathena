@@ -73,7 +73,7 @@ describe('org.service', () => {
       expect.assertions(1)
 
       await expect(
-        orgService.findOrgByNamespace('nguyen van hai day'),
+        orgService.findOrgByNamespace('nguyen van hai ne'),
       ).resolves.toBeNull()
     })
 
@@ -82,7 +82,7 @@ describe('org.service', () => {
 
       const test: ANY = {
         id: objectId(),
-        namespace: 'vanhai',
+        namespace: 'nguyenvanhai',
         name: 'nguyen van hai',
         orgId: objectId(),
       }
@@ -91,7 +91,7 @@ describe('org.service', () => {
       await expect(
         orgService.findOrgByNamespace('vanhai'),
       ).resolves.toMatchObject({
-        namespace: 'vanhai',
+        namespace: 'nguyenvanhai',
         name: 'nguyen van hai',
       })
     })
