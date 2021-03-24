@@ -31,6 +31,8 @@ export const appModules = [
         ]
       : []),
 
+    // GraphQLUpload,
+
     TypegooseModule.forRoot(config.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
