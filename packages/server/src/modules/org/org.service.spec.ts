@@ -69,7 +69,7 @@ describe('org.service', () => {
       await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
     })
 
-    it(`return null if OrgByNamespace doesn't exist`, async () => {
+    it(`returns null if org namespace doesn't exist`, async () => {
       expect.assertions(1)
 
       await expect(
