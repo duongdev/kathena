@@ -7,7 +7,7 @@ import {
   PublicationState,
   normalizeCodeField,
   removeExtraSpaces,
-  returnsInput,
+  returnUnchanged,
 } from 'core'
 
 @index({ code: 1, orgId: 1 }, { unique: true })
@@ -20,7 +20,7 @@ export class AcademicSubject extends BaseModel {
     required: true,
     trim: true,
     set: removeExtraSpaces,
-    get: returnsInput,
+    get: returnUnchanged,
   })
   name: string
 
@@ -29,12 +29,12 @@ export class AcademicSubject extends BaseModel {
     required: true,
     trim: true,
     set: normalizeCodeField,
-    get: returnsInput,
+    get: returnUnchanged,
   })
   code: string
 
   @Field({ defaultValue: '' })
-  @prop({ required: true, set: removeExtraSpaces, get: returnsInput })
+  @prop({ required: true, set: removeExtraSpaces, get: returnUnchanged })
   description: string
 
   @Field((_type) => PublicationState)
