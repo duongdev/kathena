@@ -6,7 +6,7 @@ import { BaseModel, PublicationState } from 'core'
 import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
 
 @index({ code: 1, orgId: 1 }, { unique: true })
-@index({ name: 1, orgId: 1 }, { unique: true })
+@index({ name: 1, orgId: 1 })
 @index({ publicationState: 1, orgId: 1 })
 @ObjectType({ implements: [BaseModel] })
 export class AcademicSubject extends BaseModel {
