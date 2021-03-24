@@ -66,5 +66,5 @@ export class Account extends BaseModel {
   lastActivityAt: Date | null
 
   @prop({ type: Types.ObjectId })
-  createdBy?: string
+  createdByAccountId?: string
 }

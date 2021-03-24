@@ -56,13 +56,16 @@ describe('auth.service', () => {
         .spyOn(authService['accountService'], 'findAccountById')
         .mockResolvedValueOnce(account as ANY)
 
-      await expect(
-        authService.getAccountPermissions(account.id),
-      ).resolves.toStrictEqual([
-        'Hr_Access',
-        'Hr_CreateOrgAccount',
-        'Hr_ListOrgAccounts',
-      ])
+      await expect(authService.getAccountPermissions(account.id)).resolves
+        .toMatchInlineSnapshot(`
+              Array [
+                "Hr_Access",
+                "Hr_CreateOrgAccount",
+                "Hr_ListOrgAccounts",
+                "Academic_CreateAcademicSubject",
+                "Academic_SetAcademicSubjectPublication",
+              ]
+            `)
     })
   })
 
@@ -130,6 +133,55 @@ describe('auth.service', () => {
       await expect(
         authService.canAccountManageRoles(accountId, [student, lecturer]),
       ).resolves.toBe(true)
+    })
+  })
+
+  describe('signAccountToken', () => {
+    it(`throws error if accountId doesn't exist`, async () => {
+      expect.assertions(1)
+
+      const account: any = {
+        orgId: objectId(),
+      }
+
+      await expect(authService.signAccountToken(account)).rejects.toThrow(
+        'ACCOUNT_ID_NOT_FOUND',
+      )
+    })
+
+    it(`throws error if orgId doesn't exist`, async () => {
+      const acc: any = {
+        id: objectId(),
+      }
+
+      expect.assertions(1)
+      await expect(authService.signAccountToken(acc)).rejects.toThrow(
+        'ORG_ID_NOT_FOUND',
+      )
+    })
+
+    it('returns a valid json web token', async () => {
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        orgId: objectId(),
+      }
+
+      expect.assertions(1)
+      const result: any = jwt.decode(
+        await authService.signAccountToken(account),
+      )
+      const obj = {
+        id: result.accountId,
+        orgId: result.orgId,
+      }
+      expect(obj).toMatchObject({
+        id: account.id,
+        orgId: account.orgId,
+      })
     })
   })
 
@@ -271,7 +323,13 @@ describe('auth.service', () => {
           namespace: 'kmin-edu',
           name: 'Kmin Academy',
         },
-        permissions: ['Hr_Access', 'Hr_CreateOrgAccount', 'Hr_ListOrgAccounts'],
+        permissions: [
+          'Hr_Access',
+          'Hr_CreateOrgAccount',
+          'Hr_ListOrgAccounts',
+          'Academic_CreateAcademicSubject',
+          'Academic_SetAcademicSubjectPublication',
+        ],
       })
     })
   })

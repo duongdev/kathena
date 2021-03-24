@@ -7,6 +7,9 @@ export * from './ApolloErrorList'
 export { default as Button } from './Button'
 export * from './Button'
 
+export { default as CurrencyFormField } from './CurrencyFormField'
+export * from './CurrencyFormField'
+
 export { default as DashboardContainer } from './DashboardContainer'
 export * from './DashboardContainer'
 
