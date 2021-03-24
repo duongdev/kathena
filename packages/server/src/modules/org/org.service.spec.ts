@@ -77,7 +77,7 @@ describe('org.service', () => {
       ).resolves.toBeNull()
     })
 
-    it(`returns a valid OrgByNamespace`, async () => {
+    it(`returns a valid org`, async () => {
       expect.assertions(1)
 
       const test: any = {
