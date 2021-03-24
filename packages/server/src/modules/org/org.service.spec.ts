@@ -5,7 +5,6 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
-import { Org } from './models/Org'
 import { OrgService } from './org.service'
 
 describe('org.service', () => {
