@@ -1,17 +1,12 @@
-import { ID } from '@nestjs/graphql'
 import { TestingModule } from '@nestjs/testing'
 import * as jwt from 'jsonwebtoken'
 import { Connection } from 'mongoose'
 
-import { config } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
-import { Org } from '../org/models/Org'
-
 import { AuthService } from './auth.service'
-import { AuthData } from './auth.type'
 import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
