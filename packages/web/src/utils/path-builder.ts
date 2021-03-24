@@ -13,6 +13,12 @@ export const USER_LIST = `${ORG_WORKSPACE}/users`
 export const USER_PROFILE = `${ORG_WORKSPACE}/profile/:username`
 export const USER_SELF_SETTINGS = `${ORG_WORKSPACE}/account-settings`
 
+export const ACADEMIC_SUBJECT_LIST = `${ORG_WORKSPACE}/academic-subjects`
+
+export const CREATE_ACADEMIC_SUBJECT = `${ORG_WORKSPACE}/academic-subjects/create`
+
+export const UPDATE_ACADEMIC_SUBJECT = `${ORG_WORKSPACE}/academic-subjects/:id/update`
+
 export const buildPath = (
   path: string,
   params: { [key: string]: string } = {},
