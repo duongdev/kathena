@@ -19,18 +19,20 @@ export class AcademicService {
   ) {}
 
   async findAcademicSubjectByCode(
-    code: string,
+    $code: string,
     orgId?: string,
   ): Promise<DocumentType<AcademicSubject> | null> {
+    const code = normalizeCodeField($code)
     const query = orgId ? { code, orgId } : { code }
 
     return this.academicSubjectModel.findOne(query)
   }
 
   async existsAcademicSubjectByCode(
-    code: string,
+    $code: string,
     orgId?: string,
   ): Promise<boolean> {
+    const code = normalizeCodeField($code)
     const query = orgId ? { code, orgId } : { code }
 
     return this.academicSubjectModel.exists(query)

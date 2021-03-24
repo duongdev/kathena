@@ -2,8 +2,13 @@ import { Field, Float, ID, ObjectType } from '@nestjs/graphql'
 import { index, prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
-import { BaseModel, PublicationState } from 'core'
-import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
+import {
+  BaseModel,
+  PublicationState,
+  returnsInput,
+  normalizeCodeField,
+  removeExtraSpaces,
+} from 'core'
 
 @index({ code: 1, orgId: 1 }, { unique: true })
 @index({ name: 1, orgId: 1 })
@@ -16,11 +21,22 @@ export class Course extends BaseModel {
   academicSubjectId: string
 
   @Field()
-  @prop({ required: true, trim: true, index: true, set: normalizeCodeField })
+  @prop({
+    required: true,
+    trim: true,
+    index: true,
+    set: normalizeCodeField,
+    get: returnsInput,
+  })
   code: string
 
   @Field()
-  @prop({ required: true, trim: true, set: removeExtraSpaces })
+  @prop({
+    required: true,
+    trim: true,
+    set: removeExtraSpaces,
+    get: returnsInput,
+  })
   name: string
 
   @Field((_type) => Date)

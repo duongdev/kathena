@@ -8,5 +8,6 @@ export const removeExtraSpaces = (inputString?: string): string | undefined => {
     .replace(/\s+$/, '')
 }
 
-export const normalizeCodeField = (inputString: string): string =>
-  inputString.replace(/\s/g, '').toUpperCase()
+export const normalizeCodeField = (inputString: string): string => {
+  return inputString.replace(/\s/g, '').toUpperCase()
+}
