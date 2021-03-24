@@ -55,13 +55,16 @@ describe('auth.service', () => {
         .spyOn(authService['accountService'], 'findAccountById')
         .mockResolvedValueOnce(account as ANY)
 
-      await expect(
-        authService.getAccountPermissions(account.id),
-      ).resolves.toStrictEqual([
-        'Hr_Access',
-        'Hr_CreateOrgAccount',
-        'Hr_ListOrgAccounts',
-      ])
+      await expect(authService.getAccountPermissions(account.id)).resolves
+        .toMatchInlineSnapshot(`
+              Array [
+                "Hr_Access",
+                "Hr_CreateOrgAccount",
+                "Hr_ListOrgAccounts",
+                "Academic_CreateAcademicSubject",
+                "Academic_SetAcademicSubjectPublication",
+              ]
+            `)
     })
   })
 
