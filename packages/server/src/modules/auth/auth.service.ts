@@ -1,8 +1,7 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { isUndefined, keyBy, uniq } from 'lodash'
-import { rejects } from 'node:assert'
+import { keyBy, uniq } from 'lodash'
 
 import { config, Logger, Service } from 'core'
 import { AccountService } from 'modules/account/account.service'
