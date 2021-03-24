@@ -50,6 +50,9 @@ export class OrgService {
   async findOrgByNamespace(
     namespace: string,
   ): Promise<Nullable<DocumentType<Org>>> {
+    if (!namespace) {
+      throw new Error(`NAMESPACE_IS_NOT_FOUND`)
+    }
     return this.orgModel.findOne({ namespace })
   }
 

@@ -3,6 +3,9 @@ import { Connection } from 'mongoose'
 
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 
+import { objectId } from '../../core/utils/db'
+
+import { Org } from './models/Org'
 import { OrgService } from './org.service'
 
 describe('org.service', () => {
@@ -60,6 +63,35 @@ describe('org.service', () => {
       await expect(orgService.existsOrgByNamespace('teststring')).resolves.toBe(
         false,
       )
+    })
+  })
+
+  describe('findOrgByNamespace', () => {
+    it(`throws error if OrgByNamespace doesn't exist`, async () => {
+      expect.assertions(1)
+
+      await expect(orgService.findOrgByNamespace('')).rejects.toThrow(
+        `NAMESPACE_IS_NOT_FOUND`,
+      )
+    })
+
+    it(`returns a valid OrgByNamespace`, async () => {
+      expect.assertions(1)
+
+      const test: any = {
+        id: objectId(),
+        namespace: 'vanhai',
+        name: 'nguyen van hai',
+        orgId: objectId(),
+      }
+
+      jest.spyOn(orgService['orgModel'], 'findOne').mockResolvedValueOnce(test)
+      await expect(
+        orgService.findOrgByNamespace('vanhai'),
+      ).resolves.toMatchObject({
+        namespace: 'vanhai',
+        name: 'nguyen van hai',
+      })
     })
   })
 })
