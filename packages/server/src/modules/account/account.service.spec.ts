@@ -1,11 +1,9 @@
 import { TestingModule } from '@nestjs/testing'
-import { compareSync, hashSync } from 'bcrypt'
+import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
-import { Action } from 'rxjs/internal/scheduler/Action'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { ANY } from 'types'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
