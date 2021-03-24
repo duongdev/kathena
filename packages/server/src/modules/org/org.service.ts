@@ -44,11 +44,11 @@ export class OrgService {
   }
 
   async findOrgById(id: string): Promise<Nullable<DocumentType<Org>>> {
-    const org = await this.orgModel.findById(id)
-
-    if (!org) throw new Error(`Org does not exist`)
-
-    return org
+    try {
+      return await this.orgModel.findById(id)
+    } catch (err) {
+      return null
+    }
   }
 
   async findOrgByNamespace(

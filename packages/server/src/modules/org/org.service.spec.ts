@@ -26,10 +26,6 @@ describe('org.service', () => {
   })
 
   beforeEach(async () => {
-    await module.close()
-  })
-
-  beforeEach(async () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
@@ -66,30 +62,25 @@ describe('org.service', () => {
   })
 
   describe('findOrgById', () => {
-    it('throws error if id does not exist', async () => {
-      expect.assertions(1)
+    it('returns null if id does not exist or the input is an invalid string', async () => {
+      expect.assertions(2)
 
-      jest.spyOn(orgService['orgModel'], 'findById').mockResolvedValueOnce(null)
+      await expect(orgService.findOrgById(objectId())).resolves.toBeNull()
 
-      const id = objectId()
-
-      await expect(orgService.findOrgById(id)).rejects.toThrow(
-        'Org does not exist',
-      )
+      await expect(orgService.findOrgById('this is orgId')).resolves.toBeNull()
     })
 
     it('returns org if id exists', async () => {
       expect.assertions(1)
 
-      const org = {
-        orgId: objectId(),
+      const org: any = {
+        id: objectId(),
         namespace: 'kmin-edu',
         name: 'Kmin Academy',
+        orgId: objectId(),
       }
 
-      jest
-        .spyOn(orgService['orgModel'], 'findById')
-        .mockResolvedValueOnce(org as ANY)
+      jest.spyOn(orgService['orgModel'], 'findById').mockResolvedValueOnce(org)
 
       await expect(orgService.findOrgById(org.orgId)).resolves.toMatchObject({
         namespace: 'kmin-edu',
