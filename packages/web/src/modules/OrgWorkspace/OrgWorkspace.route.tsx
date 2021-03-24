@@ -32,7 +32,7 @@ const AcademicSubjectList = lazy(
 const CreateUpdateAcademicSubject = lazy(
   () =>
     import(
-      'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/OrgAccountList" */
+      'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/CreateUpdateAcademicSubject" */
     ),
 )
 

@@ -22,10 +22,16 @@ export type AcademicSubjectFormInput = {
 
 const error = null
 
+const labels = {
+  name: 'Tên môn học',
+  description: 'Mô tả',
+  tuitionFee: 'Học phí',
+}
+
 const validationSchema = yup.object({
   name: yup
     .string()
-    .label('Tên môn học')
+    .label(labels.name)
     .trim()
     .matches(NAME_ACADEMIC_SUBJECT_REGEX, {
       message: 'Tên môn học chứa các ký tự không phù hợp',
@@ -48,15 +54,15 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
 
   const { initialValues, createMode } = props
 
-  const handle = (value: AcademicSubjectFormInput) => {
+  const handleCreateAcademicSubject = (value: AcademicSubjectFormInput) => {
     if (createMode) {
       console.log('Thêm: ')
       console.log(value)
-      enqueueSnackbar('Thêm Thành Công')
+      enqueueSnackbar('Thêm Thành Công', { variant: 'success' })
     } else {
       console.log('Sửa: ')
       console.log(value)
-      enqueueSnackbar('Sửa Thành Công')
+      enqueueSnackbar('Sửa Thành Công', { variant: 'success' })
     }
   }
 
@@ -65,7 +71,7 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handle}
+        onSubmit={handleCreateAcademicSubject}
       >
         {(formik) => (
           <Form>

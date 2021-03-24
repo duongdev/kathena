@@ -7,6 +7,9 @@ export * from './ApolloErrorList'
 export { default as Button } from './Button'
 export * from './Button'
 
+export { default as CurrencyFormField } from './CurrencyFormField'
+export * from './CurrencyFormField'
+
 export { default as DashboardContainer } from './DashboardContainer'
 export * from './DashboardContainer'
 
@@ -49,9 +52,6 @@ export * from './Spinner'
 
 export { default as TextFormField } from './TextFormField'
 export * from './TextFormField'
-
-export { default as CurrencyFormField } from './CurrencyFormField'
-export * from './CurrencyFormField'
 
 export { default as Typography } from './Typography'
 // eslint-disable-next-line import/export

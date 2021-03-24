@@ -2,8 +2,8 @@ import { FC } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import { PlusCircle, Pencil } from 'phosphor-react'
-import { useHistory } from 'react-router-dom'
 
+import { ANY } from '@kathena/types'
 import {
   Button,
   DataTable,
@@ -24,12 +24,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
   const classes = useStyles(props)
   const { page, perPage, setPage, setPerPage } = usePagination()
 
-  const history = useHistory()
-  const handleOpenSubjectEditorForm = () => {
-    history.push(CREATE_ACADEMIC_SUBJECT)
-  }
-  // eslint-disable-next-line
-  const academicSubjectList: any[] = [
+  const academicSubjectList: ANY[] = [
     // Get List Academic Subject Here
     {
       id: 'dayla1objectidtuche',
@@ -46,11 +41,12 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
       className={classes.root}
       title="Danh sách môn học"
       actions={[
+
         <Button
           variant="contained"
           color="primary"
+          link={CREATE_ACADEMIC_SUBJECT}
           startIcon={<PlusCircle />}
-          onClick={handleOpenSubjectEditorForm}
         >
           Thêm môn học
         </Button>,
