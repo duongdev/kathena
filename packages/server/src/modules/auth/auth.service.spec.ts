@@ -140,7 +140,7 @@ describe('auth.service', () => {
     it(`throws error if accountId doesn't exist`, async () => {
       expect.assertions(1)
 
-      const account: any = {
+      const account: ANY = {
         orgId: objectId(),
       }
 
@@ -150,7 +150,8 @@ describe('auth.service', () => {
     })
 
     it(`throws error if orgId doesn't exist`, async () => {
-      const acc: any = {
+      expect.assertions(1)
+      const acc: ANY = {
         id: objectId(),
       }
 
@@ -161,6 +162,8 @@ describe('auth.service', () => {
     })
 
     it('returns a valid json web token', async () => {
+      expect.assertions(1)
+
       const account = {
         id: objectId(),
         displayName: 'Dustin Do',
@@ -171,7 +174,7 @@ describe('auth.service', () => {
       }
 
       expect.assertions(1)
-      const result: any = jwt.decode(
+      const result: ANY = jwt.decode(
         await authService.signAccountToken(account),
       )
       const obj = {
@@ -271,7 +274,7 @@ describe('auth.service', () => {
         name: 'Kmin Academy',
       }
 
-      const account: any = {
+      const account = {
         id: objectId(),
         displayName: 'Dustin Do',
         email: 'dustin.do95@gmail.com',
@@ -297,7 +300,7 @@ describe('auth.service', () => {
         orgNamespace: 'kmin-edu',
       })
 
-      const decodeToken: any = jwt.decode(objSignIn.token)
+      const decodeToken: ANY = jwt.decode(objSignIn.token)
 
       const objResult = {
         ...objSignIn,
