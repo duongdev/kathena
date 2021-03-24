@@ -54,8 +54,7 @@ export class OrgService {
   async findOrgByNamespace(
     namespace: string,
   ): Promise<Nullable<DocumentType<Org>>> {
-    const a = await this.orgModel.findOne({ namespace })
-    return a
+    return this.orgModel.findOne({ namespace })
   }
 
   async existsOrgByNamespace(namespace: string): Promise<boolean> {
