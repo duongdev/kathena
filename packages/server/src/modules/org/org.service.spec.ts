@@ -86,9 +86,8 @@ describe('org.service', () => {
       }
 
       jest.spyOn(orgService['orgModel'], 'findOne').mockResolvedValueOnce(test)
-
       await expect(
-        orgService.findOrgByNamespace('vanhai'),
+        orgService.findOrgByNamespace('nguyenvanhai'),
       ).resolves.toMatchObject({
         namespace: 'nguyenvanhai',
         name: 'nguyen van hai',
