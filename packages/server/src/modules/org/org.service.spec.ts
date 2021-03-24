@@ -65,13 +65,11 @@ describe('org.service', () => {
   describe('findOrgByNamespace', () => {
     it(`returns null if org namespace is empty`, async () => {
       expect.assertions(1)
-
       await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
     })
 
     it(`returns null if org namespace doesn't exist`, async () => {
       expect.assertions(1)
-
       await expect(
         orgService.findOrgByNamespace('nguyen van hai ne'),
       ).resolves.toBeNull()
@@ -88,6 +86,7 @@ describe('org.service', () => {
       }
 
       jest.spyOn(orgService['orgModel'], 'findOne').mockResolvedValueOnce(test)
+
       await expect(
         orgService.findOrgByNamespace('vanhai'),
       ).resolves.toMatchObject({
