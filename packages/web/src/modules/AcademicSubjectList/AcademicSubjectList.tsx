@@ -41,7 +41,6 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
       className={classes.root}
       title="Danh sách môn học"
       actions={[
-
         <Button
           variant="contained"
           color="primary"

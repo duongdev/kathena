@@ -1,4 +1,5 @@
 import { TestingModule } from '@nestjs/testing'
+import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { Connection } from 'mongoose'
 
@@ -183,6 +184,155 @@ describe('auth.service', () => {
       expect(obj).toMatchObject({
         id: account.id,
         orgId: account.orgId,
+      })
+    })
+  })
+
+  describe('signIn', () => {
+    it(`throws an error if 'orgNamespace' does not exist`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: '',
+          password: '',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow(`Organization namespace kmin-edu doesn't exist`)
+    })
+
+    it(`throws error 'INVALID_CREDENTIALS' if Account is not found`, async () => {
+      expect.assertions(1)
+
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(null)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '12345',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+    })
+
+    it(`throws error 'INVALID_CREDENTIALS' if password is false or not supplied`, async () => {
+      expect.assertions(2)
+
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(account as ANY)
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '123456',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+
+      await expect(
+        authService.signIn({
+          usernameOrEmail: 'duongdev',
+          password: '',
+          orgNamespace: 'kmin-edu',
+        }),
+      ).rejects.toThrow('INVALID_CREDENTIALS')
+    })
+
+    it(`returns an object { token, account, org, permissions } if all cases are passed`, async () => {
+      expect.assertions(1)
+
+      const org = {
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      const account = {
+        id: objectId(),
+        displayName: 'Dustin Do',
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+        orgId: objectId(),
+      }
+
+      jest
+        .spyOn(authService['orgService'], 'findOrgByNamespace')
+        .mockResolvedValue(org as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountByUsernameOrEmail')
+        .mockResolvedValue(account as ANY)
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValue(account as ANY)
+
+      const objSignIn = await authService.signIn({
+        usernameOrEmail: 'duongdev',
+        password: '12345',
+        orgNamespace: 'kmin-edu',
+      })
+
+      const decodeToken: ANY = jwt.decode(objSignIn.token)
+
+      const objResult = {
+        ...objSignIn,
+        token: {
+          id: decodeToken.accountId,
+          orgId: decodeToken.orgId,
+        },
+      }
+
+      await expect(objResult).toMatchObject({
+        token: {
+          id: account.id,
+          orgId: account.orgId,
+        },
+        account: {
+          displayName: 'Dustin Do',
+          email: 'dustin.do95@gmail.com',
+          username: 'duongdev',
+          roles: ['owner', 'staff'],
+          orgId: account.orgId,
+        },
+        org: {
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        },
+        permissions: [
+          'Hr_Access',
+          'Hr_CreateOrgAccount',
+          'Hr_ListOrgAccounts',
+          'Academic_CreateAcademicSubject',
+          'Academic_SetAcademicSubjectPublication',
+        ],
       })
     })
   })
