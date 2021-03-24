@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
-import { Types } from 'mongoose'
+import { isValidObjectId, Types } from 'mongoose'
 
 import { InjectModel, Service } from 'core'
 import { Nullable } from 'types'
@@ -63,5 +63,13 @@ export class OrgService {
 
   async existsOrgById(id: string): Promise<boolean> {
     return this.orgModel.exists({ _id: id })
+  }
+
+  async validateOrgId(id?: string | null): Promise<boolean> {
+    if (!(id && isValidObjectId(id))) return false
+
+    const exists = await this.existsOrgById(id)
+
+    return exists
   }
 }

@@ -36,7 +36,7 @@ describe('org.service', () => {
   })
 
   describe('existsOrgByNamespace', () => {
-    it('Return true if exist org by namespace', async () => {
+    it('returns true if exist org by namespace', async () => {
       expect.assertions(1)
 
       jest
@@ -48,7 +48,7 @@ describe('org.service', () => {
       )
     })
 
-    it(`Return false if don't exist org by namespace`, async () => {
+    it(`returns false if don't exist org by namespace`, async () => {
       expect.assertions(1)
 
       jest
