@@ -3,7 +3,13 @@ import { FC, lazy, Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
 import { Spinner } from '@kathena/ui'
-import { USER_LIST, USER_SELF_SETTINGS } from 'utils/path-builder'
+import {
+  ACADEMIC_SUBJECT_LIST,
+  USER_LIST,
+  USER_SELF_SETTINGS,
+  CREATE_ACADEMIC_SUBJECT,
+  UPDATE_ACADEMIC_SUBJECT,
+} from 'utils/path-builder'
 
 const AccountSettings = lazy(
   () =>
@@ -17,6 +23,18 @@ const OrgAccountList = lazy(
       'modules/OrgAccountList' /* webpackChunkName: "modules/OrgAccountList" */
     ),
 )
+const AcademicSubjectList = lazy(
+  () =>
+    import(
+      'modules/AcademicSubjectList' /* webpackChunkName: "modules/OrgAccountList" */
+    ),
+)
+const CreateUpdateAcademicSubject = lazy(
+  () =>
+    import(
+      'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/OrgAccountList" */
+    ),
+)
 
 export type OrgWorkspaceRouteProps = {}
 
@@ -25,6 +43,21 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
     <Switch>
       <Route path={USER_SELF_SETTINGS} component={AccountSettings} />
       <Route path={USER_LIST} component={OrgAccountList} />
+      <Route
+        path={ACADEMIC_SUBJECT_LIST}
+        exact
+        component={AcademicSubjectList}
+      />
+      <Route
+        path={CREATE_ACADEMIC_SUBJECT}
+        exact
+        component={CreateUpdateAcademicSubject}
+      />
+      <Route
+        path={UPDATE_ACADEMIC_SUBJECT}
+        exact
+        component={CreateUpdateAcademicSubject}
+      />
     </Switch>
   </Suspense>
 )
