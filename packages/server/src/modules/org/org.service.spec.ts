@@ -27,10 +27,6 @@ describe('org.service', () => {
   })
 
   beforeEach(async () => {
-    await module.close()
-  })
-
-  beforeEach(async () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
@@ -67,10 +63,17 @@ describe('org.service', () => {
   })
 
   describe('findOrgByNamespace', () => {
-    it(`return error if OrgByNamespace doesn't exist`, async () => {
+    it(`return null if OrgByNamespace is empty`, async () => {
+      expect.assertions(1)
+      await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
+    })
+
+    it(`return null if OrgByNamespace doesn't exist`, async () => {
       expect.assertions(1)
 
-      await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
+      await expect(
+        orgService.findOrgByNamespace('nguyen van hai day'),
+      ).resolves.toBeNull()
     })
 
     it(`returns a valid OrgByNamespace`, async () => {
