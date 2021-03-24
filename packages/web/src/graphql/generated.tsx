@@ -77,6 +77,7 @@ export enum Permission {
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+  Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   NoPermission = 'NoPermission',
 }
 
@@ -93,7 +94,14 @@ export type AcademicSubject = BaseModel & {
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   name: Scalars['String']
+  code: Scalars['String']
   description: Scalars['String']
+  publicationState: PublicationState
+}
+
+export enum PublicationState {
+  Draft = 'Draft',
+  Published = 'Published',
 }
 
 export type OrgAccountsPayload = {
@@ -164,6 +172,7 @@ export type UpdateAccountInput = {
 
 export type CreateAcademicSubjectInput = {
   name: Scalars['String']
+  code: Scalars['String']
   description?: Maybe<Scalars['String']>
 }
 
