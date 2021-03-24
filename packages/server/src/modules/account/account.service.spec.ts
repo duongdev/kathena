@@ -213,6 +213,10 @@ describe('account.service', () => {
     it(`be able to find by username or email`, async () => {
       expect.assertions(2)
 
+      jest
+        .spyOn(accountService['orgService'], 'existsOrgById')
+        .mockResolvedValue(true as never)
+
       const account = await accountService.createAccount({
         username: 'duongdev',
         email: 'dustin.do95@gmail.com',
