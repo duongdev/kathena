@@ -53,7 +53,7 @@ describe('account.service', () => {
       expect.assertions(1)
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
       jest
         .spyOn(accountService['accountModel'], 'exists')
         .mockResolvedValueOnce(true as never)
@@ -68,7 +68,9 @@ describe('account.service', () => {
 
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const testCreateAccountServiceInput: CreateAccountServiceInput = {
         ...createAccountServiceInput,
@@ -110,7 +112,7 @@ describe('account.service', () => {
 
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const testCreateAccountServiceInput: CreateAccountServiceInput = {
         ...createAccountServiceInput,
@@ -130,7 +132,7 @@ describe('account.service', () => {
 
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const testAccount = await accountService.createAccount(
         createAccountServiceInput,
@@ -153,7 +155,7 @@ describe('account.service', () => {
       expect.assertions(2)
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const account = await accountService.createAccount(
         createAccountServiceInput,
@@ -170,7 +172,7 @@ describe('account.service', () => {
 
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const account = await accountService.createAccount(
         createAccountServiceInput,
@@ -215,7 +217,7 @@ describe('account.service', () => {
 
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const account = await accountService.createAccount({
         username: 'duongdev',
@@ -265,7 +267,7 @@ describe('account.service', () => {
       expect.assertions(1)
       jest
         .spyOn(accountService['orgService'], 'existsOrgById')
-        .mockResolvedValue(true as never)
+        .mockResolvedValueOnce(true as never)
 
       const account = await accountService.createAccount({
         username: 'canhhuynh',
