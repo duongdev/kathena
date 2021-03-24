@@ -12,7 +12,7 @@ import {
   TextFormField,
   CurrencyFormField,
 } from '@kathena/ui'
-import { NAME_ACADEMIC_SUBJECT_REGEX } from 'utils/validators'
+import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
 
 export type AcademicSubjectFormInput = {
   name: string
@@ -33,12 +33,12 @@ const validationSchema = yup.object({
     .string()
     .label(labels.name)
     .trim()
-    .matches(NAME_ACADEMIC_SUBJECT_REGEX, {
-      message: 'Tên môn học chứa các ký tự không phù hợp',
+    .matches(ACADEMIC_SUBJECT_NAME_REGEX, {
+      message: `${labels.name} chứa các ký tự không phù hợp`,
     })
     .required(),
-  description: yup.string().label('Mô tả').required(),
-  tuitionFee: yup.number().label('Học phí').required(),
+  description: yup.string().label(labels.description).required(),
+  tuitionFee: yup.number().label(labels.tuitionFee).required(),
 })
 
 export type CreateUpdateAcademicSubjectFormProps = {
@@ -49,21 +49,20 @@ export type CreateUpdateAcademicSubjectFormProps = {
 const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> = (
   props,
 ) => {
+  const { initialValues, createMode } = props
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
 
-  const { initialValues, createMode } = props
-
   const handleCreateAcademicSubject = (value: AcademicSubjectFormInput) => {
-    if (createMode) {
-      console.log('Thêm: ')
-      console.log(value)
-      enqueueSnackbar('Thêm Thành Công', { variant: 'success' })
-    } else {
-      console.log('Sửa: ')
-      console.log(value)
-      enqueueSnackbar('Sửa Thành Công', { variant: 'success' })
-    }
+    console.log('Thêm: ')
+    console.log(value)
+    enqueueSnackbar('Thêm Thành Công', { variant: 'success' })
+  }
+
+  const handleUpdateAcademicSubject = (value: AcademicSubjectFormInput) => {
+    console.log('Sửa: ')
+    console.log(value)
+    enqueueSnackbar('Sửa Thành Công', { variant: 'success' })
   }
 
   return (
@@ -71,7 +70,9 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleCreateAcademicSubject}
+        onSubmit={
+          createMode ? handleCreateAcademicSubject : handleUpdateAcademicSubject
+        }
       >
         {(formik) => (
           <Form>
