@@ -1,3 +1,4 @@
+import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, Mutation, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
@@ -13,8 +14,9 @@ import { AcademicSubject } from './models/AcademicSubject'
 export class AcademicSubjectResolver {
   constructor(private readonly academicService: AcademicService) {}
 
-  @UseAuthGuard(P.Academic_CreateAcademicSubject)
   @Mutation((_returns) => AcademicSubject)
+  @UseAuthGuard(P.Academic_CreateAcademicSubject)
+  @UsePipes(ValidationPipe)
   async createAcademicSubject(
     @Args('input') academicSubjectInput: CreateAcademicSubjectInput,
     @CurrentAccount() account: Account,

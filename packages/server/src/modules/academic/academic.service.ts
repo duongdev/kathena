@@ -1,6 +1,6 @@
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
-import { InjectModel, Logger, Service } from 'core'
+import { InjectModel, Logger, PublicationState, Service } from 'core'
 import { normalizeCodeField } from 'core/utils/string'
 import { OrgService } from 'modules/org/org.service'
 
@@ -76,6 +76,7 @@ export class AcademicService {
       name,
       description,
       createdByAccountId,
+      publicationState: PublicationState.Draft,
     })
 
     this.logger.log(
