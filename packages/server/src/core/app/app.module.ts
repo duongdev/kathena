@@ -34,7 +34,7 @@ export const appModules = [
         ]
       : []),
 
-    GraphQLUpload,
+    // GraphQLUpload,
 
     TypegooseModule.forRoot(config.MONGODB_URI, {
       useNewUrlParser: true,
