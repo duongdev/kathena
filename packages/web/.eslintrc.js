@@ -102,6 +102,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'react/destructuring-assignment': 0,
   },
   overrides: [
     {
