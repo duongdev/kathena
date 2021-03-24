@@ -79,17 +79,17 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
               <TextFormField
                 gridItem={{ xs: 12 }}
                 name="name"
-                label="Tên môn học"
+                label={labels.name}
               />
               <TextFormField
                 gridItem={{ xs: 12 }}
                 name="description"
-                label="Mô tả"
+                label={labels.description}
               />
               <CurrencyFormField
                 gridItem={{ xs: 12 }}
                 name="tuitionFee"
-                label="Học phí"
+                label={labels.tuitionFee}
               />
               {error && <ApolloErrorList gridItem={{ xs: 12 }} error={error} />}
 
