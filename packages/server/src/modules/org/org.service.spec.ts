@@ -80,7 +80,7 @@ describe('org.service', () => {
     it(`returns a valid org`, async () => {
       expect.assertions(1)
 
-      const test: any = {
+      const test: ANY = {
         id: objectId(),
         namespace: 'vanhai',
         name: 'nguyen van hai',
