@@ -2,6 +2,7 @@ import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
 import { uniq } from 'lodash'
+import { isValidObjectId } from 'mongoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
@@ -28,13 +29,19 @@ export class AccountService {
     private readonly orgService: OrgService,
   ) {}
 
+  async validateOrgId(id?: string | null): Promise<boolean> {
+    if (!(id && isValidObjectId(id))) return false
+
+    const exists = await this.orgService.existsOrgById(id)
+
+    return exists
+  }
+
   async createAccount(
     accountInput: CreateAccountServiceInput,
   ): Promise<DocumentType<Account>> {
     this.logger.log(`[${this.createAccount.name}] Creating new account`)
     this.logger.verbose(accountInput)
-
-    // console.log(await this.orgService.existsOrgById(accountInput.orgId))
 
     if (
       !accountInput.orgId.trim() ||
