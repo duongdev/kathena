@@ -61,6 +61,7 @@ enum Permission {
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   Academic_CreateAcademicSubject
+  Academic_SetAcademicSubjectPublication
   NoPermission
 }
 
@@ -77,7 +78,14 @@ type AcademicSubject implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  code: String!
   description: String!
+  publication: Publication!
+}
+
+enum Publication {
+  Draft
+  Published
 }
 
 type OrgAccountsPayload {
@@ -126,5 +134,6 @@ input UpdateAccountInput {
 
 input CreateAcademicSubjectInput {
   name: String!
+  code: String!
   description: String = ""
 }
