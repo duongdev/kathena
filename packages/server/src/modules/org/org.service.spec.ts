@@ -65,6 +65,7 @@ describe('org.service', () => {
   describe('findOrgByNamespace', () => {
     it(`return null if OrgByNamespace is empty`, async () => {
       expect.assertions(1)
+
       await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
     })
 
