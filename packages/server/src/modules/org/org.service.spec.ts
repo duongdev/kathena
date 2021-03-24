@@ -1,7 +1,9 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { ANY } from 'types'
 
 import { OrgService } from './org.service'
 
@@ -60,6 +62,39 @@ describe('org.service', () => {
       await expect(orgService.existsOrgByNamespace('teststring')).resolves.toBe(
         false,
       )
+    })
+  })
+
+  describe('findOrgById', () => {
+    it('throws error if id does not exist', async () => {
+      expect.assertions(1)
+
+      jest.spyOn(orgService['orgModel'], 'findById').mockResolvedValueOnce(null)
+
+      const id = objectId()
+
+      await expect(orgService.findOrgById(id)).rejects.toThrow(
+        'Org does not exist',
+      )
+    })
+
+    it('returns org if id exists', async () => {
+      expect.assertions(1)
+
+      const org = {
+        orgId: objectId(),
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      }
+
+      jest
+        .spyOn(orgService['orgModel'], 'findById')
+        .mockResolvedValueOnce(org as ANY)
+
+      await expect(orgService.findOrgById(org.orgId)).resolves.toMatchObject({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
     })
   })
 })
