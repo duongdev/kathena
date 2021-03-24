@@ -7,10 +7,12 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { config } from 'core'
+import { GraphQLUpload } from 'core/scalars/Upload'
 import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
+import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 
 export const appModules = [
@@ -19,6 +21,7 @@ export const appModules = [
   DevtoolModule,
   OrgModule,
   AcademicModule,
+  FileStorageModule,
 ]
 
 @Module({
@@ -30,6 +33,8 @@ export const appModules = [
           }),
         ]
       : []),
+
+    GraphQLUpload,
 
     TypegooseModule.forRoot(config.MONGODB_URI, {
       useNewUrlParser: true,

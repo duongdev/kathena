@@ -16,6 +16,7 @@ const config = {
   MONGODB_URI: env.MONGODB_URI,
   JWT_SECRET: env.JWT_SECRET,
   INIT_ADMIN_PWD: env.INIT_ADMIN_PWD,
+  FILE_STORAGE_UPLOADS_DIR: env.FILE_STORAGE_UPLOADS_DIR,
 }
 
 export default config
