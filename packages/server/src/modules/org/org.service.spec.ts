@@ -73,7 +73,7 @@ describe('org.service', () => {
     it('returns org if id exists', async () => {
       expect.assertions(1)
 
-      const org: any = {
+      const org: ANY = {
         id: objectId(),
         namespace: 'kmin-edu',
         name: 'Kmin Academy',
