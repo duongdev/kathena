@@ -67,12 +67,10 @@ describe('org.service', () => {
   })
 
   describe('findOrgByNamespace', () => {
-    it(`throws error if OrgByNamespace doesn't exist`, async () => {
+    it(`return error if OrgByNamespace doesn't exist`, async () => {
       expect.assertions(1)
 
-      await expect(orgService.findOrgByNamespace('')).rejects.toThrow(
-        `NAMESPACE_IS_NOT_FOUND`,
-      )
+      await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
     })
 
     it(`returns a valid OrgByNamespace`, async () => {

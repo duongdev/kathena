@@ -51,7 +51,7 @@ export class OrgService {
     namespace: string,
   ): Promise<Nullable<DocumentType<Org>>> {
     if (!namespace) {
-      throw new Error(`NAMESPACE_IS_NOT_FOUND`)
+      return null
     }
     return this.orgModel.findOne({ namespace })
   }
