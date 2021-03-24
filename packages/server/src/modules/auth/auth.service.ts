@@ -74,12 +74,17 @@ export class AuthService {
   async signAccountToken(
     account: Pick<Account, 'id' | 'orgId'>,
   ): Promise<string> {
+    if (!account.id) {
+      throw new Error(`ACCOUNT_ID_NOT_FOUND`)
+    }
+    if (!account.orgId) {
+      throw new Error(`ORG_ID_NOT_FOUND`)
+    }
     const authData: AuthData = {
       accountId: account.id,
       orgId: account.orgId,
     }
     const token = jwt.sign(authData, config.JWT_SECRET)
-
     return token
   }
 

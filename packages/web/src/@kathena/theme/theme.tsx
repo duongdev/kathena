@@ -71,43 +71,43 @@ const theme = createMuiTheme({
     borderRadius: BORDER_RADIUS,
   },
   typography: {
-    fontSize: 16,
+    // fontSize: 16,
     // htmlFontSize: 18,
     allVariants: {
       fontFamily: TEXT_FONT,
     },
     h1: {
       fontFamily: HEADING_FONT,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: '2.6rem', // 53
       lineHeight: 1.2,
     },
     h2: {
       fontFamily: HEADING_FONT,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: '2.2rem', // 39
       lineHeight: 1.2,
     },
     h3: {
       fontFamily: HEADING_FONT,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: '1.9375rem', // 31
       lineHeight: 1.21,
     },
     h4: {
       fontFamily: HEADING_FONT,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: '1.5625rem', // 25
       lineHeight: 1.218,
     },
     h5: {
       fontFamily: HEADING_FONT,
-      fontWeight: 700,
+      fontWeight: 600,
       fontSize: '1.3rem', // 25
       lineHeight: 1.218,
     },
     button: {
-      fontWeight: 700,
+      fontWeight: 600,
       letterSpacing: '0.05rem',
     },
   },

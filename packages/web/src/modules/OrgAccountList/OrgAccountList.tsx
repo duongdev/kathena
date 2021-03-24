@@ -41,8 +41,8 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   const accounts = useMemo(() => data?.orgAccounts.accounts ?? [], [
     data?.orgAccounts.accounts,
   ])
-  const totalCount = useMemo(() => data?.orgAccounts.totalCount ?? 0, [
-    data?.orgAccounts.totalCount,
+  const totalCount = useMemo(() => data?.orgAccounts.count ?? 0, [
+    data?.orgAccounts.count,
   ])
 
   return (

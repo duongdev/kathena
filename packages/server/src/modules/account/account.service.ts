@@ -6,6 +6,7 @@ import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
+import { removeExtraSpaces } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
@@ -70,7 +71,7 @@ export class AccountService {
       createdBy: accountInput.createdByAccountId,
       status: accountInput.status,
       roles: uniq(accountInput.roles),
-      displayName: accountInput.displayName?.replace(/\s\s+/g, ' '),
+      displayName: removeExtraSpaces(accountInput.displayName),
     })
 
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
@@ -141,7 +142,7 @@ export class AccountService {
       limit: number
       skip: number
     },
-  ): Promise<{ accounts: DocumentType<Account>[]; totalCount: number }> {
+  ): Promise<{ accounts: DocumentType<Account>[]; count: number }> {
     const { orgId } = query
     const { limit, skip } = pageOptions
 
@@ -151,9 +152,9 @@ export class AccountService {
       .skip(skip)
       .limit(limit)
 
-    const totalCount = await this.accountModel.countDocuments({ orgId })
+    const count = await this.accountModel.countDocuments({ orgId })
 
-    return { accounts, totalCount }
+    return { accounts, count }
   }
 
   async createOrgMemberAccount(
@@ -201,7 +202,7 @@ export class AccountService {
     }
 
     if (update.displayName) {
-      account.displayName = update.displayName?.replace(/\s\s+/g, ' ')
+      account.displayName = removeExtraSpaces(update.displayName)
     }
     if (update.email) {
       account.email = update.email
