@@ -2,7 +2,6 @@ import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
 import { uniq } from 'lodash'
-import { isValidObjectId } from 'mongoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
