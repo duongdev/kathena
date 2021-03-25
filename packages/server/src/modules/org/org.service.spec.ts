@@ -125,4 +125,28 @@ describe('org.service', () => {
       })
     })
   })
+
+  describe('existsOrgById', () => {
+    it(`returns false if id doesn't exist or the input is invalid string`, async () => {
+      expect.assertions(1)
+
+      await expect(orgService.existsOrgById(objectId())).resolves.toBe(false)
+    })
+
+    it(`throws error if the input is invalid string`, async () => {
+      expect.assertions(1)
+
+      await expect(orgService.existsOrgById('this is orgId')).rejects.toThrow()
+    })
+
+    it(`returns true if id exists`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService['orgModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(orgService.existsOrgById(objectId())).resolves.toBe(true)
+    })
+  })
 })
