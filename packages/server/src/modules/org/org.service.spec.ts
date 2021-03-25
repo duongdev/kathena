@@ -36,36 +36,107 @@ describe('org.service', () => {
   })
 
   describe('createOrg', () => {
-    it.todo('throws error if org name existed')
+    it('throws error if org namespace invalid and name invalid', async () => {
+      expect.assertions(5)
 
-    it.todo('throws error if org name invalid')
+      await expect(
+        orgService.createOrg({ name: '', namespace: '' }),
+      ).rejects.toThrowError(`Org namespace invalid and name invalid`)
+
+      await expect(
+        orgService.createOrg({ name: '', namespace: 'name    space' }),
+      ).rejects.toThrowError(`Org namespace invalid and name invalid`)
+
+      await expect(
+        orgService.createOrg({ name: '     ', namespace: '' }),
+      ).rejects.toThrowError(`Org namespace invalid and name invalid`)
+
+      await expect(
+        orgService.createOrg({ name: '     ', namespace: '     ' }),
+      ).rejects.toThrowError(`Org namespace invalid and name invalid`)
+
+      await expect(
+        orgService.createOrg({ name: '     ', namespace: 'name space' }),
+      ).rejects.toThrowError(`Org namespace invalid and name invalid`)
+    })
+
+    it('throws error if org name invalid', async () => {
+      expect.assertions(2)
+
+      await expect(
+        orgService.createOrg({ name: '', namespace: 'namespace' }),
+      ).rejects.toThrowError(`Org name invalid`)
+
+      await expect(
+        orgService.createOrg({ name: '     ', namespace: 'name-space' }),
+      ).rejects.toThrowError(`Org name invalid`)
+    })
 
     it('throws error if org namespace existed', async () => {
-      expect.assertions(1)
+      expect.assertions(2)
 
       jest
         .spyOn(orgService['orgModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
         .mockResolvedValueOnce(true as never)
 
       await expect(
         orgService.createOrg({ name: 'name', namespace: 'namespace' }),
       ).rejects.toThrowError(`Org namespace existed`)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: 'name-space' }),
+      ).rejects.toThrowError(`Org namespace existed`)
     })
 
     it('throws error if org namespace invalid', async () => {
-      expect.assertions(1)
+      expect.assertions(3)
 
       await expect(
-        orgService.createOrg({ name: 'name', namespace: 'asvs' }),
-      ).rejects.toThrowError(`Org namespace existed`)
+        orgService.createOrg({ name: 'name', namespace: '' }),
+      ).rejects.toThrowError(`Org namespace invalid`)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: '    ' }),
+      ).rejects.toThrowError(`Org namespace invalid`)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: 'Dang Hieu Liem' }),
+      ).rejects.toThrowError(`Org namespace invalid`)
     })
 
-    it.todo('return model org if created', async () => {
-      expect.assertions(1)
+    it('return model org if created', async () => {
+      expect.assertions(3)
 
       await expect(
-        orgService.createOrg({ name: 'name', namespace: 'asvs' }),
-      ).rejects.toThrowError(`Org namespace existed`)
+        orgService.createOrg({
+          name: 'name',
+          namespace: 'test',
+        }),
+      ).resolves.toMatchObject({
+        name: 'name',
+        namespace: 'test',
+      })
+
+      await expect(
+        orgService.createOrg({
+          name: 'Dang Hieu Liem',
+          namespace: 'test_1',
+        }),
+      ).resolves.toMatchObject({
+        name: 'Dang Hieu Liem',
+        namespace: 'test_1',
+      })
+
+      await expect(
+        orgService.createOrg({
+          name: 'Dang   Hieu      Liem',
+          namespace: 'test_3',
+        }),
+      ).resolves.toMatchObject({
+        name: 'Dang Hieu Liem',
+        namespace: 'test_3',
+      })
     })
   })
 
