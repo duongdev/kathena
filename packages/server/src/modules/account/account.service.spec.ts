@@ -120,6 +120,7 @@ describe('account.service', () => {
       const testAccount = await accountService.createAccount(
         testCreateAccountServiceInput,
       )
+
       await expect(
         compareSync(testCreateAccountServiceInput.email, testAccount.password),
       ).toBe(true)
