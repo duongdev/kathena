@@ -61,6 +61,39 @@ describe('org.service', () => {
     })
   })
 
+  describe('findOrgByNamespace', () => {
+    it(`returns null if org namespace is empty`, async () => {
+      expect.assertions(1)
+      await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
+    })
+
+    it(`returns null if org namespace doesn't exist`, async () => {
+      expect.assertions(1)
+      await expect(
+        orgService.findOrgByNamespace('nguyen van hai ne'),
+      ).resolves.toBeNull()
+    })
+
+    it(`returns a valid org`, async () => {
+      expect.assertions(1)
+
+      const test: ANY = {
+        id: objectId(),
+        namespace: 'nguyenvanhai',
+        name: 'nguyen van hai',
+        orgId: objectId(),
+      }
+
+      jest.spyOn(orgService['orgModel'], 'findOne').mockResolvedValueOnce(test)
+      await expect(
+        orgService.findOrgByNamespace('nguyenvanhai'),
+      ).resolves.toMatchObject({
+        namespace: 'nguyenvanhai',
+        name: 'nguyen van hai',
+      })
+    })
+  })
+
   describe('findOrgById', () => {
     it('returns null if id does not exist or the input is an invalid string', async () => {
       expect.assertions(2)
