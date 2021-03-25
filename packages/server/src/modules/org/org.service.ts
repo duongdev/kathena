@@ -44,11 +44,7 @@ export class OrgService {
   }
 
   async findOrgById(id: string): Promise<Nullable<DocumentType<Org>>> {
-    try {
-      return await this.orgModel.findById(id)
-    } catch (err) {
-      return null
-    }
+    return this.orgModel.findById(id)
   }
 
   async findOrgByNamespace(
