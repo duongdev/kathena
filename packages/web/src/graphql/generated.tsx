@@ -76,6 +76,8 @@ export enum Permission {
   Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
+  Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+  Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   NoPermission = 'NoPermission',
 }
 
@@ -84,6 +86,22 @@ export type SignInPayload = {
   account: Account
   org: Org
   permissions: Array<Permission>
+}
+
+export type AcademicSubject = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  code: Scalars['String']
+  description: Scalars['String']
+  publication: Publication
+}
+
+export enum Publication {
+  Draft = 'Draft',
+  Published = 'Published',
 }
 
 export type OrgAccountsPayload = {
@@ -115,6 +133,7 @@ export type Mutation = {
   createOrgAccount: Account
   updateAccount: Account
   signIn: SignInPayload
+  createAcademicSubject: AcademicSubject
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -132,6 +151,10 @@ export type MutationSignInArgs = {
   orgNamespace: Scalars['String']
 }
 
+export type MutationCreateAcademicSubjectArgs = {
+  input: CreateAcademicSubjectInput
+}
+
 export type CreateAccountInput = {
   username: Scalars['String']
   email: Scalars['String']
@@ -145,6 +168,12 @@ export type UpdateAccountInput = {
   displayName?: Maybe<Scalars['String']>
   roles?: Maybe<Array<Scalars['String']>>
   password?: Maybe<Scalars['String']>
+}
+
+export type CreateAcademicSubjectInput = {
+  name: Scalars['String']
+  code: Scalars['String']
+  description?: Maybe<Scalars['String']>
 }
 
 export type AuthAccountFragment = Pick<

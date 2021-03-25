@@ -1,7 +1,9 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { ANY } from 'types'
 
 import { OrgService } from './org.service'
 
@@ -20,10 +22,6 @@ describe('org.service', () => {
   })
 
   afterAll(async () => {
-    await module.close()
-  })
-
-  beforeEach(async () => {
     await module.close()
   })
 
@@ -72,7 +70,7 @@ describe('org.service', () => {
   })
 
   describe('existsOrgByNamespace', () => {
-    it('Return true if exist org by namespace', async () => {
+    it('returns true if exist org by namespace', async () => {
       expect.assertions(1)
 
       jest
@@ -84,7 +82,7 @@ describe('org.service', () => {
       )
     })
 
-    it(`Return false if don't exist org by namespace`, async () => {
+    it(`returns false if don't exist org by namespace`, async () => {
       expect.assertions(1)
 
       jest
@@ -94,6 +92,67 @@ describe('org.service', () => {
       await expect(orgService.existsOrgByNamespace('teststring')).resolves.toBe(
         false,
       )
+    })
+  })
+
+  describe('findOrgByNamespace', () => {
+    it(`returns null if org namespace is empty`, async () => {
+      expect.assertions(1)
+      await expect(orgService.findOrgByNamespace('')).resolves.toBeNull()
+    })
+
+    it(`returns null if org namespace doesn't exist`, async () => {
+      expect.assertions(1)
+      await expect(
+        orgService.findOrgByNamespace('nguyen van hai ne'),
+      ).resolves.toBeNull()
+    })
+
+    it(`returns a valid org`, async () => {
+      expect.assertions(1)
+
+      const test: ANY = {
+        id: objectId(),
+        namespace: 'nguyenvanhai',
+        name: 'nguyen van hai',
+        orgId: objectId(),
+      }
+
+      jest.spyOn(orgService['orgModel'], 'findOne').mockResolvedValueOnce(test)
+      await expect(
+        orgService.findOrgByNamespace('nguyenvanhai'),
+      ).resolves.toMatchObject({
+        namespace: 'nguyenvanhai',
+        name: 'nguyen van hai',
+      })
+    })
+  })
+
+  describe('findOrgById', () => {
+    it('returns null if id does not exist or the input is an invalid string', async () => {
+      expect.assertions(2)
+
+      await expect(orgService.findOrgById(objectId())).resolves.toBeNull()
+
+      await expect(orgService.findOrgById('this is orgId')).resolves.toBeNull()
+    })
+
+    it('returns org if id exists', async () => {
+      expect.assertions(1)
+
+      const org: ANY = {
+        id: objectId(),
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+        orgId: objectId(),
+      }
+
+      jest.spyOn(orgService['orgModel'], 'findById').mockResolvedValueOnce(org)
+
+      await expect(orgService.findOrgById(org.orgId)).resolves.toMatchObject({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
     })
   })
 })
