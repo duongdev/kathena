@@ -37,6 +37,40 @@ describe('org.service', () => {
     expect(orgService).toBeDefined()
   })
 
+  describe('createOrg', () => {
+    it.todo('throws error if org name existed')
+
+    it.todo('throws error if org name invalid')
+
+    it('throws error if org namespace existed', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService['orgModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: 'namespace' }),
+      ).rejects.toThrowError(`Org namespace existed`)
+    })
+
+    it('throws error if org namespace invalid', async () => {
+      expect.assertions(1)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: 'asvs' }),
+      ).rejects.toThrowError(`Org namespace existed`)
+    })
+
+    it.todo('return model org if created', async () => {
+      expect.assertions(1)
+
+      await expect(
+        orgService.createOrg({ name: 'name', namespace: 'asvs' }),
+      ).rejects.toThrowError(`Org namespace existed`)
+    })
+  })
+
   describe('existsOrgByNamespace', () => {
     it('Return true if exist org by namespace', async () => {
       expect.assertions(1)
