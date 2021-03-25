@@ -105,7 +105,7 @@ describe('org.service', () => {
       ).rejects.toThrowError(`Org namespace invalid`)
     })
 
-    it('return model org if created', async () => {
+    it('returns model org if created', async () => {
       expect.assertions(3)
 
       await expect(
