@@ -136,9 +136,7 @@ describe('org.service', () => {
     it(`throws error if the input is invalid string`, async () => {
       expect.assertions(1)
 
-      await expect(
-        orgService.existsOrgById('edhsdcwihcvishdfshd'),
-      ).rejects.toThrow()
+      await expect(orgService.existsOrgById('this is orgId')).rejects.toThrow()
     })
 
     it(`returns true if id exists`, async () => {
