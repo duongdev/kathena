@@ -49,6 +49,7 @@ describe('account.service', () => {
 
     it(`throws error if username or email has been taken`, async () => {
       expect.assertions(1)
+
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
