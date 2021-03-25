@@ -201,11 +201,15 @@ describe('org.service', () => {
 
   describe('findOrgById', () => {
     it('returns null if id does not exist or the input is an invalid string', async () => {
-      expect.assertions(2)
+      expect.assertions(1)
 
       await expect(orgService.findOrgById(objectId())).resolves.toBeNull()
+    })
 
-      await expect(orgService.findOrgById('this is orgId')).resolves.toBeNull()
+    it('throws error if the input is an invalid string', async () => {
+      expect.assertions(1)
+
+      await expect(orgService.findOrgById('this is orgId')).rejects.toThrow()
     })
 
     it('returns org if id exists', async () => {
