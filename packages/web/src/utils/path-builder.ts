@@ -19,6 +19,10 @@ export const CREATE_ACADEMIC_SUBJECT = `${ORG_WORKSPACE}/academic-subjects/creat
 
 export const UPDATE_ACADEMIC_SUBJECT = `${ORG_WORKSPACE}/academic-subjects/:id/update`
 
+export const CREATE_ORG_OFFICE = `${ORG_WORKSPACE}/office/create`
+
+export const UPDATE_ORG_OFFICE = `${ORG_WORKSPACE}/office/:id/update`
+
 export const buildPath = (
   path: string,
   params: { [key: string]: string } = {},
