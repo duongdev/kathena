@@ -53,6 +53,7 @@ describe('account.service', () => {
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
+
       jest
         .spyOn(accountService['accountModel'], 'exists')
         .mockResolvedValueOnce(true as never)
