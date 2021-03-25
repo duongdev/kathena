@@ -232,7 +232,7 @@ describe('org.service', () => {
   })
 
   describe('existsOrgById', () => {
-    it(`returns false if id doesn't exist or the input is invalid string`, async () => {
+    it(`returns false if id doesn't exist`, async () => {
       expect.assertions(1)
 
       await expect(orgService.existsOrgById(objectId())).resolves.toBe(false)
