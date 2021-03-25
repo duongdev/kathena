@@ -29,21 +29,13 @@ export class AccountService {
     private readonly orgService: OrgService,
   ) {}
 
-  async validateOrgId(id?: string | null): Promise<boolean> {
-    if (!(id && isValidObjectId(id))) return false
-
-    const exists = await this.orgService.existsOrgById(id)
-
-    return exists
-  }
-
   async createAccount(
     accountInput: CreateAccountServiceInput,
   ): Promise<DocumentType<Account>> {
     this.logger.log(`[${this.createAccount.name}] Creating new account`)
     this.logger.verbose(accountInput)
 
-    if (!(await this.validateOrgId(accountInput.orgId))) {
+    if (!(await this.orgService.validateOrgId(accountInput.orgId))) {
       throw new Error(`Org ID is invalid`)
     }
 
