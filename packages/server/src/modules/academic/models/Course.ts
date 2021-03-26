@@ -4,8 +4,8 @@ import { Types } from 'mongoose'
 
 import {
   BaseModel,
-  PublicationState,
   returnUnchanged,
+  Publication,
   normalizeCodeField,
   removeExtraSpaces,
 } from 'core'
@@ -47,9 +47,9 @@ export class Course extends BaseModel {
   @prop({ required: true, min: 0 })
   tuitionFee: number
 
-  @Field((_type) => PublicationState)
-  @prop({ required: true, index: true, default: PublicationState.Draft })
-  publicationState: PublicationState
+  @Field((_type) => Publication)
+  @prop({ required: true, index: true, default: Publication.Draft })
+  publicationState: Publication
 
   @Field((_type) => Date)
   @prop({ required: false.valueOf, type: Date })

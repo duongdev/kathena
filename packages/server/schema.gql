@@ -80,10 +80,10 @@ type AcademicSubject implements BaseModel {
   name: String!
   code: String!
   description: String!
-  publicationState: PublicationState!
+  publication: Publication!
 }
 
-enum PublicationState {
+enum Publication {
   Draft
   Published
 }

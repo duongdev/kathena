@@ -155,6 +155,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-143 MuiButton-label css-8xplcm-MuiButton-label"
@@ -182,6 +183,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-148 MuiButton-label css-8xplcm-MuiButton-label"
@@ -209,6 +211,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-153 MuiButton-label css-8xplcm-MuiButton-label"
@@ -236,6 +239,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-158 MuiButton-label css-8xplcm-MuiButton-label"
@@ -258,7 +262,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -292,6 +296,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-163 MuiButton-label css-8xplcm-MuiButton-label"
@@ -319,6 +324,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-168 MuiButton-label css-8xplcm-MuiButton-label"
@@ -371,6 +377,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-173 MuiButton-label css-8xplcm-MuiButton-label"
@@ -426,6 +433,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-138 makeStyles-label-178 MuiButton-label css-8xplcm-MuiButton-label"
@@ -483,6 +491,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-183 MuiButton-label css-8xplcm-MuiButton-label"
@@ -510,6 +519,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-188 MuiButton-label css-8xplcm-MuiButton-label"
@@ -537,6 +547,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-193 MuiButton-label css-8xplcm-MuiButton-label"
@@ -564,6 +575,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-198 MuiButton-label css-8xplcm-MuiButton-label"
@@ -586,7 +598,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -620,6 +632,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-203 MuiButton-label css-8xplcm-MuiButton-label"
@@ -647,6 +660,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-208 MuiButton-label css-8xplcm-MuiButton-label"
@@ -699,6 +713,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-213 MuiButton-label css-8xplcm-MuiButton-label"
@@ -754,6 +769,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-138 makeStyles-label-218 MuiButton-label css-8xplcm-MuiButton-label"
@@ -811,6 +827,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-223 MuiButton-label css-8xplcm-MuiButton-label"
@@ -838,6 +855,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-228 MuiButton-label css-8xplcm-MuiButton-label"
@@ -865,6 +883,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-233 MuiButton-label css-8xplcm-MuiButton-label"
@@ -892,6 +911,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-238 MuiButton-label css-8xplcm-MuiButton-label"
@@ -914,7 +934,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -948,6 +968,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-243 MuiButton-label css-8xplcm-MuiButton-label"
@@ -975,6 +996,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-248 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1027,6 +1049,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-138 makeStyles-label-253 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1082,6 +1105,7 @@ exports[`Storyshots components/Button Contained Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-138 makeStyles-label-258 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1146,6 +1170,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-272 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1173,6 +1198,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-277 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1200,6 +1226,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-282 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1227,6 +1254,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-287 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1249,7 +1277,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -1283,6 +1311,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-292 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1310,6 +1339,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-297 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1362,6 +1392,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-302 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1417,6 +1448,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-267 makeStyles-label-307 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1474,6 +1506,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-312 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1501,6 +1534,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-317 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1528,6 +1562,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-322 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1555,6 +1590,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-327 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1577,7 +1613,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -1611,6 +1647,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-332 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1638,6 +1675,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-337 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1690,6 +1728,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-342 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1745,6 +1784,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-267 makeStyles-label-347 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1802,6 +1842,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-352 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1829,6 +1870,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-357 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1856,6 +1898,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-362 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1883,6 +1926,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-367 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1905,7 +1949,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -1939,6 +1983,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-372 MuiButton-label css-8xplcm-MuiButton-label"
@@ -1966,6 +2011,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-377 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2018,6 +2064,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-267 makeStyles-label-382 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2073,6 +2120,7 @@ exports[`Storyshots components/Button Outlined Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-267 makeStyles-label-387 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2137,6 +2185,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-14 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2164,6 +2213,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-19 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2191,6 +2241,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-24 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2218,6 +2269,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-29 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2240,7 +2292,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -2274,6 +2326,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-34 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2301,6 +2354,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-39 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2353,6 +2407,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-44 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2408,6 +2463,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-9 makeStyles-label-49 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2465,6 +2521,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-54 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2492,6 +2549,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-59 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2519,6 +2577,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-64 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2546,6 +2605,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-69 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2568,7 +2628,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -2602,6 +2662,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-74 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2629,6 +2690,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-79 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2681,6 +2743,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-84 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2736,6 +2799,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-9 makeStyles-label-89 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2793,6 +2857,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-94 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2820,6 +2885,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-99 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2847,6 +2913,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-104 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2874,6 +2941,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-109 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2896,7 +2964,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
               viewBox="22 22 44 44"
             >
               <circle
-                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-odafvm-MuiCircularProgress-circle"
+                className="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle"
                 cx={44}
                 cy={44}
                 fill="none"
@@ -2930,6 +2998,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={-1}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-114 MuiButton-label css-8xplcm-MuiButton-label"
@@ -2957,6 +3026,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-119 MuiButton-label css-8xplcm-MuiButton-label"
@@ -3009,6 +3079,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
       onTouchMove={[Function]}
       onTouchStart={[Function]}
       tabIndex={0}
+      type="button"
     >
       <span
         className="makeStyles-label-9 makeStyles-label-124 MuiButton-label css-8xplcm-MuiButton-label"
@@ -3064,6 +3135,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         tabIndex={0}
+        type="button"
       >
         <span
           className="makeStyles-label-9 makeStyles-label-129 MuiButton-label css-8xplcm-MuiButton-label"
@@ -3445,7 +3517,7 @@ exports[`Storyshots components/InputField Text 1`] = `
             type="text"
           />
           <div
-            className="MuiInputAdornment-root MuiInputAdornment-positionEnd"
+            className="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-hiddenLabel MuiInputAdornment-sizeSmall css-1laqsz7-MuiInputAdornment-root"
           >
             <svg
               fill="primary"
@@ -3496,7 +3568,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <textarea
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline css-kjyl2c-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline css-no2ni4-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -3730,7 +3802,7 @@ exports[`Storyshots containers/DashboardContainer Basic 1`] = `
     className="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-391 css-7ik032-MuiDrawer-docked"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 makeStyles-drawerPaper-392 MuiDrawer-paper MuiDrawer-paperAnchorLeft MuiDrawer-paperAnchorDockedLeft css-ah1avk-MuiPaper-root-MuiDrawer-paper"
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 makeStyles-drawerPaper-392 MuiDrawer-paper MuiDrawer-paperAnchorLeft MuiDrawer-paperAnchorDockedLeft css-1g93cup-MuiPaper-root-MuiDrawer-paper"
     >
       <div
         className="makeStyles-root-394"

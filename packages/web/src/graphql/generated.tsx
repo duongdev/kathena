@@ -96,10 +96,10 @@ export type AcademicSubject = BaseModel & {
   name: Scalars['String']
   code: Scalars['String']
   description: Scalars['String']
-  publicationState: PublicationState
+  publication: Publication
 }
 
-export enum PublicationState {
+export enum Publication {
   Draft = 'Draft',
   Published = 'Published',
 }
