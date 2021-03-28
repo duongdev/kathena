@@ -4,10 +4,11 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { ANY } from 'types'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
-import { AccountStatus } from './models/Account'
+import { Account, AccountStatus } from './models/Account'
 
 describe('account.service', () => {
   let module: TestingModule
@@ -287,6 +288,48 @@ describe('account.service', () => {
         email: 'huynhthanhcanh.top@gmail.com',
         orgId: account.orgId,
       })
+    })
+  })
+
+  describe('findOneAccount', () => {
+    it('returns a account if it exist', async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        id: objectId(),
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        orgId: objectId(),
+      }
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        accountService.findOneAccount({
+          id: account.id,
+          orgId: account.orgId,
+        }),
+      ).resolves.toMatchObject(account)
+    })
+
+    it('returns a null if it exist', async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        id: objectId(),
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        orgId: objectId(),
+      }
+
+      await expect(
+        accountService.findOneAccount({
+          id: account.id,
+          orgId: account.orgId,
+        }),
+      ).resolves.toBeNull()
     })
   })
 
