@@ -5,6 +5,7 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { Account } from 'modules/account/models/Account'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
@@ -32,6 +33,93 @@ describe('auth.service', () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
+  })
+
+  describe('accountHasPermission', () => {
+    it('returns true if account has permission', async () => {
+      expect.assertions(5)
+
+      console.log('aaaaaaaaaa')
+      const testAccount = {
+        roles: ['staff'],
+      }
+
+      const resultPermissions: string[] = [
+        'Hr_Access',
+        'Hr_CreateOrgAccount',
+        'Hr_ListOrgAccounts',
+        'Academic_CreateAcademicSubject',
+        'Academic_SetAcademicSubjectPublication',
+      ]
+
+      jest
+        .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_CreateOrgAccount',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_ListOrgAccounts',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_SetAcademicSubjectPublication',
+        }),
+      ).resolves.toBe(true)
+    })
+
+    it(`returns false if account hasn't permission`, async () => {
+      expect.assertions(3)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'awdawdawd',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: '     ',
+        }),
+      ).resolves.toBe(false)
+    })
   })
 
   describe('getAccountPermissions', () => {
