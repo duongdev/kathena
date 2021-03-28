@@ -38,7 +38,7 @@ describe('auth.service', () => {
     it('returns true if account has permission', async () => {
       expect.assertions(5)
 
-      const resultPermissions: string[] = [
+      const resultPermissions: ANY = [
         'Hr_Access',
         'Hr_CreateOrgAccount',
         'Hr_ListOrgAccounts',
