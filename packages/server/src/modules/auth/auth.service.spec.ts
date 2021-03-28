@@ -39,11 +39,6 @@ describe('auth.service', () => {
     it('returns true if account has permission', async () => {
       expect.assertions(5)
 
-      console.log('aaaaaaaaaa')
-      const testAccount = {
-        roles: ['staff'],
-      }
-
       const resultPermissions: string[] = [
         'Hr_Access',
         'Hr_CreateOrgAccount',
