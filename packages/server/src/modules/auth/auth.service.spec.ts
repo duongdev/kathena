@@ -5,7 +5,6 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { Account } from 'modules/account/models/Account'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
