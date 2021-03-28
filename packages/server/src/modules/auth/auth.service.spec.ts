@@ -8,6 +8,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
+import { Role } from './models'
 import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
@@ -334,6 +335,73 @@ describe('auth.service', () => {
           'Academic_SetAcademicSubjectPublication',
         ],
       })
+    })
+  })
+
+  describe('mapOrgRolesFromNames', () => {
+    it('retturn a array roler map org roles form name', async () => {
+      expect.assertions(5)
+      const arrRoles: Role[] = [
+        {
+          name: 'admin',
+          priority: 2,
+          permissions: [],
+        },
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [],
+        },
+      ]
+
+      jest
+        .spyOn(authService, 'getOrgRoles')
+        .mockResolvedValueOnce(arrRoles)
+        .mockResolvedValueOnce(arrRoles)
+        .mockResolvedValueOnce(arrRoles)
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [...arrRoles.map((roles) => roles.name.toString())],
+        }),
+      ).resolves.toMatchObject([...arrRoles])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [
+            ...arrRoles.map((roles) => roles.name.toString()),
+            'test1',
+          ],
+        }),
+      ).resolves.toMatchObject([...arrRoles])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: ['owner'],
+        }),
+      ).resolves.toMatchObject([arrRoles[1]])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: ['test'],
+        }),
+      ).resolves.toMatchObject([])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [],
+        }),
+      ).resolves.toMatchObject([])
     })
   })
 })
