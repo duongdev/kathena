@@ -299,7 +299,7 @@ describe('account.service', () => {
 
   // TODO: In progress
   describe('updateOrgMemberAccount', () => {
-    it(`returns account if updaterId equal query id and account does not have permission to update`, async () => {
+    it(`returns the account if updaterId equal query id and account does not have permission to update`, async () => {
       expect.assertions(1)
 
       jest
