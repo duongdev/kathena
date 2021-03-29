@@ -8,7 +8,6 @@ import {
   USER_LIST,
   USER_SELF_SETTINGS,
   CREATE_ACADEMIC_SUBJECT,
-  UPDATE_ACADEMIC_SUBJECT,
   CREATE_ORG_OFFICE,
   UPDATE_ORG_OFFICE,
 } from 'utils/path-builder'
@@ -57,11 +56,6 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       />
       <Route
         path={CREATE_ACADEMIC_SUBJECT}
-        exact
-        component={CreateUpdateAcademicSubject}
-      />
-      <Route
-        path={UPDATE_ACADEMIC_SUBJECT}
         exact
         component={CreateUpdateAcademicSubject}
       />

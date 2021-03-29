@@ -1,119 +1,101 @@
-/* eslint-disable no-console */
-import { FC } from 'react'
+import { FC, useCallback } from 'react'
 
-import { Grid, makeStyles } from '@material-ui/core'
-import { Form, Formik } from 'formik'
-import { useSnackbar } from 'notistack'
+import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import { useFormikContext } from 'formik'
 
-import yup from '@kathena/libs/yup'
+import { DASHBOARD_SPACING } from '@kathena/theme'
 import {
-  ApolloErrorList,
-  Button,
+  FileItem,
+  ImagesUploadInput,
+  SectionCard,
   TextFormField,
-  CurrencyFormField,
+  Typography,
 } from '@kathena/ui'
-import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
 
-export type AcademicSubjectFormInput = {
-  name: string
-  description: string
-  tuitionFee: number | null
-}
+import {
+  AcademicSubjectFormInput,
+  academicSubjectLabels as labels,
+} from './CreateUpdateAcademicSubject'
 
-const error = null
-
-const labels = {
-  name: 'Tên môn học',
-  description: 'Mô tả',
-  tuitionFee: 'Học phí',
-}
-
-const validationSchema = yup.object({
-  name: yup
-    .string()
-    .label(labels.name)
-    .trim()
-    .matches(ACADEMIC_SUBJECT_NAME_REGEX, {
-      message: `${labels.name} chứa các ký tự không phù hợp`,
-    })
-    .required(),
-  description: yup.string().label(labels.description).required(),
-  tuitionFee: yup.number().label(labels.tuitionFee).required(),
-})
-
-export type CreateUpdateAcademicSubjectFormProps = {
-  initialValues: AcademicSubjectFormInput
-  createMode: boolean
-}
+export type CreateUpdateAcademicSubjectFormProps = {}
 
 const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> = (
   props,
 ) => {
-  const { initialValues, createMode } = props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
-  const { enqueueSnackbar } = useSnackbar()
+  const formik = useFormikContext<AcademicSubjectFormInput>()
 
-  const handleCreateAcademicSubject = (value: AcademicSubjectFormInput) => {
-    console.log('Thêm: ')
-    console.log(value)
-    enqueueSnackbar('Thêm Thành Công', { variant: 'success' })
-  }
-
-  const handleUpdateAcademicSubject = (value: AcademicSubjectFormInput) => {
-    console.log('Sửa: ')
-    console.log(value)
-    enqueueSnackbar('Sửa Thành Công', { variant: 'success' })
-  }
+  const handleImageSelect = useCallback(
+    (files: FileItem[]) => {
+      formik.setFieldValue('image', files[0] ?? null)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
 
   return (
-    <div className={classes.root}>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={
-          createMode ? handleCreateAcademicSubject : handleUpdateAcademicSubject
-        }
+    <Grid container spacing={DASHBOARD_SPACING}>
+      <SectionCard
+        maxContentHeight={false}
+        gridItem={{ xs: 12, sm: 6 }}
+        title="Thông tin môn học"
       >
-        {(formik) => (
-          <Form>
-            <Grid container spacing={2}>
-              <TextFormField
-                gridItem={{ xs: 12 }}
-                name="name"
-                label={labels.name}
-              />
-              <TextFormField
-                gridItem={{ xs: 12 }}
-                name="description"
-                label={labels.description}
-              />
-              <CurrencyFormField
-                gridItem={{ xs: 12 }}
-                name="tuitionFee"
-                label={labels.tuitionFee}
-              />
-              {error && <ApolloErrorList gridItem={{ xs: 12 }} error={error} />}
+        <CardContent>
+          <Stack spacing={2}>
+            <TextFormField required autoFocus name="name" label={labels.name} />
+            <TextFormField
+              required
+              name="code"
+              label={labels.code}
+              placeholder="VD: JSBASIC"
+            />
+            <TextFormField
+              required
+              name="description"
+              label={labels.description}
+              multiline
+              minRows={2}
+              maxRows={4}
+            />
+          </Stack>
+        </CardContent>
+      </SectionCard>
 
-              <Button
-                gridItem
-                variant="contained"
-                color="primary"
-                loading={formik.isSubmitting}
-                type="submit"
-                sx={{ mt: 2 }}
-              >
-                {createMode ? 'Thêm Môn Học' : 'Cập Nhật Môn Học'}
-              </Button>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-    </div>
+      <SectionCard
+        maxContentHeight={false}
+        gridItem={{ xs: 12, sm: 6 }}
+        title="Hình ảnh"
+      >
+        <CardContent className={classes.imageCardContent}>
+          <ImagesUploadInput
+            maxFiles={1}
+            accept={['image/png', 'image/jpeg']}
+            onChange={handleImageSelect}
+          />
+          {formik.dirty && formik.errors.image && (
+            <Typography color="error" className={classes.imageError}>
+              {formik.errors.image}
+            </Typography>
+          )}
+        </CardContent>
+      </SectionCard>
+    </Grid>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   root: {},
+  imageCardContent: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  imageError: {
+    marginTop: spacing(2),
+    flexShrink: 0,
+    display: 'block',
+  },
 }))
 
 export default CreateUpdateAcademicSubjectForm

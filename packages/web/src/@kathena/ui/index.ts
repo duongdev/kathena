@@ -26,6 +26,9 @@ export { default as withComponentHocs } from './hocs/withComponentHocs'
 
 export * from './hooks'
 
+export { default as ImagesUploadInput } from './ImagesUploadInput'
+export * from './ImagesUploadInput'
+
 export { default as InputField } from './InputField'
 export * from './InputField'
 
