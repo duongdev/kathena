@@ -5,6 +5,9 @@
   "repository": "git@github.com:withDustin/kmin-athena.git",
   "author": "Dustin Do <dustin.do95@gmail.com>",
   "private": true,
+  "engines": {
+    "node": "12.x.x"
+  },
   "workspaces": [
     "packages/*"
   ],
@@ -21,7 +24,7 @@
     "start:codegen": "yarn workspace web codegen --watch"
   },
   "devDependencies": {
-    "husky": "5.2.0",
+    "husky": "6.0.0",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1"
   },
