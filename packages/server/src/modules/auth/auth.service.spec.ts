@@ -339,7 +339,7 @@ describe('auth.service', () => {
   })
 
   describe('mapOrgRolesFromNames', () => {
-    it('retturn a array roler map org roles form name', async () => {
+    it('returns a map org roles from name', async () => {
       expect.assertions(5)
       const arrRoles: Role[] = [
         {
