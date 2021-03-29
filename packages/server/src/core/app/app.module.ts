@@ -7,7 +7,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { config } from 'core'
-import { GraphQLUpload } from 'core/scalars/Upload'
+// import { GraphQLUpload } from 'core/scalars/Upload'
 import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
