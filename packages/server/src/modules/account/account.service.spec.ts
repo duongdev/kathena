@@ -297,7 +297,6 @@ describe('account.service', () => {
 
   describe('existsOrgByNamespace', () => {})
 
-  // TODO: In progress
   describe('updateOrgMemberAccount', () => {
     it(`returns the account if updaterId equal query id and account does not have permission to update`, async () => {
       expect.assertions(1)
