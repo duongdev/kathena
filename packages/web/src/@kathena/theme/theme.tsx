@@ -108,7 +108,7 @@ const theme = createMuiTheme({
     },
     button: {
       fontWeight: 600,
-      letterSpacing: '0.05rem',
+      letterSpacing: '0.01071em',
     },
   },
   shadows,

@@ -4,8 +4,8 @@ import { Types } from 'mongoose'
 
 import {
   BaseModel,
+  returnUnchanged,
   Publication,
-  returnsInput,
   normalizeCodeField,
   removeExtraSpaces,
 } from 'core'
@@ -26,7 +26,7 @@ export class Course extends BaseModel {
     trim: true,
     index: true,
     set: normalizeCodeField,
-    get: returnsInput,
+    get: returnUnchanged,
   })
   code: string
 
@@ -35,7 +35,7 @@ export class Course extends BaseModel {
     required: true,
     trim: true,
     set: removeExtraSpaces,
-    get: returnsInput,
+    get: returnUnchanged,
   })
   name: string
 
