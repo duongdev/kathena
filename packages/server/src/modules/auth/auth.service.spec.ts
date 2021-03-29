@@ -35,6 +35,88 @@ describe('auth.service', () => {
     jest.restoreAllMocks()
   })
 
+  describe('accountHasPermission', () => {
+    it('returns true if account has permission', async () => {
+      expect.assertions(5)
+
+      const resultPermissions: ANY = [
+        'Hr_Access',
+        'Hr_CreateOrgAccount',
+        'Hr_ListOrgAccounts',
+        'Academic_CreateAcademicSubject',
+        'Academic_SetAcademicSubjectPublication',
+      ]
+
+      jest
+        .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_CreateOrgAccount',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_ListOrgAccounts',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_SetAcademicSubjectPublication',
+        }),
+      ).resolves.toBe(true)
+    })
+
+    it(`returns false if account doesn't have permission`, async () => {
+      expect.assertions(3)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'awdawdawd',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: '     ',
+        }),
+      ).resolves.toBe(false)
+    })
+  })
+
   describe('getAccountPermissions', () => {
     it(`returns [] if accountId doesn't exist`, async () => {
       expect.assertions(1)
