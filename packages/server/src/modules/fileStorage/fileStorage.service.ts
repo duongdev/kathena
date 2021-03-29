@@ -14,7 +14,7 @@ import * as path from 'path'
 
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as fileType from 'file-type'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
 import { config, InjectModel, Logger, Service } from 'core'
 
