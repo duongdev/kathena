@@ -1,13 +1,13 @@
 import { join } from 'path'
 
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { GraphQLError, GraphQLFormattedError } from 'graphql'
+import { graphqlUploadExpress } from 'graphql-upload'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { config } from 'core'
-// import { GraphQLUpload } from 'core/scalars/Upload'
 import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
@@ -34,8 +34,6 @@ export const appModules = [
         ]
       : []),
 
-    // GraphQLUpload,
-
     TypegooseModule.forRoot(config.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -46,6 +44,7 @@ export const appModules = [
       autoSchemaFile: config.IS_PROD ? true : 'schema.gql',
       introspection: !config.IS_PROD,
       playground: !config.IS_PROD,
+      uploads: false,
       formatError: (error: GraphQLError) => {
         const graphQLFormattedError: GraphQLFormattedError = {
           message:
@@ -69,4 +68,8 @@ export const appModules = [
     ...appModules,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(graphqlUploadExpress()).forRoutes('graphql')
+  }
+}

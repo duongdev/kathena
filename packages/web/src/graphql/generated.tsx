@@ -21,6 +21,8 @@ export type Scalars = {
   Float: number
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any
 }
 
 export type Account = BaseModel & {
@@ -97,6 +99,7 @@ export type AcademicSubject = BaseModel & {
   code: Scalars['String']
   description: Scalars['String']
   publication: Publication
+  imageFileId: Scalars['String']
 }
 
 export enum Publication {
@@ -174,6 +177,7 @@ export type CreateAcademicSubjectInput = {
   name: Scalars['String']
   code: Scalars['String']
   description?: Maybe<Scalars['String']>
+  image: Scalars['Upload']
 }
 
 export type AuthAccountFragment = Pick<
@@ -230,6 +234,14 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 
 export type UpdateSelfAccountMutation = {
   updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+}
+
+export type CreateAcademicSubjectMutationVariables = Exact<{
+  input: CreateAcademicSubjectInput
+}>
+
+export type CreateAcademicSubjectMutation = {
+  createAcademicSubject: Pick<AcademicSubject, 'id' | 'code' | 'name'>
 }
 
 export type CreateAccountMutationVariables = Exact<{
@@ -1118,6 +1130,133 @@ export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAc
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
+>
+export const CreateAcademicSubjectDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateAcademicSubject' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateAcademicSubjectInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createAcademicSubject' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateAcademicSubjectMutationFn = Apollo.MutationFunction<
+  CreateAcademicSubjectMutation,
+  CreateAcademicSubjectMutationVariables
+>
+export type CreateAcademicSubjectProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateAcademicSubject<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables,
+    CreateAcademicSubjectProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables,
+    CreateAcademicSubjectProps<TChildProps, TDataName>
+  >(CreateAcademicSubjectDocument, {
+    alias: 'createAcademicSubject',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateAcademicSubjectMutation__
+ *
+ * To run a mutation, you first call `useCreateAcademicSubjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAcademicSubjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAcademicSubjectMutation, { data, loading, error }] = useCreateAcademicSubjectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAcademicSubjectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >(CreateAcademicSubjectDocument, options)
+}
+export type CreateAcademicSubjectMutationHookResult = ReturnType<
+  typeof useCreateAcademicSubjectMutation
+>
+export type CreateAcademicSubjectMutationResult = Apollo.MutationResult<CreateAcademicSubjectMutation>
+export type CreateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
+  CreateAcademicSubjectMutation,
+  CreateAcademicSubjectMutationVariables
 >
 export const CreateAccountDocument: DocumentNode = {
   kind: 'Document',

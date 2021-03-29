@@ -7,6 +7,7 @@ import { Check } from 'phosphor-react'
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
 import { Button, FileItem, PageContainer } from '@kathena/ui'
+import { useCreateAcademicSubjectMutation } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
 
@@ -46,7 +47,9 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   props,
 ) => {
   const classes = useStyles(props)
-  // const isEditMode = false
+  const [createAcademicSubject] = useCreateAcademicSubjectMutation({
+    context: { hasFileUpload: true },
+  })
   const initialValues: AcademicSubjectFormInput = useMemo(
     () => ({
       name: '',
@@ -57,10 +60,34 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     [],
   )
 
-  const handleSubmitForm = useCallback((values: AcademicSubjectFormInput) => {
-    // eslint-disable-next-line no-console
-    console.log(values)
-  }, [])
+  const handleCreateAcademicSubject = useCallback(
+    async (input: AcademicSubjectFormInput) => {
+      try {
+        const { data } = await createAcademicSubject({
+          variables: { input },
+        })
+
+        const academicSubject = data?.createAcademicSubject
+
+        if (!academicSubject) {
+          return
+        }
+
+        // eslint-disable-next-line no-console
+        console.log(academicSubject)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [createAcademicSubject],
+  )
+
+  const handleSubmitForm = useCallback(
+    async (values: AcademicSubjectFormInput) =>
+      handleCreateAcademicSubject(values),
+    [handleCreateAcademicSubject],
+  )
 
   return (
     <Formik
@@ -80,6 +107,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
               size="large"
               startIcon={<Check />}
               onClick={formik.submitForm}
+              loading={formik.isSubmitting}
             >
               Tạo môn học
             </Button>,

@@ -8,6 +8,7 @@ import {
   FileItem,
   ImagesUploadInput,
   SectionCard,
+  Spinner,
   TextFormField,
   Typography,
 } from '@kathena/ui'
@@ -66,14 +67,16 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
         maxContentHeight={false}
         gridItem={{ xs: 12, sm: 6 }}
         title="Hình ảnh"
+        classes={{ root: classes.imageCard }}
       >
+        {formik.isSubmitting && <Spinner container="overlay" />}
         <CardContent className={classes.imageCardContent}>
           <ImagesUploadInput
             maxFiles={1}
             accept={['image/png', 'image/jpeg']}
             onChange={handleImageSelect}
           />
-          {formik.dirty && formik.errors.image && (
+          {formik.submitCount > 0 && formik.errors.image && (
             <Typography color="error" className={classes.imageError}>
               {formik.errors.image}
             </Typography>
@@ -86,6 +89,9 @@ const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> 
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {},
+  imageCard: {
+    position: 'relative',
+  },
   imageCardContent: {
     height: '100%',
     display: 'flex',

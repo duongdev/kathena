@@ -44,6 +44,7 @@ export class AcademicService {
     name: string
     description: string
     createdByAccountId: string
+    imageFileId: string
   }): Promise<DocumentType<AcademicSubject>> {
     this.logger.log(
       `[${this.createAcademicSubject.name}] Creating academic subject`,
@@ -56,6 +57,7 @@ export class AcademicService {
       name,
       description,
       createdByAccountId,
+      imageFileId,
     } = academicSubjectInput
     const code = normalizeCodeField($code)
 
@@ -78,6 +80,8 @@ export class AcademicService {
       name,
       description,
       createdByAccountId,
+      imageFileId,
+      code,
       publication: Publication.Draft,
     })
 
