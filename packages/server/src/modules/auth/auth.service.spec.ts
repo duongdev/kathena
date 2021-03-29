@@ -90,7 +90,7 @@ describe('auth.service', () => {
       ).resolves.toBe(true)
     })
 
-    it(`returns false if account hasn't permission`, async () => {
+    it(`returns false if account doesn't have permission`, async () => {
       expect.assertions(3)
 
       await expect(
