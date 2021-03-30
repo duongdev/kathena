@@ -52,7 +52,7 @@
     "@graphql-codegen/typescript-react-apollo": "2.2.3",
     "@testing-library/jest-dom": "5.11.10",
     "@testing-library/react": "11.2.6",
-    "@testing-library/user-event": "13.0.16",
+    "@testing-library/user-event": "13.1.1",
     "@types/graphql": "14.5.0",
     "@types/gravatar": "1.8.1",
     "@types/jest": "26.0.22",
