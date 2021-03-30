@@ -7,7 +7,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AccountService } from './account.service'
-import { CreateAccountServiceInput } from './account.type'
+import { CreateAccountInput, CreateAccountServiceInput } from './account.type'
 import { AccountStatus } from './models/Account'
 
 describe('account.service', () => {
@@ -293,41 +293,133 @@ describe('account.service', () => {
 
   describe('findOneAccount', () => {
     it('returns a account if it exist', async () => {
-      expect.assertions(1)
+      expect.assertions(4)
 
-      const account: ANY = {
-        id: objectId(),
-        username: 'duongdev',
+      const orgId1 = objectId()
+      const orgId2 = objectId()
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId: orgId1,
         email: 'dustin.do95@gmail.com',
-        orgId: objectId(),
+        password: '123456',
+        username: 'duongdev',
+        roles: ['owner', 'admin'],
+        displayName: 'Dustin Do',
       }
 
       jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(account)
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const createdAccount = await accountService.createAccount(
+        createAccountServiceInput,
+      )
+      const createdAccount2 = await accountService.createAccount({
+        ...createAccountServiceInput,
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
+
+      const createdAccountDifferenceOrg = await accountService.createAccount({
+        ...createAccountServiceInput,
+        orgId: orgId2,
+      })
+
+      const createdAccountDifferenceOrg2 = await accountService.createAccount({
+        ...createAccountServiceInput,
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+        orgId: orgId2,
+      })
 
       await expect(
         accountService.findOneAccount({
-          id: account.id,
-          orgId: account.orgId,
+          id: createdAccount.id,
+          orgId: orgId1,
         }),
-      ).resolves.toMatchObject(account)
+      ).resolves.toMatchObject({
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        displayName: 'Dustin Do',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccount2.id,
+          orgId: orgId1,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccountDifferenceOrg.id,
+          orgId: orgId2,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        displayName: 'Dustin Do',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccountDifferenceOrg2.id,
+          orgId: orgId2,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
     })
 
     it('returns a null if it exist', async () => {
-      expect.assertions(1)
+      expect.assertions(3)
 
-      const account: ANY = {
-        id: objectId(),
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
+      const createAccountServiceInput: CreateAccountServiceInput = {
         orgId: objectId(),
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['owner', 'admin'],
+        displayName: 'Dustin Do',
       }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createdAccount = await accountService.createAccount(
+        createAccountServiceInput,
+      )
 
       await expect(
         accountService.findOneAccount({
-          id: account.id,
-          orgId: account.orgId,
+          id: objectId(),
+          orgId: createdAccount.orgId,
+        }),
+      ).resolves.toBeNull()
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccount.id,
+          orgId: objectId(),
+        }),
+      ).resolves.toBeNull()
+
+      await expect(
+        accountService.findOneAccount({
+          id: objectId(),
+          orgId: objectId(),
         }),
       ).resolves.toBeNull()
     })
