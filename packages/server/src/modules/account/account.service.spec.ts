@@ -4,10 +4,9 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { ANY } from 'types'
 
 import { AccountService } from './account.service'
-import { CreateAccountInput, CreateAccountServiceInput } from './account.type'
+import { CreateAccountServiceInput } from './account.type'
 import { AccountStatus } from './models/Account'
 
 describe('account.service', () => {
