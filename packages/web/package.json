@@ -37,7 +37,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-helmet-async": "1.0.9",
-    "react-number-format": "4.5.2",
+    "react-number-format": "4.5.3",
     "react-router-dom": "5.2.0",
     "react-use": "17.2.1",
     "unstated-next": "1.1.0",
