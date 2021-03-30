@@ -2,6 +2,7 @@ import { FC, useCallback, useMemo } from 'react'
 
 import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import { Check } from 'phosphor-react'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
@@ -47,6 +48,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   props,
 ) => {
   const classes = useStyles(props)
+  const { enqueueSnackbar } = useSnackbar()
   const [createAcademicSubject] = useCreateAcademicSubjectMutation({
     context: { hasFileUpload: true },
   })
@@ -72,15 +74,16 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         if (!academicSubject) {
           return
         }
-
+        enqueueSnackbar('Thêm Môn Học Thành Công', { variant: 'success' })
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
+        enqueueSnackbar('Thêm Môn Học Thất Bại', { variant: 'error' })
         // eslint-disable-next-line no-console
         console.error(error)
       }
     },
-    [createAcademicSubject],
+    [createAcademicSubject, enqueueSnackbar],
   )
 
   const handleSubmitForm = useCallback(
