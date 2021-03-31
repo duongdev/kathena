@@ -387,7 +387,7 @@ describe('account.service', () => {
       })
     })
 
-    it('returns a null if it exist', async () => {
+    it('returns null if account does not exists', async () => {
       expect.assertions(3)
 
       const createAccountServiceInput: CreateAccountServiceInput = {
