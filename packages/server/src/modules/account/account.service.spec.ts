@@ -290,7 +290,7 @@ describe('account.service', () => {
     const createAccountServiceInput: ANY = {
       orgId: objectId(),
       email: 'nguyenvanhai141911@gmail.com',
-      password: '123456',
+      password: '1234567',
       username: 'nguyenvanhai',
       roles: ['owner', 'admin'],
       displayName: 'Nguyen Van Hai',
@@ -365,7 +365,7 @@ describe('account.service', () => {
         ),
       ).resolves.toMatchObject({
         email: 'nguyenvanhai141911@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'nguyenvanhai',
         roles: ['owner', 'admin'],
         displayName: 'Nguyen Van Hai',
@@ -378,7 +378,7 @@ describe('account.service', () => {
       const creatorTest: ANY = {
         orgId: objectId(),
         email: 'nguyenvanhai141911@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'nguyenvanhai',
         roles: ['staff'],
         displayName: 'Nguyen Van Hai',
@@ -415,7 +415,7 @@ describe('account.service', () => {
       const input: CreateAccountServiceInput = {
         orgId: objectId(),
         email: 'dustin.do95@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'duongdev',
         roles: ['staff', 'admin'],
         displayName: 'Dustin Do',
@@ -444,7 +444,7 @@ describe('account.service', () => {
       const creatorAccountInput: ANY = {
         orgId: objectId(),
         email: 'vanhai911@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'haidev',
         roles: ['staff'],
         displayName: 'Hai Nguyen',
@@ -461,7 +461,7 @@ describe('account.service', () => {
       const accountInput: ANY = {
         orgId: creatorAccount.orgId,
         email: 'dustin.3123do95@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'duo213gdev',
         roles: ['student', 'lecturer'],
         displayName: 'Dustin Do',
@@ -515,7 +515,7 @@ describe('account.service', () => {
         accountService.createOrgMemberAccount(creatorAccount.id, accountInput),
       ).resolves.toMatchObject({
         email: 'dustin.3123do95@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'duo213gdev',
         roles: ['student', 'lecturer'],
         displayName: 'Dustin Do',
@@ -528,7 +528,7 @@ describe('account.service', () => {
       const creatorAccountInput: ANY = {
         orgId: objectId(),
         email: 'vanhai911@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'haidev',
         roles: ['admin'],
         displayName: 'Hai Nguyen',
@@ -545,7 +545,7 @@ describe('account.service', () => {
       const accountInput: ANY = {
         orgId: creatorAccount.orgId,
         email: 'dustin.3123do95@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'duo213gdev',
         roles: ['admin', 'staff'],
         displayName: 'Dustin Do',
@@ -599,7 +599,7 @@ describe('account.service', () => {
         accountService.createOrgMemberAccount(creatorAccount.id, accountInput),
       ).resolves.toMatchObject({
         email: 'dustin.3123do95@gmail.com',
-        password: '123456',
+        password: '1234567',
         username: 'duo213gdev',
         roles: ['admin', 'staff'],
         displayName: 'Dustin Do',
