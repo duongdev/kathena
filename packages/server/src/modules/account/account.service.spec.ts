@@ -192,7 +192,7 @@ describe('account.service', () => {
   })
 
   describe('findAndPaginateAccounts', () => {
-    it('returns array account and count find and pagination account', async () => {
+    it('returns array accounts and count find and pagination account', async () => {
       expect.assertions(6)
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
@@ -282,13 +282,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId1,
-          },
-          {
-            limit: 2,
-            skip: 2,
-          },
+          { orgId: orgId1 },
+          { limit: 2, skip: 2 },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -308,13 +303,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId1,
-          },
-          {
-            limit: 3,
-            skip: 2,
-          },
+          { orgId: orgId1 },
+          { limit: 3, skip: 2 },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -339,13 +329,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId1,
-          },
-          {
-            limit: 1,
-            skip: 0,
-          },
+          { orgId: orgId1 },
+          { limit: 1, skip: 0 },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -360,13 +345,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
-          {
-            limit: 2,
-            skip: 0,
-          },
+          { orgId: orgId2 },
+          { limit: 2, skip: 0 },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -386,13 +366,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
-          {
-            limit: 0,
-            skip: 0,
-          },
+          { orgId: orgId2 },
+          { limit: 0, skip: 0 },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -412,13 +387,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
-          {
-            limit: 0,
-            skip: 1,
-          },
+          { orgId: orgId2 },
+          { limit: 0, skip: 1 },
         ),
       ).resolves.toMatchObject({
         accounts: [
