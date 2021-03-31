@@ -8,6 +8,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
+import { Role } from './models'
 import { admin, lecturer, owner, staff, student } from './orgRolesMap'
 
 describe('auth.service', () => {
@@ -32,6 +33,88 @@ describe('auth.service', () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
+  })
+
+  describe('accountHasPermission', () => {
+    it('returns true if account has permission', async () => {
+      expect.assertions(5)
+
+      const resultPermissions: ANY = [
+        'Hr_Access',
+        'Hr_CreateOrgAccount',
+        'Hr_ListOrgAccounts',
+        'Academic_CreateAcademicSubject',
+        'Academic_SetAcademicSubjectPublication',
+      ]
+
+      jest
+        .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_CreateOrgAccount',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Hr_ListOrgAccounts',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_SetAcademicSubjectPublication',
+        }),
+      ).resolves.toBe(true)
+    })
+
+    it(`returns false if account doesn't have permission`, async () => {
+      expect.assertions(3)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'awdawdawd',
+        }),
+      ).resolves.toBe(false)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: '     ',
+        }),
+      ).resolves.toBe(false)
+    })
   })
 
   describe('getAccountPermissions', () => {
@@ -334,6 +417,126 @@ describe('auth.service', () => {
           'Academic_SetAcademicSubjectPublication',
         ],
       })
+    })
+  })
+
+  describe('mapOrgRolesFromNames', () => {
+    it('returns a map org roles from name', async () => {
+      expect.assertions(5)
+      const arrRoles: Role[] = [
+        {
+          name: 'admin',
+          priority: 2,
+          permissions: [],
+        },
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [],
+        },
+      ]
+
+      jest
+        .spyOn(authService, 'getOrgRoles')
+        .mockResolvedValueOnce(arrRoles)
+        .mockResolvedValueOnce(arrRoles)
+        .mockResolvedValueOnce(arrRoles)
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [...arrRoles.map((roles) => roles.name.toString())],
+        }),
+      ).resolves.toMatchObject([...arrRoles])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [
+            ...arrRoles.map((roles) => roles.name.toString()),
+            'test1',
+          ],
+        }),
+      ).resolves.toMatchObject([...arrRoles])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: ['owner'],
+        }),
+      ).resolves.toMatchObject([arrRoles[1]])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: ['test'],
+        }),
+      ).resolves.toMatchObject([])
+
+      await expect(
+        authService.mapOrgRolesFromNames({
+          orgId: objectId(),
+          roleNames: [],
+        }),
+      ).resolves.toMatchObject([])
+    })
+  })
+
+  describe('getAccountRoles', () => {
+    it(`returns [] if account doesn't exist`, async () => {
+      expect.assertions(1)
+      await expect(
+        authService.getAccountRoles(objectId()),
+      ).resolves.toStrictEqual([])
+    })
+
+    it(`returns Account Roles`, async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        id: objectId(),
+        displayName: 'Nguyen Van Hai',
+        email: 'nguyenvanhai141911@gmail.com',
+        username: 'hainguyen',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+      }
+
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        authService.getAccountRoles(account.id),
+      ).resolves.toStrictEqual([
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [
+            'Hr_Access',
+            'Hr_CreateOrgAccount',
+            'Hr_ListOrgAccounts',
+            'Academic_CreateAcademicSubject',
+            'Academic_SetAcademicSubjectPublication',
+          ],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [
+            'Hr_Access',
+            'Hr_CreateOrgAccount',
+            'Hr_ListOrgAccounts',
+            'Academic_CreateAcademicSubject',
+            'Academic_SetAcademicSubjectPublication',
+          ],
+        },
+      ])
     })
   })
 })
