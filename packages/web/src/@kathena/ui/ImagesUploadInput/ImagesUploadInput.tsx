@@ -19,12 +19,7 @@ export type ImagesUploadInputProps = {
 }
 
 const ImagesUploadInput: FC<ImagesUploadInputProps> = (props) => {
-  const {
-    maxFiles,
-    accept = ['image/*'],
-    hideDropzoneOnNotEmpty,
-    onChange,
-  } = props
+  const { maxFiles, accept, hideDropzoneOnNotEmpty, onChange } = props
   const classes = useStyles(props)
   const [files, setFiles] = useState<FileItem[]>([])
   const {

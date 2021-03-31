@@ -7,7 +7,7 @@ import { Check } from 'phosphor-react'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, FileItem, PageContainer } from '@kathena/ui'
+import { Button, FileItem, PageContainer, renderApolloError } from '@kathena/ui'
 import { useCreateAcademicSubjectMutation } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -78,7 +78,8 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
-        enqueueSnackbar('Thêm Môn Học Thất Bại', { variant: 'error' })
+        const errorMessage = renderApolloError(error)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
         // eslint-disable-next-line no-console
         console.error(error)
       }

@@ -28,7 +28,9 @@ export class AcademicSubjectResolver {
   ): Promise<AcademicSubject | null> {
     const image = await academicSubjectInput.image
 
-    const { createReadStream, filename } = image
+    const { createReadStream, filename, encoding } = image
+
+    console.log('encoding', encoding)
 
     const imageFile = await this.fileStorageService.uploadFromReadStream({
       orgId: org.id,

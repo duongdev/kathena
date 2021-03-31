@@ -17,6 +17,7 @@ import * as fileType from 'file-type'
 import * as shortid from 'shortid'
 
 import { config, InjectModel, Logger, Service } from 'core'
+import { ANY } from 'types'
 
 import { File, FileStorageProvider } from './models/File'
 
@@ -77,7 +78,9 @@ export class FileStorageService {
     // })
 
     await new Promise((resolve, reject) => {
-      const writeStream = createWriteStream(filePath)
+      const writeStream = createWriteStream(filePath, {
+        encoding: 'base64' as ANY,
+      })
 
       writeStream.on('finish', resolve)
 
