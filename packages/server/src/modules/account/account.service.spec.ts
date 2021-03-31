@@ -291,7 +291,7 @@ describe('account.service', () => {
   })
 
   describe('findOneAccount', () => {
-    it('returns a account if it exist', async () => {
+    it('returns an account if it exists', async () => {
       expect.assertions(4)
 
       const orgId1 = objectId()
