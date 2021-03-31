@@ -291,47 +291,5 @@ describe('account.service', () => {
     })
   })
 
-  describe('findOneAccount', () => {
-    it('returns an account if it exists', async () => {
-      expect.assertions(1)
-
-      const account: ANY = {
-        id: objectId(),
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
-        orgId: objectId(),
-      }
-
-      jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(account)
-
-      await expect(
-        accountService.findOneAccount({
-          id: account.id,
-          orgId: account.orgId,
-        }),
-      ).resolves.toMatchObject(account)
-    })
-
-    it('returns null if account does not exist', async () => {
-      expect.assertions(1)
-
-      const account: ANY = {
-        id: objectId(),
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
-        orgId: objectId(),
-      }
-
-      await expect(
-        accountService.findOneAccount({
-          id: account.id,
-          orgId: account.orgId,
-        }),
-      ).resolves.toBeNull()
-    })
-  })
-
   describe('existsOrgByNamespace', () => {})
 })
