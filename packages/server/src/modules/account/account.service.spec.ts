@@ -5,7 +5,6 @@ import { Connection } from 'mongoose'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
-import { OrgService } from '../org/org.service'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
@@ -14,7 +13,6 @@ import { AccountStatus } from './models/Account'
 describe('account.service', () => {
   let module: TestingModule
   let accountService: AccountService
-  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -24,7 +22,6 @@ describe('account.service', () => {
     module = await createTestingModule(testDb.uri)
 
     accountService = module.get<AccountService>(AccountService)
-    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
@@ -194,218 +191,6 @@ describe('account.service', () => {
     })
   })
 
-  describe('findAndPaginateAccounts', () => {
-    it('returns array accounts and count find and pagination account', async () => {
-      expect.assertions(6)
-      jest
-        .spyOn(accountService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-
-      const orgId1 = objectId()
-      const orgId2 = objectId()
-      const listCreatedAccountOrgId1: ANY[] = []
-      const listCreatedAccountOrgId2: ANY[] = []
-
-      const createAccountServiceInput: CreateAccountServiceInput = {
-        orgId: orgId1,
-        email: 'hieuliem33@gmail.com',
-        password: '123456',
-        username: 'hieuliem',
-        roles: ['admin'],
-        displayName: 'Yami Doki',
-      }
-
-      listCreatedAccountOrgId1.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          email: 'hieuliem331@gmail.com',
-          username: 'hieuliem1',
-          displayName: 'Yami Doki1',
-        }),
-      )
-
-      listCreatedAccountOrgId1.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          email: 'hieuliem332@gmail.com',
-          username: 'hieuliem2',
-          displayName: 'Yami Doki2',
-        }),
-      )
-
-      listCreatedAccountOrgId1.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          email: 'hieuliem333@gmail.com',
-          username: 'hieuliem3',
-          displayName: 'Yami Doki3',
-        }),
-      )
-
-      listCreatedAccountOrgId1.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          email: 'hieuliem334@gmail.com',
-          username: 'hieuliem4',
-          displayName: 'Yami Doki4',
-        }),
-      )
-
-      listCreatedAccountOrgId1.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          email: 'hieuliem335@gmail.com',
-          username: 'hieuliem5',
-          displayName: 'Yami Doki5',
-        }),
-      )
-
-      listCreatedAccountOrgId2.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          orgId: orgId2,
-        }),
-      )
-
-      listCreatedAccountOrgId2.push(
-        await accountService.createAccount({
-          ...createAccountServiceInput,
-          orgId: orgId2,
-          email: 'hieuliem331@gmail.com',
-          username: 'hieuliem1',
-          displayName: 'Yami Doki1',
-        }),
-      )
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId1 },
-          { limit: 2, skip: 2 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem333@gmail.com',
-            username: 'hieuliem3',
-            displayName: 'Yami Doki3',
-          },
-          {
-            email: 'hieuliem332@gmail.com',
-            username: 'hieuliem2',
-            displayName: 'Yami Doki2',
-          },
-        ],
-        count: listCreatedAccountOrgId1.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId1 },
-          { limit: 3, skip: 2 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem333@gmail.com',
-            username: 'hieuliem3',
-            displayName: 'Yami Doki3',
-          },
-          {
-            email: 'hieuliem332@gmail.com',
-            username: 'hieuliem2',
-            displayName: 'Yami Doki2',
-          },
-          {
-            email: 'hieuliem331@gmail.com',
-            username: 'hieuliem1',
-            displayName: 'Yami Doki1',
-          },
-        ],
-        count: listCreatedAccountOrgId1.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId1 },
-          { limit: 1, skip: 0 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem335@gmail.com',
-            username: 'hieuliem5',
-            displayName: 'Yami Doki5',
-          },
-        ],
-        count: listCreatedAccountOrgId1.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId2 },
-          { limit: 2, skip: 0 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem331@gmail.com',
-            username: 'hieuliem1',
-            displayName: 'Yami Doki1',
-          },
-          {
-            email: 'hieuliem33@gmail.com',
-            username: 'hieuliem',
-            displayName: 'Yami Doki',
-          },
-        ],
-        count: listCreatedAccountOrgId2.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId2 },
-          { limit: 0, skip: 0 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem331@gmail.com',
-            username: 'hieuliem1',
-            displayName: 'Yami Doki1',
-          },
-          {
-            email: 'hieuliem33@gmail.com',
-            username: 'hieuliem',
-            displayName: 'Yami Doki',
-          },
-        ],
-        count: listCreatedAccountOrgId2.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { orgId: orgId2 },
-          { limit: 0, skip: 1 },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'hieuliem33@gmail.com',
-            username: 'hieuliem',
-            displayName: 'Yami Doki',
-          },
-        ],
-        count: listCreatedAccountOrgId2.length,
-      })
-    })
-  })
-
   describe('findAccountByUsernameOrEmail', () => {
     it(`returns null if neither usernameOrEmail or orgId is provided`, async () => {
       expect.assertions(1)
@@ -506,225 +291,47 @@ describe('account.service', () => {
     })
   })
 
-  describe('existsOrgByNamespace', () => {})
-
-  describe('updateOrgMemberAccount', () => {
-    it(`returns the account if updaterId equal query id and account does not have permission to update`, async () => {
+  describe('findOneAccount', () => {
+    it('returns an account if it exists', async () => {
       expect.assertions(1)
-
-      jest
-        .spyOn(accountService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-
-      const org = await orgService.createOrg({
-        namespace: 'kmin-edu',
-        name: 'Kmin Academy',
-      })
-
-      const account = await accountService.createAccount({
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
-        password: 'rawPass',
-        orgId: org.id,
-        roles: ['admin'],
-        displayName: 'Dustin Do',
-      })
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(false as never)
-
-      await expect(
-        accountService.updateOrgMemberAccount(
-          account.id,
-          {
-            id: account.id,
-            orgId: account.orgId,
-          },
-          {
-            displayName: 'Thanh Canh',
-            password: '12345',
-            roles: ['owner', 'admin', 'admin'],
-          },
-        ),
-      ).resolves.toMatchObject({
-        displayName: 'Thanh Canh',
-      })
-    })
-
-    it('throws error if account does not have permission to update', async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(false as never)
-
-      await expect(
-        accountService.updateOrgMemberAccount(
-          objectId(),
-          {
-            id: objectId(),
-            orgId: objectId(),
-          },
-          {
-            displayName: 'Thanh Canh',
-            password: '12345',
-          },
-        ),
-      ).rejects.toThrow()
-    })
-
-    it('throws error if account not is a target account', async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
-      jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(null)
-
-      await expect(
-        accountService.updateOrgMemberAccount(
-          objectId(),
-          {
-            id: objectId(),
-            orgId: objectId(),
-          },
-          {
-            displayName: 'Thanh Canh',
-            password: '12345',
-          },
-        ),
-      ).rejects.toThrow(`Couldn't find account to update`)
-    })
-
-    it('throws error if target account is not a manager account', async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
 
       const account: ANY = {
+        id: objectId(),
         username: 'duongdev',
         email: 'dustin.do95@gmail.com',
-        password: 'rawPass',
         orgId: objectId(),
-        roles: ['admin'],
-        displayName: 'Dustin Do',
       }
 
       jest
         .spyOn(accountService['accountModel'], 'findOne')
         .mockResolvedValueOnce(account)
-      jest
-        .spyOn(accountService['authService'], 'canAccountManageRoles')
-        .mockResolvedValueOnce(false as never)
 
       await expect(
-        accountService.updateOrgMemberAccount(
-          objectId(),
-          {
-            id: objectId(),
-            orgId: objectId(),
-          },
-          {
-            displayName: 'Thanh Canh',
-            password: '12345',
-          },
-        ),
-      ).rejects.toThrow()
+        accountService.findOneAccount({
+          id: account.id,
+          orgId: account.orgId,
+        }),
+      ).resolves.toMatchObject(account)
     })
 
-    it('throws error if roles is not empty and account is a manager account', async () => {
+    it('returns null if account does not exist', async () => {
       expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
 
       const account: ANY = {
+        id: objectId(),
         username: 'duongdev',
         email: 'dustin.do95@gmail.com',
-        password: 'rawPass',
         orgId: objectId(),
-        roles: ['admin'],
-        displayName: 'Dustin Do',
       }
 
-      jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(account)
-      jest
-        .spyOn(accountService['authService'], 'canAccountManageRoles')
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-
       await expect(
-        accountService.updateOrgMemberAccount(
-          objectId(),
-          {
-            id: objectId(),
-            orgId: objectId(),
-          },
-          {
-            displayName: 'Thanh Canh',
-            password: '12345',
-            roles: ['owner', 'admin', 'admin'],
-          },
-        ),
-      ).rejects.toThrow()
-    })
-
-    it('returns the account with new info if the input is valid', async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
-
-      const org = await orgService.createOrg({
-        namespace: 'kmin-edu',
-        name: 'Kmin Academy',
-      })
-
-      const account = await accountService.createAccount({
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
-        password: 'rawPass',
-        orgId: org.id,
-        roles: ['admin'],
-        displayName: 'Dustin Do',
-      })
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
-      jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(account)
-      jest
-        .spyOn(accountService['authService'], 'canAccountManageRoles')
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(false as never)
-
-      await expect(
-        accountService.updateOrgMemberAccount(
-          account.id,
-          {
-            id: account.id,
-            orgId: account.orgId,
-          },
-          {
-            displayName: 'Thanh Canh',
-          },
-        ),
-      ).resolves.toMatchObject({
-        displayName: 'Thanh Canh',
-        username: 'duongdev',
-        email: 'dustin.do95@gmail.com',
-      })
+        accountService.findOneAccount({
+          id: account.id,
+          orgId: account.orgId,
+        }),
+      ).resolves.toBeNull()
     })
   })
+
+  describe('existsOrgByNamespace', () => {})
 })
