@@ -486,4 +486,57 @@ describe('auth.service', () => {
       ).resolves.toMatchObject([])
     })
   })
+
+  describe('getAccountRoles', () => {
+    it(`returns [] if account doesn't exist`, async () => {
+      expect.assertions(1)
+      await expect(
+        authService.getAccountRoles(objectId()),
+      ).resolves.toStrictEqual([])
+    })
+
+    it(`returns Account Roles`, async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        id: objectId(),
+        displayName: 'Nguyen Van Hai',
+        email: 'nguyenvanhai141911@gmail.com',
+        username: 'hainguyen',
+        roles: ['owner', 'staff'],
+        password: bcrypt.hashSync('12345', 10),
+      }
+
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        authService.getAccountRoles(account.id),
+      ).resolves.toStrictEqual([
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [
+            'Hr_Access',
+            'Hr_CreateOrgAccount',
+            'Hr_ListOrgAccounts',
+            'Academic_CreateAcademicSubject',
+            'Academic_SetAcademicSubjectPublication',
+          ],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [
+            'Hr_Access',
+            'Hr_CreateOrgAccount',
+            'Hr_ListOrgAccounts',
+            'Academic_CreateAcademicSubject',
+            'Academic_SetAcademicSubjectPublication',
+          ],
+        },
+      ])
+    })
+  })
 })
