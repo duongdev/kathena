@@ -4,6 +4,8 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { Role } from 'modules/auth/models'
+import { ANY } from 'types'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
@@ -141,12 +143,6 @@ describe('account.service', () => {
 
       await expect(testAccount.status).toBe(AccountStatus.Active)
     })
-
-    it.todo(`throws error if a staff creates staff or admin`)
-
-    it.todo(`allows staff to create lecturer or student`)
-
-    it.todo(`allows admin to create staff or admin`)
 
     it.todo(`replaces duplicated spaces in displayName by single spaces`)
 
@@ -290,5 +286,324 @@ describe('account.service', () => {
     })
   })
 
-  describe('existsOrgByNamespace', () => {})
+  describe('createOrgMemberAccount', () => {
+    const createAccountServiceInput: ANY = {
+      orgId: objectId(),
+      email: 'nguyenvanhai141911@gmail.com',
+      password: '123456',
+      username: 'nguyenvanhai',
+      roles: ['owner', 'admin'],
+      displayName: 'Nguyen Van Hai',
+    }
+
+    const arrRole: Role[] = [
+      {
+        name: 'admin',
+        priority: 2,
+        permissions: [],
+      },
+      {
+        name: 'owner',
+        priority: 1,
+        permissions: [],
+      },
+      {
+        name: 'staff',
+        priority: 3,
+        permissions: [],
+      },
+      {
+        name: 'lecturer',
+        priority: 4,
+        permissions: [],
+      },
+      {
+        name: 'student',
+        priority: 5,
+        permissions: [],
+      },
+    ]
+
+    it(`throws error if can't Create Member`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'mapOrgRolesFromNames')
+        .mockResolvedValueOnce(arrRole)
+
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.createOrgMemberAccount(
+          createAccountServiceInput.orgId,
+          createAccountServiceInput,
+        ),
+      ).rejects.toThrow('TARGET_ROLES_FORBIDDEN')
+    })
+
+    it(`returns account if createdAccount`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'mapOrgRolesFromNames')
+        .mockResolvedValueOnce(arrRole)
+
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(accountService, 'createAccount')
+        .mockResolvedValueOnce(createAccountServiceInput)
+
+      await expect(
+        accountService.createOrgMemberAccount(
+          createAccountServiceInput.orgId,
+          createAccountServiceInput,
+        ),
+      ).resolves.toMatchObject({
+        email: 'nguyenvanhai141911@gmail.com',
+        password: '123456',
+        username: 'nguyenvanhai',
+        roles: ['owner', 'admin'],
+        displayName: 'Nguyen Van Hai',
+      })
+    })
+
+    it(`throws error if a staff creates staff or admin`, async () => {
+      expect.assertions(1)
+
+      const creatorTest: ANY = {
+        orgId: objectId(),
+        email: 'nguyenvanhai141911@gmail.com',
+        password: '123456',
+        username: 'nguyenvanhai',
+        roles: ['staff'],
+        displayName: 'Nguyen Van Hai',
+      }
+
+      const arrRoleTest: Role[] = [
+        {
+          name: 'admin',
+          priority: 2,
+          permissions: [],
+        },
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [],
+        },
+        {
+          name: 'lecturer',
+          priority: 4,
+          permissions: [],
+        },
+        {
+          name: 'student',
+          priority: 5,
+          permissions: [],
+        },
+      ]
+
+      const input: CreateAccountServiceInput = {
+        orgId: objectId(),
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['staff', 'admin'],
+        displayName: 'Dustin Do',
+      }
+
+      jest
+        .spyOn(accountService['authService'], 'mapOrgRolesFromNames')
+        .mockResolvedValueOnce(arrRoleTest)
+
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(false as never)
+
+      jest
+        .spyOn(accountService, 'createAccount')
+        .mockResolvedValueOnce(creatorTest)
+
+      await expect(
+        accountService.createOrgMemberAccount(creatorTest.id, input),
+      ).rejects.toThrow('TARGET_ROLES_FORBIDDEN')
+    })
+
+    it(`allows staff to create lecturer or student`, async () => {
+      expect.assertions(1)
+
+      const creatorAccountInput: ANY = {
+        orgId: objectId(),
+        email: 'vanhai911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['staff'],
+        displayName: 'Hai Nguyen',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const creatorAccount = await accountService.createAccount(
+        creatorAccountInput,
+      )
+
+      const accountInput: ANY = {
+        orgId: creatorAccount.orgId,
+        email: 'dustin.3123do95@gmail.com',
+        password: '123456',
+        username: 'duo213gdev',
+        roles: ['student', 'lecturer'],
+        displayName: 'Dustin Do',
+      }
+
+      const arrRoleTest: Role[] = [
+        {
+          name: 'admin',
+          priority: 2,
+          permissions: [],
+        },
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [],
+        },
+        {
+          name: 'lecturer',
+          priority: 4,
+          permissions: [],
+        },
+        {
+          name: 'student',
+          priority: 5,
+          permissions: [],
+        },
+      ]
+
+      jest
+        .spyOn(accountService['authService'], 'mapOrgRolesFromNames')
+        .mockResolvedValueOnce(arrRoleTest)
+
+      jest
+        .spyOn(accountService['authService'], 'getAccountRoles')
+        .mockResolvedValue(creatorAccountInput.roles)
+
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(accountService, 'createAccount')
+        .mockResolvedValueOnce(accountInput)
+
+      await expect(
+        accountService.createOrgMemberAccount(creatorAccount.id, accountInput),
+      ).resolves.toMatchObject({
+        email: 'dustin.3123do95@gmail.com',
+        password: '123456',
+        username: 'duo213gdev',
+        roles: ['student', 'lecturer'],
+        displayName: 'Dustin Do',
+      })
+    })
+
+    it(`allows admin to create staff or admin`, async () => {
+      expect.assertions(1)
+
+      const creatorAccountInput: ANY = {
+        orgId: objectId(),
+        email: 'vanhai911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['admin'],
+        displayName: 'Hai Nguyen',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const creatorAccount = await accountService.createAccount(
+        creatorAccountInput,
+      )
+
+      const accountInput: ANY = {
+        orgId: creatorAccount.orgId,
+        email: 'dustin.3123do95@gmail.com',
+        password: '123456',
+        username: 'duo213gdev',
+        roles: ['admin', 'staff'],
+        displayName: 'Dustin Do',
+      }
+
+      const arrRoleTest: Role[] = [
+        {
+          name: 'admin',
+          priority: 2,
+          permissions: [],
+        },
+        {
+          name: 'owner',
+          priority: 1,
+          permissions: [],
+        },
+        {
+          name: 'staff',
+          priority: 3,
+          permissions: [],
+        },
+        {
+          name: 'lecturer',
+          priority: 4,
+          permissions: [],
+        },
+        {
+          name: 'student',
+          priority: 5,
+          permissions: [],
+        },
+      ]
+
+      jest
+        .spyOn(accountService['authService'], 'mapOrgRolesFromNames')
+        .mockResolvedValueOnce(arrRoleTest)
+
+      jest
+        .spyOn(accountService['authService'], 'getAccountRoles')
+        .mockResolvedValue(creatorAccountInput.roles)
+
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(accountService, 'createAccount')
+        .mockResolvedValueOnce(accountInput)
+
+      await expect(
+        accountService.createOrgMemberAccount(creatorAccount.id, accountInput),
+      ).resolves.toMatchObject({
+        email: 'dustin.3123do95@gmail.com',
+        password: '123456',
+        username: 'duo213gdev',
+        roles: ['admin', 'staff'],
+        displayName: 'Dustin Do',
+      })
+    })
+  })
 })
