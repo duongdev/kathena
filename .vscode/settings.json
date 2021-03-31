@@ -26,6 +26,7 @@
     "kmin",
     "mongod",
     "nestjs",
+    "notistack",
     "typegoose",
     "unmount",
     "virtuals"

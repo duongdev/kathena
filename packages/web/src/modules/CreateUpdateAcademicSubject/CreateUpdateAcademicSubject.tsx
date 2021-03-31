@@ -74,7 +74,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         if (!academicSubject) {
           return
         }
-        enqueueSnackbar('Thêm Môn Học Thành Công', { variant: 'success' })
+        enqueueSnackbar('Thêm môn học thành công', { variant: 'success' })
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
