@@ -295,7 +295,248 @@ describe('account.service', () => {
     })
   })
 
-  describe('existsOrgByNamespace', () => {})
+  describe('findAndPaginateAccounts', () => {
+    it('returns array account and count find and pagination account', async () => {
+      expect.assertions(6)
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const orgId1 = objectId()
+      const orgId2 = objectId()
+      const listCreatedAccountOrgId1: ANY[] = []
+      const listCreatedAccountOrgId2: ANY[] = []
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId: orgId1,
+        email: 'hieuliem33@gmail.com',
+        password: '123456',
+        username: 'hieuliem',
+        roles: ['admin'],
+        displayName: 'Yami Doki',
+      }
+
+      listCreatedAccountOrgId1.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem331@gmail.com',
+          username: 'hieuliem1',
+          displayName: 'Yami Doki1',
+        }),
+      )
+
+      listCreatedAccountOrgId1.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem332@gmail.com',
+          username: 'hieuliem2',
+          displayName: 'Yami Doki2',
+        }),
+      )
+
+      listCreatedAccountOrgId1.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem333@gmail.com',
+          username: 'hieuliem3',
+          displayName: 'Yami Doki3',
+        }),
+      )
+
+      listCreatedAccountOrgId1.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem334@gmail.com',
+          username: 'hieuliem4',
+          displayName: 'Yami Doki4',
+        }),
+      )
+
+      listCreatedAccountOrgId1.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem335@gmail.com',
+          username: 'hieuliem5',
+          displayName: 'Yami Doki5',
+        }),
+      )
+
+      listCreatedAccountOrgId2.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          orgId: orgId2,
+        }),
+      )
+
+      listCreatedAccountOrgId2.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          orgId: orgId2,
+          email: 'hieuliem331@gmail.com',
+          username: 'hieuliem1',
+          displayName: 'Yami Doki1',
+        }),
+      )
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId1,
+          },
+          {
+            limit: 2,
+            skip: 2,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem333@gmail.com',
+            username: 'hieuliem3',
+            displayName: 'Yami Doki3',
+          },
+          {
+            email: 'hieuliem332@gmail.com',
+            username: 'hieuliem2',
+            displayName: 'Yami Doki2',
+          },
+        ],
+        count: listCreatedAccountOrgId1.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId1,
+          },
+          {
+            limit: 3,
+            skip: 2,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem333@gmail.com',
+            username: 'hieuliem3',
+            displayName: 'Yami Doki3',
+          },
+          {
+            email: 'hieuliem332@gmail.com',
+            username: 'hieuliem2',
+            displayName: 'Yami Doki2',
+          },
+          {
+            email: 'hieuliem331@gmail.com',
+            username: 'hieuliem1',
+            displayName: 'Yami Doki1',
+          },
+        ],
+        count: listCreatedAccountOrgId1.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId1,
+          },
+          {
+            limit: 1,
+            skip: 0,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem335@gmail.com',
+            username: 'hieuliem5',
+            displayName: 'Yami Doki5',
+          },
+        ],
+        count: listCreatedAccountOrgId1.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId2,
+          },
+          {
+            limit: 2,
+            skip: 0,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem331@gmail.com',
+            username: 'hieuliem1',
+            displayName: 'Yami Doki1',
+          },
+          {
+            email: 'hieuliem33@gmail.com',
+            username: 'hieuliem',
+            displayName: 'Yami Doki',
+          },
+        ],
+        count: listCreatedAccountOrgId2.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId2,
+          },
+          {
+            limit: 0,
+            skip: 0,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem331@gmail.com',
+            username: 'hieuliem1',
+            displayName: 'Yami Doki1',
+          },
+          {
+            email: 'hieuliem33@gmail.com',
+            username: 'hieuliem',
+            displayName: 'Yami Doki',
+          },
+        ],
+        count: listCreatedAccountOrgId2.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          {
+            orgId: orgId2,
+          },
+          {
+            limit: 0,
+            skip: 1,
+          },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'hieuliem33@gmail.com',
+            username: 'hieuliem',
+            displayName: 'Yami Doki',
+          },
+        ],
+        count: listCreatedAccountOrgId2.length,
+      })
+    })
+  })
 
   describe('updateOrgMemberAccount', () => {
     it(`returns the account if updaterId equal query id and account does not have permission to update`, async () => {
