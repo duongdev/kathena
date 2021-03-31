@@ -4,6 +4,9 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { ANY } from 'types'
+
+import { OrgService } from '../org/org.service'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
@@ -12,6 +15,7 @@ import { AccountStatus } from './models/Account'
 describe('account.service', () => {
   let module: TestingModule
   let accountService: AccountService
+  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -21,6 +25,7 @@ describe('account.service', () => {
     module = await createTestingModule(testDb.uri)
 
     accountService = module.get<AccountService>(AccountService)
+    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
@@ -291,4 +296,224 @@ describe('account.service', () => {
   })
 
   describe('existsOrgByNamespace', () => {})
+
+  describe('updateOrgMemberAccount', () => {
+    it(`returns the account if updaterId equal query id and account does not have permission to update`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          account.id,
+          {
+            id: account.id,
+            orgId: account.orgId,
+          },
+          {
+            displayName: 'Thanh Canh',
+            password: '12345',
+            roles: ['owner', 'admin', 'admin'],
+          },
+        ),
+      ).resolves.toMatchObject({
+        displayName: 'Thanh Canh',
+      })
+    })
+
+    it('throws error if account does not have permission to update', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          objectId(),
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            displayName: 'Thanh Canh',
+            password: '12345',
+          },
+        ),
+      ).rejects.toThrow()
+    })
+
+    it('throws error if account not is a target account', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(null)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          objectId(),
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            displayName: 'Thanh Canh',
+            password: '12345',
+          },
+        ),
+      ).rejects.toThrow(`Couldn't find account to update`)
+    })
+
+    it('throws error if target account is not a manager account', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const account: ANY = {
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: objectId(),
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      }
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          objectId(),
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            displayName: 'Thanh Canh',
+            password: '12345',
+          },
+        ),
+      ).rejects.toThrow()
+    })
+
+    it('throws error if roles is not empty and account is a manager account', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const account: ANY = {
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: objectId(),
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      }
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          objectId(),
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            displayName: 'Thanh Canh',
+            password: '12345',
+            roles: ['owner', 'admin', 'admin'],
+          },
+        ),
+      ).rejects.toThrow()
+    })
+
+    it('returns the account with new info if the input is valid', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.updateOrgMemberAccount(
+          account.id,
+          {
+            id: account.id,
+            orgId: account.orgId,
+          },
+          {
+            displayName: 'Thanh Canh',
+          },
+        ),
+      ).resolves.toMatchObject({
+        displayName: 'Thanh Canh',
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+      })
+    })
+  })
 })
