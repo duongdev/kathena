@@ -5,14 +5,11 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
-import { OrgService } from '../org/org.service'
-
 import { AcademicService } from './academic.service'
 
 describe('academic.service', () => {
   let module: TestingModule
   let academicService: AcademicService
-  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -22,7 +19,6 @@ describe('academic.service', () => {
     module = await createTestingModule(testDb.uri)
 
     academicService = module.get<AcademicService>(AcademicService)
-    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
