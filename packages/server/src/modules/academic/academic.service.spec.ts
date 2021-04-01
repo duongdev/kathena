@@ -93,6 +93,7 @@ describe('academic.service', () => {
       jest
         .spyOn(academicService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
+
       jest
         .spyOn(academicService, 'existsAcademicSubjectByCode')
         .mockResolvedValueOnce(false as never)
