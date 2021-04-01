@@ -5,7 +5,7 @@ import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 
 import { AcademicService } from './academic.service'
-import { AcademicSubjectResolver } from './AcademicSubject.resolver'
+import { AcademicSubjectResolver } from './academicSubject.resolver'
 import { AcademicSubject } from './models/AcademicSubject'
 
 @Module({
