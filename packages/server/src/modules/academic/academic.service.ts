@@ -76,6 +76,7 @@ export class AcademicService {
     const academicSubject = await this.academicSubjectModel.create({
       orgId,
       name,
+      code,
       description,
       createdByAccountId,
       publication: Publication.Draft,
