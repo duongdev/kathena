@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-process-env */
+import { resolve } from 'path'
+
 import { loadEnv, normalizePort } from './config.util'
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
@@ -16,7 +18,11 @@ const config = {
   MONGODB_URI: env.MONGODB_URI,
   JWT_SECRET: env.JWT_SECRET,
   INIT_ADMIN_PWD: env.INIT_ADMIN_PWD,
-  FILE_STORAGE_UPLOADS_DIR: env.FILE_STORAGE_UPLOADS_DIR,
+  FILE_STORAGE_UPLOADS_DIR: resolve(
+    __dirname,
+    '../../..',
+    env.FILE_STORAGE_UPLOADS_DIR,
+  ),
 }
 
 export default config

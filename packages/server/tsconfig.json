@@ -12,5 +12,6 @@
     "baseUrl": "./src",
     "incremental": true,
     "strictNullChecks": true
-  }
+  },
+  "exclude": ["uploads"]
 }

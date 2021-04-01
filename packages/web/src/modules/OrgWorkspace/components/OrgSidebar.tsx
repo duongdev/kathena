@@ -30,12 +30,12 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
       },
       {
         key: 'academicSubject',
-        title: 'QL mon hoc',
+        title: 'QL học vụ',
         icon: Book,
         items: [
           {
             key: 'academicSubjectList',
-            label: 'Danh Sach Mon Hoc',
+            label: 'Môn học',
             link: ACADEMIC_SUBJECT_LIST,
             active: !!matchPath(window.location.pathname, {
               path: ACADEMIC_SUBJECT_LIST,

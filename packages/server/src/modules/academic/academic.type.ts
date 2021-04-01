@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql'
 import { IsNotEmpty } from 'class-validator'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 @InputType()
 export class CreateAcademicSubjectInput {
@@ -13,4 +14,7 @@ export class CreateAcademicSubjectInput {
 
   @Field({ defaultValue: '' })
   description: string
+
+  @Field((_type) => GraphQLUpload)
+  image: Promise<FileUpload>
 }
