@@ -34,4 +34,80 @@ describe('academic.service', () => {
   it('should be defined', () => {
     expect(academicService).toBeDefined()
   })
+
+  describe('createAcademicSubject', () => {
+    it(`throws error "INVALID_ORG_ID" if orgId is invalid`, async () => {
+      expect.assertions(1)
+
+      const academicSubjectInput: ANY = {
+        orgId: objectId(),
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        createdByAccountId: objectId(),
+      }
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        academicService.createAcademicSubject(academicSubjectInput),
+      ).rejects.toThrow('INVALID_ORG_ID')
+    })
+
+    it(`throws error "DUPLICATED_SUBJECT_CODE" if academic subject already existed`, async () => {
+      expect.assertions(1)
+
+      const academicSubjectInput: ANY = {
+        orgId: objectId(),
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        createdByAccountId: objectId(),
+      }
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'existsAcademicSubjectByCode')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        academicService.createAcademicSubject(academicSubjectInput),
+      ).rejects.toThrow('DUPLICATED_SUBJECT_CODE')
+    })
+
+    it(`returns an academic subject if the input is valid`, async () => {
+      expect.assertions(1)
+
+      const academicSubjectInput: ANY = {
+        orgId: objectId(),
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        createdByAccountId: objectId(),
+      }
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'existsAcademicSubjectByCode')
+        .mockResolvedValueOnce(false as never)
+
+      console.log('b: ', academicSubjectInput)
+
+      await expect(
+        academicService.createAcademicSubject(academicSubjectInput),
+      ).resolves.toMatchObject({
+        orgId: academicSubjectInput.orgId,
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        createdByAccountId: academicSubjectInput.createdByAccountId,
+        publication: 'Draft',
+      })
+    })
+  })
 })

@@ -3626,10 +3626,10 @@
     mkdirp "^1.0.4"
     multimatch "^5.0.0"
 
-"@typegoose/typegoose@8.0.0-beta.3":
-  version "8.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.3.tgz#e57a0611c05e9ae0ef103d4b55d49292bc47a7e9"
-  integrity sha512-+05Cw8ZeXasf2W9adDyg2n6TJKlD65MApv7z4cxKxS903dyuTFFO1EZq1g5qoMcs64sB5Tm7IE9So++2H2oFNg==
+"@typegoose/typegoose@8.0.0-beta.4":
+  version "8.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.4.tgz#99d616f5acab7a641b6e4fffd816ad94a815957a"
+  integrity sha512-1g1ms6Kz1T12SgNWgip1Cx8zQsIsaZ506VTrz9aJc2B8ny5EM/0ZO+/Ppe/23m/h/lJDADIhzIR5rbKUKJv+HA==
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
@@ -4297,10 +4297,10 @@
     "@types/cookiejar" "*"
     "@types/node" "*"
 
-"@types/supertest@2.0.10":
-  version "2.0.10"
-  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.10.tgz#630d79b4d82c73e043e43ff777a9ca98d457cab7"
-  integrity sha512-Xt8TbEyZTnD5Xulw95GLMOkmjGICrOQyJ2jqgkSjAUR3mm7pAIzSR0NFBaMcwlzVvlpCjNwbATcWWwjNiZiFrQ==
+"@types/supertest@2.0.11":
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.11.tgz#2e70f69f220bc77b4f660d72c2e1a4231f44a77d"
+  integrity sha512-uci4Esokrw9qGb9bvhhSVEjd6rkny/dk5PK/Qz4yxKiyppEI+dOPlNrZBahE3i+PoKFYyDxChVXZ/ysS/nrm1Q==
   dependencies:
     "@types/superagent" "*"
 

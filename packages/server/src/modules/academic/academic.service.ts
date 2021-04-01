@@ -76,6 +76,7 @@ export class AcademicService {
     const academicSubject = await this.academicSubjectModel.create({
       orgId,
       name,
+      code,
       description,
       createdByAccountId,
       publication: Publication.Draft,
@@ -85,6 +86,8 @@ export class AcademicService {
       `[${this.createAcademicSubject.name}] Created academic subject ${academicSubject.id}`,
     )
     this.logger.verbose(academicSubject)
+
+    console.log('a: ', academicSubject)
 
     return academicSubject
   }
