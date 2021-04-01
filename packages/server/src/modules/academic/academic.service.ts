@@ -93,7 +93,7 @@ export class AcademicService {
     return academicSubject
   }
 
-  async findAndPaginateAcademicSubject(
+  async findAndPaginateAcademicSubjects(
     query: {
       orgId: string
     },
