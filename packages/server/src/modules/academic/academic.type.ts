@@ -23,7 +23,7 @@ export class CreateAcademicSubjectInput {
 @ObjectType()
 export class AcademicSubjectsPayload {
   @Field((_type) => [AcademicSubject])
-  academicSubject: AcademicSubject[]
+  academicsSubject: AcademicSubject[]
 
   @Field((_type) => Int)
   count: number
