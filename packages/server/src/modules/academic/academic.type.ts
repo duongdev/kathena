@@ -21,7 +21,7 @@ export class CreateAcademicSubjectInput {
   image: Promise<FileUpload>
 }
 @ObjectType()
-export class AcademicSubjectPayload {
+export class AcademicSubjectsPayload {
   @Field((_type) => [AcademicSubject])
   academicSubject: AcademicSubject[]
 
