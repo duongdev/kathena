@@ -87,8 +87,6 @@ export class AcademicService {
     )
     this.logger.verbose(academicSubject)
 
-    console.log('a: ', academicSubject)
-
     return academicSubject
   }
 }

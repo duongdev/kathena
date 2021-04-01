@@ -89,8 +89,6 @@ describe('academic.service', () => {
         .spyOn(academicService, 'existsAcademicSubjectByCode')
         .mockResolvedValueOnce(false as never)
 
-      console.log('b: ', academicSubjectInput)
-
       await expect(
         academicService.createAcademicSubject(academicSubjectInput),
       ).resolves.toMatchObject({
@@ -118,8 +116,6 @@ describe('academic.service', () => {
       jest
         .spyOn(academicService, 'existsAcademicSubjectByCode')
         .mockResolvedValueOnce(false as never)
-
-      console.log('b: ', academicSubjectInput)
 
       await expect(
         academicService.createAcademicSubject(academicSubjectInput),
