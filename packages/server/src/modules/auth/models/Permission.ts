@@ -10,7 +10,7 @@ export enum Permission {
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
 
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
-  Academic_ListAcademicSubject = 'Academic_ListAcademicSubject',
+  Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
 
   /** For testing purpose */
