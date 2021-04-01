@@ -290,6 +290,141 @@ describe('account.service', () => {
     })
   })
 
+  describe('findOneAccount', () => {
+    it('returns an account if it exists', async () => {
+      expect.assertions(4)
+
+      const orgId1 = objectId()
+
+      const orgId2 = objectId()
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId: orgId1,
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['owner', 'admin'],
+        displayName: 'Dustin Do',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const createdAccount = await accountService.createAccount(
+        createAccountServiceInput,
+      )
+      const createdAccount2 = await accountService.createAccount({
+        ...createAccountServiceInput,
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
+
+      const createdAccountDifferenceOrg = await accountService.createAccount({
+        ...createAccountServiceInput,
+        orgId: orgId2,
+      })
+
+      const createdAccountDifferenceOrg2 = await accountService.createAccount({
+        ...createAccountServiceInput,
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+        orgId: orgId2,
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccount.id,
+          orgId: orgId1,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        displayName: 'Dustin Do',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccount2.id,
+          orgId: orgId1,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccountDifferenceOrg.id,
+          orgId: orgId2,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin.do95@gmail.com',
+        username: 'duongdev',
+        displayName: 'Dustin Do',
+      })
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccountDifferenceOrg2.id,
+          orgId: orgId2,
+        }),
+      ).resolves.toMatchObject({
+        email: 'dustin2.do95@gmail.com',
+        username: 'duongdev2',
+        displayName: 'Dustin Do 2',
+      })
+    })
+
+    it('returns null if account does not exists', async () => {
+      expect.assertions(3)
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId: objectId(),
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['owner', 'admin'],
+        displayName: 'Dustin Do',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createdAccount = await accountService.createAccount(
+        createAccountServiceInput,
+      )
+
+      await expect(
+        accountService.findOneAccount({
+          id: objectId(),
+          orgId: createdAccount.orgId,
+        }),
+      ).resolves.toBeNull()
+
+      await expect(
+        accountService.findOneAccount({
+          id: createdAccount.id,
+          orgId: objectId(),
+        }),
+      ).resolves.toBeNull()
+
+      await expect(
+        accountService.findOneAccount({
+          id: objectId(),
+          orgId: objectId(),
+        }),
+      ).resolves.toBeNull()
+    })
+  })
+
   describe('findAndPaginateAccounts', () => {
     it('returns array account and count find and pagination account', async () => {
       expect.assertions(6)
