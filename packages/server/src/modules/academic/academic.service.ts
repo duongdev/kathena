@@ -81,7 +81,6 @@ export class AcademicService {
       createdByAccountId,
       publication: Publication.Draft,
     })
-
     this.logger.log(
       `[${this.createAcademicSubject.name}] Created academic subject ${academicSubject.id}`,
     )
