@@ -102,13 +102,13 @@ export class AcademicService {
       skip: number
     },
   ): Promise<{
-    academicSubject: DocumentType<AcademicSubject>[]
+    academicSubjects: DocumentType<AcademicSubject>[]
     count: number
   }> {
     const { orgId } = query
     const { limit, skip } = pageOptions
 
-    const academicSubject = await this.academicSubjectModel
+    const academicSubjects = await this.academicSubjectModel
       .find({ orgId })
       .sort({ _id: -1 })
       .skip(skip)
@@ -116,6 +116,6 @@ export class AcademicService {
 
     const count = await this.academicSubjectModel.countDocuments({ orgId })
 
-    return { academicSubject, count }
+    return { academicSubjects, count }
   }
 }

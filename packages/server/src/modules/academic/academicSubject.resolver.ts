@@ -11,7 +11,7 @@ import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
-  AcademicSubjectPayload,
+  AcademicSubjectsPayload,
   CreateAcademicSubjectInput,
 } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
@@ -55,17 +55,17 @@ export class AcademicSubjectResolver {
     return academicSubject
   }
 
-  @Query((_return) => AcademicSubjectPayload)
-  @UseAuthGuard(P.Academic_ListAcademicSubject)
+  @Query((_return) => AcademicSubjectsPayload)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
   async academicSubjects(
     @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
-  ): Promise<AcademicSubjectPayload> {
+  ): Promise<AcademicSubjectsPayload> {
     if (org.id !== orgId) {
       throw new ForbiddenError()
     }
-    return this.academicService.findAndPaginateAcademicSubject(
+    return this.academicService.findAndPaginateAcademicSubjects(
       { orgId },
       pageOptions,
     )
