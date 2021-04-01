@@ -56,7 +56,7 @@ export class AcademicSubjectResolver {
   }
 
   @Query((_return) => AcademicSubjectPayload)
-  // @UseAuthGuard(P.Academic_ListAcademicSubject) // chưa có permission
+  @UseAuthGuard(P.Academic_ListAcademicSubject)
   async academicSubjects(
     @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
