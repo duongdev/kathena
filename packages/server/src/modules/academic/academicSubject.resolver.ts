@@ -35,6 +35,7 @@ export class AcademicSubjectResolver {
 
     const { createReadStream, filename, encoding } = image
 
+    // eslint-disable-next-line no-console
     console.log('encoding', encoding)
 
     const imageFile = await this.fileStorageService.uploadFromReadStream({
