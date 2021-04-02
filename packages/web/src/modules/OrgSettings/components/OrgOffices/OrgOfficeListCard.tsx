@@ -9,6 +9,8 @@ import {
   useDialogState,
   withComponentHocs,
 } from '@kathena/ui'
+import { RequiredPermission } from 'common/auth'
+import { Permission } from 'graphql/generated'
 
 import CreateOrgOfficeDialog from './CreateOrgOfficeDialog'
 import OrgOfficeList from './OrgOfficeList'
@@ -28,19 +30,23 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
     <SectionCard
       title="Văn phòng"
       action={
-        <Button
-          startIcon={<Plus />}
-          size="small"
-          onClick={handleOpenCreateDialog}
-        >
-          Thêm văn phòng
-        </Button>
+        <RequiredPermission permission={Permission.OrgOffice_CreateOrgOffice}>
+          <Button
+            startIcon={<Plus />}
+            size="small"
+            onClick={handleOpenCreateDialog}
+          >
+            Thêm văn phòng
+          </Button>
+        </RequiredPermission>
       }
     >
-      <CreateOrgOfficeDialog
-        open={createDialogOpen}
-        onClose={handleCloseCreateDialog}
-      />
+      <RequiredPermission permission={Permission.OrgOffice_CreateOrgOffice}>
+        <CreateOrgOfficeDialog
+          open={createDialogOpen}
+          onClose={handleCloseCreateDialog}
+        />
+      </RequiredPermission>
       <CardContent>
         <OrgOfficeList />
       </CardContent>
