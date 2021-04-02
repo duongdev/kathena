@@ -1,8 +1,6 @@
 import { TestingModule } from '@nestjs/testing'
 import { compareSync } from 'bcrypt'
-import * as bcrypt from 'bcrypt'
 import { Connection } from 'mongoose'
-import { AnyCnameRecord } from 'node:dns'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
