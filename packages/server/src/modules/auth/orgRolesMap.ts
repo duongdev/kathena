@@ -28,7 +28,7 @@ export const lecturer: Role = {
 export const admin: Role = {
   name: 'admin',
   priority: 2,
-  permissions: [...staff.permissions],
+  permissions: [...staff.permissions, P.OrgOffice_CreateOrgOffice],
 }
 
 export const owner: Role = {

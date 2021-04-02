@@ -38,8 +38,8 @@ export const validationSchema: SchemaOf<OrgOfficeEditorFormInput> = yup.object({
 
 export const formContent = (
   <Stack spacing={2}>
-    <TextFormField autoFocus label={labels.name} name="name" />
-    <TextFormField label={labels.address} name="address" />
-    <TextFormField label={labels.phone} name="phone" />
+    <TextFormField required autoFocus label={labels.name} name="name" />
+    <TextFormField required label={labels.address} name="address" />
+    <TextFormField required label={labels.phone} name="phone" />
   </Stack>
 )

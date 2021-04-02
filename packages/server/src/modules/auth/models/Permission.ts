@@ -13,6 +13,8 @@ export enum Permission {
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
 
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
