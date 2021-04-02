@@ -263,6 +263,29 @@ export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
+export type AcademicSubjectListQueryVariables = Exact<{
+  orgId: Scalars['ID']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type AcademicSubjectListQuery = {
+  academicSubjects: Pick<AcademicSubjectsPayload, 'count'> & {
+    academicSubjects: Array<
+      Pick<
+        AcademicSubject,
+        | 'id'
+        | 'orgId'
+        | 'name'
+        | 'code'
+        | 'description'
+        | 'publication'
+        | 'imageFileId'
+      >
+    >
+  }
+}
+
 export type UpdateSelfAccountMutationVariables = Exact<{
   accountId: Scalars['ID']
   update: UpdateAccountInput
@@ -1032,6 +1055,208 @@ export type AccountDisplayNameLazyQueryHookResult = ReturnType<
 export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
+>
+export const AcademicSubjectListDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AcademicSubjectList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orgId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'academicSubjects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orgId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orgId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'academicSubjects' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publication' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'imageFileId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AcademicSubjectListProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >
+} &
+  TChildProps
+export function withAcademicSubjectList<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables,
+    AcademicSubjectListProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables,
+    AcademicSubjectListProps<TChildProps, TDataName>
+  >(AcademicSubjectListDocument, {
+    alias: 'academicSubjectList',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAcademicSubjectListQuery__
+ *
+ * To run a query within a React component, call `useAcademicSubjectListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAcademicSubjectListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAcademicSubjectListQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAcademicSubjectListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >(AcademicSubjectListDocument, options)
+}
+export function useAcademicSubjectListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >(AcademicSubjectListDocument, options)
+}
+export type AcademicSubjectListQueryHookResult = ReturnType<
+  typeof useAcademicSubjectListQuery
+>
+export type AcademicSubjectListLazyQueryHookResult = ReturnType<
+  typeof useAcademicSubjectListLazyQuery
+>
+export type AcademicSubjectListQueryResult = Apollo.QueryResult<
+  AcademicSubjectListQuery,
+  AcademicSubjectListQueryVariables
 >
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
