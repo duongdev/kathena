@@ -147,6 +147,7 @@ describe('auth.service', () => {
                 "Hr_ListOrgAccounts",
                 "Academic_CreateAcademicSubject",
                 "Academic_SetAcademicSubjectPublication",
+                "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
               ]
             `)

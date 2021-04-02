@@ -13,7 +13,11 @@ const OrgSettings: FC<OrgSettingsProps> = (props) => {
   const classes = useStyles(props)
 
   return (
-    <PageContainer title="Cài đặt tổ chức" className={classes.root}>
+    <PageContainer
+      maxWidth="sm"
+      title="Cài đặt tổ chức"
+      className={classes.root}
+    >
       <Grid container spacing={DASHBOARD_SPACING}>
         <OrgOfficeListCard gridItem={{ xs: 12 }} />
       </Grid>

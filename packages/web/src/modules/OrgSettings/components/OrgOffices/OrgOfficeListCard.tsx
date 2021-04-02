@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { makeStyles } from '@material-ui/core'
+import { CardContent, makeStyles } from '@material-ui/core'
 import { Plus } from 'phosphor-react'
 
 import {
@@ -41,7 +41,9 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
         open={createDialogOpen}
         onClose={handleCloseCreateDialog}
       />
-      <OrgOfficeList />
+      <CardContent>
+        <OrgOfficeList />
+      </CardContent>
     </SectionCard>
   )
 }

@@ -10,6 +10,7 @@ export const staff: Role = {
     P.Hr_ListOrgAccounts,
     P.Academic_CreateAcademicSubject,
     P.Academic_SetAcademicSubjectPublication,
+    P.OrgOffice_ListOrgOffices,
   ],
 }
 

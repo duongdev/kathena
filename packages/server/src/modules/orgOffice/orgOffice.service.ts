@@ -56,4 +56,12 @@ export class OrgOfficeService {
 
     return orgOffice
   }
+
+  async findOrgOfficesByOrgId(orgId: string): Promise<OrgOffice[]> {
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error('INVALID_ORG_ID')
+    }
+
+    return this.orgOfficeModel.find({ orgId })
+  }
 }

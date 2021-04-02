@@ -82,6 +82,7 @@ export enum Permission {
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   NoPermission = 'NoPermission',
 }
 
@@ -134,6 +135,7 @@ export type Query = {
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
+  orgOffices: Array<OrgOffice>
 }
 
 export type QueryAccountArgs = {
@@ -307,6 +309,12 @@ export type OrgAccountListQuery = {
       >
     >
   }
+}
+
+export type ListOrgOfficesQueryVariables = Exact<{ [key: string]: never }>
+
+export type ListOrgOfficesQuery = {
+  orgOffices: Array<Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>>
 }
 
 export type CreateOrgOfficeMutationVariables = Exact<{
@@ -1632,6 +1640,116 @@ export type OrgAccountListLazyQueryHookResult = ReturnType<
 export type OrgAccountListQueryResult = Apollo.QueryResult<
   OrgAccountListQuery,
   OrgAccountListQueryVariables
+>
+export const ListOrgOfficesDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListOrgOffices' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'orgOffices' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'phone' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ListOrgOfficesProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >
+} &
+  TChildProps
+export function withListOrgOffices<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables,
+    ListOrgOfficesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables,
+    ListOrgOfficesProps<TChildProps, TDataName>
+  >(ListOrgOfficesDocument, {
+    alias: 'listOrgOffices',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListOrgOfficesQuery__
+ *
+ * To run a query within a React component, call `useListOrgOfficesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListOrgOfficesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListOrgOfficesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListOrgOfficesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ListOrgOfficesQuery, ListOrgOfficesQueryVariables>(
+    ListOrgOfficesDocument,
+    options,
+  )
+}
+export function useListOrgOfficesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ListOrgOfficesQuery, ListOrgOfficesQueryVariables>(
+    ListOrgOfficesDocument,
+    options,
+  )
+}
+export type ListOrgOfficesQueryHookResult = ReturnType<
+  typeof useListOrgOfficesQuery
+>
+export type ListOrgOfficesLazyQueryHookResult = ReturnType<
+  typeof useListOrgOfficesLazyQuery
+>
+export type ListOrgOfficesQueryResult = Apollo.QueryResult<
+  ListOrgOfficesQuery,
+  ListOrgOfficesQueryVariables
 >
 export const CreateOrgOfficeDocument: DocumentNode = {
   kind: 'Document',

@@ -1,13 +1,56 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 
-import { makeStyles } from '@material-ui/core'
+import {
+  ListItem,
+  ListItemText,
+  makeStyles,
+  List,
+  ListItemSecondaryAction,
+  IconButton,
+} from '@material-ui/core'
+import { Pencil } from 'phosphor-react'
+
+import { ApolloErrorList, Typography } from '@kathena/ui'
+import { ContentSkeleton } from '@kathena/ui/skeletons/ContentSkeleton'
+import { useListOrgOfficesQuery } from 'graphql/generated'
 
 export type OrgOfficeListProps = {}
 
 const OrgOfficeList: FC<OrgOfficeListProps> = (props) => {
   const classes = useStyles(props)
+  const { data, loading, error } = useListOrgOfficesQuery()
 
-  return <div className={classes.root}>OrgOfficeList</div>
+  const orgOffices = useMemo(() => data?.orgOffices ?? [], [data?.orgOffices])
+
+  if (error) {
+    return <ApolloErrorList error={error} />
+  }
+
+  if (loading) {
+    return <ContentSkeleton />
+  }
+
+  if (!orgOffices.length) {
+    return <Typography>Chưa có văn phòng nào</Typography>
+  }
+
+  return (
+    <List disablePadding className={classes.root}>
+      {orgOffices.map((orgOffice) => (
+        <ListItem key={orgOffice.id} disableGutters>
+          <ListItemText
+            primary={orgOffice.name}
+            secondary={`${orgOffice.phone} – ${orgOffice.address}`}
+          />
+          <ListItemSecondaryAction>
+            <IconButton>
+              <Pencil />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ))}
+    </List>
+  )
 }
 
 const useStyles = makeStyles(() => ({

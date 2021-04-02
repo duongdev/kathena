@@ -3,7 +3,10 @@ import { FC, useCallback } from 'react'
 import { useSnackbar } from 'notistack'
 
 import { FormDialog } from '@kathena/ui'
-import { useCreateOrgOfficeMutation } from 'graphql/generated'
+import {
+  ListOrgOfficesDocument,
+  useCreateOrgOfficeMutation,
+} from 'graphql/generated'
 
 import {
   FormContent,
@@ -24,7 +27,9 @@ const initialValues: OrgOfficeEditorFormInput = {
 
 const CreateOrgOfficeDialog: FC<CreateOrgOfficeDialogProps> = (props) => {
   const { open, onClose } = props
-  const [createOrgOffice, { error }] = useCreateOrgOfficeMutation()
+  const [createOrgOffice, { error }] = useCreateOrgOfficeMutation({
+    refetchQueries: [{ query: ListOrgOfficesDocument }],
+  })
   const { enqueueSnackbar } = useSnackbar()
 
   const handleCreateOrgOffice = useCallback(

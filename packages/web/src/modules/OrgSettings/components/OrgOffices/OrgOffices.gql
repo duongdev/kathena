@@ -1,3 +1,12 @@
+query ListOrgOffices {
+  orgOffices {
+    id
+    name
+    address
+    phone
+  }
+}
+
 mutation CreateOrgOffice($input: CreateOrgOfficeInput!) {
   createOrgOffice(input: $input) {
     id

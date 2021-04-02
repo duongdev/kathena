@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
@@ -12,6 +12,12 @@ import { CreateOrgOfficeInput } from './orgOffice.types'
 @Resolver((_of) => OrgOffice)
 export class OrgOfficeResolver {
   constructor(private readonly orgOfficeService: OrgOfficeService) {}
+
+  @Query((_returns) => [OrgOffice])
+  @UseAuthGuard(P.OrgOffice_ListOrgOffices)
+  async orgOffices(@CurrentOrg() org: Org): Promise<OrgOffice[]> {
+    return this.orgOfficeService.findOrgOfficesByOrgId(org.id)
+  }
 
   @Mutation((_returns) => OrgOffice)
   @UseAuthGuard(P.OrgOffice_CreateOrgOffice)

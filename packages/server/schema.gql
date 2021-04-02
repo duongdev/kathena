@@ -64,6 +64,7 @@ enum Permission {
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   OrgOffice_CreateOrgOffice
+  OrgOffice_ListOrgOffices
   NoPermission
 }
 
@@ -116,6 +117,7 @@ type Query {
   orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  orgOffices: [OrgOffice!]!
 }
 
 input PageOptionsInput {
