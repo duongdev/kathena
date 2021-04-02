@@ -11,7 +11,7 @@ import { OrgService } from '../org/org.service'
 
 import { AccountService } from './account.service'
 import { CreateAccountServiceInput } from './account.type'
-import { Account, AccountStatus } from './models/Account'
+import { AccountStatus } from './models/Account'
 
 describe('account.service', () => {
   let module: TestingModule
