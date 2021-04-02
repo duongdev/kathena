@@ -1,14 +1,19 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
+import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
-import { CreateAcademicSubjectInput } from './academic.type'
+import {
+  AcademicSubjectsPayload,
+  CreateAcademicSubjectInput,
+} from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 
 @Resolver((_of) => AcademicSubject)
@@ -48,5 +53,21 @@ export class AcademicSubjectResolver {
     })
 
     return academicSubject
+  }
+
+  @Query((_return) => AcademicSubjectsPayload)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
+  async academicSubjects(
+    @Args('orgId', { type: () => ID }) orgId: string,
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @CurrentOrg() org: Org,
+  ): Promise<AcademicSubjectsPayload> {
+    if (org.id !== orgId) {
+      throw new ForbiddenError()
+    }
+    return this.academicService.findAndPaginateAcademicSubjects(
+      { orgId },
+      pageOptions,
+    )
   }
 }

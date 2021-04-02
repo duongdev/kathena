@@ -61,6 +61,7 @@ enum Permission {
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   Academic_CreateAcademicSubject
+  Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   NoPermission
 }
@@ -89,6 +90,11 @@ enum Publication {
   Published
 }
 
+type AcademicSubjectsPayload {
+  academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
@@ -98,6 +104,7 @@ type Query {
   account(id: ID!): Account
   orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
 }
 
 input PageOptionsInput {
