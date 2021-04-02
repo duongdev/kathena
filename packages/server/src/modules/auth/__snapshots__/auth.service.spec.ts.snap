@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`orgRolesMap should match snapshot 1`] = `
+exports[`auth.service getAccountRoles returns Account Roles 1`] = `
 Array [
   Object {
     "name": "owner",
@@ -16,19 +16,6 @@ Array [
     "priority": 1,
   },
   Object {
-    "name": "admin",
-    "permissions": Array [
-      "Hr_Access",
-      "Hr_CreateOrgAccount",
-      "Hr_ListOrgAccounts",
-      "Academic_CreateAcademicSubject",
-      "Academic_SetAcademicSubjectPublication",
-      "OrgOffice_ListOrgOffices",
-      "OrgOffice_CreateOrgOffice",
-    ],
-    "priority": 2,
-  },
-  Object {
     "name": "staff",
     "permissions": Array [
       "Hr_Access",
@@ -39,16 +26,6 @@ Array [
       "OrgOffice_ListOrgOffices",
     ],
     "priority": 3,
-  },
-  Object {
-    "name": "lecturer",
-    "permissions": Array [],
-    "priority": 4,
-  },
-  Object {
-    "name": "student",
-    "permissions": Array [],
-    "priority": 4,
   },
 ]
 `;

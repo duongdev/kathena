@@ -10,6 +10,7 @@ export const staff: Role = {
     P.Hr_ListOrgAccounts,
     P.Academic_CreateAcademicSubject,
     P.Academic_SetAcademicSubjectPublication,
+    P.OrgOffice_ListOrgOffices,
   ],
 }
 
@@ -28,7 +29,7 @@ export const lecturer: Role = {
 export const admin: Role = {
   name: 'admin',
   priority: 2,
-  permissions: [...staff.permissions],
+  permissions: [...staff.permissions, P.OrgOffice_CreateOrgOffice],
 }
 
 export const owner: Role = {

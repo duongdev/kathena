@@ -4,6 +4,8 @@ export * from './Alert'
 export { default as ApolloErrorList } from './ApolloErrorList'
 export * from './ApolloErrorList'
 
+export { default as AutoScrollToTop } from './AutoScrollToTop'
+
 export { default as Button } from './Button'
 export * from './Button'
 
