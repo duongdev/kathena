@@ -11,16 +11,18 @@ import { AuthModule } from 'modules/auth/auth.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
+import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
 
 import { GraphQLWithUploadModule } from './graphql-with-upload.module'
 
 export const appModules = [
+  ...(config.ENABLE_DEVTOOL_MODULE ? [DevtoolModule] : []),
   AccountModule,
   AuthModule,
-  DevtoolModule,
   OrgModule,
   AcademicModule,
   FileStorageModule,
+  OrgOfficeModule,
 ]
 
 @Module({

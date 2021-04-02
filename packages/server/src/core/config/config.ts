@@ -23,6 +23,7 @@ const config = {
     '../../..',
     env.FILE_STORAGE_UPLOADS_DIR,
   ),
+  ENABLE_DEVTOOL_MODULE: env.ENABLE_DEVTOOL_MODULE === 'true',
 }
 
 export default config
