@@ -210,7 +210,6 @@ export class AccountService {
     if (update.password) {
       account.password = bcrypt.hashSync(update.password, 10)
     }
-
     const updatedAccount = await account.save()
 
     return updatedAccount
