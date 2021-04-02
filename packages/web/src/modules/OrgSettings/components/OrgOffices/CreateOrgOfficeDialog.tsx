@@ -1,10 +1,12 @@
 import { FC, useCallback } from 'react'
 
+import { useSnackbar } from 'notistack'
+
 import { FormDialog } from '@kathena/ui'
-import { wait } from '@kathena/utils'
+import { useCreateOrgOfficeMutation } from 'graphql/generated'
 
 import {
-  formContent,
+  FormContent,
   OrgOfficeEditorFormInput,
   validationSchema,
 } from './OrgOfficeEditor.form'
@@ -22,14 +24,30 @@ const initialValues: OrgOfficeEditorFormInput = {
 
 const CreateOrgOfficeDialog: FC<CreateOrgOfficeDialogProps> = (props) => {
   const { open, onClose } = props
+  const [createOrgOffice, { error }] = useCreateOrgOfficeMutation()
+  const { enqueueSnackbar } = useSnackbar()
 
   const handleCreateOrgOffice = useCallback(
     async (input: OrgOfficeEditorFormInput) => {
-      // eslint-disable-next-line no-console
-      console.log(input)
-      await wait(2000)
+      try {
+        const { data } = await createOrgOffice({ variables: { input } })
+
+        const orgOffice = data?.createOrgOffice
+
+        if (!orgOffice) {
+          return
+        }
+
+        enqueueSnackbar(`Đã tạo văn phòng ${orgOffice.name}`, {
+          variant: 'success',
+        })
+        onClose()
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
+      }
     },
-    [],
+    [createOrgOffice, enqueueSnackbar, onClose],
   )
 
   return (
@@ -42,7 +60,7 @@ const CreateOrgOfficeDialog: FC<CreateOrgOfficeDialogProps> = (props) => {
       submitButtonLabel="Tạo văn phòng"
       width={400}
     >
-      {formContent}
+      <FormContent error={error} />
     </FormDialog>
   )
 }

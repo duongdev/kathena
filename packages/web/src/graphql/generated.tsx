@@ -79,7 +79,9 @@ export enum Permission {
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+  Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   NoPermission = 'NoPermission',
 }
 
@@ -107,15 +109,31 @@ export enum Publication {
   Published = 'Published',
 }
 
+export type AcademicSubjectsPayload = {
+  academicSubjects: Array<AcademicSubject>
+  count: Scalars['Int']
+}
+
 export type OrgAccountsPayload = {
   accounts: Array<Account>
   count: Scalars['Int']
+}
+
+export type OrgOffice = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
 }
 
 export type Query = {
   account?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
+  academicSubjects: AcademicSubjectsPayload
 }
 
 export type QueryAccountArgs = {
@@ -123,6 +141,11 @@ export type QueryAccountArgs = {
 }
 
 export type QueryOrgAccountsArgs = {
+  pageOptions: PageOptionsInput
+  orgId: Scalars['ID']
+}
+
+export type QueryAcademicSubjectsArgs = {
   pageOptions: PageOptionsInput
   orgId: Scalars['ID']
 }
@@ -137,6 +160,7 @@ export type Mutation = {
   updateAccount: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
+  createOrgOffice: OrgOffice
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -156,6 +180,10 @@ export type MutationSignInArgs = {
 
 export type MutationCreateAcademicSubjectArgs = {
   input: CreateAcademicSubjectInput
+}
+
+export type MutationCreateOrgOfficeArgs = {
+  input: CreateOrgOfficeInput
 }
 
 export type CreateAccountInput = {
@@ -178,6 +206,12 @@ export type CreateAcademicSubjectInput = {
   code: Scalars['String']
   description?: Maybe<Scalars['String']>
   image: Scalars['Upload']
+}
+
+export type CreateOrgOfficeInput = {
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
 }
 
 export type AuthAccountFragment = Pick<
@@ -273,6 +307,14 @@ export type OrgAccountListQuery = {
       >
     >
   }
+}
+
+export type CreateOrgOfficeMutationVariables = Exact<{
+  input: CreateOrgOfficeInput
+}>
+
+export type CreateOrgOfficeMutation = {
+  createOrgOffice: Pick<OrgOffice, 'id' | 'name'>
 }
 
 export const AuthAccountFragmentDoc: DocumentNode = {
@@ -1590,4 +1632,130 @@ export type OrgAccountListLazyQueryHookResult = ReturnType<
 export type OrgAccountListQueryResult = Apollo.QueryResult<
   OrgAccountListQuery,
   OrgAccountListQueryVariables
+>
+export const CreateOrgOfficeDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateOrgOffice' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateOrgOfficeInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createOrgOffice' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateOrgOfficeMutationFn = Apollo.MutationFunction<
+  CreateOrgOfficeMutation,
+  CreateOrgOfficeMutationVariables
+>
+export type CreateOrgOfficeProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateOrgOffice<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables,
+    CreateOrgOfficeProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables,
+    CreateOrgOfficeProps<TChildProps, TDataName>
+  >(CreateOrgOfficeDocument, {
+    alias: 'createOrgOffice',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateOrgOfficeMutation__
+ *
+ * To run a mutation, you first call `useCreateOrgOfficeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrgOfficeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrgOfficeMutation, { data, loading, error }] = useCreateOrgOfficeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrgOfficeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >(CreateOrgOfficeDocument, options)
+}
+export type CreateOrgOfficeMutationHookResult = ReturnType<
+  typeof useCreateOrgOfficeMutation
+>
+export type CreateOrgOfficeMutationResult = Apollo.MutationResult<CreateOrgOfficeMutation>
+export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
+  CreateOrgOfficeMutation,
+  CreateOrgOfficeMutationVariables
 >

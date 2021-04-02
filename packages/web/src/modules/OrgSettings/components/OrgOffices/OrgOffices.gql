@@ -1,0 +1,6 @@
+mutation CreateOrgOffice($input: CreateOrgOfficeInput!) {
+  createOrgOffice(input: $input) {
+    id
+    name
+  }
+}

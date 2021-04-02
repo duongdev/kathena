@@ -1,7 +1,10 @@
+import { FC } from 'react'
+
+import { ApolloError } from '@apollo/client'
 import { Stack } from '@material-ui/core'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
-import { TextFormField } from '@kathena/ui'
+import { ApolloErrorList, TextFormField } from '@kathena/ui'
 import { ORG_OFFICE_NAME_REGEX, PHONE_REGEX } from 'utils/validators'
 
 export type OrgOfficeEditorFormInput = {
@@ -11,7 +14,7 @@ export type OrgOfficeEditorFormInput = {
 }
 
 export const labels: Record<keyof OrgOfficeEditorFormInput, string> = {
-  name: 'Tên chi nhánh',
+  name: 'Tên văn phòng',
   address: 'Địa chỉ',
   phone: 'Số điện thoại',
 }
@@ -36,10 +39,11 @@ export const validationSchema: SchemaOf<OrgOfficeEditorFormInput> = yup.object({
     .required(),
 })
 
-export const formContent = (
+export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => (
   <Stack spacing={2}>
     <TextFormField required autoFocus label={labels.name} name="name" />
     <TextFormField required label={labels.address} name="address" />
     <TextFormField required label={labels.phone} name="phone" />
+    {error && <ApolloErrorList error={error} />}
   </Stack>
 )
