@@ -35,6 +35,50 @@ describe('academic.service', () => {
     expect(academicService).toBeDefined()
   })
 
+  describe('existsAcademicSubjectByCode', () => {
+    it('returns true if it exists academic subject by code', async () => {
+      expect.assertions(2)
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        academicService.existsAcademicSubjectByCode(
+          'NESTJS-T1-2021',
+          objectId(),
+        ),
+      ).resolves.toBeTruthy()
+
+      await expect(
+        academicService.existsAcademicSubjectByCode('NESTJS-T1-2021'),
+      ).resolves.toBeTruthy()
+    })
+
+    it(`returns false if it doesn't exists academic subject by code`, async () => {
+      expect.assertions(3)
+
+      await expect(
+        academicService.existsAcademicSubjectByCode(
+          'NESTJS-T1-2021',
+          objectId(),
+        ),
+      ).resolves.toBeFalsy()
+
+      await expect(
+        academicService.existsAcademicSubjectByCode('NESTJS-T1-2021'),
+      ).resolves.toBeFalsy()
+
+      await expect(
+        academicService.existsAcademicSubjectByCode(''),
+      ).resolves.toBeFalsy()
+    })
+  })
+
   describe('createAcademicSubject', () => {
     it(`throws error if orgId is invalid`, async () => {
       expect.assertions(1)
