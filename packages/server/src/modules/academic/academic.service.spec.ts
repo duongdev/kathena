@@ -255,7 +255,7 @@ describe('academic.service', () => {
       ).resolves.toBeNull()
     })
 
-    it('returns academic subject if code exists', async () => {
+    it('returns an academic subject if code exists', async () => {
       expect.assertions(2)
 
       const academicSubject: ANY = {
