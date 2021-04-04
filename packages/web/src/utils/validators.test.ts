@@ -9,15 +9,17 @@ test('ACADEMIC_SUBJECT_NAME_REGEX', () => {
   expect(
     ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web Backend với PHP cơ bản'),
   ).toBe(true)
-  expect(ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web')).toBe(true)
+  expect(
+    ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web Back_end với PHP cơ bản'),
+  ).toBe(true)
+  expect(
+    ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web Back-end với PHP cơ bản'),
+  ).toBe(true)
 
   expect(
     ACADEMIC_SUBJECT_NAME_REGEX.test(
       'Lập trình web Back-end với PHP cơ bản - Khóa T4',
     ),
-  ).toBe(false)
-  expect(
-    ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web Back-end với PHP cơ bản'),
   ).toBe(false)
   expect(
     ACADEMIC_SUBJECT_NAME_REGEX.test('Lập trình web Backend với PHP cơ bản1'),
