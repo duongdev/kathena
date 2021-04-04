@@ -37,18 +37,20 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(5)
+      expect.assertions(6)
 
       const resultPermissions: ANY = [
         'Hr_Access',
         'Hr_CreateOrgAccount',
         'Hr_ListOrgAccounts',
         'Academic_CreateAcademicSubject',
+        'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
       ]
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -80,6 +82,13 @@ describe('auth.service', () => {
         authService.accountHasPermission({
           accountId: objectId().toString(),
           permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_ListAcademicSubjects',
         }),
       ).resolves.toBe(true)
 
@@ -146,6 +155,7 @@ describe('auth.service', () => {
                 "Hr_CreateOrgAccount",
                 "Hr_ListOrgAccounts",
                 "Academic_CreateAcademicSubject",
+                "Academic_ListAcademicSubjects",
                 "Academic_SetAcademicSubjectPublication",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",

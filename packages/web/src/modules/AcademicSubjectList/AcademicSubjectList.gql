@@ -1,0 +1,14 @@
+query AcademicSubjectList($orgId: ID!, $skip: Int!, $limit: Int!) {
+  academicSubjects(pageOptions: { skip: $skip, limit: $limit }, orgId: $orgId) {
+    academicSubjects {
+      id
+      orgId
+      name
+      code
+      description
+      publication
+      imageFileId
+    }
+    count
+  }
+}

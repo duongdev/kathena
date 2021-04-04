@@ -4,11 +4,16 @@ import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import { Check } from 'phosphor-react'
+import { useHistory } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
 import { Button, FileItem, PageContainer, renderApolloError } from '@kathena/ui'
-import { useCreateAcademicSubjectMutation } from 'graphql/generated'
+import { useAuth } from 'common/auth'
+import {
+  useCreateAcademicSubjectMutation,
+  AcademicSubjectListDocument,
+} from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
 
@@ -49,7 +54,15 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
 ) => {
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
+  const history = useHistory()
+  const { $org: org } = useAuth()
   const [createAcademicSubject] = useCreateAcademicSubjectMutation({
+    refetchQueries: [
+      {
+        query: AcademicSubjectListDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+    ],
     context: { hasFileUpload: true },
   })
   const initialValues: AcademicSubjectFormInput = useMemo(
@@ -75,6 +88,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
           return
         }
         enqueueSnackbar('Thêm môn học thành công', { variant: 'success' })
+        history.push(ACADEMIC_SUBJECT_LIST)
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
@@ -84,7 +98,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         console.error(error)
       }
     },
-    [createAcademicSubject, enqueueSnackbar],
+    [createAcademicSubject, enqueueSnackbar, history],
   )
 
   const handleSubmitForm = useCallback(
