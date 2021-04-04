@@ -6,6 +6,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AcademicService } from './academic.service'
+import { AcademicSubject } from './models/AcademicSubject'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -237,6 +238,55 @@ describe('academic.service', () => {
       await expect(
         academicService.createAcademicSubject(academicSubjectInput),
       ).resolves.toMatchObject({
+        publication: 'Draft',
+      })
+    })
+  })
+
+  describe('findAcademicSubjectByCode', () => {
+    it(`returns null if code or orgId doesn't exist`, async () => {
+      expect.assertions(2)
+
+      await expect(
+        academicService.findAcademicSubjectByCode('NESTJS-T1-2021', objectId()),
+      ).resolves.toBeNull()
+
+      await expect(
+        academicService.findAcademicSubjectByCode('NESTJS-T1-2021'),
+      ).resolves.toBeNull()
+    })
+
+    it('returns academic subject if code exists', async () => {
+      expect.assertions(2)
+
+      const academicSubject: ANY = {
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        publication: 'Draft',
+        createdByAccountId: objectId(),
+      }
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'findOne')
+        .mockResolvedValueOnce(academicSubject)
+        .mockResolvedValueOnce(academicSubject)
+
+      await expect(
+        academicService.findAcademicSubjectByCode('NESTJS-T1-2021'),
+      ).resolves.toMatchObject({
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
+        publication: 'Draft',
+      })
+
+      await expect(
+        academicService.findAcademicSubjectByCode('NESTJS-T1-2021', objectId()),
+      ).resolves.toMatchObject({
+        code: 'NESTJS-T1-2021',
+        name: 'NestJs',
+        description: 'This is NestJs course',
         publication: 'Draft',
       })
     })
