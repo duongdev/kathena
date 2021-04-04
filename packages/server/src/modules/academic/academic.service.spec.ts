@@ -6,7 +6,6 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AcademicService } from './academic.service'
-import { AcademicSubject } from './models/AcademicSubject'
 
 describe('academic.service', () => {
   let module: TestingModule
