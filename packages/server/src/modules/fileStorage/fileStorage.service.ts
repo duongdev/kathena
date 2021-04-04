@@ -14,9 +14,10 @@ import * as path from 'path'
 
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as fileType from 'file-type'
-import shortid from 'shortid'
+import * as shortid from 'shortid'
 
 import { config, InjectModel, Logger, Service } from 'core'
+import { ANY } from 'types'
 
 import { File, FileStorageProvider } from './models/File'
 
@@ -55,12 +56,31 @@ export class FileStorageService {
 
     const filePath = path.resolve(
       config.FILE_STORAGE_UPLOADS_DIR,
-      '.tmp',
+      // '.tmp',
       `${this.generateShortId()}-${fileName}`,
     )
 
+    // console.log('filePath', filePath)
+
+    // await new Promise((resolve, reject) => {
+    //   const writeStream = createWriteStream(filePath)
+    //   const stream = readStream
+    //     .pipe(writeStream)
+    //     .on('finish', () => {
+    //       console.log('finished')
+    //       setTimeout(() => stream, 1000) // Below 70, the problem still occurred.
+    //       resolve(filePath)
+    //     })
+    //     .on('error', (error) => {
+    //       console.log('error', error)
+    //       reject(error)
+    //     })
+    // })
+
     await new Promise((resolve, reject) => {
-      const writeStream = createWriteStream(filePath)
+      const writeStream = createWriteStream(filePath, {
+        encoding: 'base64' as ANY,
+      })
 
       writeStream.on('finish', resolve)
 
@@ -102,6 +122,7 @@ export class FileStorageService {
     fileName: string
   }): Promise<{ filePath: string }> {
     const filePath = path.resolve(config.FILE_STORAGE_UPLOADS_DIR, fileName)
+
     writeFileSync(filePath, buffer)
 
     return { filePath }

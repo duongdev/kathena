@@ -61,7 +61,10 @@ enum Permission {
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   Academic_CreateAcademicSubject
+  Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
+  OrgOffice_CreateOrgOffice
+  OrgOffice_ListOrgOffices
   NoPermission
 }
 
@@ -81,6 +84,7 @@ type AcademicSubject implements BaseModel {
   code: String!
   description: String!
   publication: Publication!
+  imageFileId: String!
 }
 
 enum Publication {
@@ -88,15 +92,32 @@ enum Publication {
   Published
 }
 
+type AcademicSubjectsPayload {
+  academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
+}
+
+type OrgOffice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  phone: String!
 }
 
 type Query {
   account(id: ID!): Account
   orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  orgOffices: [OrgOffice!]!
 }
 
 input PageOptionsInput {
@@ -115,6 +136,7 @@ type Mutation {
     orgNamespace: String!
   ): SignInPayload!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
+  createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
 }
 
 input CreateAccountInput {
@@ -136,4 +158,14 @@ input CreateAcademicSubjectInput {
   name: String!
   code: String!
   description: String = ""
+  image: Upload!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateOrgOfficeInput {
+  name: String!
+  address: String!
+  phone: String!
 }

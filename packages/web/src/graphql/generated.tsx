@@ -21,6 +21,8 @@ export type Scalars = {
   Float: number
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any
 }
 
 export type Account = BaseModel & {
@@ -77,7 +79,10 @@ export enum Permission {
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+  Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   NoPermission = 'NoPermission',
 }
 
@@ -97,6 +102,7 @@ export type AcademicSubject = BaseModel & {
   code: Scalars['String']
   description: Scalars['String']
   publication: Publication
+  imageFileId: Scalars['String']
 }
 
 export enum Publication {
@@ -104,15 +110,32 @@ export enum Publication {
   Published = 'Published',
 }
 
+export type AcademicSubjectsPayload = {
+  academicSubjects: Array<AcademicSubject>
+  count: Scalars['Int']
+}
+
 export type OrgAccountsPayload = {
   accounts: Array<Account>
   count: Scalars['Int']
+}
+
+export type OrgOffice = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
 }
 
 export type Query = {
   account?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
+  academicSubjects: AcademicSubjectsPayload
+  orgOffices: Array<OrgOffice>
 }
 
 export type QueryAccountArgs = {
@@ -120,6 +143,11 @@ export type QueryAccountArgs = {
 }
 
 export type QueryOrgAccountsArgs = {
+  pageOptions: PageOptionsInput
+  orgId: Scalars['ID']
+}
+
+export type QueryAcademicSubjectsArgs = {
   pageOptions: PageOptionsInput
   orgId: Scalars['ID']
 }
@@ -134,6 +162,7 @@ export type Mutation = {
   updateAccount: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
+  createOrgOffice: OrgOffice
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -155,6 +184,10 @@ export type MutationCreateAcademicSubjectArgs = {
   input: CreateAcademicSubjectInput
 }
 
+export type MutationCreateOrgOfficeArgs = {
+  input: CreateOrgOfficeInput
+}
+
 export type CreateAccountInput = {
   username: Scalars['String']
   email: Scalars['String']
@@ -174,6 +207,13 @@ export type CreateAcademicSubjectInput = {
   name: Scalars['String']
   code: Scalars['String']
   description?: Maybe<Scalars['String']>
+  image: Scalars['Upload']
+}
+
+export type CreateOrgOfficeInput = {
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
 }
 
 export type AuthAccountFragment = Pick<
@@ -223,6 +263,29 @@ export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
+export type AcademicSubjectListQueryVariables = Exact<{
+  orgId: Scalars['ID']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type AcademicSubjectListQuery = {
+  academicSubjects: Pick<AcademicSubjectsPayload, 'count'> & {
+    academicSubjects: Array<
+      Pick<
+        AcademicSubject,
+        | 'id'
+        | 'orgId'
+        | 'name'
+        | 'code'
+        | 'description'
+        | 'publication'
+        | 'imageFileId'
+      >
+    >
+  }
+}
+
 export type UpdateSelfAccountMutationVariables = Exact<{
   accountId: Scalars['ID']
   update: UpdateAccountInput
@@ -230,6 +293,14 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 
 export type UpdateSelfAccountMutation = {
   updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+}
+
+export type CreateAcademicSubjectMutationVariables = Exact<{
+  input: CreateAcademicSubjectInput
+}>
+
+export type CreateAcademicSubjectMutation = {
+  createAcademicSubject: Pick<AcademicSubject, 'id' | 'code' | 'name'>
 }
 
 export type CreateAccountMutationVariables = Exact<{
@@ -261,6 +332,20 @@ export type OrgAccountListQuery = {
       >
     >
   }
+}
+
+export type ListOrgOfficesQueryVariables = Exact<{ [key: string]: never }>
+
+export type ListOrgOfficesQuery = {
+  orgOffices: Array<Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>>
+}
+
+export type CreateOrgOfficeMutationVariables = Exact<{
+  input: CreateOrgOfficeInput
+}>
+
+export type CreateOrgOfficeMutation = {
+  createOrgOffice: Pick<OrgOffice, 'id' | 'name'>
 }
 
 export const AuthAccountFragmentDoc: DocumentNode = {
@@ -971,6 +1056,208 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
+export const AcademicSubjectListDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AcademicSubjectList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orgId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'academicSubjects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orgId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orgId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'academicSubjects' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publication' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'imageFileId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AcademicSubjectListProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >
+} &
+  TChildProps
+export function withAcademicSubjectList<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables,
+    AcademicSubjectListProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables,
+    AcademicSubjectListProps<TChildProps, TDataName>
+  >(AcademicSubjectListDocument, {
+    alias: 'academicSubjectList',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAcademicSubjectListQuery__
+ *
+ * To run a query within a React component, call `useAcademicSubjectListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAcademicSubjectListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAcademicSubjectListQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAcademicSubjectListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >(AcademicSubjectListDocument, options)
+}
+export function useAcademicSubjectListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AcademicSubjectListQuery,
+    AcademicSubjectListQueryVariables
+  >(AcademicSubjectListDocument, options)
+}
+export type AcademicSubjectListQueryHookResult = ReturnType<
+  typeof useAcademicSubjectListQuery
+>
+export type AcademicSubjectListLazyQueryHookResult = ReturnType<
+  typeof useAcademicSubjectListLazyQuery
+>
+export type AcademicSubjectListQueryResult = Apollo.QueryResult<
+  AcademicSubjectListQuery,
+  AcademicSubjectListQueryVariables
+>
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -1118,6 +1405,133 @@ export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAc
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
+>
+export const CreateAcademicSubjectDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateAcademicSubject' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateAcademicSubjectInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createAcademicSubject' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateAcademicSubjectMutationFn = Apollo.MutationFunction<
+  CreateAcademicSubjectMutation,
+  CreateAcademicSubjectMutationVariables
+>
+export type CreateAcademicSubjectProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateAcademicSubject<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables,
+    CreateAcademicSubjectProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables,
+    CreateAcademicSubjectProps<TChildProps, TDataName>
+  >(CreateAcademicSubjectDocument, {
+    alias: 'createAcademicSubject',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateAcademicSubjectMutation__
+ *
+ * To run a mutation, you first call `useCreateAcademicSubjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAcademicSubjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAcademicSubjectMutation, { data, loading, error }] = useCreateAcademicSubjectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAcademicSubjectMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateAcademicSubjectMutation,
+    CreateAcademicSubjectMutationVariables
+  >(CreateAcademicSubjectDocument, options)
+}
+export type CreateAcademicSubjectMutationHookResult = ReturnType<
+  typeof useCreateAcademicSubjectMutation
+>
+export type CreateAcademicSubjectMutationResult = Apollo.MutationResult<CreateAcademicSubjectMutation>
+export type CreateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
+  CreateAcademicSubjectMutation,
+  CreateAcademicSubjectMutationVariables
 >
 export const CreateAccountDocument: DocumentNode = {
   kind: 'Document',
@@ -1451,4 +1865,240 @@ export type OrgAccountListLazyQueryHookResult = ReturnType<
 export type OrgAccountListQueryResult = Apollo.QueryResult<
   OrgAccountListQuery,
   OrgAccountListQueryVariables
+>
+export const ListOrgOfficesDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListOrgOffices' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'orgOffices' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'phone' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ListOrgOfficesProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >
+} &
+  TChildProps
+export function withListOrgOffices<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables,
+    ListOrgOfficesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables,
+    ListOrgOfficesProps<TChildProps, TDataName>
+  >(ListOrgOfficesDocument, {
+    alias: 'listOrgOffices',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListOrgOfficesQuery__
+ *
+ * To run a query within a React component, call `useListOrgOfficesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListOrgOfficesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListOrgOfficesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListOrgOfficesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ListOrgOfficesQuery, ListOrgOfficesQueryVariables>(
+    ListOrgOfficesDocument,
+    options,
+  )
+}
+export function useListOrgOfficesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListOrgOfficesQuery,
+    ListOrgOfficesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ListOrgOfficesQuery, ListOrgOfficesQueryVariables>(
+    ListOrgOfficesDocument,
+    options,
+  )
+}
+export type ListOrgOfficesQueryHookResult = ReturnType<
+  typeof useListOrgOfficesQuery
+>
+export type ListOrgOfficesLazyQueryHookResult = ReturnType<
+  typeof useListOrgOfficesLazyQuery
+>
+export type ListOrgOfficesQueryResult = Apollo.QueryResult<
+  ListOrgOfficesQuery,
+  ListOrgOfficesQueryVariables
+>
+export const CreateOrgOfficeDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateOrgOffice' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateOrgOfficeInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createOrgOffice' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateOrgOfficeMutationFn = Apollo.MutationFunction<
+  CreateOrgOfficeMutation,
+  CreateOrgOfficeMutationVariables
+>
+export type CreateOrgOfficeProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateOrgOffice<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables,
+    CreateOrgOfficeProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables,
+    CreateOrgOfficeProps<TChildProps, TDataName>
+  >(CreateOrgOfficeDocument, {
+    alias: 'createOrgOffice',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateOrgOfficeMutation__
+ *
+ * To run a mutation, you first call `useCreateOrgOfficeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrgOfficeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrgOfficeMutation, { data, loading, error }] = useCreateOrgOfficeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrgOfficeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateOrgOfficeMutation,
+    CreateOrgOfficeMutationVariables
+  >(CreateOrgOfficeDocument, options)
+}
+export type CreateOrgOfficeMutationHookResult = ReturnType<
+  typeof useCreateOrgOfficeMutation
+>
+export type CreateOrgOfficeMutationResult = Apollo.MutationResult<CreateOrgOfficeMutation>
+export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
+  CreateOrgOfficeMutation,
+  CreateOrgOfficeMutationVariables
 >

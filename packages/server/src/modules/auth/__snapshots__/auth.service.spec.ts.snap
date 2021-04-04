@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`auth.service getAccountRoles returns Account Roles 1`] = `
+Array [
+  Object {
+    "name": "owner",
+    "permissions": Array [
+      "Hr_Access",
+      "Hr_CreateOrgAccount",
+      "Hr_ListOrgAccounts",
+      "Academic_CreateAcademicSubject",
+      "Academic_ListAcademicSubjects",
+      "Academic_SetAcademicSubjectPublication",
+      "OrgOffice_ListOrgOffices",
+      "OrgOffice_CreateOrgOffice",
+    ],
+    "priority": 1,
+  },
+  Object {
+    "name": "staff",
+    "permissions": Array [
+      "Hr_Access",
+      "Hr_CreateOrgAccount",
+      "Hr_ListOrgAccounts",
+      "Academic_CreateAcademicSubject",
+      "Academic_ListAcademicSubjects",
+      "Academic_SetAcademicSubjectPublication",
+      "OrgOffice_ListOrgOffices",
+    ],
+    "priority": 3,
+  },
+]
+`;

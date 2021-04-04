@@ -1,0 +1,7 @@
+mutation CreateAcademicSubject($input: CreateAcademicSubjectInput!) {
+  createAcademicSubject(input: $input) {
+    id
+    code
+    name
+  }
+}

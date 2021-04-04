@@ -37,18 +37,20 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(5)
+      expect.assertions(6)
 
       const resultPermissions: ANY = [
         'Hr_Access',
         'Hr_CreateOrgAccount',
         'Hr_ListOrgAccounts',
         'Academic_CreateAcademicSubject',
+        'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
       ]
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -80,6 +82,13 @@ describe('auth.service', () => {
         authService.accountHasPermission({
           accountId: objectId().toString(),
           permission: 'Academic_CreateAcademicSubject',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_ListAcademicSubjects',
         }),
       ).resolves.toBe(true)
 
@@ -146,7 +155,10 @@ describe('auth.service', () => {
                 "Hr_CreateOrgAccount",
                 "Hr_ListOrgAccounts",
                 "Academic_CreateAcademicSubject",
+                "Academic_ListAcademicSubjects",
                 "Academic_SetAcademicSubjectPublication",
+                "OrgOffice_ListOrgOffices",
+                "OrgOffice_CreateOrgOffice",
               ]
             `)
     })
@@ -393,7 +405,7 @@ describe('auth.service', () => {
         },
       }
 
-      await expect(objResult).toMatchObject({
+      expect(objResult).toMatchObject({
         token: {
           id: account.id,
           orgId: account.orgId,
@@ -409,13 +421,6 @@ describe('auth.service', () => {
           namespace: 'kmin-edu',
           name: 'Kmin Academy',
         },
-        permissions: [
-          'Hr_Access',
-          'Hr_CreateOrgAccount',
-          'Hr_ListOrgAccounts',
-          'Academic_CreateAcademicSubject',
-          'Academic_SetAcademicSubjectPublication',
-        ],
       })
     })
   })
@@ -513,30 +518,7 @@ describe('auth.service', () => {
 
       await expect(
         authService.getAccountRoles(account.id),
-      ).resolves.toStrictEqual([
-        {
-          name: 'owner',
-          priority: 1,
-          permissions: [
-            'Hr_Access',
-            'Hr_CreateOrgAccount',
-            'Hr_ListOrgAccounts',
-            'Academic_CreateAcademicSubject',
-            'Academic_SetAcademicSubjectPublication',
-          ],
-        },
-        {
-          name: 'staff',
-          priority: 3,
-          permissions: [
-            'Hr_Access',
-            'Hr_CreateOrgAccount',
-            'Hr_ListOrgAccounts',
-            'Academic_CreateAcademicSubject',
-            'Academic_SetAcademicSubjectPublication',
-          ],
-        },
-      ])
+      ).resolves.toMatchSnapshot()
     })
   })
 })

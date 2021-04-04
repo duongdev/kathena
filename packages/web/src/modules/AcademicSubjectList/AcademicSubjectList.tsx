@@ -1,9 +1,8 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import { PlusCircle, Pencil } from 'phosphor-react'
 
-import { ANY } from '@kathena/types'
 import {
   Button,
   DataTable,
@@ -11,7 +10,8 @@ import {
   PageContainer,
   usePagination,
 } from '@kathena/ui'
-import { WithAuth } from 'common/auth'
+import { useAuth, WithAuth } from 'common/auth'
+import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
 import {
   buildPath,
   CREATE_ACADEMIC_SUBJECT,
@@ -22,20 +22,21 @@ export type AcademicSubjectListProps = {}
 
 const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
   const classes = useStyles(props)
+  const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
+  const { data, loading } = useAcademicSubjectListQuery({
+    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
+  })
 
-  const academicSubjectList: ANY[] = [
-    // Get List Academic Subject Here
-    {
-      id: 'dayla1objectidtuche',
-      name: 'HTML',
-      description: 'Front end co ban',
-      tuitionFee: 2000000,
-    },
-  ]
-  const loading = false
+  const academicSubjectList = useMemo(
+    () => data?.academicSubjects.academicSubjects ?? [],
+    [data?.academicSubjects.academicSubjects],
+  )
 
-  const totalCount = 0
+  const totalCount = useMemo(() => data?.academicSubjects.count ?? 0, [
+    data?.academicSubjects.count,
+  ])
+
   return (
     <PageContainer
       className={classes.root}
@@ -58,6 +59,12 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           loading={loading}
           columns={[
             {
+              label: 'Mã môn học',
+              field: 'code',
+              width: '10%',
+              skeleton: <Skeleton />,
+            },
+            {
               label: 'Tên môn học',
               field: 'name',
               skeleton: <Skeleton />,
@@ -65,11 +72,6 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
             {
               label: 'Mô tả',
               field: 'description',
-              skeleton: <Skeleton />,
-            },
-            {
-              label: 'Học phí (gốc)',
-              field: 'tuitionFee',
               skeleton: <Skeleton />,
             },
             {
@@ -103,7 +105,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionAcademicSubjectList = () => (
-  <WithAuth>
+  <WithAuth permission={Permission.Academic_ListAcademicSubjects}>
     <AcademicSubjectList />
   </WithAuth>
 )

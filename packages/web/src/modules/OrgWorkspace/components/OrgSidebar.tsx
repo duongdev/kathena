@@ -4,7 +4,11 @@ import { Book, Nut, Users } from 'phosphor-react'
 import { matchPath } from 'react-router-dom'
 
 import { SidebarMenu } from '@kathena/ui'
-import { ACADEMIC_SUBJECT_LIST, USER_LIST } from 'utils/path-builder'
+import {
+  ACADEMIC_SUBJECT_LIST,
+  ORG_SETTINGS,
+  USER_LIST,
+} from 'utils/path-builder'
 
 export type OrgSidebarProps = {}
 
@@ -13,7 +17,7 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
     menus={[
       {
         key: 'users',
-        title: 'QL người dùng',
+        title: 'Người dùng',
         icon: Users,
         items: [
           {
@@ -30,12 +34,12 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
       },
       {
         key: 'academicSubject',
-        title: 'QL mon hoc',
+        title: 'Học vụ',
         icon: Book,
         items: [
           {
             key: 'academicSubjectList',
-            label: 'Danh Sach Mon Hoc',
+            label: 'Môn học',
             link: ACADEMIC_SUBJECT_LIST,
             active: !!matchPath(window.location.pathname, {
               path: ACADEMIC_SUBJECT_LIST,
@@ -48,11 +52,19 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
       },
       {
         key: 'settings',
-        title: 'QL hệ thống',
+        title: 'Hệ thống',
         icon: Nut,
         items: [
-          { key: 'users', label: 'Người dùng' },
-          { key: 'courses', label: 'Khoá học' },
+          {
+            key: 'org-settings',
+            label: 'Cài đặt tổ chức',
+            link: ORG_SETTINGS,
+            active: !!matchPath(window.location.pathname, {
+              path: ORG_SETTINGS,
+              exact: false,
+              strict: false,
+            }),
+          },
         ],
       },
     ]}

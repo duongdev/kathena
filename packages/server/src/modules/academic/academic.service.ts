@@ -44,6 +44,7 @@ export class AcademicService {
     name: string
     description: string
     createdByAccountId: string
+    imageFileId: string
   }): Promise<DocumentType<AcademicSubject>> {
     this.logger.log(
       `[${this.createAcademicSubject.name}] Creating academic subject`,
@@ -56,6 +57,7 @@ export class AcademicService {
       name,
       description,
       createdByAccountId,
+      imageFileId,
     } = academicSubjectInput
     const code = normalizeCodeField($code)
 
@@ -76,9 +78,10 @@ export class AcademicService {
     const academicSubject = await this.academicSubjectModel.create({
       orgId,
       name,
-      code,
       description,
       createdByAccountId,
+      imageFileId,
+      code,
       publication: Publication.Draft,
     })
     this.logger.log(
@@ -87,5 +90,31 @@ export class AcademicService {
     this.logger.verbose(academicSubject)
 
     return academicSubject
+  }
+
+  async findAndPaginateAcademicSubjects(
+    query: {
+      orgId: string
+    },
+    pageOptions: {
+      limit: number
+      skip: number
+    },
+  ): Promise<{
+    academicSubjects: DocumentType<AcademicSubject>[]
+    count: number
+  }> {
+    const { orgId } = query
+    const { limit, skip } = pageOptions
+
+    const academicSubjects = await this.academicSubjectModel
+      .find({ orgId })
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(limit)
+
+    const count = await this.academicSubjectModel.countDocuments({ orgId })
+
+    return { academicSubjects, count }
   }
 }

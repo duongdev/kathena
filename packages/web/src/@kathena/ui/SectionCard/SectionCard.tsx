@@ -76,14 +76,19 @@ export const SectionCardMoreAction: React.FC<SectionCardMoreActionProps> = (
 
 const useStyles = makeStyles<Theme, SectionCardProps, 'root' | 'content'>(
   () => ({
-    root: { height: ({ fullHeight }) => (fullHeight ? '100%' : undefined) },
+    root: {
+      height: ({ fullHeight }) => (fullHeight ? '100%' : undefined),
+      display: 'flex',
+      flexDirection: 'column',
+    },
     content: ({ maxContentHeight }) =>
       maxContentHeight
         ? {
             maxHeight: maxContentHeight,
             overflow: 'auto',
+            height: '100%',
           }
-        : {},
+        : { height: '100%' },
   }),
 )
 

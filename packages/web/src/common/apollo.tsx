@@ -3,12 +3,17 @@ import { FC } from 'react'
 import {
   ApolloClient,
   ApolloProvider as Provider,
-  createHttpLink,
+  from,
   InMemoryCache,
+  Operation,
+  split,
 } from '@apollo/client'
+import { BatchHttpLink } from '@apollo/client/link/batch-http'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import { createUploadLink } from 'apollo-upload-client'
 
+import { ANY } from '@kathena/types'
 import { LOCAL_STORAGE_JWT } from 'common/constants'
 
 import { buildPath, SIGN_IN } from '../utils/path-builder'
@@ -18,7 +23,12 @@ const TOKEN_EXPIRED = 'TOKEN_EXPIRED'
 
 const uri = process.env.REACT_APP_GRAPHQL_URI || `/graphql`
 
-const httpLink = createHttpLink({ uri })
+const httpLink = new BatchHttpLink({ uri })
+
+const uploadLink = createUploadLink({
+  uri,
+  credentials: 'same-origin',
+})
 
 const authLink = setContext(({ operationName }, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -53,8 +63,32 @@ const errorLink = onError(({ graphQLErrors }) => {
   }
 })
 
+const isFile = (value: ANY) => {
+  if (Array.isArray(value)) {
+    return value.some(isFile)
+  }
+
+  const isFileCheck =
+    (typeof File !== 'undefined' && value instanceof File) ||
+    (typeof Blob !== 'undefined' && value instanceof Blob)
+
+  return isFileCheck
+}
+
+const isUpload = ({ variables, getContext }: Operation) => {
+  if (getContext().hasFileUpload) {
+    return true
+  }
+  return Object.values(variables).some(isFile)
+}
+
 const client = new ApolloClient({
-  link: authLink.concat(errorLink).concat(httpLink),
+  // link: authLink.concat(errorLink).concat(httpLink),
+  link: from([
+    authLink,
+    errorLink,
+    split(isUpload, uploadLink as ANY, httpLink),
+  ]),
   cache: new InMemoryCache(),
   // defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
 })

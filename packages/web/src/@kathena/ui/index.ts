@@ -4,6 +4,8 @@ export * from './Alert'
 export { default as ApolloErrorList } from './ApolloErrorList'
 export * from './ApolloErrorList'
 
+export { default as AutoScrollToTop } from './AutoScrollToTop'
+
 export { default as Button } from './Button'
 export * from './Button'
 
@@ -25,6 +27,9 @@ export * from './GridItemContainer'
 export { default as withComponentHocs } from './hocs/withComponentHocs'
 
 export * from './hooks'
+
+export { default as ImagesUploadInput } from './ImagesUploadInput'
+export * from './ImagesUploadInput'
 
 export { default as InputField } from './InputField'
 export * from './InputField'

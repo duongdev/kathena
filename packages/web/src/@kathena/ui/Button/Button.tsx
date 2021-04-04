@@ -13,11 +13,14 @@ import {
   Tooltip,
   TooltipProps,
 } from '@material-ui/core'
+// eslint-disable-next-line no-restricted-imports
+import { Link, LinkProps } from 'react-router-dom'
 
 import { ANY, TODO } from '@kathena/types'
 
 import withComponentHocs from '../hocs/withComponentHocs'
-import Link, { LinkProps } from '../Link'
+
+// import Link, { LinkProps } from '../Link'
 
 const SPINNER_SIZE = {
   small: 18,

@@ -8,9 +8,7 @@ import {
   USER_LIST,
   USER_SELF_SETTINGS,
   CREATE_ACADEMIC_SUBJECT,
-  UPDATE_ACADEMIC_SUBJECT,
-  CREATE_ORG_OFFICE,
-  UPDATE_ORG_OFFICE,
+  ORG_SETTINGS,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -37,11 +35,9 @@ const CreateUpdateAcademicSubject = lazy(
       'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/CreateUpdateAcademicSubject" */
     ),
 )
-const OrgOfficeEditor = lazy(
+const OrgSettings = lazy(
   () =>
-    import(
-      'modules/OrgOfficeEditor' /* webpackChunkName: "modules/OrgOfficeEditor" */
-    ),
+    import('modules/OrgSettings' /* webpackChunkName: "modules/OrgSettings" */),
 )
 export type OrgWorkspaceRouteProps = {}
 
@@ -60,13 +56,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         exact
         component={CreateUpdateAcademicSubject}
       />
-      <Route
-        path={UPDATE_ACADEMIC_SUBJECT}
-        exact
-        component={CreateUpdateAcademicSubject}
-      />
-      <Route path={CREATE_ORG_OFFICE} exact component={OrgOfficeEditor} />
-      <Route path={UPDATE_ORG_OFFICE} exact component={OrgOfficeEditor} />
+      <Route path={ORG_SETTINGS} exact component={OrgSettings} />
     </Switch>
   </Suspense>
 )

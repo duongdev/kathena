@@ -5,6 +5,9 @@
   "repository": "git@github.com:withDustin/kmin-athena.git",
   "author": "Dustin Do <dustin.do95@gmail.com>",
   "private": true,
+  "engines": {
+    "node": "12.x.x"
+  },
   "workspaces": [
     "packages/*"
   ],

@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 
 import { SnackbarProvider } from 'notistack'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
@@ -12,6 +12,8 @@ import { ApolloProvider } from 'common/apollo'
 import { AuthProvider } from 'common/auth'
 
 import AppRoute from './App.route'
+
+const AutoScrollToTop = lazy(() => import('@kathena/ui/AutoScrollToTop'))
 
 setLocale(yupViLocale)
 
@@ -28,6 +30,7 @@ function App() {
                   titleTemplate="%s | Kathena Platform"
                 />
                 <Router>
+                  <AutoScrollToTop />
                   <AppRoute />
                 </Router>
               </HelmetProvider>

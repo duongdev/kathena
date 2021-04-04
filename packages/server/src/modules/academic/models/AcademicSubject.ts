@@ -27,4 +27,8 @@ export class AcademicSubject extends BaseModel {
 
   @prop({ type: Types.ObjectId })
   createdByAccountId: string
+
+  @Field()
+  @prop({ type: Types.ObjectId })
+  imageFileId: string
 }

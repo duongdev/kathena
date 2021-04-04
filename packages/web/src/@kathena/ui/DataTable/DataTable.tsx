@@ -7,6 +7,7 @@
 import React, { ReactNode, useCallback } from 'react'
 
 import {
+  Fade,
   makeStyles,
   Table,
   TableBody,
@@ -95,25 +96,48 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
   )
 
   return (
-    <>
-      <TableContainer className={classes.root}>
-        {props.loading && (
-          <Spinner
-            container="overlay"
-            delay={1000}
-            className={classes.spinner}
-          />
-        )}
-        <Table>
-          <TableHead classes={{ root: classes.tableHead }}>
-            <TableRow>
-              {props.columns.map((column, idx) => {
-                if (
-                  column.field &&
-                  props.sortableColumns?.includes(column.field)
-                ) {
-                  const sortLabelActivated =
-                    props.orderBy && props.orderBy === column.field
+    <Fade in>
+      <div>
+        <TableContainer className={classes.root}>
+          {props.loading && (
+            <Spinner
+              container="overlay"
+              delay={1000}
+              className={classes.spinner}
+            />
+          )}
+          <Table>
+            <TableHead classes={{ root: classes.tableHead }}>
+              <TableRow>
+                {props.columns.map((column, idx) => {
+                  if (
+                    column.field &&
+                    props.sortableColumns?.includes(column.field)
+                  ) {
+                    const sortLabelActivated =
+                      props.orderBy && props.orderBy === column.field
+
+                    return (
+                      <TableCell
+                        align={column.align}
+                        padding={column.padding}
+                        key={`${column.label}-${idx}`}
+                        style={{ width: column.width }}
+                      >
+                        <TableSortLabel
+                          active={sortLabelActivated}
+                          direction={
+                            props.orderBy === column.field
+                              ? props.order
+                              : undefined
+                          }
+                          onClick={handleSort(column.field)}
+                        >
+                          {column.label}
+                        </TableSortLabel>
+                      </TableCell>
+                    )
+                  }
 
                   return (
                     <TableCell
@@ -122,79 +146,58 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
                       key={`${column.label}-${idx}`}
                       style={{ width: column.width }}
                     >
-                      <TableSortLabel
-                        active={sortLabelActivated}
-                        direction={
-                          props.orderBy === column.field
-                            ? props.order
-                            : undefined
-                        }
-                        onClick={handleSort(column.field)}
-                      >
-                        {column.label}
-                      </TableSortLabel>
+                      {column.label}
                     </TableCell>
                   )
-                }
-
-                return (
-                  <TableCell
-                    align={column.align}
-                    padding={column.padding}
-                    key={`${column.label}-${idx}`}
-                    style={{ width: column.width }}
-                  >
-                    {column.label}
-                  </TableCell>
-                )
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {props.loading && props.data.length === 0
-              ? repeatArray(props.skeletonCount ?? 5).map((idx) => (
-                  <TableRow className={classes.rowItem} key={idx}>
-                    {props.columns.map((column, idx) => (
-                      <TableCell
-                        align={column.align}
-                        padding={column.padding}
-                        key={`${column.label}-${column.field || idx}`}
-                        style={{ width: column.width }}
-                      >
-                        {column.skeleton}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              : props.data.map((row, idx) => (
-                  <TableRow
-                    key={getRowKey(row, props.rowKey) || idx}
-                    className={classes.rowItem}
-                  >
-                    {props.columns.map((column, idx) => (
-                      <TableCell
-                        align={column.align}
-                        padding={column.padding}
-                        key={`${column.label}-${column.field || idx}`}
-                        style={{ width: column.width }}
-                      >
-                        {getCellValue(row, column)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {props.pagination && (
-        <TablePagination
-          {...{
-            component: 'div',
-            ...props.pagination,
-          }}
-        />
-      )}
-    </>
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {props.loading && props.data.length === 0
+                ? repeatArray(props.skeletonCount ?? 5).map((idx) => (
+                    <TableRow className={classes.rowItem} key={idx}>
+                      {props.columns.map((column, idx) => (
+                        <TableCell
+                          align={column.align}
+                          padding={column.padding}
+                          key={`${column.label}-${column.field || idx}`}
+                          style={{ width: column.width }}
+                        >
+                          {column.skeleton}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                : props.data.map((row, idx) => (
+                    <TableRow
+                      key={getRowKey(row, props.rowKey) || idx}
+                      className={classes.rowItem}
+                    >
+                      {props.columns.map((column, idx) => (
+                        <TableCell
+                          align={column.align}
+                          padding={column.padding}
+                          key={`${column.label}-${column.field || idx}`}
+                          style={{ width: column.width }}
+                        >
+                          {getCellValue(row, column)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {props.pagination && (
+          <TablePagination
+            {...{
+              component: 'div',
+              ...props.pagination,
+            }}
+          />
+        )}
+      </div>
+    </Fade>
   )
 }
 
