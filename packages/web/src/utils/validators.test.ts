@@ -1,4 +1,16 @@
-import { DISPLAY_NAME_REGEX, USERNAME_REGEX } from './validators'
+import {
+  DISPLAY_NAME_REGEX,
+  USERNAME_REGEX,
+  ORG_OFFICE_NAME_REGEX,
+} from './validators'
+
+test('ORG_OFFICE_NAME_REGEX', () => {
+  expect(ORG_OFFICE_NAME_REGEX.test('Bùi Huy Hoàng')).toBe(true)
+  expect(ORG_OFFICE_NAME_REGEX.test('Bùi Huy Hoàng1')).toBe(true)
+  expect(ORG_OFFICE_NAME_REGEX.test('1Bùi Huy Hoàng')).toBe(true)
+
+  expect(ORG_OFFICE_NAME_REGEX.test('Bùi Huy Hoàng@')).toBe(false)
+})
 
 test('DISPLAY_NAME_REGEX', () => {
   expect(DISPLAY_NAME_REGEX.test('Dương Đỗ')).toBe(true)
