@@ -150,7 +150,7 @@ describe('academic.service', () => {
   })
 
   describe('findAcademicSubjectById', () => {
-    it(`returns null if Id doesn't exist`, async () => {
+    it(`returns null if Id doesn't exists`, async () => {
       expect.assertions(1)
 
       await expect(
