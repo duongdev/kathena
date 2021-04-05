@@ -6,7 +6,10 @@ import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
-import { removeExtraSpaces } from 'core/utils/string'
+import {
+  removeExtraSpaces,
+  stringWithoutSpecialCharacters,
+} from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
@@ -56,6 +59,9 @@ export class AccountService {
     }
 
     // TODO: Throw error if orgId doesn't exist
+    if (!stringWithoutSpecialCharacters(accountInput.displayName)) {
+      throw new Error('displayName contains invalid characters')
+    }
 
     const account = await this.accountModel.create({
       username: accountInput.username,
