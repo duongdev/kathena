@@ -1208,4 +1208,176 @@ describe('account.service', () => {
       })
     })
   })
+
+  describe('updateAccount', () => {
+    it(`throws error if couldn't find account to update`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(null)
+
+      await expect(
+        accountService.updateAccount(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            displayName: 'van hai',
+            email: 'vanhai0911@gmail.com',
+            username: 'haidev',
+          },
+        ),
+      ).rejects.toThrow(`Couldn't find account to update`)
+    })
+
+    it(`returns an account with a new displayname`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        accountService.updateAccount(
+          {
+            id: account.id,
+            orgId: account.orgId,
+          },
+          {
+            displayName: 'nguyen van hai',
+          },
+        ),
+      ).resolves.toMatchObject({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        displayName: 'nguyen van hai',
+      })
+    })
+
+    it(`returns an account with a new email`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        accountService.updateAccount(
+          {
+            id: account.id,
+            orgId: account.orgId,
+          },
+          {
+            email: 'vanhai0911@gmail.com',
+          },
+        ),
+      ).resolves.toMatchObject({
+        username: 'duongdev',
+        email: 'vanhai0911@gmail.com',
+        displayName: 'Dustin Do',
+      })
+    })
+
+    it(`returns an account with a new username`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: 'rawPass',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+
+      await expect(
+        accountService.updateAccount(
+          {
+            id: account.id,
+            orgId: account.orgId,
+          },
+          {
+            username: 'haidev',
+          },
+        ),
+      ).resolves.toMatchObject({
+        username: 'haidev',
+        email: 'dustin.do95@gmail.com',
+        displayName: 'Dustin Do',
+      })
+    })
+
+    it(`returns an account with a new password`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account = await accountService.createAccount({
+        username: 'duongdev',
+        email: 'dustin.do95@gmail.com',
+        password: '1234567',
+        orgId: org.id,
+        roles: ['admin'],
+        displayName: 'Dustin Do',
+      })
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+
+      const accountUpdated = await accountService.updateAccount(
+        {
+          id: account.id,
+          orgId: account.orgId,
+        },
+        {
+          password: '123456',
+        },
+      )
+
+      await expect(compareSync('123456', accountUpdated.password)).toBeTruthy()
+    })
+  })
 })
