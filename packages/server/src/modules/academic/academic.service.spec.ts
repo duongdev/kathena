@@ -1,6 +1,7 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
@@ -447,6 +448,58 @@ describe('academic.service', () => {
         code: 'FEBC01',
         name: 'Frontend cơ bản',
         description: 'Lập trình frontend cơ bản',
+      })
+    })
+  })
+
+  describe('toggleAcademicSubjectPublicationById', () => {
+    it(`throws error if couldn't find academic subject to publication`, async () => {
+      expect.assertions(1)
+      await expect(
+        academicService.toggleAcademicSubjectPublicationById({
+          id: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow(`Couldn't find academic subject to update publication`)
+    })
+
+    it(`returns an academic subject with publication is "Published" when input has publication is "Draft"`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createAcademicSubjectInput: {
+        orgId: string
+        code: string
+        name: string
+        description: string
+        createdByAccountId: string
+        imageFileId: string
+      } = {
+        orgId: objectId(),
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        createdByAccountId: objectId(),
+        imageFileId: objectId(),
+      }
+
+      const academicSubject = await academicService.createAcademicSubject(
+        createAcademicSubjectInput,
+      )
+
+      await expect(
+        academicService.toggleAcademicSubjectPublicationById({
+          id: academicSubject.id,
+          orgId: academicSubject.orgId,
+        }),
+      ).resolves.toMatchObject({
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        publication: Publication.Published,
       })
     })
   })
