@@ -86,7 +86,6 @@ export class AcademicService {
       code,
       publication: Publication.Draft,
     })
-
     this.logger.log(
       `[${this.createAcademicSubject.name}] Created academic subject ${academicSubject.id}`,
     )
