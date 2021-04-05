@@ -158,7 +158,7 @@ describe('academic.service', () => {
       ).resolves.toBeNull()
     })
 
-    it(`returns AcademicSubject if Id does exist`, async () => {
+    it(`returns AcademicSubject if Id does exists`, async () => {
       expect.assertions(1)
 
       jest
