@@ -148,4 +148,50 @@ describe('academic.service', () => {
       })
     })
   })
+
+  describe('findAcademicSubjectById', () => {
+    it(`returns null if Id doesn't exist`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        academicService.findAcademicSubjectById('99536101b803f71a85798c77'),
+      ).resolves.toBeNull()
+    })
+
+    it(`returns AcademicSubject if Id does exist`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createAcademicSubjectInput: {
+        orgId: string
+        code: string
+        name: string
+        description: string
+        createdByAccountId: string
+        imageFileId: string
+      } = {
+        orgId: objectId(),
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        createdByAccountId: objectId(),
+        imageFileId: objectId(),
+      }
+
+      const academicSubject = await academicService.createAcademicSubject(
+        createAcademicSubjectInput,
+      )
+
+      await expect(
+        academicService.findAcademicSubjectById(academicSubject.id),
+      ).resolves.toMatchObject({
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+      })
+    })
+  })
 })

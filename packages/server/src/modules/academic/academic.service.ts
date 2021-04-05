@@ -4,6 +4,8 @@ import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField } from 'core/utils/string'
 import { OrgService } from 'modules/org/org.service'
 
+import { Nullable } from '../../types'
+
 import { AcademicSubject } from './models/AcademicSubject'
 
 @Service()
@@ -117,5 +119,11 @@ export class AcademicService {
     const count = await this.academicSubjectModel.countDocuments({ orgId })
 
     return { academicSubjects, count }
+  }
+
+  async findAcademicSubjectById(
+    id: string,
+  ): Promise<Nullable<DocumentType<AcademicSubject>>> {
+    return this.academicSubjectModel.findById(id)
   }
 }
