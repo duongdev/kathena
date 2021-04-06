@@ -58,7 +58,6 @@ export class AccountService {
       throw new Error(`Username ${accountInput.username} has been taken`)
     }
 
-    // TODO: Throw error if orgId doesn't exist
     if (!stringWithoutSpecialCharacters(accountInput.displayName)) {
       throw new Error('displayName contains invalid characters')
     }
