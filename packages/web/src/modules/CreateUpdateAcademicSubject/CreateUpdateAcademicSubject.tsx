@@ -4,15 +4,23 @@ import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import { Check } from 'phosphor-react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, FileItem, PageContainer, renderApolloError } from '@kathena/ui'
+import {
+  Button,
+  FileItem,
+  PageContainer,
+  renderApolloError,
+  Spinner,
+} from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import {
   useCreateAcademicSubjectMutation,
   AcademicSubjectListDocument,
+  useFindAcademicSubjectByIdQuery,
+  Publication,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -55,6 +63,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
+  const params: { id: string } = useParams()
   const { $org: org } = useAuth()
   const [createAcademicSubject] = useCreateAcademicSubjectMutation({
     refetchQueries: [
@@ -65,24 +74,45 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     ],
     context: { hasFileUpload: true },
   })
-  const initialValues: AcademicSubjectFormInput = useMemo(
-    () => ({
-      name: '',
-      description: '',
-      code: '',
-      image: null,
-    }),
-    [],
-  )
+  const id = useMemo(() => params.id, [params])
+  const { data, loading } = useFindAcademicSubjectByIdQuery({
+    variables: {
+      Id: id,
+    },
+  })
+  const createMode = useMemo(() => {
+    if (id) {
+      return false
+    }
+    return true
+  }, [id])
+  const initialValues: ANY = useMemo(() => {
+    if (createMode) {
+      return {
+        name: '',
+        description: '',
+        code: '',
+        image: null,
+      }
+    }
+    return {
+      name: data?.academicSubject?.name,
+      description: data?.academicSubject?.description,
+      code: data?.academicSubject?.code,
+      image: data?.academicSubject?.imageFileId,
+    }
+  }, [createMode, data?.academicSubject])
 
   const handleCreateAcademicSubject = useCallback(
     async (input: AcademicSubjectFormInput) => {
       try {
-        const { data } = await createAcademicSubject({
-          variables: { input },
-        })
+        const dataCreated = (
+          await createAcademicSubject({
+            variables: { input },
+          })
+        ).data
 
-        const academicSubject = data?.createAcademicSubject
+        const academicSubject = dataCreated?.createAcademicSubject
 
         if (!academicSubject) {
           return
@@ -101,11 +131,23 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     [createAcademicSubject, enqueueSnackbar, history],
   )
 
-  const handleSubmitForm = useCallback(
-    async (values: AcademicSubjectFormInput) =>
-      handleCreateAcademicSubject(values),
-    [handleCreateAcademicSubject],
+  const handleUpdateAcademicSubject = useCallback(
+    (input: AcademicSubjectFormInput) => {
+      console.log(input)
+    },
+    [],
   )
+  const handleSubmitForm = useCallback(
+    async (values: AcademicSubjectFormInput) => {
+      if (createMode) {
+        handleCreateAcademicSubject(values)
+      }
+      handleUpdateAcademicSubject(values)
+    },
+    [createMode, handleCreateAcademicSubject, handleUpdateAcademicSubject],
+  )
+
+  if (loading) return <Spinner />
 
   return (
     <Formik
@@ -115,21 +157,46 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     >
       {(formik) => (
         <PageContainer
-          title="Thêm môn học mới"
+          title={createMode ? 'Thêm môn học mới' : 'Chỉnh sửa môn học'}
           backButtonLabel="Danh sách môn học"
           withBackButton={ACADEMIC_SUBJECT_LIST}
-          actions={[
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              startIcon={<Check />}
-              onClick={formik.submitForm}
-              loading={formik.isSubmitting}
-            >
-              Tạo môn học
-            </Button>,
-          ]}
+          actions={
+            createMode
+              ? [
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={<Check />}
+                    onClick={formik.submitForm}
+                    loading={formik.isSubmitting}
+                  >
+                    Tạo môn học
+                  </Button>,
+                ]
+              : [
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={<Check />}
+                  >
+                    {data?.academicSubject.publication === Publication.Draft
+                      ? 'Public'
+                      : 'Unpublic'}
+                  </Button>,
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={<Check />}
+                    onClick={formik.submitForm}
+                    loading={formik.isSubmitting}
+                  >
+                    Sửa môn học
+                  </Button>,
+                ]
+          }
           className={classes.root}
         >
           <CreateUpdateAcademicSubjectForm />

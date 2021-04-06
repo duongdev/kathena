@@ -9,6 +9,7 @@ import {
   USER_SELF_SETTINGS,
   CREATE_ACADEMIC_SUBJECT,
   ORG_SETTINGS,
+  UPDATE_ACADEMIC_SUBJECT,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -53,6 +54,11 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       />
       <Route
         path={CREATE_ACADEMIC_SUBJECT}
+        exact
+        component={CreateUpdateAcademicSubject}
+      />
+      <Route
+        path={UPDATE_ACADEMIC_SUBJECT}
         exact
         component={CreateUpdateAcademicSubject}
       />

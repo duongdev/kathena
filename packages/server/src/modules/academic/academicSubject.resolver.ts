@@ -1,5 +1,6 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
@@ -7,7 +8,7 @@ import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
@@ -69,5 +70,13 @@ export class AcademicSubjectResolver {
       { orgId },
       pageOptions,
     )
+  }
+
+  @Query((_return) => AcademicSubject)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
+  async academicSubject(
+    @Args('id', { type: () => ID }) academicSubjectId: string,
+  ): Promise<Nullable<DocumentType<AcademicSubject>>> {
+    return this.academicService.findAcademicSubjectById(academicSubjectId)
   }
 }
