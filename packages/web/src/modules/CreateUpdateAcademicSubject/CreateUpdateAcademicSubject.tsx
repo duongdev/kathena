@@ -3,7 +3,7 @@ import { FC, useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { Check } from 'phosphor-react'
+import { Check, LockOpen, Lock } from 'phosphor-react'
 import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
@@ -21,6 +21,7 @@ import {
   AcademicSubjectListDocument,
   useFindAcademicSubjectByIdQuery,
   Publication,
+  useUpdateAcademicSubjectMutation,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -56,6 +57,21 @@ const validationSchema: SchemaOf<AcademicSubjectFormInput> = yup.object({
   code: yup.string().label(labels.code).trim().uppercase().required(),
   image: yup.mixed().label(labels.image).required() as ANY,
 })
+const validationWithoutImageSchema: SchemaOf<AcademicSubjectFormInput> = yup.object(
+  {
+    name: yup
+      .string()
+      .label(labels.name)
+      .trim()
+      .matches(ACADEMIC_SUBJECT_NAME_REGEX, {
+        message: `${labels.name} chứa các ký tự không phù hợp`,
+      })
+      .required(),
+    description: yup.string().label(labels.description).required(),
+    code: yup.string().label(labels.code).trim().uppercase().required(),
+    image: yup.mixed().label(labels.image) as ANY,
+  },
+)
 
 const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   props,
@@ -73,6 +89,14 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
       },
     ],
     context: { hasFileUpload: true },
+  })
+  const [updateAcademicSubject] = useUpdateAcademicSubjectMutation({
+    refetchQueries: [
+      {
+        query: AcademicSubjectListDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+    ],
   })
   const id = useMemo(() => params.id, [params])
   const { data, loading } = useFindAcademicSubjectByIdQuery({
@@ -99,7 +123,6 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
       name: data?.academicSubject?.name,
       description: data?.academicSubject?.description,
       code: data?.academicSubject?.code,
-      image: data?.academicSubject?.imageFileId,
     }
   }, [createMode, data?.academicSubject])
 
@@ -132,10 +155,37 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   )
 
   const handleUpdateAcademicSubject = useCallback(
-    (input: AcademicSubjectFormInput) => {
-      console.log(input)
+    async (input: AcademicSubjectFormInput) => {
+      try {
+        const dataUpdated = (
+          await updateAcademicSubject({
+            variables: {
+              Id: id,
+              updateInput: {
+                name: input.name,
+                description: input.description,
+              },
+            },
+          })
+        ).data
+
+        const academicSubject = dataUpdated?.updateAcademicSubject
+
+        if (!academicSubject) {
+          return
+        }
+        enqueueSnackbar('Sửa môn học thành công', { variant: 'success' })
+        history.push(ACADEMIC_SUBJECT_LIST)
+        // eslint-disable-next-line no-console
+        console.log(academicSubject)
+      } catch (error) {
+        const errorMessage = renderApolloError(error)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
     },
-    [],
+    [updateAcademicSubject, enqueueSnackbar, history, id],
   )
   const handleSubmitForm = useCallback(
     async (values: AcademicSubjectFormInput) => {
@@ -151,7 +201,9 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
 
   return (
     <Formik
-      validationSchema={validationSchema}
+      validationSchema={
+        createMode ? validationSchema : validationWithoutImageSchema
+      }
       initialValues={initialValues}
       onSubmit={handleSubmitForm}
     >
@@ -179,7 +231,14 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     variant="contained"
                     color="primary"
                     size="large"
-                    startIcon={<Check />}
+                    startIcon={
+                      data?.academicSubject.publication ===
+                      Publication.Draft ? (
+                        <LockOpen />
+                      ) : (
+                        <Lock />
+                      )
+                    }
                   >
                     {data?.academicSubject.publication === Publication.Draft
                       ? 'Public'
@@ -189,6 +248,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     variant="contained"
                     color="primary"
                     size="large"
+                    disabled={formik.values === formik.initialValues}
                     startIcon={<Check />}
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
@@ -199,7 +259,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
           }
           className={classes.root}
         >
-          <CreateUpdateAcademicSubjectForm />
+          <CreateUpdateAcademicSubjectForm createMode={createMode} />
         </PageContainer>
       )}
     </Formik>

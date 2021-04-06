@@ -15,3 +15,10 @@ query FindAcademicSubjectById($Id: ID!){
     publication
   }
 }
+mutation UpdateAcademicSubject($Id: ID!,$updateInput: UpdateAcademicSubjectInput!){
+  updateAcademicSubject(id: $Id,updateInput: $updateInput) {
+    id
+    code
+    name
+  }
+}
