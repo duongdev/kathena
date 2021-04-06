@@ -157,6 +157,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   const handleUpdateAcademicSubject = useCallback(
     async (input: AcademicSubjectFormInput) => {
       try {
+        if (!id) return
         const dataUpdated = (
           await updateAcademicSubject({
             variables: {
