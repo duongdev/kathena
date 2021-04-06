@@ -1,13 +1,15 @@
 import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
-import { PlusCircle, Pencil } from 'phosphor-react'
+import PublicationChip from 'components/PublicationChip'
+import { PlusCircle } from 'phosphor-react'
 
 import {
   Button,
   DataTable,
   Link,
   PageContainer,
+  Typography,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
@@ -59,32 +61,55 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           loading={loading}
           columns={[
             {
-              label: 'Mã môn học',
-              field: 'code',
-              width: '10%',
+              label: 'Môn học',
               skeleton: <Skeleton />,
-            },
-            {
-              label: 'Tên môn học',
-              field: 'name',
-              skeleton: <Skeleton />,
+              render: (academicSubject) => (
+                <>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    className={classes.twoRows}
+                  >
+                    <Link
+                      to={buildPath(UPDATE_ACADEMIC_SUBJECT, {
+                        id: academicSubject.id,
+                      })}
+                    >
+                      {academicSubject.name}
+                    </Link>
+                  </Typography>
+                  <Typography
+                    variant="button"
+                    color="textSecondary"
+                    className={classes.twoRows}
+                  >
+                    {academicSubject.code}
+                  </Typography>
+                </>
+              ),
             },
             {
               label: 'Mô tả',
               field: 'description',
               skeleton: <Skeleton />,
+              width: '45%',
+              render: ({ description }) => (
+                <Typography className={classes.twoRows}>
+                  {description}
+                </Typography>
+              ),
             },
             {
-              render: (academicSubject) => (
-                <Link
-                  to={buildPath(UPDATE_ACADEMIC_SUBJECT, {
-                    id: academicSubject.id,
-                  })}
-                >
-                  <Pencil size={24} />
-                </Link>
-              ),
+              label: 'Trạng thái',
+              align: 'right',
               skeleton: <Skeleton />,
+              render: ({ publication }) => (
+                <PublicationChip
+                  publication={publication}
+                  variant="outlined"
+                  size="small"
+                />
+              ),
             },
           ]}
           pagination={{
@@ -102,6 +127,13 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   root: {},
+  twoRows: {
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+  },
 }))
 
 const WithPermissionAcademicSubjectList = () => (
