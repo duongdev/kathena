@@ -3,16 +3,25 @@ import { FC, useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { Check } from 'phosphor-react'
-import { useHistory } from 'react-router-dom'
+import { Check, LockOpen, Lock } from 'phosphor-react'
+import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, FileItem, PageContainer, renderApolloError } from '@kathena/ui'
+import {
+  Button,
+  FileItem,
+  PageContainer,
+  renderApolloError,
+  Spinner,
+} from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import {
   useCreateAcademicSubjectMutation,
   AcademicSubjectListDocument,
+  useFindAcademicSubjectByIdQuery,
+  Publication,
+  useUpdateAcademicSubjectMutation,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -48,6 +57,21 @@ const validationSchema: SchemaOf<AcademicSubjectFormInput> = yup.object({
   code: yup.string().label(labels.code).trim().uppercase().required(),
   image: yup.mixed().label(labels.image).required() as ANY,
 })
+const validationWithoutImageSchema: SchemaOf<AcademicSubjectFormInput> = yup.object(
+  {
+    name: yup
+      .string()
+      .label(labels.name)
+      .trim()
+      .matches(ACADEMIC_SUBJECT_NAME_REGEX, {
+        message: `${labels.name} chứa các ký tự không phù hợp`,
+      })
+      .required(),
+    description: yup.string().label(labels.description).required(),
+    code: yup.string().label(labels.code).trim().uppercase().required(),
+    image: yup.mixed().label(labels.image) as ANY,
+  },
+)
 
 const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   props,
@@ -55,6 +79,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
+  const params: { id: string } = useParams()
   const { $org: org } = useAuth()
   const [createAcademicSubject] = useCreateAcademicSubjectMutation({
     refetchQueries: [
@@ -65,24 +90,52 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     ],
     context: { hasFileUpload: true },
   })
-  const initialValues: AcademicSubjectFormInput = useMemo(
-    () => ({
-      name: '',
-      description: '',
-      code: '',
-      image: null,
-    }),
-    [],
-  )
+  const [updateAcademicSubject] = useUpdateAcademicSubjectMutation({
+    refetchQueries: [
+      {
+        query: AcademicSubjectListDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+    ],
+  })
+  const id = useMemo(() => params.id, [params])
+  const { data, loading } = useFindAcademicSubjectByIdQuery({
+    variables: {
+      Id: id,
+    },
+  })
+  const createMode = useMemo(() => {
+    if (id) {
+      return false
+    }
+    return true
+  }, [id])
+  const initialValues: ANY = useMemo(() => {
+    if (createMode) {
+      return {
+        name: '',
+        description: '',
+        code: '',
+        image: null,
+      }
+    }
+    return {
+      name: data?.academicSubject?.name,
+      description: data?.academicSubject?.description,
+      code: data?.academicSubject?.code,
+    }
+  }, [createMode, data?.academicSubject])
 
   const handleCreateAcademicSubject = useCallback(
     async (input: AcademicSubjectFormInput) => {
       try {
-        const { data } = await createAcademicSubject({
-          variables: { input },
-        })
+        const dataCreated = (
+          await createAcademicSubject({
+            variables: { input },
+          })
+        ).data
 
-        const academicSubject = data?.createAcademicSubject
+        const academicSubject = dataCreated?.createAcademicSubject
 
         if (!academicSubject) {
           return
@@ -101,38 +154,113 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     [createAcademicSubject, enqueueSnackbar, history],
   )
 
-  const handleSubmitForm = useCallback(
-    async (values: AcademicSubjectFormInput) =>
-      handleCreateAcademicSubject(values),
-    [handleCreateAcademicSubject],
+  const handleUpdateAcademicSubject = useCallback(
+    async (input: AcademicSubjectFormInput) => {
+      try {
+        if (!id) return
+        const dataUpdated = (
+          await updateAcademicSubject({
+            variables: {
+              Id: id,
+              updateInput: {
+                name: input.name,
+                description: input.description,
+              },
+            },
+          })
+        ).data
+
+        const academicSubject = dataUpdated?.updateAcademicSubject
+
+        if (!academicSubject) {
+          return
+        }
+        enqueueSnackbar('Sửa môn học thành công', { variant: 'success' })
+        history.push(ACADEMIC_SUBJECT_LIST)
+        // eslint-disable-next-line no-console
+        console.log(academicSubject)
+      } catch (error) {
+        const errorMessage = renderApolloError(error)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [updateAcademicSubject, enqueueSnackbar, history, id],
   )
+  const handleSubmitForm = useCallback(
+    async (values: AcademicSubjectFormInput) => {
+      if (createMode) {
+        handleCreateAcademicSubject(values)
+      }
+      handleUpdateAcademicSubject(values)
+    },
+    [createMode, handleCreateAcademicSubject, handleUpdateAcademicSubject],
+  )
+
+  if (loading) return <Spinner />
 
   return (
     <Formik
-      validationSchema={validationSchema}
+      validationSchema={
+        createMode ? validationSchema : validationWithoutImageSchema
+      }
       initialValues={initialValues}
       onSubmit={handleSubmitForm}
     >
       {(formik) => (
         <PageContainer
-          title="Thêm môn học mới"
+          title={createMode ? 'Thêm môn học mới' : 'Chỉnh sửa môn học'}
           backButtonLabel="Danh sách môn học"
           withBackButton={ACADEMIC_SUBJECT_LIST}
-          actions={[
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              startIcon={<Check />}
-              onClick={formik.submitForm}
-              loading={formik.isSubmitting}
-            >
-              Tạo môn học
-            </Button>,
-          ]}
+          actions={
+            createMode
+              ? [
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={<Check />}
+                    onClick={formik.submitForm}
+                    loading={formik.isSubmitting}
+                  >
+                    Tạo môn học
+                  </Button>,
+                ]
+              : [
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    startIcon={
+                      data?.academicSubject.publication ===
+                      Publication.Draft ? (
+                        <LockOpen />
+                      ) : (
+                        <Lock />
+                      )
+                    }
+                  >
+                    {data?.academicSubject.publication === Publication.Draft
+                      ? 'Public'
+                      : 'Unpublic'}
+                  </Button>,
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disabled={formik.values === formik.initialValues}
+                    startIcon={<Check />}
+                    onClick={formik.submitForm}
+                    loading={formik.isSubmitting}
+                  >
+                    Sửa môn học
+                  </Button>,
+                ]
+          }
           className={classes.root}
         >
-          <CreateUpdateAcademicSubjectForm />
+          <CreateUpdateAcademicSubjectForm createMode={createMode} />
         </PageContainer>
       )}
     </Formik>
