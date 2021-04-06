@@ -1,5 +1,5 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { AcademicSubject } from './models/AcademicSubject'
@@ -27,4 +27,15 @@ export class AcademicSubjectsPayload {
 
   @Field((_type) => Int)
   count: number
+}
+
+@InputType()
+export class UpdateAcademicSubjectInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  name?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  description?: string
 }

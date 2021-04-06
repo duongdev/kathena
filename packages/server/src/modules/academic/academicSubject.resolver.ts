@@ -14,6 +14,7 @@ import { AcademicService } from './academic.service'
 import {
   AcademicSubjectsPayload,
   CreateAcademicSubjectInput,
+  UpdateAcademicSubjectInput,
 } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 
@@ -78,5 +79,22 @@ export class AcademicSubjectResolver {
     @Args('id', { type: () => ID }) academicSubjectId: string,
   ): Promise<Nullable<DocumentType<AcademicSubject>>> {
     return this.academicService.findAcademicSubjectById(academicSubjectId)
+  }
+
+  @Mutation((_returns) => AcademicSubject)
+  @UseAuthGuard(P.Academic_UpdateAcademicSubject)
+  @UsePipes(ValidationPipe)
+  async updateAcademicSubject(
+    @Args('id', { type: () => ID }) academicSubjectId: string,
+    @Args('updateInput') updateInput: UpdateAcademicSubjectInput,
+    @CurrentOrg() currentOrg: Org,
+  ): Promise<AcademicSubject> {
+    return this.academicService.updateAcademicSubject(
+      {
+        id: academicSubjectId,
+        orgId: currentOrg.id,
+      },
+      updateInput,
+    )
   }
 }
