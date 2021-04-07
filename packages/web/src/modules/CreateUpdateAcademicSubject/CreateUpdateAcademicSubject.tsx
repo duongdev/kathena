@@ -229,7 +229,6 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
           return
         }
         enqueueSnackbar('Sửa môn học thành công', { variant: 'success' })
-        history.push(ACADEMIC_SUBJECT_LIST)
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
@@ -239,7 +238,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         console.error(error)
       }
     },
-    [updateAcademicSubject, enqueueSnackbar, history, id],
+    [updateAcademicSubject, enqueueSnackbar, id],
   )
   const handleSubmitForm = useCallback(
     async (values: AcademicSubjectFormInput) => {
