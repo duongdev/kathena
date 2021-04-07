@@ -138,7 +138,7 @@ type Mutation {
     orgNamespace: String!
   ): SignInPayload!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
-  toggleAcademicSubject(id: ID!): AcademicSubject!
+  updateAcademicSubjectPublication(id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
 }

@@ -126,7 +126,7 @@ export class AcademicService {
     return this.academicSubjectModel.findById(id)
   }
 
-  async toggleAcademicSubjectPublicationById(query: {
+  async updateAcademicSubjectPublicationById(query: {
     id: string
     orgId: string
   }): Promise<DocumentType<AcademicSubject>> {

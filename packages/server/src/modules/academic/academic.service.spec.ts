@@ -456,11 +456,11 @@ describe('academic.service', () => {
     })
   })
 
-  describe('toggleAcademicSubjectPublicationById', () => {
+  describe('updateAcademicSubjectPublicationById', () => {
     it(`throws error if couldn't find academic subject to publication`, async () => {
       expect.assertions(1)
       await expect(
-        academicService.toggleAcademicSubjectPublicationById({
+        academicService.updateAcademicSubjectPublicationById({
           id: objectId(),
           orgId: objectId(),
         }),
@@ -495,7 +495,7 @@ describe('academic.service', () => {
       )
 
       await expect(
-        academicService.toggleAcademicSubjectPublicationById({
+        academicService.updateAcademicSubjectPublicationById({
           id: academicSubject.id,
           orgId: academicSubject.orgId,
         }),

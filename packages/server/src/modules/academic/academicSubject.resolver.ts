@@ -76,11 +76,11 @@ export class AcademicSubjectResolver {
   @Mutation((_returns) => AcademicSubject)
   @UseAuthGuard(P.Academic_SetAcademicSubjectPublication)
   @UsePipes(ValidationPipe)
-  async toggleAcademicSubject(
+  async updateAcademicSubjectPublication(
     @Args('id', { type: () => ID }) academicSubjectId: string,
     @CurrentOrg() currentOrg: Org,
   ): Promise<AcademicSubject> {
-    return this.academicService.toggleAcademicSubjectPublicationById({
+    return this.academicService.updateAcademicSubjectPublicationById({
       id: academicSubjectId,
       orgId: currentOrg.id,
     })
