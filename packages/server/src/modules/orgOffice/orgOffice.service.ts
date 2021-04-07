@@ -63,7 +63,5 @@ export class OrgOfficeService {
     }
 
     return this.orgOfficeModel.find({ orgId })
-
-    console.log(`hihi${orgId}`)
   }
 }
