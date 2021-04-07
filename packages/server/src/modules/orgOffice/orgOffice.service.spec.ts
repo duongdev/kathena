@@ -9,7 +9,6 @@ import { AccountService } from '../account/account.service'
 import { OrgService } from '../org/org.service'
 
 import { OrgOfficeService } from './orgOffice.service'
-import { CreateOrgOfficeInput } from './orgOffice.types'
 
 describe('orgOffice.service', () => {
   let module: TestingModule
