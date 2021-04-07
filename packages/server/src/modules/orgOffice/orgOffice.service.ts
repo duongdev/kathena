@@ -65,12 +65,14 @@ export class OrgOfficeService {
     return this.orgOfficeModel.find({ orgId })
   }
 
-  async findOrgOffices(name: string): Promise<OrgOffice[]> {
+  async findOrgOfficesByName(name: string): Promise<OrgOffice[]> {
     const handleName = removeExtraSpaces(name)
-    console.log('handleName: ', handleName)
+
     if (handleName === undefined) return []
-    const listOrgOffice = await this.orgOfficeModel.find({ name: /handleName/ })
-    console.log('list: ', listOrgOffice)
+
+    const listOrgOffice = await this.orgOfficeModel.find({
+      name: new RegExp(handleName),
+    })
 
     return listOrgOffice
   }

@@ -78,7 +78,27 @@ describe('orgOffice.service', () => {
         }),
       )
 
-      await expect(orgOfficeService.findOrgOffices('AB')).resolves.toBeNull()
+      listOrgService.push(
+        await orgOfficeService.createOrgOffice({
+          ...createOrgOfficeInput,
+          name: 'XYZ',
+          createdByAccountId: account.id,
+          orgId: org.id,
+        }),
+      )
+
+      listOrgService.push(
+        await orgOfficeService.createOrgOffice({
+          ...createOrgOfficeInput,
+          name: 'ABG',
+          createdByAccountId: account.id,
+          orgId: org.id,
+        }),
+      )
+
+      await expect(
+        orgOfficeService.findOrgOfficesByName('AB'),
+      ).resolves.toBeNull()
     })
   })
 })
