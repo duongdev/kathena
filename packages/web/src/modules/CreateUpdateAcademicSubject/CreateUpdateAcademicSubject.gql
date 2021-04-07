@@ -5,3 +5,20 @@ mutation CreateAcademicSubject($input: CreateAcademicSubjectInput!) {
     name
   }
 }
+query FindAcademicSubjectById($Id: ID!){
+  academicSubject(id: $Id) {
+    id
+    code
+    name
+    description
+    imageFileId
+    publication
+  }
+}
+mutation UpdateAcademicSubject($Id: ID!,$updateInput: UpdateAcademicSubjectInput!){
+  updateAcademicSubject(id: $Id,updateInput: $updateInput) {
+    id
+    code
+    name
+  }
+}
