@@ -1,15 +1,19 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
+
+import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
 
 describe('academic.service', () => {
   let module: TestingModule
   let academicService: AcademicService
+  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -19,6 +23,7 @@ describe('academic.service', () => {
     module = await createTestingModule(testDb.uri)
 
     academicService = module.get<AcademicService>(AcademicService)
+    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
@@ -447,6 +452,156 @@ describe('academic.service', () => {
         code: 'FEBC01',
         name: 'Frontend cơ bản',
         description: 'Lập trình frontend cơ bản',
+      })
+    })
+  })
+
+  describe('updateAcademicSubjectPublicationById', () => {
+    it(`throws error if couldn't find academic subject to publication`, async () => {
+      expect.assertions(1)
+      await expect(
+        academicService.updateAcademicSubjectPublicationById({
+          id: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow(`Couldn't find academic subject to update publication`)
+    })
+
+    it(`returns an academic subject with publication is "Published" when input has publication is "Draft"`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createAcademicSubjectInput: {
+        orgId: string
+        code: string
+        name: string
+        description: string
+        createdByAccountId: string
+        imageFileId: string
+      } = {
+        orgId: objectId(),
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        createdByAccountId: objectId(),
+        imageFileId: objectId(),
+      }
+
+      const academicSubject = await academicService.createAcademicSubject(
+        createAcademicSubjectInput,
+      )
+
+      await expect(
+        academicService.updateAcademicSubjectPublicationById({
+          id: academicSubject.id,
+          orgId: academicSubject.orgId,
+        }),
+      ).resolves.toMatchObject({
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        publication: Publication.Published,
+      })
+    })
+  })
+
+  describe('updateAcademicSubject', () => {
+    it(`throws error if couldn't find academic subject to update`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'findOne')
+        .mockResolvedValueOnce(null)
+
+      await expect(
+        academicService.updateAcademicSubject(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            name: 'Frontend cơ bản',
+          },
+        ),
+      ).rejects.toThrow(`Couldn't find academic subject to update`)
+    })
+
+    it(`returns an academic subject with a new name`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        name: 'Frontend cơ bản',
+        orgId: org.id,
+        code: 'FEBASIC',
+        description: 'Lập trình frontend cơ bản',
+        imageFileId: objectId(),
+        createdByAccountId: objectId(),
+      })
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'findOne')
+        .mockResolvedValueOnce(academicSubject)
+
+      await expect(
+        academicService.updateAcademicSubject(
+          {
+            id: academicSubject.id,
+            orgId: academicSubject.orgId,
+          },
+          {
+            name: 'Frontend nâng cao',
+          },
+        ),
+      ).resolves.toMatchObject({
+        code: 'FEBASIC',
+        description: 'Lập trình frontend cơ bản',
+        name: 'Frontend nâng cao',
+      })
+    })
+
+    it(`returns an academic subject with a new description`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        name: 'Frontend cơ bản',
+        orgId: org.id,
+        code: 'FEBASIC',
+        description: 'Lập trình frontend cơ bản',
+        imageFileId: objectId(),
+        createdByAccountId: objectId(),
+      })
+
+      jest
+        .spyOn(academicService['academicSubjectModel'], 'findOne')
+        .mockResolvedValueOnce(academicSubject)
+
+      await expect(
+        academicService.updateAcademicSubject(
+          {
+            id: academicSubject.id,
+            orgId: academicSubject.orgId,
+          },
+          {
+            description: 'Lập trình quá dễ hahaha',
+          },
+        ),
+      ).resolves.toMatchObject({
+        code: 'FEBASIC',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình quá dễ hahaha',
       })
     })
   })

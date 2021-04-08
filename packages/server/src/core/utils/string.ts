@@ -11,3 +11,11 @@ export const removeExtraSpaces = (inputString?: string): string | undefined => {
 export const normalizeCodeField = (inputString: string): string => {
   return inputString.replace(/\s/g, '').toUpperCase()
 }
+
+export const stringWithoutSpecialCharacters = (
+  inputString?: string,
+): boolean => {
+  if (inputString === undefined) return true
+  const regex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/
+  return regex.test(inputString)
+}
