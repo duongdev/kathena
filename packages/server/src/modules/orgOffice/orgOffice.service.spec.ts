@@ -148,7 +148,7 @@ describe('orgOffice.service', () => {
       ).resolves.toBeNull()
     })
 
-    it(`return OrgOffice if Id does exists`, async () => {
+    it(`returns an OrgOffice if Id does exists`, async () => {
       expect.assertions(1)
 
       const org = await orgService.createOrg({
@@ -176,10 +176,6 @@ describe('orgOffice.service', () => {
         orgId: org.id,
         createdByAccountId: account.id,
       })
-
-      jest
-        .spyOn(orgOfficeService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
 
       await expect(
         orgOfficeService.findOrgOfficeById(createOrgOfficeInput.id),
