@@ -1,6 +1,8 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
 
+import { OrgRoleName } from 'modules/auth/models'
+
 import { Account, AccountStatus } from './models/Account'
 
 @InputType()
@@ -63,4 +65,13 @@ export class OrgAccountsPayload {
 
   @Field((_type) => Int)
   count: number
+}
+
+@InputType()
+export class FilterAccountInput {
+  @Field()
+  role: OrgRoleName
+
+  @Field()
+  keyName: string
 }

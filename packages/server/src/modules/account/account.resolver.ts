@@ -9,6 +9,7 @@ import {
   Resolver,
 } from '@nestjs/graphql'
 import { differenceInMinutes } from 'date-fns'
+import { FilterQuery } from 'mongoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
@@ -20,6 +21,7 @@ import { Nullable, PageOptionsInput } from 'types'
 import { AccountService } from './account.service'
 import {
   CreateAccountInput,
+  FilterAccountInput,
   OrgAccountsPayload,
   UpdateAccountInput,
 } from './account.type'
@@ -58,15 +60,22 @@ export class AccountResolver {
   }
 
   @Query((_return) => OrgAccountsPayload)
-  @UseAuthGuard(P.Hr_ListOrgAccounts)
+  // @UseAuthGuard(P.Hr_ListOrgAccounts)
   async orgAccounts(
     @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
+    @Args('filter', { nullable: true }) filter?: FilterAccountInput,
   ): Promise<OrgAccountsPayload> {
-    if (org.id !== orgId) {
-      throw new ForbiddenError()
-    }
+    // if (org.id !== orgId) {
+    //   throw new ForbiddenError()
+    // }
+    if (filter)
+      return this.accountService.findAndPaginateAccounts(
+        { orgId },
+        pageOptions,
+        filter,
+      )
     return this.accountService.findAndPaginateAccounts({ orgId }, pageOptions)
   }
 
@@ -105,14 +114,5 @@ export class AccountResolver {
     }
 
     return AccountAvailability.Offline
-  }
-
-  @Query((_return) => [Account])
-  @UseAuthGuard()
-  async accountByNameAndRole(
-    @Args('keyName', { type: () => ID }) keyName: string,
-    @Args('role') role: OrgRoleName,
-  ): Promise<Account[]> {
-    return this.accountService.findAccountByNameAndRole(keyName, role)
   }
 }

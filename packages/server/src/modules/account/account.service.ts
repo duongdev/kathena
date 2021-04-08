@@ -144,18 +144,35 @@ export class AccountService {
       limit: number
       skip: number
     },
+    filter?: {
+      keyName: string
+      role: OrgRoleName
+    },
   ): Promise<{ accounts: DocumentType<Account>[]; count: number }> {
     const { orgId } = query
     const { limit, skip } = pageOptions
-
-    const accounts = await this.accountModel
-      .find({ orgId })
-      .sort({ _id: -1 })
-      .skip(skip)
-      .limit(limit)
-
+    let accounts: DocumentType<Account>[] = []
     const count = await this.accountModel.countDocuments({ orgId })
-
+    if (!filter) {
+      accounts = await this.accountModel
+        .find({ orgId })
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit)
+      return { accounts, count }
+    }
+    const key = removeExtraSpaces(filter.keyName)
+    if (key !== undefined && key !== '') {
+      accounts = await this.accountModel
+        .find({
+          orgId,
+          roles: filter.role,
+          displayName: new RegExp(key),
+        })
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit)
+    }
     return { accounts, count }
   }
 
@@ -318,10 +335,9 @@ export class AccountService {
   ): Promise<DocumentType<Account>[]> {
     const key = removeExtraSpaces(keyName)
     if (key === undefined) return []
-    if (key === '') return []
     return this.accountModel.find({
       roles: role,
-      displayName: new RegExp(key.toLowerCase(), 'i'),
+      displayName: new RegExp(key),
     })
   }
 }

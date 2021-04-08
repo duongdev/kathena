@@ -115,12 +115,16 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
-  accountByNameAndRole(role: String!, keyName: ID!): [Account!]!
+  orgAccounts(filter: FilterAccountInput, pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   orgOffices: [OrgOffice!]!
+}
+
+input FilterAccountInput {
+  role: String!
+  keyName: String!
 }
 
 input PageOptionsInput {

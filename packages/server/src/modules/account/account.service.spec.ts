@@ -698,6 +698,112 @@ describe('account.service', () => {
         count: listCreatedAccountOrgId2.length,
       })
     })
+
+    it('returns array account and count find and pagination account with filter', async () => {
+      expect.assertions(2)
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const orgId = objectId()
+      const listCreatedAccountOrgId: ANY[] = []
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId,
+        email: 'leminhnhat1133@gmail.com',
+        password: '123456',
+        username: 'nhatminh0509',
+        roles: ['lecturer'],
+        displayName: 'Nhật Minh',
+      }
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem@gmail.com',
+          username: 'hieuliem',
+          displayName: 'Hiếu Liêm',
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'thanhcanh@gmail.com',
+          username: 'thanhcanh',
+          displayName: 'Thanh Cảnh',
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'nhatnam@gmail.com',
+          username: 'nhatnam',
+          displayName: 'Nhật Nam',
+          roles: ['staff'],
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'vanhai@gmail.com',
+          username: 'vanhai',
+          displayName: 'Văn Hải',
+        }),
+      )
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          { orgId },
+          { limit: 10, skip: 0 },
+          { keyName: 'ả', role: 'lecturer' },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'vanhai@gmail.com',
+            username: 'vanhai',
+            displayName: 'Văn Hải',
+          },
+          {
+            email: 'thanhcanh@gmail.com',
+            username: 'thanhcanh',
+            displayName: 'Thanh Cảnh',
+          },
+        ],
+        count: listCreatedAccountOrgId.length,
+      })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          { orgId },
+          { limit: 10, skip: 0 },
+          { keyName: 'Nhật', role: 'staff' },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'nhatnam@gmail.com',
+            username: 'nhatnam',
+            displayName: 'Nhật Nam',
+          },
+        ],
+        count: listCreatedAccountOrgId.length,
+      })
+    })
   })
 
   describe('updateOrgMemberAccount', () => {
@@ -1410,108 +1516,6 @@ describe('account.service', () => {
       )
 
       await expect(compareSync('123456', accountUpdated.password)).toBeTruthy()
-    })
-  })
-
-  describe('findAccountByNameAndRole', () => {
-    it('returns an empty array account if the input is invalid', async () => {
-      expect.assertions(1)
-      jest
-        .spyOn(accountService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-
-      const orgId = objectId()
-
-      const createAccountServiceInput: CreateAccountServiceInput = {
-        orgId,
-        email: 'nhatminh@gmail.com',
-        password: '@admin',
-        username: 'nhatminh',
-        roles: ['lecturer'],
-        displayName: 'Nhật Minh',
-      }
-
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-      })
-      await expect(
-        accountService.findAccountByNameAndRole('Nam', 'lecturer'),
-      ).resolves.toMatchObject([])
-    })
-    it('returns an array account if the input is valid', async () => {
-      expect.assertions(2)
-      jest
-        .spyOn(accountService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-        .mockResolvedValueOnce(true as never)
-
-      const orgId = objectId()
-
-      const createAccountServiceInput: CreateAccountServiceInput = {
-        orgId,
-        email: 'nhatminh@gmail.com',
-        password: '@admin',
-        username: 'nhatminh',
-        roles: ['lecturer'],
-        displayName: 'Nhật Minh',
-      }
-
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-      })
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-        email: 'vanhai@gmail.com',
-        username: 'vanhai',
-        displayName: 'Văn Hải',
-      })
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-        email: 'thanhcanh@gmail.com',
-        username: 'thanhcanh',
-        displayName: 'Thanh Cảnh',
-      })
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-        email: 'nhathoa@gmail.com',
-        username: 'nhathoa',
-        displayName: 'Nhật Hòa',
-        roles: ['staff'],
-      })
-      await accountService.createAccount({
-        ...createAccountServiceInput,
-        email: 'nhatnam@gmail.com',
-        username: 'nhatnam',
-        displayName: 'Nhật Nam',
-      })
-
-      await expect(
-        accountService.findAccountByNameAndRole('Nhật', 'lecturer'),
-      ).resolves.toMatchObject([
-        {
-          email: 'nhatminh@gmail.com',
-          username: 'nhatminh',
-          displayName: 'Nhật Minh',
-        },
-        {
-          email: 'nhatnam@gmail.com',
-          username: 'nhatnam',
-          displayName: 'Nhật Nam',
-        },
-      ])
-
-      await expect(
-        accountService.findAccountByNameAndRole('Nhật', 'staff'),
-      ).resolves.toMatchObject([
-        {
-          email: 'nhathoa@gmail.com',
-          username: 'nhathoa',
-          displayName: 'Nhật Hòa',
-        },
-      ])
     })
   })
 })
