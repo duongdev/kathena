@@ -125,4 +125,31 @@ export class AcademicService {
   ): Promise<Nullable<DocumentType<AcademicSubject>>> {
     return this.academicSubjectModel.findById(id)
   }
+
+  async updateAcademicSubject(
+    query: { id: string; orgId: string },
+    update: {
+      name?: string
+      description?: string
+    },
+  ): Promise<DocumentType<AcademicSubject>> {
+    const academicSubject = await this.academicSubjectModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
+
+    if (!academicSubject) {
+      throw new Error(`Couldn't find academic subject to update`)
+    }
+
+    if (update.name) {
+      academicSubject.name = update.name
+    }
+    if (update.description) {
+      academicSubject.description = update.description
+    }
+    const updatedAcademicSubject = await academicSubject.save()
+
+    return updatedAcademicSubject
+  }
 }
