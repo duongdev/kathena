@@ -34,7 +34,7 @@ export const admin: Role = {
   permissions: [
     ...staff.permissions,
     P.OrgOffice_CreateOrgOffice,
-    P.OrgOffice_UpdateOrgOffices,
+    P.OrgOffice_UpdateOrgOffice,
   ],
 }
 
