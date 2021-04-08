@@ -16,7 +16,7 @@ export enum Permission {
 
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
-  OrgOffice_UpdateOrgOffices = 'OrgOffice_UpdateOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
 
   /** For testing purpose */
   NoPermission = 'NoPermission',
