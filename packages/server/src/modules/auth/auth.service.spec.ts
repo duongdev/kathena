@@ -113,7 +113,7 @@ describe('auth.service', () => {
       await expect(
         authService.accountHasPermission({
           accountId: objectId().toString(),
-          permission: 'OrgOffice_UpdateOrgOffices',
+          permission: 'OrgOffice_UpdateOrgOffice',
         }),
       ).resolves.toBe(true)
     })
