@@ -1415,7 +1415,7 @@ describe('account.service', () => {
 
   describe('findAccountByNameAndRole', () => {
     it('returns an empty array account if the input is invalid', async () => {
-      await expect.assertions(1)
+      expect.assertions(1)
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
@@ -1439,7 +1439,7 @@ describe('account.service', () => {
       ).resolves.toMatchObject([])
     })
     it('returns an array account if the input is valid', async () => {
-      await expect.assertions(2)
+      expect.assertions(2)
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
