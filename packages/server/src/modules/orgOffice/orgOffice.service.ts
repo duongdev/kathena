@@ -5,6 +5,7 @@ import { InjectModel, Logger, removeExtraSpaces, Service } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
+import { Nullable } from 'types'
 
 import { OrgOffice } from './models/OrgOffice'
 
@@ -63,5 +64,11 @@ export class OrgOfficeService {
     }
 
     return this.orgOfficeModel.find({ orgId })
+  }
+
+  async findOrgOfficeById(
+    id: string,
+  ): Promise<Nullable<DocumentType<OrgOffice>>> {
+    return this.orgOfficeModel.findById(id)
   }
 }
