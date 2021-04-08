@@ -60,16 +60,16 @@ export class AccountResolver {
   }
 
   @Query((_return) => OrgAccountsPayload)
-  // @UseAuthGuard(P.Hr_ListOrgAccounts)
+  @UseAuthGuard(P.Hr_ListOrgAccounts)
   async orgAccounts(
     @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
     @Args('filter', { nullable: true }) filter?: FilterAccountInput,
   ): Promise<OrgAccountsPayload> {
-    // if (org.id !== orgId) {
-    //   throw new ForbiddenError()
-    // }
+    if (org.id !== orgId) {
+      throw new ForbiddenError()
+    }
     if (filter)
       return this.accountService.findAndPaginateAccounts(
         { orgId },
