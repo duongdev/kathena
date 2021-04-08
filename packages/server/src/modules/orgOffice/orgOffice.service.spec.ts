@@ -3,19 +3,15 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { ANY } from 'types'
 
-import { AccountService } from '../account/account.service'
 import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { OrgOfficeService } from './orgOffice.service'
-import { CreateOrgOfficeInput } from './orgOffice.types'
 
 describe('orgOffice.service', () => {
   let module: TestingModule
   let orgOfficeService: OrgOfficeService
-  let accountService: AccountService
   let orgService: OrgService
   let authService: AuthService
   let mongooseConnection: Connection
@@ -27,7 +23,6 @@ describe('orgOffice.service', () => {
     module = await createTestingModule(testDb.uri)
 
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
-    accountService = module.get<AccountService>(AccountService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
   })
