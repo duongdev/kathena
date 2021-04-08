@@ -178,7 +178,7 @@ describe('auth.service', () => {
                 "Academic_UpdateAcademicSubject",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
-                "OrgOffice_UpdateOrgOffices",
+                "OrgOffice_UpdateOrgOffice",
               ]
             `)
     })
