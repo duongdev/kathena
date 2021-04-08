@@ -30,7 +30,7 @@ Array [
       "Academic_UpdateAcademicSubject",
       "OrgOffice_ListOrgOffices",
       "OrgOffice_CreateOrgOffice",
-      "OrgOffice_UpdateOrgOffices",
+      "OrgOffice_UpdateOrgOffice",
     ],
     "priority": 2,
   },
