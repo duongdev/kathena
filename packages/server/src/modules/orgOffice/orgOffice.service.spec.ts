@@ -46,65 +46,6 @@ describe('orgOffice.service', () => {
     expect(orgOfficeService).toBeDefined()
   })
 
-  // describe('findOrgOffices', () => {
-  //   it('abc', async () => {
-  //     expect.assertions(1)
-
-  //     const org = await orgService.createOrg({
-  //       namespace: 'kmin-edu',
-  //       name: 'Kmin Academy',
-  //     })
-
-  //     const account = await accountService.createAccount({
-  //       orgId: org.id,
-  //       email: 'huynhthanhcanh.top@gmail.com',
-  //       password: '123456',
-  //       username: 'canhhuynh',
-  //       roles: ['owner', 'admin'],
-  //       displayName: 'Thanh Canh',
-  //     })
-
-  //     const listOrgService: ANY[] = []
-
-  //     const createOrgOfficeInput: CreateOrgOfficeInput = {
-  //       name: 'KMIN',
-  //       address: '25A Mai Thi Luu',
-  //       phone: '0987654321',
-  //     }
-
-  //     listOrgService.push(
-  //       await orgOfficeService.createOrgOffice({
-  //         ...createOrgOfficeInput,
-  //         name: 'ABC',
-  //         createdByAccountId: account.id,
-  //         orgId: org.id,
-  //       }),
-  //     )
-
-  //     listOrgService.push(
-  //       await orgOfficeService.createOrgOffice({
-  //         ...createOrgOfficeInput,
-  //         name: 'XYZ',
-  //         createdByAccountId: account.id,
-  //         orgId: org.id,
-  //       }),
-  //     )
-
-  //     listOrgService.push(
-  //       await orgOfficeService.createOrgOffice({
-  //         ...createOrgOfficeInput,
-  //         name: 'ABG',
-  //         createdByAccountId: account.id,
-  //         orgId: org.id,
-  //       }),
-  //     )
-
-  //     await expect(orgOfficeService.findOrgOfficesByName('X')).resolves.toMatchObject({
-
-  //     })
-  //   })
-  // })
-
   describe('createOrgOffice', () => {
     const orgOfficeInput = {
       name: 'KMIN',
