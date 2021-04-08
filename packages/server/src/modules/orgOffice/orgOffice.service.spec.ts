@@ -9,6 +9,7 @@ import { AccountService } from '../account/account.service'
 import { OrgService } from '../org/org.service'
 
 import { OrgOfficeService } from './orgOffice.service'
+import { CreateOrgOfficeInput } from './orgOffice.types'
 
 describe('orgOffice.service', () => {
   let module: TestingModule
@@ -55,51 +56,6 @@ describe('orgOffice.service', () => {
       ).rejects.toThrow('INVALID_ORG_ID')
     })
 
-    it('returns a valid OrgOfficesService', async () => {
-      expect.assertions(1)
-
-      const org = await orgService.createOrg({
-        namespace: 'kmin-edu',
-        name: 'Kmin Academy',
-      })
-
-      jest
-        .spyOn(orgService['orgModel'], 'exists')
-        .mockResolvedValueOnce(true as never)
-
-      const account = await accountService.createAccount({
-        orgId: org.id,
-        email: 'nguyenvanhai0911@gmail.com',
-        password: '123456',
-        username: 'nguyenvanhai',
-        roles: ['owner', 'admin'],
-        displayName: 'Hai Nguyen',
-      })
-
-      const createOrgOfficeInput: ANY = {
-        name: 'Kmin Academy',
-        address: '25A Mai Thi Luu',
-        phone: '0973797634',
-        createdByAccountId: account.id,
-      }
-
-      jest
-        .spyOn(orgOfficeService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-
-      jest
-        .spyOn(orgOfficeService['orgOfficeModel'], 'find')
-        .mockResolvedValueOnce(createOrgOfficeInput)
-
-      await expect(
-        orgOfficeService.findOrgOfficesByOrgId(createOrgOfficeInput.orgId),
-      ).resolves.toMatchObject({
-        name: 'Kmin Academy',
-        address: '25A Mai Thi Luu',
-        phone: '0973797634',
-      })
-    })
-
     it('returns an array valid OrgOfficesService', async () => {
       expect.assertions(1)
 
@@ -112,6 +68,8 @@ describe('orgOffice.service', () => {
         .spyOn(orgService['orgModel'], 'exists')
         .mockResolvedValueOnce(true as never)
 
+      const listOrgOffices: ANY[] = []
+
       const account = await accountService.createAccount({
         orgId: org.id,
         email: 'nguyenvanhai0911@gmail.com',
@@ -121,55 +79,61 @@ describe('orgOffice.service', () => {
         displayName: 'Hai Nguyen',
       })
 
-      const createOrgOfficeInput: ANY = [
-        {
-          name: 'Kmin Academy 1',
-          address: '25A Mai Thi Luu',
-          phone: '0973797634',
+      const createOrgOfficeInput: CreateOrgOfficeInput = {
+        name: 'Kmin Academy 1',
+        address: '25A Mai Thi Luu',
+        phone: '0973797634',
+      }
+
+      listOrgOffices.push(
+        await orgOfficeService.createOrgOffice({
+          ...createOrgOfficeInput,
           createdByAccountId: account.id,
-        },
-        {
+          orgId: org.id,
+        }),
+      )
+
+      listOrgOffices.push(
+        await orgOfficeService.createOrgOffice({
+          ...createOrgOfficeInput,
+          createdByAccountId: account.id,
+          orgId: org.id,
           name: 'Kmin Academy 2',
-          address: '25A Pham Van Dong',
-          phone: '0973797634',
+        }),
+      )
+
+      listOrgOffices.push(
+        await orgOfficeService.createOrgOffice({
+          ...createOrgOfficeInput,
           createdByAccountId: account.id,
-        },
-        {
+          orgId: org.id,
           name: 'Kmin Academy 3',
-          address: '25A Huynh Thuc Khang',
-          phone: '0973797634',
-          createdByAccountId: account.id,
-        },
-      ]
+        }),
+      )
 
       jest
         .spyOn(orgOfficeService['orgService'], 'validateOrgId')
         .mockResolvedValueOnce(true as never)
-
-      jest
-        .spyOn(orgOfficeService['orgOfficeModel'], 'find')
-        .mockResolvedValueOnce(createOrgOfficeInput)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
 
       await expect(
-        orgOfficeService.findOrgOfficesByOrgId(createOrgOfficeInput.orgId),
+        orgOfficeService.findOrgOfficesByOrgId(org.id),
       ).resolves.toMatchObject([
         {
           name: 'Kmin Academy 1',
           address: '25A Mai Thi Luu',
           phone: '0973797634',
-          createdByAccountId: account.id,
         },
         {
           name: 'Kmin Academy 2',
-          address: '25A Pham Van Dong',
+          address: '25A Mai Thi Luu',
           phone: '0973797634',
-          createdByAccountId: account.id,
         },
         {
           name: 'Kmin Academy 3',
-          address: '25A Huynh Thuc Khang',
+          address: '25A Mai Thi Luu',
           phone: '0973797634',
-          createdByAccountId: account.id,
         },
       ])
     })
