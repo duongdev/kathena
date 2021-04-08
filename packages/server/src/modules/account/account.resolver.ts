@@ -9,12 +9,11 @@ import {
   Resolver,
 } from '@nestjs/graphql'
 import { differenceInMinutes } from 'date-fns'
-import { FilterQuery } from 'mongoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
 import { AuthService } from 'modules/auth/auth.service'
-import { OrgRoleName, P } from 'modules/auth/models'
+import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
