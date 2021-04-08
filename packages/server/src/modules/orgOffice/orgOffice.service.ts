@@ -71,7 +71,7 @@ export class OrgOfficeService {
     if (handleName === undefined) return []
 
     const listOrgOffice = await this.orgOfficeModel.find({
-      name: new RegExp(handleName),
+      name: new RegExp(handleName.toLowerCase(), 'i'),
     })
 
     return listOrgOffice

@@ -6,6 +6,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
 import { AccountService } from '../account/account.service'
+import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { OrgOfficeService } from './orgOffice.service'
@@ -16,6 +17,7 @@ describe('orgOffice.service', () => {
   let orgOfficeService: OrgOfficeService
   let accountService: AccountService
   let orgService: OrgService
+  let authService: AuthService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -27,6 +29,7 @@ describe('orgOffice.service', () => {
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     accountService = module.get<AccountService>(AccountService)
     orgService = module.get<OrgService>(OrgService)
+    authService = module.get<AuthService>(AuthService)
   })
 
   afterAll(async () => {
@@ -43,62 +46,176 @@ describe('orgOffice.service', () => {
     expect(orgOfficeService).toBeDefined()
   })
 
-  describe('findOrgOffices', () => {
-    it('abc', async () => {
+  // describe('findOrgOffices', () => {
+  //   it('abc', async () => {
+  //     expect.assertions(1)
+
+  //     const org = await orgService.createOrg({
+  //       namespace: 'kmin-edu',
+  //       name: 'Kmin Academy',
+  //     })
+
+  //     const account = await accountService.createAccount({
+  //       orgId: org.id,
+  //       email: 'huynhthanhcanh.top@gmail.com',
+  //       password: '123456',
+  //       username: 'canhhuynh',
+  //       roles: ['owner', 'admin'],
+  //       displayName: 'Thanh Canh',
+  //     })
+
+  //     const listOrgService: ANY[] = []
+
+  //     const createOrgOfficeInput: CreateOrgOfficeInput = {
+  //       name: 'KMIN',
+  //       address: '25A Mai Thi Luu',
+  //       phone: '0987654321',
+  //     }
+
+  //     listOrgService.push(
+  //       await orgOfficeService.createOrgOffice({
+  //         ...createOrgOfficeInput,
+  //         name: 'ABC',
+  //         createdByAccountId: account.id,
+  //         orgId: org.id,
+  //       }),
+  //     )
+
+  //     listOrgService.push(
+  //       await orgOfficeService.createOrgOffice({
+  //         ...createOrgOfficeInput,
+  //         name: 'XYZ',
+  //         createdByAccountId: account.id,
+  //         orgId: org.id,
+  //       }),
+  //     )
+
+  //     listOrgService.push(
+  //       await orgOfficeService.createOrgOffice({
+  //         ...createOrgOfficeInput,
+  //         name: 'ABG',
+  //         createdByAccountId: account.id,
+  //         orgId: org.id,
+  //       }),
+  //     )
+
+  //     await expect(orgOfficeService.findOrgOfficesByName('X')).resolves.toMatchObject({
+
+  //     })
+  //   })
+  // })
+
+  describe('createOrgOffice', () => {
+    const orgOfficeInput = {
+      name: 'KMIN',
+      address: 'ABC/1 XYZ',
+      phone: '0987654321',
+      createdByAccountId: objectId(),
+      orgId: objectId(),
+    }
+
+    it('throws an error if orgId is invalid', async () => {
       expect.assertions(1)
 
-      const org = await orgService.createOrg({
-        namespace: 'kmin-edu',
-        name: 'Kmin Academy',
-      })
+      await expect(
+        orgOfficeService.createOrgOffice(orgOfficeInput),
+      ).rejects.toThrow('INVALID_ORG_ID')
+    })
 
-      const account = await accountService.createAccount({
-        orgId: org.id,
-        email: 'huynhthanhcanh.top@gmail.com',
-        password: '123456',
-        username: 'canhhuynh',
-        roles: ['owner', 'admin'],
-        displayName: 'Thanh Canh',
-      })
+    it(`throws an error if account hasn't permission`, async () => {
+      expect.assertions(1)
 
-      const listOrgService: ANY[] = []
-
-      const createOrgOfficeInput: CreateOrgOfficeInput = {
-        name: 'KMIN',
-        address: '25A Mai Thi Luu',
-        phone: '0987654321',
-      }
-
-      listOrgService.push(
-        await orgOfficeService.createOrgOffice({
-          ...createOrgOfficeInput,
-          name: 'ABC',
-          createdByAccountId: account.id,
-          orgId: org.id,
-        }),
-      )
-
-      listOrgService.push(
-        await orgOfficeService.createOrgOffice({
-          ...createOrgOfficeInput,
-          name: 'XYZ',
-          createdByAccountId: account.id,
-          orgId: org.id,
-        }),
-      )
-
-      listOrgService.push(
-        await orgOfficeService.createOrgOffice({
-          ...createOrgOfficeInput,
-          name: 'ABG',
-          createdByAccountId: account.id,
-          orgId: org.id,
-        }),
-      )
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
 
       await expect(
-        orgOfficeService.findOrgOfficesByName('AB'),
-      ).resolves.toBeNull()
+        orgOfficeService.createOrgOffice(orgOfficeInput),
+      ).rejects.toThrow()
+    })
+
+    it(`throws an error if the name, phone number or address input is left blank`, async () => {
+      expect.assertions(4)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        orgOfficeService.createOrgOffice({
+          name: '',
+          address: '25A Mai Thi Luu',
+          phone: '0987654321',
+          createdByAccountId: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow()
+
+      await expect(
+        orgOfficeService.createOrgOffice({
+          name: 'Kmin',
+          address: '',
+          phone: '0987654321',
+          createdByAccountId: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow()
+
+      await expect(
+        orgOfficeService.createOrgOffice({
+          name: 'Kmin',
+          address: '25A Mai Thi Luu',
+          phone: '',
+          createdByAccountId: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow()
+
+      await expect(
+        orgOfficeService.createOrgOffice({
+          name: '',
+          address: '',
+          phone: '',
+          createdByAccountId: objectId(),
+          orgId: objectId(),
+        }),
+      ).rejects.toThrow()
+    })
+
+    it(`returns an orgOffice if the input is valid`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        orgOfficeService.createOrgOffice({
+          name: 'Kmin',
+          address: '25A Mai Thi Luu',
+          phone: '0987654321',
+          createdByAccountId: objectId(),
+          orgId: objectId(),
+        }),
+      ).resolves.toMatchObject({
+        name: 'Kmin',
+        address: '25A Mai Thi Luu',
+        phone: '0987654321',
+      })
     })
   })
 })
