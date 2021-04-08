@@ -47,7 +47,7 @@ describe('auth.service', () => {
         'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
         'Academic_UpdateAcademicSubject',
-        'OrgOffice_UpdateOrgOffices',
+        'OrgOffice_UpdateOrgOffice',
       ]
 
       jest
