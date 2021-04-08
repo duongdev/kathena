@@ -11,7 +11,7 @@ import {
   stringWithoutSpecialCharacters,
 } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
-import { Permission } from 'modules/auth/models'
+import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 import { Nullable } from 'types'
 
@@ -310,5 +310,18 @@ export class AccountService {
     }
 
     return this.updateAccount(query, update)
+  }
+
+  async findAccountByNameAndRole(
+    keyName: string,
+    role: OrgRoleName,
+  ): Promise<DocumentType<Account>[]> {
+    const key = removeExtraSpaces(keyName)
+    if (key === undefined) return []
+    if (key === '') return []
+    return this.accountModel.find({
+      roles: role,
+      displayName: new RegExp(key.toLowerCase(), 'i'),
+    })
   }
 }

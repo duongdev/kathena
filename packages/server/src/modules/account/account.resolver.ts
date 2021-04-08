@@ -13,7 +13,7 @@ import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
 import { AuthService } from 'modules/auth/auth.service'
-import { P } from 'modules/auth/models'
+import { OrgRoleName, P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
@@ -105,5 +105,14 @@ export class AccountResolver {
     }
 
     return AccountAvailability.Offline
+  }
+
+  @Query((_return) => [Account])
+  @UseAuthGuard()
+  async accountByNameAndRole(
+    @Args('keyName', { type: () => ID }) keyName: string,
+    @Args('role') role: OrgRoleName,
+  ): Promise<Account[]> {
+    return this.accountService.findAccountByNameAndRole(keyName, role)
   }
 }
