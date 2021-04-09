@@ -94,6 +94,22 @@ export type SignInPayload = {
   permissions: Array<Permission>
 }
 
+export type File = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  size: Scalars['Int']
+  mimeType: Scalars['String']
+  storageProvider: FileLocation
+  storageProviderIdentifier: Scalars['String']
+}
+
+export enum FileLocation {
+  LocalStorage = 'LocalStorage',
+}
+
 export type AcademicSubject = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -137,6 +153,7 @@ export type Query = {
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
+  file?: Maybe<File>
   orgOffices: Array<OrgOffice>
 }
 
@@ -155,6 +172,10 @@ export type QueryAcademicSubjectsArgs = {
 }
 
 export type QueryAcademicSubjectArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryFileArgs = {
   id: Scalars['ID']
 }
 
@@ -193,6 +214,7 @@ export type MutationCreateAcademicSubjectArgs = {
 }
 
 export type MutationUpdateAcademicSubjectPublicationArgs = {
+  publication: Scalars['String']
   id: Scalars['ID']
 }
 
@@ -347,6 +369,7 @@ export type UpdateAcademicSubjectMutation = {
 
 export type UpdateAcademicSubjectPublicationMutationVariables = Exact<{
   Id: Scalars['ID']
+  publication: Scalars['String']
 }>
 
 export type UpdateAcademicSubjectPublicationMutation = {
@@ -1879,6 +1902,20 @@ export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publication' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -1893,6 +1930,14 @@ export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'Id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publication' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publication' },
                 },
               },
             ],
@@ -1961,6 +2006,7 @@ export function withUpdateAcademicSubjectPublication<
  * const [updateAcademicSubjectPublicationMutation, { data, loading, error }] = useUpdateAcademicSubjectPublicationMutation({
  *   variables: {
  *      Id: // value for 'Id'
+ *      publication: // value for 'publication'
  *   },
  * });
  */

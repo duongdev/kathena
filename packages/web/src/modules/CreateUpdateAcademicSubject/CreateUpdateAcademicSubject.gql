@@ -22,8 +22,8 @@ mutation UpdateAcademicSubject($Id: ID!,$updateInput: UpdateAcademicSubjectInput
     name
   }
 }
-mutation UpdateAcademicSubjectPublication($Id: ID!){
-  updateAcademicSubjectPublication(id: $Id){
+mutation UpdateAcademicSubjectPublication($Id: ID!,$publication: String!){
+  updateAcademicSubjectPublication(id: $Id,publication: $publication){
     id
     code
     publication

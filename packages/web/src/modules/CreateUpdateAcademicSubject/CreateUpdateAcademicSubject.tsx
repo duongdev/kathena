@@ -99,6 +99,10 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         query: AcademicSubjectListDocument,
         variables: { orgId: org.id, skip: 0, limit: 10 },
       },
+      {
+        query: FindAcademicSubjectByIdDocument,
+        variables: { Id: id },
+      },
     ],
   })
   const [
@@ -150,6 +154,10 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
           await updateAcademicSubjectPublication({
             variables: {
               Id: input,
+              publication:
+                data?.academicSubject.publication === Publication.Draft
+                  ? Publication.Published
+                  : Publication.Draft,
             },
           })
         ).data
@@ -176,7 +184,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         console.error(error)
       }
     },
-    [updateAcademicSubjectPublication, enqueueSnackbar, id],
+    [updateAcademicSubjectPublication, enqueueSnackbar, data, id],
   )
 
   const handleCreateAcademicSubject = useCallback(
