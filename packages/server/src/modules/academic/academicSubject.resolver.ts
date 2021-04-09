@@ -3,7 +3,7 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
-import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
@@ -78,12 +78,12 @@ export class AcademicSubjectResolver {
   @UsePipes(ValidationPipe)
   async updateAcademicSubjectPublication(
     @Args('id', { type: () => ID }) academicSubjectId: string,
-    @CurrentOrg() currentOrg: Org,
+    @Args('publication', { type: () => String }) publication: Publication,
   ): Promise<AcademicSubject> {
-    return this.academicService.updateAcademicSubjectPublicationById({
-      id: academicSubjectId,
-      orgId: currentOrg.id,
-    })
+    return this.academicService.updateAcademicSubjectPublication(
+      academicSubjectId,
+      publication,
+    )
   }
 
   @Query((_return) => AcademicSubject)
