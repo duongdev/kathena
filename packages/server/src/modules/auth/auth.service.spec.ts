@@ -47,7 +47,7 @@ describe('auth.service', () => {
         'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
         'Academic_UpdateAcademicSubject',
-        'OrgOffice_UpdateOrgOffice',
+        'OrgOffice_UpdateOrgOffices',
       ]
 
       jest
@@ -113,7 +113,7 @@ describe('auth.service', () => {
       await expect(
         authService.accountHasPermission({
           accountId: objectId().toString(),
-          permission: 'OrgOffice_UpdateOrgOffice',
+          permission: 'OrgOffice_UpdateOrgOffices',
         }),
       ).resolves.toBe(true)
     })
@@ -178,7 +178,7 @@ describe('auth.service', () => {
                 "Academic_UpdateAcademicSubject",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
-                "OrgOffice_UpdateOrgOffice",
+                "OrgOffice_UpdateOrgOffices",
               ]
             `)
     })
