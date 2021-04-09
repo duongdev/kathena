@@ -66,6 +66,7 @@ enum Permission {
   Academic_UpdateAcademicSubject
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
+  OrgOffice_UpdateOrgOffice
   NoPermission
 }
 
@@ -115,16 +116,17 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  orgAccounts(filter: FilterAccountInput, pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   orgOffices: [OrgOffice!]!
 }
 
-input FilterAccountInput {
-  role: String!
-  keyName: String!
+input AccountsFilterInput {
+  orgId: ID!
+  roles: [String!]
+  searchText: String
 }
 
 input PageOptionsInput {

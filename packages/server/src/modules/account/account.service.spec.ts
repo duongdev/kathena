@@ -550,11 +550,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 2,
             skip: 2,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -576,11 +576,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 3,
             skip: 2,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -607,11 +607,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 1,
             skip: 0,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -628,12 +628,12 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId2,
-          },
-          {
             limit: 2,
             skip: 0,
           },
+          {
+            orgId: orgId2,
+          },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -653,13 +653,13 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
           {
             limit: 0,
             skip: 0,
           },
+          {
+            orgId: orgId2,
+          },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -680,11 +680,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId2,
-          },
-          {
             limit: 0,
             skip: 1,
+          },
+          {
+            orgId: orgId2,
           },
         ),
       ).resolves.toMatchObject({
@@ -767,9 +767,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          { orgId },
           { limit: 10, skip: 0 },
-          { keyName: 'ả', role: 'lecturer' },
+          { orgId, searchText: 'ả', roles: ['lecturer'] },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -789,9 +788,8 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          { orgId },
           { limit: 10, skip: 0 },
-          { keyName: 'Nhật', role: 'staff' },
+          { orgId, searchText: 'Nhật', roles: ['staff'] },
         ),
       ).resolves.toMatchObject({
         accounts: [

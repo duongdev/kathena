@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
 
 import { OrgRoleName } from 'modules/auth/models'
@@ -68,10 +68,13 @@ export class OrgAccountsPayload {
 }
 
 @InputType()
-export class FilterAccountInput {
-  @Field()
-  role: OrgRoleName
+export class AccountsFilterInput {
+  @Field((_type) => ID)
+  orgId: string
 
-  @Field()
-  keyName: string
+  @Field((_type) => [String], { nullable: true })
+  roles: OrgRoleName[]
+
+  @Field({ nullable: true })
+  searchText: string
 }

@@ -20,7 +20,7 @@ import { Nullable, PageOptionsInput } from 'types'
 import { AccountService } from './account.service'
 import {
   CreateAccountInput,
-  FilterAccountInput,
+  AccountsFilterInput,
   OrgAccountsPayload,
   UpdateAccountInput,
 } from './account.type'
@@ -61,21 +61,14 @@ export class AccountResolver {
   @Query((_return) => OrgAccountsPayload)
   @UseAuthGuard(P.Hr_ListOrgAccounts)
   async orgAccounts(
-    @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
-    @Args('filter', { nullable: true }) filter?: FilterAccountInput,
+    @Args('filter') filter: AccountsFilterInput,
   ): Promise<OrgAccountsPayload> {
-    if (org.id !== orgId) {
+    if (org.id !== filter.orgId) {
       throw new ForbiddenError()
     }
-    if (filter)
-      return this.accountService.findAndPaginateAccounts(
-        { orgId },
-        pageOptions,
-        filter,
-      )
-    return this.accountService.findAndPaginateAccounts({ orgId }, pageOptions)
+    return this.accountService.findAndPaginateAccounts(pageOptions, filter)
   }
 
   @Mutation((_returns) => Account)
