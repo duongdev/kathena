@@ -86,6 +86,7 @@ export class OrgOfficeService {
     }
 
     const query = {
+      /* eslint-disable no-underscore-dangle */
       _id: inputUpdate.id,
       orgId: inputUpdate.orgId,
     }
