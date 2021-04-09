@@ -79,7 +79,7 @@ export class OrgOfficeService {
     if (
       !(await this.authService.accountHasPermission({
         accountId: inputUpdate.updatedByAccountId,
-        permission: P.OrgOffice_UpdateOrgOffices,
+        permission: P.OrgOffice_UpdateOrgOffice,
       }))
     ) {
       throw new ForbiddenError()
