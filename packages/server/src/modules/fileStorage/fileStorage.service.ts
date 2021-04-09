@@ -17,7 +17,7 @@ import * as fileType from 'file-type'
 import * as shortid from 'shortid'
 
 import { config, InjectModel, Logger, Service } from 'core'
-import { ANY } from 'types'
+import { ANY, Nullable } from 'types'
 
 import { File, FileStorageProvider } from './models/File'
 
@@ -164,5 +164,9 @@ export class FileStorageService {
       storageProvider: FileStorageProvider.LocalStorage,
       storageProviderIdentifier: filePath,
     })
+  }
+
+  async findFileById(fileId: string): Promise<Nullable<DocumentType<File>>> {
+    return this.fileModel.findById(fileId)
   }
 }
