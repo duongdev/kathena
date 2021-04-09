@@ -378,4 +378,52 @@ describe('orgOffice.service', () => {
       ])
     })
   })
+
+  describe('findOrgOfficeById', () => {
+    it(`returns null if Id doesn't exist`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        orgOfficeService.findOrgOfficeById(objectId()),
+      ).resolves.toBeNull()
+    })
+
+    it(`returns an OrgOffice if Id does exists`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      jest
+        .spyOn(orgService['orgModel'], 'exists')
+        .mockResolvedValueOnce(true as never)
+
+      const account = await accountService.createAccount({
+        orgId: org.id,
+        email: 'nguyenvanhai0911@gmail.com',
+        password: '123456',
+        username: 'nguyenvanhai',
+        roles: ['owner', 'admin'],
+        displayName: 'Hai Nguyen',
+      })
+
+      const createOrgOfficeInput = await orgOfficeService.createOrgOffice({
+        name: 'Kmin Academy 1',
+        address: '25A Mai Thi Luu',
+        phone: '0973797634',
+        orgId: org.id,
+        createdByAccountId: account.id,
+      })
+
+      await expect(
+        orgOfficeService.findOrgOfficeById(createOrgOfficeInput.id),
+      ).resolves.toMatchObject({
+        name: 'Kmin Academy 1',
+        address: '25A Mai Thi Luu',
+        phone: '0973797634',
+      })
+    })
+  })
 })
