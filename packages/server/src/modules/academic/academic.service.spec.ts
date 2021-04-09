@@ -460,14 +460,14 @@ describe('academic.service', () => {
     it(`throws error if couldn't find academic subject to publication`, async () => {
       expect.assertions(1)
       await expect(
-        academicService.updateAcademicSubjectPublicationById({
-          id: objectId(),
-          orgId: objectId(),
-        }),
+        academicService.updateAcademicSubjectPublication(
+          objectId(),
+          Publication.Draft,
+        ),
       ).rejects.toThrow(`Couldn't find academic subject to update publication`)
     })
 
-    it(`returns an academic subject with publication is "Published" when input has publication is "Draft"`, async () => {
+    it(`returns an academic subject with new publication`, async () => {
       expect.assertions(1)
 
       jest
@@ -495,10 +495,10 @@ describe('academic.service', () => {
       )
 
       await expect(
-        academicService.updateAcademicSubjectPublicationById({
-          id: academicSubject.id,
-          orgId: academicSubject.orgId,
-        }),
+        academicService.updateAcademicSubjectPublication(
+          academicSubject.id,
+          Publication.Published,
+        ),
       ).resolves.toMatchObject({
         code: 'FEBC01',
         name: 'Frontend cơ bản',
