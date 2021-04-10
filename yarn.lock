@@ -3628,10 +3628,10 @@
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^7.28.1"
 
-"@testing-library/user-event@13.0.16":
-  version "13.0.16"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.0.16.tgz#c027a9656f1984cf05f9c94c8f7168c06e85792c"
-  integrity sha512-plXL8lGR2H0xm0fHE0Dfz37ke2UtBI1wAmaWIo6BP7+pGt+BxdBQrITHAMGcac0a3PtBi5CXNPth8S53ISO1Ew==
+"@testing-library/user-event@13.1.2":
+  version "13.1.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.1.2.tgz#2dff143155da093f0dc2485cf4717780d12a6235"
+  integrity sha512-89S/QELVCXbcHmgAfPrk0U8kCu9qESqV8/QQaUe5B4+7qi3kJlfQYCiB7Pfi2XInBtO0qm7vDmJb+/Oa+TFdyQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
@@ -8030,10 +8030,10 @@ date-fns@*:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.19.0.tgz#65193348635a28d5d916c43ec7ce6fbd145059e1"
   integrity sha512-X3bf2iTPgCAQp9wvjOQytnf5vO5rESYRXlPIVcgSbtT5OTScPcsf9eZU+B/YIkKAtYr5WeCii58BgATrNitlWg==
 
-date-fns@2.20.0:
-  version "2.20.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.20.0.tgz#df00ba9177fbea22d88010b5844ecc91e9e03ceb"
-  integrity sha512-nmA7y6aDH5+fknfJ0G77HQzUSfTPpq4ifq+c9blP9d+X9zs3kNjxC+t3pcbBMGTp262a6PJB3RVjLlxIgoMI+Q==
+date-fns@2.20.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.20.1.tgz#7e60b7035284a5f83e37500376e738d9f49ecfd3"
+  integrity sha512-8P5M8Kxbnovd0zfvOs7ipkiVJ3/zZQ0F/nrBW4x5E+I0uAZVZ80h6CKd24fSXQ5TLK5hXMtI4yb2O5rEZdUt2A==
 
 date-fns@^1.27.2:
   version "1.30.1"
