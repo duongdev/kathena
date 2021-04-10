@@ -18,6 +18,9 @@ export * from './DashboardContainer'
 export { default as DataTable } from './DataTable'
 export * from './DataTable'
 
+export { default as Dialog } from './Dialog'
+export * from './Dialog'
+
 export { default as FormDialog } from './FormDialog'
 export * from './FormDialog'
 

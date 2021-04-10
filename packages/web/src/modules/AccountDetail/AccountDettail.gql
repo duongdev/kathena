@@ -1,0 +1,10 @@
+query AccountDetail($id: ID!) {
+  account(id: $id) {
+    id
+    email
+    username
+    displayName
+    status
+    roles
+  }
+}
