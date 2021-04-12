@@ -67,6 +67,7 @@ enum Permission {
   Academic_UpdateAcademicSubject
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
+  OrgOffice_UpdateOrgOffice
   NoPermission
 }
 

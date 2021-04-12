@@ -23,7 +23,7 @@ import {
   OrgAccountsPayload,
   UpdateAccountInput,
 } from './account.type'
-import { Account, AccountAvailability } from './models/Account'
+import { Account, AccountAvailability, AccountStatus } from './models/Account'
 
 @Resolver((_of) => Account)
 export class AccountResolver {
@@ -94,7 +94,7 @@ export class AccountResolver {
   @UsePipes(ValidationPipe)
   async updateAccountStatus(
     @Args('id', { type: () => ID }) accountId: string,
-    @Args('status', { type: () => String }) status: string,
+    @Args('status', { type: () => String }) status: AccountStatus,
     @CurrentAccount() currentAccount: Account,
     @CurrentOrg() currentOrg: Org,
   ): Promise<Account> {

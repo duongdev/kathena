@@ -1429,7 +1429,7 @@ describe('account.service', () => {
             id: updaterId,
             orgId: objectId(),
           },
-          'Activate',
+          AccountStatus.Active,
         ),
       ).rejects.toThrowError(
         `Can't change activate/deactivate status by yourself`,
@@ -1448,7 +1448,7 @@ describe('account.service', () => {
             id: objectId(),
             orgId: objectId(),
           },
-          'Activate',
+          AccountStatus.Active,
         ),
       ).rejects.toThrowError(
         `Access denied! You don't have permission for this action!`,
@@ -1471,7 +1471,7 @@ describe('account.service', () => {
             id: objectId(),
             orgId: objectId(),
           },
-          'Activate',
+          AccountStatus.Active,
         ),
       ).rejects.toThrowError(`Couldn't find account to update`)
     })
@@ -1506,7 +1506,7 @@ describe('account.service', () => {
             id: objectId(),
             orgId: objectId(),
           },
-          'Activate',
+          AccountStatus.Active,
         ),
       ).rejects.toThrowError(
         `Access denied! You don't have permission for this action!`,
@@ -1557,7 +1557,7 @@ describe('account.service', () => {
             id: targetAccount.id,
             orgId: org.id,
           },
-          'Activate',
+          AccountStatus.Active,
         ),
       ).rejects.toThrowError(
         `Access denied! You don't have permission for this action!`,
@@ -1601,6 +1601,8 @@ describe('account.service', () => {
         .spyOn(accountService['accountModel'], 'findOne')
         .mockResolvedValueOnce(targetAccount)
 
+      const permission: ANY = 'taolao'
+
       await expect(
         accountService.updateOrgMemberAccountStatus(
           accountUpdater.id,
@@ -1608,9 +1610,11 @@ describe('account.service', () => {
             id: targetAccount.id,
             orgId: org.id,
           },
-          'Pending',
+          permission,
         ),
-      ).rejects.toThrowError(`The permission is invalid`)
+      ).rejects.toThrowError(
+        'Account validation failed: status: `taolao` is not a valid enum value for path `status`.',
+      )
     })
 
     it(`returns an account if the input is valid and the target account is the lecturer or student`, async () => {
@@ -1657,7 +1661,7 @@ describe('account.service', () => {
             id: targetAccount.id,
             orgId: org.id,
           },
-          'Deactivated',
+          AccountStatus.Deactivated,
         ),
       ).resolves.toMatchObject({
         displayName: 'Thanh Canh',
