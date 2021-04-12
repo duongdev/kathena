@@ -7,6 +7,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { Role } from 'modules/auth/models'
 import { ANY } from 'types'
 
+import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AccountService } from './account.service'
@@ -17,6 +18,7 @@ describe('account.service', () => {
   let module: TestingModule
   let accountService: AccountService
   let orgService: OrgService
+  let authService: AuthService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -27,6 +29,7 @@ describe('account.service', () => {
 
     accountService = module.get<AccountService>(AccountService)
     orgService = module.get<OrgService>(OrgService)
+    authService = module.get<AuthService>(AuthService)
   })
 
   afterAll(async () => {
@@ -1410,6 +1413,260 @@ describe('account.service', () => {
       )
 
       await expect(compareSync('123456', accountUpdated.password)).toBeTruthy()
+    })
+  })
+
+  describe('updateOrgMemberAccountStatus', () => {
+    it(`throws an error if the update object is itself`, async () => {
+      expect.assertions(1)
+
+      const updaterId = objectId()
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          updaterId,
+          {
+            id: updaterId,
+            orgId: objectId(),
+          },
+          AccountStatus.Active,
+        ),
+      ).rejects.toThrowError(
+        `Can't change activate/deactivate status by yourself`,
+      )
+    })
+
+    it(`throws an error if account hasn't permission`, async () => {
+      expect.assertions(1)
+
+      const updaterId = objectId()
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          updaterId,
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          AccountStatus.Active,
+        ),
+      ).rejects.toThrowError(
+        `Access denied! You don't have permission for this action!`,
+      )
+    })
+
+    it(`throws an error if the account isn't found`, async () => {
+      expect.assertions(1)
+
+      const updaterId = objectId()
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          updaterId,
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          AccountStatus.Active,
+        ),
+      ).rejects.toThrowError(`Couldn't find account to update`)
+    })
+
+    it('throws error if target account is not a manager account', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const account: ANY = {
+        username: 'thanhcanh',
+        email: 'thanhcanh@gmail.com',
+        password: '12345',
+        orgId: objectId(),
+        roles: ['admin'],
+        displayName: 'Thanh Canh',
+      }
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(account)
+      jest
+        .spyOn(accountService['authService'], 'canAccountManageRoles')
+        .mockResolvedValueOnce(false as never)
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          objectId(),
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          AccountStatus.Active,
+        ),
+      ).rejects.toThrowError(
+        `Access denied! You don't have permission for this action!`,
+      )
+    })
+
+    it(`throws an error if target account isn't a lecture or student`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account1: CreateAccountServiceInput = {
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['admin'],
+        orgId: org.id,
+        displayName: 'Dustin Do',
+      }
+
+      const account2: ANY = {
+        email: 'thanhcanh@gmail.com',
+        password: '12345',
+        username: 'thanhcanh',
+        roles: ['admin'],
+        orgId: org.id,
+        displayName: 'Thanh Canh',
+      }
+
+      const accountUpdater = await accountService.createAccount(account1)
+      const targetAccount = await accountService.createAccount(account2)
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(targetAccount)
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          accountUpdater.id,
+          {
+            id: targetAccount.id,
+            orgId: org.id,
+          },
+          AccountStatus.Active,
+        ),
+      ).rejects.toThrowError(
+        `Access denied! You don't have permission for this action!`,
+      )
+    })
+
+    it(`throws an error if the permission input is invalid`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account1: CreateAccountServiceInput = {
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['admin'],
+        orgId: org.id,
+        displayName: 'Dustin Do',
+      }
+
+      const account2: ANY = {
+        email: 'thanhcanh@gmail.com',
+        password: '12345',
+        username: 'thanhcanh',
+        roles: ['student'],
+        orgId: org.id,
+        displayName: 'Thanh Canh',
+      }
+
+      const accountUpdater = await accountService.createAccount(account1)
+      const targetAccount = await accountService.createAccount(account2)
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(targetAccount)
+
+      const permission: ANY = 'taolao'
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          accountUpdater.id,
+          {
+            id: targetAccount.id,
+            orgId: org.id,
+          },
+          permission,
+        ),
+      ).rejects.toThrowError(
+        'Account validation failed: status: `taolao` is not a valid enum value for path `status`.',
+      )
+    })
+
+    it(`returns an account if the input is valid and the target account is the lecturer or student`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['authService'], 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const account1: CreateAccountServiceInput = {
+        email: 'dustin.do95@gmail.com',
+        password: '123456',
+        username: 'duongdev',
+        roles: ['admin'],
+        orgId: org.id,
+        displayName: 'Dustin Do',
+      }
+
+      const account2: ANY = {
+        email: 'thanhcanh@gmail.com',
+        password: '12345',
+        username: 'thanhcanh',
+        roles: ['student'],
+        orgId: org.id,
+        displayName: 'Thanh Canh',
+      }
+
+      const accountUpdater = await accountService.createAccount(account1)
+      const targetAccount = await accountService.createAccount(account2)
+
+      jest
+        .spyOn(accountService['accountModel'], 'findOne')
+        .mockResolvedValueOnce(targetAccount)
+
+      await expect(
+        accountService.updateOrgMemberAccountStatus(
+          accountUpdater.id,
+          {
+            id: targetAccount.id,
+            orgId: org.id,
+          },
+          AccountStatus.Deactivated,
+        ),
+      ).resolves.toMatchObject({
+        displayName: 'Thanh Canh',
+        status: 'Deactivated',
+      })
     })
   })
 })
