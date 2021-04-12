@@ -1581,7 +1581,7 @@ describe('account.service', () => {
       ).rejects.toThrowError(`The permission is invalid`)
     })
 
-    it(`returns an account if the input is valid and the target account is the lecture or student`, async () => {
+    it(`returns an account if the input is valid and the target account is the lecturer or student`, async () => {
       expect.assertions(1)
 
       jest
