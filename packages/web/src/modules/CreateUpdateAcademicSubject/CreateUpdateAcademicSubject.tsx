@@ -303,8 +303,8 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     }
                   >
                     {data?.academicSubject.publication === Publication.Draft
-                      ? 'Public'
-                      : 'Unpublic'}
+                      ? 'Publish'
+                      : 'Unpublish'}
                   </Button>,
                   <Button
                     variant="contained"
