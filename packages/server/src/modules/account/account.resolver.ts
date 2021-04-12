@@ -90,7 +90,7 @@ export class AccountResolver {
   }
 
   @Mutation((_returns) => Account)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Hr_UpdateOrgAccountStatus)
   @UsePipes(ValidationPipe)
   async updateAccountStatus(
     @Args('id', { type: () => ID }) accountId: string,
