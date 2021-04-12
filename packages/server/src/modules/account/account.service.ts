@@ -363,13 +363,7 @@ export class AccountService {
       throw new ForbiddenError()
     }
 
-    if (status === AccountStatus.Active) {
-      targetAccount.status = AccountStatus.Active
-    } else if (status === AccountStatus.Deactivated) {
-      targetAccount.status = AccountStatus.Deactivated
-    } else {
-      throw new Error('The permission is invalid')
-    }
+    targetAccount.status = status
 
     const updateAccount = await targetAccount.save()
 
