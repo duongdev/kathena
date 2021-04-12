@@ -315,7 +315,7 @@ export class AccountService {
   async updateOrgMemberAccountStatus(
     updaterId: string,
     query: { id: string; orgId: string },
-    status: string,
+    status: AccountStatus,
   ): Promise<DocumentType<Account>> {
     const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
       {
