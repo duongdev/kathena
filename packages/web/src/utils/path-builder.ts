@@ -17,8 +17,7 @@ export const ACADEMIC_MODULE = `${ORG_WORKSPACE}/academic`
 export const ACADEMIC_SUBJECTS = `${ACADEMIC_MODULE}/subjects`
 export const ACADEMIC_SUBJECT_LIST = `${ACADEMIC_SUBJECTS}`
 export const CREATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/create`
-
-export const UPDATE_ACADEMIC_SUBJECT = `${ORG_WORKSPACE}/academic-subjects/:id/update`
+export const UPDATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/update`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 

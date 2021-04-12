@@ -151,9 +151,41 @@ describe('account.service', () => {
       await expect(testAccount.status).toBe(AccountStatus.Active)
     })
 
-    it.todo(`replaces duplicated spaces in displayName by single spaces`)
+    it(`replaces duplicated spaces in displayName by single spaces`, async () => {
+      expect.assertions(1)
 
-    it.todo(`throws error if displayName contains invalid characters`)
+      const accountInput: CreateAccountServiceInput = {
+        ...createAccountServiceInput,
+        displayName: '    Dang    Hieu   Liem    ',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        accountService.createAccount(accountInput),
+      ).resolves.toMatchObject({
+        displayName: 'Dang Hieu Liem',
+      })
+    })
+
+    it(`throws error if displayName contains invalid characters`, async () => {
+      expect.assertions(1)
+
+      const accountInput: CreateAccountServiceInput = {
+        ...createAccountServiceInput,
+        displayName: '   */-++*++/*   ',
+      }
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        accountService.createAccount(accountInput),
+      ).rejects.toThrowError('displayName contains invalid characters')
+    })
 
     it(`encrypts the password`, async () => {
       expect.assertions(2)
@@ -324,7 +356,7 @@ describe('account.service', () => {
         ...createAccountServiceInput,
         email: 'dustin2.do95@gmail.com',
         username: 'duongdev2',
-        displayName: 'Dustin Do 2',
+        displayName: 'Dustin Do a',
       })
 
       const createdAccountDifferenceOrg = await accountService.createAccount({
@@ -336,7 +368,7 @@ describe('account.service', () => {
         ...createAccountServiceInput,
         email: 'dustin2.do95@gmail.com',
         username: 'duongdev2',
-        displayName: 'Dustin Do 2',
+        displayName: 'Dustin Do a',
         orgId: orgId2,
       })
 
@@ -359,7 +391,7 @@ describe('account.service', () => {
       ).resolves.toMatchObject({
         email: 'dustin2.do95@gmail.com',
         username: 'duongdev2',
-        displayName: 'Dustin Do 2',
+        displayName: 'Dustin Do a',
       })
 
       await expect(
@@ -381,7 +413,7 @@ describe('account.service', () => {
       ).resolves.toMatchObject({
         email: 'dustin2.do95@gmail.com',
         username: 'duongdev2',
-        displayName: 'Dustin Do 2',
+        displayName: 'Dustin Do a',
       })
     })
 
@@ -461,7 +493,7 @@ describe('account.service', () => {
           ...createAccountServiceInput,
           email: 'hieuliem331@gmail.com',
           username: 'hieuliem1',
-          displayName: 'Yami Doki1',
+          displayName: 'Yami Dokia',
         }),
       )
 
@@ -470,7 +502,7 @@ describe('account.service', () => {
           ...createAccountServiceInput,
           email: 'hieuliem332@gmail.com',
           username: 'hieuliem2',
-          displayName: 'Yami Doki2',
+          displayName: 'Yami Dokib',
         }),
       )
 
@@ -479,7 +511,7 @@ describe('account.service', () => {
           ...createAccountServiceInput,
           email: 'hieuliem333@gmail.com',
           username: 'hieuliem3',
-          displayName: 'Yami Doki3',
+          displayName: 'Yami Dokic',
         }),
       )
 
@@ -488,7 +520,7 @@ describe('account.service', () => {
           ...createAccountServiceInput,
           email: 'hieuliem334@gmail.com',
           username: 'hieuliem4',
-          displayName: 'Yami Doki4',
+          displayName: 'Yami Dokid',
         }),
       )
 
@@ -497,7 +529,7 @@ describe('account.service', () => {
           ...createAccountServiceInput,
           email: 'hieuliem335@gmail.com',
           username: 'hieuliem5',
-          displayName: 'Yami Doki5',
+          displayName: 'Yami Dokie',
         }),
       )
 
@@ -514,7 +546,7 @@ describe('account.service', () => {
           orgId: orgId2,
           email: 'hieuliem331@gmail.com',
           username: 'hieuliem1',
-          displayName: 'Yami Doki1',
+          displayName: 'Yami Dokia',
         }),
       )
 
@@ -533,12 +565,12 @@ describe('account.service', () => {
           {
             email: 'hieuliem333@gmail.com',
             username: 'hieuliem3',
-            displayName: 'Yami Doki3',
+            displayName: 'Yami Dokic',
           },
           {
             email: 'hieuliem332@gmail.com',
             username: 'hieuliem2',
-            displayName: 'Yami Doki2',
+            displayName: 'Yami Dokib',
           },
         ],
         count: listCreatedAccountOrgId1.length,
@@ -559,17 +591,17 @@ describe('account.service', () => {
           {
             email: 'hieuliem333@gmail.com',
             username: 'hieuliem3',
-            displayName: 'Yami Doki3',
+            displayName: 'Yami Dokic',
           },
           {
             email: 'hieuliem332@gmail.com',
             username: 'hieuliem2',
-            displayName: 'Yami Doki2',
+            displayName: 'Yami Dokib',
           },
           {
             email: 'hieuliem331@gmail.com',
             username: 'hieuliem1',
-            displayName: 'Yami Doki1',
+            displayName: 'Yami Dokia',
           },
         ],
         count: listCreatedAccountOrgId1.length,
@@ -590,7 +622,7 @@ describe('account.service', () => {
           {
             email: 'hieuliem335@gmail.com',
             username: 'hieuliem5',
-            displayName: 'Yami Doki5',
+            displayName: 'Yami Dokie',
           },
         ],
         count: listCreatedAccountOrgId1.length,
@@ -611,7 +643,7 @@ describe('account.service', () => {
           {
             email: 'hieuliem331@gmail.com',
             username: 'hieuliem1',
-            displayName: 'Yami Doki1',
+            displayName: 'Yami Dokia',
           },
           {
             email: 'hieuliem33@gmail.com',
@@ -637,7 +669,7 @@ describe('account.service', () => {
           {
             email: 'hieuliem331@gmail.com',
             username: 'hieuliem1',
-            displayName: 'Yami Doki1',
+            displayName: 'Yami Dokia',
           },
           {
             email: 'hieuliem33@gmail.com',
