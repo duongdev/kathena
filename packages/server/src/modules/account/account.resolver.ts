@@ -89,6 +89,25 @@ export class AccountResolver {
     )
   }
 
+  @Mutation((_returns) => Account)
+  @UseAuthGuard()
+  @UsePipes(ValidationPipe)
+  async updateAccountStatus(
+    @Args('id', { type: () => ID }) accountId: string,
+    @Args('status', { type: () => String }) status: string,
+    @CurrentAccount() currentAccount: Account,
+    @CurrentOrg() currentOrg: Org,
+  ): Promise<Account> {
+    return this.accountService.updateOrgMemberAccountStatus(
+      currentAccount.id,
+      {
+        id: accountId,
+        orgId: currentOrg.id,
+      },
+      status,
+    )
+  }
+
   @ResolveField((_returns) => AccountAvailability)
   availability(@Parent() account: Account): AccountAvailability {
     if (!account.lastActivityAt) {
