@@ -22,6 +22,8 @@ import {
   useFindAcademicSubjectByIdQuery,
   Publication,
   useUpdateAcademicSubjectMutation,
+  useUpdateAcademicSubjectPublicationMutation,
+  FindAcademicSubjectByIdDocument,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -80,6 +82,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const params: { id: string } = useParams()
+  const id = useMemo(() => params.id, [params])
   const { $org: org } = useAuth()
   const [createAcademicSubject] = useCreateAcademicSubjectMutation({
     refetchQueries: [
@@ -96,9 +99,26 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         query: AcademicSubjectListDocument,
         variables: { orgId: org.id, skip: 0, limit: 10 },
       },
+      {
+        query: FindAcademicSubjectByIdDocument,
+        variables: { Id: id },
+      },
     ],
   })
-  const id = useMemo(() => params.id, [params])
+  const [
+    updateAcademicSubjectPublication,
+  ] = useUpdateAcademicSubjectPublicationMutation({
+    refetchQueries: [
+      {
+        query: AcademicSubjectListDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+      {
+        query: FindAcademicSubjectByIdDocument,
+        variables: { Id: id },
+      },
+    ],
+  })
   const { data, loading } = useFindAcademicSubjectByIdQuery({
     variables: {
       Id: id,
@@ -125,6 +145,47 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
       code: data?.academicSubject?.code,
     }
   }, [createMode, data?.academicSubject])
+
+  const handleUpdateAcademicSubjectPublication = useCallback(
+    async (input: string) => {
+      try {
+        if (!id) return
+        const dataUpdated = (
+          await updateAcademicSubjectPublication({
+            variables: {
+              Id: input,
+              publication:
+                data?.academicSubject.publication === Publication.Draft
+                  ? Publication.Published
+                  : Publication.Draft,
+            },
+          })
+        ).data
+
+        const academicSubject = dataUpdated?.updateAcademicSubjectPublication
+
+        if (!academicSubject) {
+          return
+        }
+        enqueueSnackbar(
+          `${
+            academicSubject.publication === Publication.Draft
+              ? 'Unpublish'
+              : 'Publish'
+          } môn học thành công`,
+          { variant: 'success' },
+        )
+        // eslint-disable-next-line no-console
+        console.log(academicSubject)
+      } catch (error) {
+        const errorMessage = renderApolloError(error)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [updateAcademicSubjectPublication, enqueueSnackbar, data, id],
+  )
 
   const handleCreateAcademicSubject = useCallback(
     async (input: AcademicSubjectFormInput) => {
@@ -176,7 +237,6 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
           return
         }
         enqueueSnackbar('Sửa môn học thành công', { variant: 'success' })
-        history.push(ACADEMIC_SUBJECT_LIST)
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
@@ -186,7 +246,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
         console.error(error)
       }
     },
-    [updateAcademicSubject, enqueueSnackbar, history, id],
+    [updateAcademicSubject, enqueueSnackbar, id],
   )
   const handleSubmitForm = useCallback(
     async (values: AcademicSubjectFormInput) => {
@@ -232,6 +292,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     variant="contained"
                     color="primary"
                     size="large"
+                    onClick={() => handleUpdateAcademicSubjectPublication(id)}
                     startIcon={
                       data?.academicSubject.publication ===
                       Publication.Draft ? (
@@ -242,8 +303,8 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     }
                   >
                     {data?.academicSubject.publication === Publication.Draft
-                      ? 'Public'
-                      : 'Unpublic'}
+                      ? 'Publish'
+                      : 'Unpublish'}
                   </Button>,
                   <Button
                     variant="contained"
