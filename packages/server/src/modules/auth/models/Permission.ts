@@ -8,6 +8,7 @@ export enum Permission {
   Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
+  Hr_UpdateOrgAccountStatus = 'Hr_UpdateOrgAccountStatus',
 
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
@@ -16,6 +17,7 @@ export enum Permission {
 
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
 
   /** For testing purpose */
   NoPermission = 'NoPermission',

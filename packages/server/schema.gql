@@ -60,12 +60,14 @@ enum Permission {
   Hr_CreateOrgAccount
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
+  Hr_UpdateOrgAccountStatus
   Academic_CreateAcademicSubject
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   Academic_UpdateAcademicSubject
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
+  OrgOffice_UpdateOrgOffice
   NoPermission
 }
 
@@ -147,6 +149,7 @@ input PageOptionsInput {
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
+  updateAccountStatus(status: String!, id: ID!): Account!
   signIn(
     password: String!
 
