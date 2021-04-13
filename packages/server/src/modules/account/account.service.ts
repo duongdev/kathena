@@ -329,16 +329,4 @@ export class AccountService {
 
     return this.updateAccount(query, update)
   }
-
-  async findAccountByNameAndRole(
-    keyName: string,
-    role: OrgRoleName,
-  ): Promise<DocumentType<Account>[]> {
-    const key = removeExtraSpaces(keyName)
-    if (key === undefined) return []
-    return this.accountModel.find({
-      roles: role,
-      displayName: new RegExp(key),
-    })
-  }
 }
