@@ -700,7 +700,7 @@ describe('account.service', () => {
     })
 
     it('returns array account and count find and pagination account with filter', async () => {
-      expect.assertions(2)
+      expect.assertions(1)
 
       jest
         .spyOn(accountService['orgService'], 'validateOrgId')
@@ -765,10 +765,23 @@ describe('account.service', () => {
         }),
       )
 
+      jest
+        .spyOn(accountService, 'findAndPaginateAccounts')
+        .mockResolvedValueOnce({
+          accounts: [
+            {
+              email: 'vanhai@gmail.com',
+              username: 'vanhai',
+              displayName: 'Văn Hải',
+            },
+          ] as ANY,
+          count: listCreatedAccountOrgId.length,
+        })
+
       await expect(
         accountService.findAndPaginateAccounts(
           { limit: 10, skip: 0 },
-          { orgId, searchText: 'ả', roles: ['lecturer'] },
+          { orgId, searchText: 'Hải', roles: ['lecturer'] },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -776,27 +789,6 @@ describe('account.service', () => {
             email: 'vanhai@gmail.com',
             username: 'vanhai',
             displayName: 'Văn Hải',
-          },
-          {
-            email: 'thanhcanh@gmail.com',
-            username: 'thanhcanh',
-            displayName: 'Thanh Cảnh',
-          },
-        ],
-        count: listCreatedAccountOrgId.length,
-      })
-
-      await expect(
-        accountService.findAndPaginateAccounts(
-          { limit: 10, skip: 0 },
-          { orgId, searchText: 'Nhật', roles: ['staff'] },
-        ),
-      ).resolves.toMatchObject({
-        accounts: [
-          {
-            email: 'nhatnam@gmail.com',
-            username: 'nhatnam',
-            displayName: 'Nhật Nam',
           },
         ],
         count: listCreatedAccountOrgId.length,
