@@ -156,7 +156,7 @@ export class AccountService {
       const search = removeExtraSpaces(filter.searchText)
       if (search !== undefined && search !== '') {
         accountModel.find({
-          displayName: new RegExp(search),
+          $text: { $search: search },
         })
       }
     }
