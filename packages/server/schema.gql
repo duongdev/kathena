@@ -78,6 +78,22 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
+type File implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  size: Int!
+  mimeType: String!
+  storageProvider: FileLocation!
+  storageProviderIdentifier: String!
+}
+
+enum FileLocation {
+  LocalStorage
+}
+
 type AcademicSubject implements BaseModel {
   id: ID!
   orgId: ID!
@@ -121,6 +137,7 @@ type Query {
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  file(id: ID!): File
   orgOffices: [OrgOffice!]!
 }
 

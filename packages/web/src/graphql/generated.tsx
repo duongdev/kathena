@@ -94,6 +94,22 @@ export type SignInPayload = {
   permissions: Array<Permission>
 }
 
+export type File = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  size: Scalars['Int']
+  mimeType: Scalars['String']
+  storageProvider: FileLocation
+  storageProviderIdentifier: Scalars['String']
+}
+
+export enum FileLocation {
+  LocalStorage = 'LocalStorage',
+}
+
 export type AcademicSubject = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -137,6 +153,7 @@ export type Query = {
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
+  file?: Maybe<File>
   orgOffices: Array<OrgOffice>
 }
 
@@ -158,6 +175,10 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type QueryFileArgs = {
+  id: Scalars['ID']
+}
+
 export type PageOptionsInput = {
   skip: Scalars['Int']
   limit: Scalars['Int']
@@ -168,6 +189,7 @@ export type Mutation = {
   updateAccount: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
+  updateAcademicSubjectPublication: AcademicSubject
   updateAcademicSubject: AcademicSubject
   createOrgOffice: OrgOffice
 }
@@ -189,6 +211,11 @@ export type MutationSignInArgs = {
 
 export type MutationCreateAcademicSubjectArgs = {
   input: CreateAcademicSubjectInput
+}
+
+export type MutationUpdateAcademicSubjectPublicationArgs = {
+  publication: Scalars['String']
+  id: Scalars['ID']
 }
 
 export type MutationUpdateAcademicSubjectArgs = {
@@ -338,6 +365,18 @@ export type UpdateAcademicSubjectMutationVariables = Exact<{
 
 export type UpdateAcademicSubjectMutation = {
   updateAcademicSubject: Pick<AcademicSubject, 'id' | 'code' | 'name'>
+}
+
+export type UpdateAcademicSubjectPublicationMutationVariables = Exact<{
+  Id: Scalars['ID']
+  publication: Scalars['String']
+}>
+
+export type UpdateAcademicSubjectPublicationMutation = {
+  updateAcademicSubjectPublication: Pick<
+    AcademicSubject,
+    'id' | 'code' | 'publication'
+  >
 }
 
 export type CreateAccountMutationVariables = Exact<{
@@ -1846,6 +1885,150 @@ export type UpdateAcademicSubjectMutationResult = Apollo.MutationResult<UpdateAc
 export type UpdateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
+>
+export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateAcademicSubjectPublication' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publication' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateAcademicSubjectPublication' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publication' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publication' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publication' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateAcademicSubjectPublicationMutationFn = Apollo.MutationFunction<
+  UpdateAcademicSubjectPublicationMutation,
+  UpdateAcademicSubjectPublicationMutationVariables
+>
+export type UpdateAcademicSubjectPublicationProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateAcademicSubjectPublication<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables,
+    UpdateAcademicSubjectPublicationProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables,
+    UpdateAcademicSubjectPublicationProps<TChildProps, TDataName>
+  >(UpdateAcademicSubjectPublicationDocument, {
+    alias: 'updateAcademicSubjectPublication',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateAcademicSubjectPublicationMutation__
+ *
+ * To run a mutation, you first call `useUpdateAcademicSubjectPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAcademicSubjectPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAcademicSubjectPublicationMutation, { data, loading, error }] = useUpdateAcademicSubjectPublicationMutation({
+ *   variables: {
+ *      Id: // value for 'Id'
+ *      publication: // value for 'publication'
+ *   },
+ * });
+ */
+export function useUpdateAcademicSubjectPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables
+  >(UpdateAcademicSubjectPublicationDocument, options)
+}
+export type UpdateAcademicSubjectPublicationMutationHookResult = ReturnType<
+  typeof useUpdateAcademicSubjectPublicationMutation
+>
+export type UpdateAcademicSubjectPublicationMutationResult = Apollo.MutationResult<UpdateAcademicSubjectPublicationMutation>
+export type UpdateAcademicSubjectPublicationMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAcademicSubjectPublicationMutation,
+  UpdateAcademicSubjectPublicationMutationVariables
 >
 export const CreateAccountDocument: DocumentNode = {
   kind: 'Document',
