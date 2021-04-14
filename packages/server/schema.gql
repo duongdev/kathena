@@ -150,7 +150,6 @@ input PageOptionsInput {
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
-  updateAccountStatus(status: String!, id: ID!): Account!
   signIn(
     password: String!
 
