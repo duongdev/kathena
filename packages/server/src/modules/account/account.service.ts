@@ -16,7 +16,7 @@ import { OrgService } from 'modules/org/org.service'
 import { Nullable } from 'types'
 
 import { CreateAccountServiceInput } from './account.type'
-import { Account } from './models/Account'
+import { Account, AccountStatus } from './models/Account'
 
 @Service()
 export class AccountService {
@@ -310,5 +310,63 @@ export class AccountService {
     }
 
     return this.updateAccount(query, update)
+  }
+
+  async updateOrgMemberAccountStatus(
+    updaterId: string,
+    query: { id: string; orgId: string },
+    status: AccountStatus,
+  ): Promise<DocumentType<Account>> {
+    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
+      {
+        accountId: updaterId,
+        permission: Permission.Hr_UpdateOrgAccountStatus,
+      },
+    )
+
+    if (updaterId === query.id) {
+      throw new Error(`Can't change activate/deactivate status by yourself`)
+    }
+
+    if (!accountHasPermissionToUpdate) {
+      throw new ForbiddenError()
+    }
+
+    const targetAccount = await this.accountModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
+
+    if (!targetAccount) {
+      throw new Error(`Couldn't find account to update`)
+    }
+
+    const targetAccountRoles = await this.authService.mapOrgRolesFromNames({
+      orgId: targetAccount.orgId,
+      roleNames: targetAccount.roles,
+    })
+
+    const canUpdateMember = await this.authService.canAccountManageRoles(
+      updaterId,
+      targetAccountRoles,
+    )
+
+    if (!canUpdateMember) {
+      throw new ForbiddenError()
+    }
+
+    // Must be either 'lecturer' or 'student'
+    if (
+      !targetAccount.roles.includes('lecturer') &&
+      !targetAccount.roles.includes('student')
+    ) {
+      throw new ForbiddenError()
+    }
+
+    targetAccount.status = status
+
+    const updateAccount = await targetAccount.save()
+
+    return updateAccount
   }
 }

@@ -3,7 +3,7 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
-import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
@@ -70,6 +70,19 @@ export class AcademicSubjectResolver {
     return this.academicService.findAndPaginateAcademicSubjects(
       { orgId },
       pageOptions,
+    )
+  }
+
+  @Mutation((_returns) => AcademicSubject)
+  @UseAuthGuard(P.Academic_SetAcademicSubjectPublication)
+  @UsePipes(ValidationPipe)
+  async updateAcademicSubjectPublication(
+    @Args('id', { type: () => ID }) academicSubjectId: string,
+    @Args('publication', { type: () => String }) publication: Publication,
+  ): Promise<AcademicSubject> {
+    return this.academicService.updateAcademicSubjectPublication(
+      academicSubjectId,
+      publication,
     )
   }
 

@@ -58,6 +58,9 @@ export * from './SidebarMenu'
 export { default as Spinner } from './Spinner'
 export * from './Spinner'
 
+export { default as StatusChip } from './StatusChip'
+export * from './StatusChip'
+
 export { default as TextFormField } from './TextFormField'
 export * from './TextFormField'
 

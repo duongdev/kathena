@@ -1,6 +1,7 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
@@ -451,6 +452,58 @@ describe('academic.service', () => {
         code: 'FEBC01',
         name: 'Frontend cơ bản',
         description: 'Lập trình frontend cơ bản',
+      })
+    })
+  })
+
+  describe('updateAcademicSubjectPublicationById', () => {
+    it(`throws error if couldn't find academic subject to publication`, async () => {
+      expect.assertions(1)
+      await expect(
+        academicService.updateAcademicSubjectPublication(
+          objectId(),
+          Publication.Draft,
+        ),
+      ).rejects.toThrow(`Couldn't find academic subject to update publication`)
+    })
+
+    it(`returns an academic subject with new publication`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(academicService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      const createAcademicSubjectInput: {
+        orgId: string
+        code: string
+        name: string
+        description: string
+        createdByAccountId: string
+        imageFileId: string
+      } = {
+        orgId: objectId(),
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        createdByAccountId: objectId(),
+        imageFileId: objectId(),
+      }
+
+      const academicSubject = await academicService.createAcademicSubject(
+        createAcademicSubjectInput,
+      )
+
+      await expect(
+        academicService.updateAcademicSubjectPublication(
+          academicSubject.id,
+          Publication.Published,
+        ),
+      ).resolves.toMatchObject({
+        code: 'FEBC01',
+        name: 'Frontend cơ bản',
+        description: 'Lập trình frontend cơ bản',
+        publication: Publication.Published,
       })
     })
   })
