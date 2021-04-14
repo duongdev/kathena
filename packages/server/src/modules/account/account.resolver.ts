@@ -23,7 +23,7 @@ import {
   OrgAccountsPayload,
   UpdateAccountInput,
 } from './account.type'
-import { Account, AccountAvailability, AccountStatus } from './models/Account'
+import { Account, AccountAvailability } from './models/Account'
 
 @Resolver((_of) => Account)
 export class AccountResolver {
@@ -57,6 +57,18 @@ export class AccountResolver {
     return this.accountService.findOneAccount({ id, orgId: org.id })
   }
 
+  @Query((_returns) => Account, { nullable: true })
+  @UseAuthGuard()
+  async accountByUserName(
+    @Args('username') username: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<Account>> {
+    return this.accountService.findAccountByUsernameOrEmail({
+      usernameOrEmail: username,
+      orgId: org.id,
+    })
+  }
+
   @Query((_return) => OrgAccountsPayload)
   @UseAuthGuard(P.Hr_ListOrgAccounts)
   async orgAccounts(
@@ -86,25 +98,6 @@ export class AccountResolver {
         orgId: currentOrg.id,
       },
       updateInput,
-    )
-  }
-
-  @Mutation((_returns) => Account)
-  @UseAuthGuard(P.Hr_UpdateOrgAccountStatus)
-  @UsePipes(ValidationPipe)
-  async updateAccountStatus(
-    @Args('id', { type: () => ID }) accountId: string,
-    @Args('status', { type: () => String }) status: AccountStatus,
-    @CurrentAccount() currentAccount: Account,
-    @CurrentOrg() currentOrg: Org,
-  ): Promise<Account> {
-    return this.accountService.updateOrgMemberAccountStatus(
-      currentAccount.id,
-      {
-        id: accountId,
-        orgId: currentOrg.id,
-      },
-      status,
     )
   }
 
