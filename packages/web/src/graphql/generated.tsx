@@ -84,6 +84,7 @@ export enum Permission {
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
   NoPermission = 'NoPermission',
 }
 
@@ -133,6 +134,7 @@ export type OrgOffice = BaseModel & {
 
 export type Query = {
   account?: Maybe<Account>
+  accountByUserName?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
@@ -142,6 +144,10 @@ export type Query = {
 
 export type QueryAccountArgs = {
   id: Scalars['ID']
+}
+
+export type QueryAccountByUserNameArgs = {
+  username: Scalars['String']
 }
 
 export type QueryOrgAccountsArgs = {
@@ -303,15 +309,15 @@ export type AcademicSubjectListQuery = {
   }
 }
 
-export type AccountDetailQueryVariables = Exact<{
-  id: Scalars['ID']
+export type AccountProfileQueryVariables = Exact<{
+  username: Scalars['String']
 }>
 
-export type AccountDetailQuery = {
-  account?: Maybe<
+export type AccountProfileQuery = {
+  accountByUserName?: Maybe<
     Pick<
       Account,
-      'id' | 'email' | 'username' | 'displayName' | 'status' | 'roles'
+      'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
     >
   >
 }
@@ -1308,20 +1314,26 @@ export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
 >
-export const AccountDetailDocument: DocumentNode = {
+export const AccountProfileDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'AccountDetail' },
+      name: { kind: 'Name', value: 'AccountProfile' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'username' },
+          },
           type: {
             kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
           },
         },
       ],
@@ -1330,14 +1342,14 @@ export const AccountDetailDocument: DocumentNode = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'account' },
+            name: { kind: 'Name', value: 'accountByUserName' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
+                name: { kind: 'Name', value: 'username' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
+                  name: { kind: 'Name', value: 'username' },
                 },
               },
             ],
@@ -1348,8 +1360,8 @@ export const AccountDetailDocument: DocumentNode = {
                 { kind: 'Field', name: { kind: 'Name', value: 'email' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'username' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
               ],
             },
           },
@@ -1358,88 +1370,88 @@ export const AccountDetailDocument: DocumentNode = {
     },
   ],
 }
-export type AccountDetailProps<
+export type AccountProfileProps<
   TChildProps = {},
   TDataName extends string = 'data'
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
-    AccountDetailQuery,
-    AccountDetailQueryVariables
+    AccountProfileQuery,
+    AccountProfileQueryVariables
   >
 } &
   TChildProps
-export function withAccountDetail<
+export function withAccountProfile<
   TProps,
   TChildProps = {},
   TDataName extends string = 'data'
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
-    AccountDetailQuery,
-    AccountDetailQueryVariables,
-    AccountDetailProps<TChildProps, TDataName>
+    AccountProfileQuery,
+    AccountProfileQueryVariables,
+    AccountProfileProps<TChildProps, TDataName>
   >,
 ) {
   return ApolloReactHoc.withQuery<
     TProps,
-    AccountDetailQuery,
-    AccountDetailQueryVariables,
-    AccountDetailProps<TChildProps, TDataName>
-  >(AccountDetailDocument, {
-    alias: 'accountDetail',
+    AccountProfileQuery,
+    AccountProfileQueryVariables,
+    AccountProfileProps<TChildProps, TDataName>
+  >(AccountProfileDocument, {
+    alias: 'accountProfile',
     ...operationOptions,
   })
 }
 
 /**
- * __useAccountDetailQuery__
+ * __useAccountProfileQuery__
  *
- * To run a query within a React component, call `useAccountDetailQuery` and pass it any options that fit your needs.
- * When your component renders, `useAccountDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAccountProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAccountDetailQuery({
+ * const { data, loading, error } = useAccountProfileQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      username: // value for 'username'
  *   },
  * });
  */
-export function useAccountDetailQuery(
+export function useAccountProfileQuery(
   baseOptions: Apollo.QueryHookOptions<
-    AccountDetailQuery,
-    AccountDetailQueryVariables
+    AccountProfileQuery,
+    AccountProfileQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<AccountDetailQuery, AccountDetailQueryVariables>(
-    AccountDetailDocument,
+  return Apollo.useQuery<AccountProfileQuery, AccountProfileQueryVariables>(
+    AccountProfileDocument,
     options,
   )
 }
-export function useAccountDetailLazyQuery(
+export function useAccountProfileLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    AccountDetailQuery,
-    AccountDetailQueryVariables
+    AccountProfileQuery,
+    AccountProfileQueryVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<AccountDetailQuery, AccountDetailQueryVariables>(
-    AccountDetailDocument,
+  return Apollo.useLazyQuery<AccountProfileQuery, AccountProfileQueryVariables>(
+    AccountProfileDocument,
     options,
   )
 }
-export type AccountDetailQueryHookResult = ReturnType<
-  typeof useAccountDetailQuery
+export type AccountProfileQueryHookResult = ReturnType<
+  typeof useAccountProfileQuery
 >
-export type AccountDetailLazyQueryHookResult = ReturnType<
-  typeof useAccountDetailLazyQuery
+export type AccountProfileLazyQueryHookResult = ReturnType<
+  typeof useAccountProfileLazyQuery
 >
-export type AccountDetailQueryResult = Apollo.QueryResult<
-  AccountDetailQuery,
-  AccountDetailQueryVariables
+export type AccountProfileQueryResult = Apollo.QueryResult<
+  AccountProfileQuery,
+  AccountProfileQueryVariables
 >
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',

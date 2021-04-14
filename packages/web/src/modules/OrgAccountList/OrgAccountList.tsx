@@ -7,18 +7,18 @@ import AccountAvatar, {
 import AccountDisplayName from 'components/AccountDisplayName'
 import { UserPlus } from 'phosphor-react'
 
-import { ANY } from '@kathena/types'
 import {
   Button,
   DataTable,
+  Link,
   PageContainer,
   Typography,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useOrgAccountListQuery } from 'graphql/generated'
-import { AccountDetailDialog } from 'modules/AccountDetail'
 import { CreateAccountDialog } from 'modules/CreateUpdateAccount'
+import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
 export type OrgAccountListProps = {}
 
@@ -30,8 +30,6 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
     variables: { orgId: org.id, limit: perPage, skip: page * perPage },
   })
   const [createAccountDialogOpen, setCreateAccountDialogOpen] = useState(false)
-  const [accountDetailDialogOpen, setAccountDetailDialogOpen] = useState(false)
-  const [valueAccountDetail, setValueAccountDetail] = useState({} as ANY)
 
   const handleOpenCreateAccountDialog = useCallback(
     () => setCreateAccountDialogOpen(true),
@@ -39,16 +37,6 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   )
   const handleCloseCreateAccountDialog = useCallback(
     () => setCreateAccountDialogOpen(false),
-    [],
-  )
-
-  const handleOpenAccountDetailClick = useCallback((account) => {
-    setValueAccountDetail(account)
-    setAccountDetailDialogOpen(true)
-  }, [])
-
-  const handleCloseAccountDetailDialog = useCallback(
-    () => setAccountDetailDialogOpen(false),
     [],
   )
 
@@ -80,12 +68,6 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
         onSuccess={refetch}
       />
 
-      <AccountDetailDialog
-        open={accountDetailDialogOpen}
-        onClose={handleCloseAccountDetailDialog}
-        account={valueAccountDetail}
-      />
-
       <Paper>
         <DataTable
           data={accounts}
@@ -101,12 +83,15 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
               label: 'Tên người dùng',
               render: (account) => (
                 <>
-                  <AccountDisplayName
-                    className={classes.pointer}
-                    variant="body1"
-                    account={account}
-                    onClick={() => handleOpenAccountDetailClick(account)}
-                  />
+                  <Link
+                    to={buildPath(USER_PROFILE, { username: account.username })}
+                  >
+                    <AccountDisplayName
+                      className={classes.pointer}
+                      variant="body1"
+                      account={account}
+                    />
+                  </Link>
                   <Typography variant="body2" color="textSecondary">
                     @{account.username}
                   </Typography>

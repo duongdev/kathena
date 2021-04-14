@@ -1,0 +1,10 @@
+query AccountProfile($username: String!) {
+  accountByUserName(username: $username) {
+    id
+    email
+    username
+    displayName
+    roles
+    status
+  }
+}
