@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
-import { PageContainer, SectionCard, Typography } from '@kathena/ui'
+import { Button, PageContainer, SectionCard, Typography } from '@kathena/ui'
 import { useAccountProfileQuery } from 'graphql/generated'
 
 export type AccountProfileProps = {}
@@ -31,7 +31,12 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
   }, [data])
   return (
     <div className={classes.root}>
-      <PageContainer withBackButton maxWidth="sm" title="Thông tin tài khoản">
+      <PageContainer
+        withBackButton
+        maxWidth="md"
+        title="Thông tin tài khoản"
+        actions={[<Button variant="contained">Active</Button>]}
+      >
         <Grid container spacing={DASHBOARD_SPACING}>
           <SectionCard
             maxContentHeight={false}
