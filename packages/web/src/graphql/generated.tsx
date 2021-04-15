@@ -78,12 +78,14 @@ export enum Permission {
   Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
   Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
+  Hr_UpdateOrgAccountStatus = 'Hr_UpdateOrgAccountStatus',
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
   NoPermission = 'NoPermission',
 }
 
@@ -149,6 +151,7 @@ export type OrgOffice = BaseModel & {
 
 export type Query = {
   account?: Maybe<Account>
+  accountByUserName?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
@@ -159,6 +162,10 @@ export type Query = {
 
 export type QueryAccountArgs = {
   id: Scalars['ID']
+}
+
+export type QueryAccountByUserNameArgs = {
+  username: Scalars['String']
 }
 
 export type QueryOrgAccountsArgs = {
@@ -192,6 +199,7 @@ export type PageOptionsInput = {
 export type Mutation = {
   createOrgAccount: Account
   updateAccount: Account
+  updateAccountStatus: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
   updateAcademicSubjectPublication: AcademicSubject
@@ -205,6 +213,11 @@ export type MutationCreateOrgAccountArgs = {
 
 export type MutationUpdateAccountArgs = {
   updateInput: UpdateAccountInput
+  id: Scalars['ID']
+}
+
+export type MutationUpdateAccountStatusArgs = {
+  status: Scalars['String']
   id: Scalars['ID']
 }
 
@@ -333,6 +346,25 @@ export type AcademicSubjectListQuery = {
       >
     >
   }
+}
+
+export type AccountProfileQueryVariables = Exact<{
+  username: Scalars['String']
+}>
+
+export type AccountProfileQuery = {
+  accountByUserName?: Maybe<
+    Pick<
+      Account,
+      | 'id'
+      | 'email'
+      | 'username'
+      | 'displayName'
+      | 'roles'
+      | 'status'
+      | 'availability'
+    >
+  >
 }
 
 export type UpdateSelfAccountMutationVariables = Exact<{
@@ -1340,6 +1372,149 @@ export type AcademicSubjectListLazyQueryHookResult = ReturnType<
 export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
+>
+export const AccountProfileDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AccountProfile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'username' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accountByUserName' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'username' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'username' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'availability' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AccountProfileProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AccountProfileQuery,
+    AccountProfileQueryVariables
+  >
+} &
+  TChildProps
+export function withAccountProfile<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AccountProfileQuery,
+    AccountProfileQueryVariables,
+    AccountProfileProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AccountProfileQuery,
+    AccountProfileQueryVariables,
+    AccountProfileProps<TChildProps, TDataName>
+  >(AccountProfileDocument, {
+    alias: 'accountProfile',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAccountProfileQuery__
+ *
+ * To run a query within a React component, call `useAccountProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountProfileQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useAccountProfileQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AccountProfileQuery,
+    AccountProfileQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<AccountProfileQuery, AccountProfileQueryVariables>(
+    AccountProfileDocument,
+    options,
+  )
+}
+export function useAccountProfileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AccountProfileQuery,
+    AccountProfileQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<AccountProfileQuery, AccountProfileQueryVariables>(
+    AccountProfileDocument,
+    options,
+  )
+}
+export type AccountProfileQueryHookResult = ReturnType<
+  typeof useAccountProfileQuery
+>
+export type AccountProfileLazyQueryHookResult = ReturnType<
+  typeof useAccountProfileLazyQuery
+>
+export type AccountProfileQueryResult = Apollo.QueryResult<
+  AccountProfileQuery,
+  AccountProfileQueryVariables
 >
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
