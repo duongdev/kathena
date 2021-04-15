@@ -4,7 +4,6 @@ import { Types } from 'mongoose'
 
 import {
   BaseModel,
-  returnUnchanged,
   Publication,
   normalizeCodeField,
   removeExtraSpaces,
@@ -25,8 +24,8 @@ export class Course extends BaseModel {
     required: true,
     trim: true,
     index: true,
-    set: normalizeCodeField,
-    get: returnUnchanged,
+    set: (code: string) => normalizeCodeField(code),
+    get: (code: string) => code,
   })
   code: string
 
@@ -34,8 +33,8 @@ export class Course extends BaseModel {
   @prop({
     required: true,
     trim: true,
-    set: removeExtraSpaces,
-    get: returnUnchanged,
+    set: (name: string) => removeExtraSpaces(name),
+    get: (code: string) => code,
   })
   name: string
 
@@ -55,7 +54,7 @@ export class Course extends BaseModel {
   @prop({ required: false.valueOf, type: Date })
   publishedAt?: Date | null
 
-  @Field()
+  @Field((_type) => [String])
   lecturerIds: string[]
 
   @prop({ type: Types.ObjectId, required: true })

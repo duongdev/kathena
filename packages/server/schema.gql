@@ -68,6 +68,9 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Academic_CreateCourse
+  Academic_UpdateCourse
+  Academic_FindCourseById
   NoPermission
 }
 
@@ -109,6 +112,21 @@ type AcademicSubject implements BaseModel {
 enum Publication {
   Draft
   Published
+}
+
+type Course implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  academicSubjectId: ID!
+  code: String!
+  name: String!
+  startDate: DateTime!
+  tuitionFee: Float!
+  publicationState: Publication!
+  publishedAt: DateTime!
+  lecturerIds: [String!]!
 }
 
 type AcademicSubjectsPayload {
@@ -160,6 +178,8 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  createCourse: Course!
+  updateCourse: Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
 }
 
