@@ -18,6 +18,7 @@ import {
   buildPath,
   CREATE_ACADEMIC_SUBJECT,
   UPDATE_ACADEMIC_SUBJECT,
+  SUBJECT_PROFILE,
 } from 'utils/path-builder'
 
 export type AcademicSubjectListProps = {}
@@ -71,7 +72,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
                     className={classes.twoRows}
                   >
                     <Link
-                      to={buildPath(UPDATE_ACADEMIC_SUBJECT, {
+                      to={buildPath(SUBJECT_PROFILE, {
                         id: academicSubject.id,
                       })}
                     >

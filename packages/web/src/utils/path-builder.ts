@@ -19,6 +19,8 @@ export const ACADEMIC_SUBJECT_LIST = `${ACADEMIC_SUBJECTS}`
 export const CREATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/create`
 export const UPDATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/update`
 
+export const SUBJECT_PROFILE = `${ACADEMIC_SUBJECTS}/:id/profile`
+
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
 export const buildPath = (
