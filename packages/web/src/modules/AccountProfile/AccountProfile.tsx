@@ -1,11 +1,12 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
-import { Button, PageContainer, SectionCard, Typography } from '@kathena/ui'
+import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
 import { useAccountProfileQuery } from 'graphql/generated'
 
 export type AccountProfileProps = {}
@@ -22,11 +23,13 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
       return data.accountByUserName
     }
     return {
+      id: '',
       displayName: '',
       username: '',
       email: '',
       roles: [],
       status: '',
+      availability: '',
     }
   }, [data])
   return (
@@ -44,17 +47,28 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
             title="Thông tin tài khoản"
           >
             <CardContent>
-              <ContentItem
-                title="Tên người dùng"
-                content={account.displayName as ANY}
-              />
-              <ContentItem title="Tên đăng nhập" content={account.username} />
-              <ContentItem title="Email" content={account.email} />
-              <ContentItem
-                title="Phân quyền"
-                content={account.roles.join(', ')}
-              />
-              <ContentItem title="Trạng thái" content={account.status} />
+              <Grid container>
+                <Grid item xs={5} className={classes.avatarWrapper}>
+                  <AccountAvatar size={150} account={account as ANY} />
+                </Grid>
+                <Grid container item xs={7}>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Tên người dùng">
+                    {account.displayName}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Tên đăng nhập">
+                    {account.username}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Email">
+                    {account.email}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Phân quyền">
+                    {account.roles.join(', ')}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Trạng thái">
+                    {account.status}
+                  </InfoBlock>
+                </Grid>
+              </Grid>
             </CardContent>
           </SectionCard>
         </Grid>
@@ -65,28 +79,11 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   root: {},
-  rootContent: {
-    marginBottom: '20px',
+  avatarWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }))
-
-type ContentItemProps = {
-  title: string
-  content: string | undefined
-}
-const ContentItem: FC<ContentItemProps> = (props) => {
-  const classes = useStyles(props)
-  const { title, content } = props
-  return (
-    <div className={classes.rootContent}>
-      <Typography variant="h6">{title}: </Typography>
-      <Typography variant="body1">{content}</Typography>
-    </div>
-  )
-}
 
 export default AccountProfile

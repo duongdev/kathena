@@ -6,5 +6,6 @@ query AccountProfile($username: String!) {
     displayName
     roles
     status
+    availability
   }
 }

@@ -27,6 +27,9 @@ export * from './FormDialog'
 export { default as GridItemContainer } from './GridItemContainer'
 export * from './GridItemContainer'
 
+export { default as InfoBlock } from './InfoBlock'
+export * from './InfoBlock'
+
 export { default as withComponentHocs } from './hocs/withComponentHocs'
 
 export * from './hooks'
