@@ -1,0 +1,10 @@
+query QueryAcademicSubjectProfile($Id: ID!) {
+  academicSubject(id: $Id) {
+    id
+    code
+    name
+    description
+    imageFileId
+    publication
+  }
+}

@@ -5,7 +5,7 @@ mutation CreateAcademicSubject($input: CreateAcademicSubjectInput!) {
     name
   }
 }
-query FindAcademicSubjectById($Id: ID!){
+query FindAcademicSubjectById($Id: ID!) {
   academicSubject(id: $Id) {
     id
     code
@@ -15,15 +15,18 @@ query FindAcademicSubjectById($Id: ID!){
     publication
   }
 }
-mutation UpdateAcademicSubject($Id: ID!,$updateInput: UpdateAcademicSubjectInput!){
-  updateAcademicSubject(id: $Id,updateInput: $updateInput) {
+mutation UpdateAcademicSubject(
+  $Id: ID!
+  $updateInput: UpdateAcademicSubjectInput!
+) {
+  updateAcademicSubject(id: $Id, updateInput: $updateInput) {
     id
     code
     name
   }
 }
-mutation UpdateAcademicSubjectPublication($Id: ID!,$publication: String!){
-  updateAcademicSubjectPublication(id: $Id,publication: $publication){
+mutation UpdateAcademicSubjectPublication($Id: ID!, $publication: String!) {
+  updateAcademicSubjectPublication(id: $Id, publication: $publication) {
     id
     code
     publication
