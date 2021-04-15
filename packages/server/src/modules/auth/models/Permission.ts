@@ -19,6 +19,10 @@ export enum Permission {
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
 
+  Academic_CreateCourse = 'Academic_CreateCourse',
+  Academic_UpdateCourse = 'Academic_UpdateCourse',
+  Academic_FindCourseById = 'Academic_FindCourseById',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
