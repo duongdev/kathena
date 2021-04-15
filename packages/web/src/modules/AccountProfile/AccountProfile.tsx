@@ -101,8 +101,8 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
             }
           >
             {account.status === AccountStatus.Active
-              ? AccountStatus.Deactivated
-              : AccountStatus.Active}
+              ? "Deactivate"
+              : "Active"}
           </Button>,
         ]}
       >
