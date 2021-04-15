@@ -373,14 +373,6 @@ export class AccountService {
       throw new ForbiddenError()
     }
 
-    // Must be either 'lecturer' or 'student'
-    if (
-      !targetAccount.roles.includes('lecturer') &&
-      !targetAccount.roles.includes('student')
-    ) {
-      throw new ForbiddenError()
-    }
-
     targetAccount.status = status
 
     const updateAccount = await targetAccount.save()
