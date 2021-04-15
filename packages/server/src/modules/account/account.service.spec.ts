@@ -1513,57 +1513,6 @@ describe('account.service', () => {
       )
     })
 
-    it(`throws an error if target account isn't a lecture or student`, async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['authService'], 'accountHasPermission')
-        .mockResolvedValueOnce(true as never)
-
-      const org = await orgService.createOrg({
-        namespace: 'kmin-edu',
-        name: 'Kmin Academy',
-      })
-
-      const account1: CreateAccountServiceInput = {
-        email: 'dustin.do95@gmail.com',
-        password: '123456',
-        username: 'duongdev',
-        roles: ['admin'],
-        orgId: org.id,
-        displayName: 'Dustin Do',
-      }
-
-      const account2: ANY = {
-        email: 'thanhcanh@gmail.com',
-        password: '12345',
-        username: 'thanhcanh',
-        roles: ['admin'],
-        orgId: org.id,
-        displayName: 'Thanh Canh',
-      }
-
-      const accountUpdater = await accountService.createAccount(account1)
-      const targetAccount = await accountService.createAccount(account2)
-
-      jest
-        .spyOn(accountService['accountModel'], 'findOne')
-        .mockResolvedValueOnce(targetAccount)
-
-      await expect(
-        accountService.updateOrgMemberAccountStatus(
-          accountUpdater.id,
-          {
-            id: targetAccount.id,
-            orgId: org.id,
-          },
-          AccountStatus.Active,
-        ),
-      ).rejects.toThrowError(
-        `Access denied! You don't have permission for this action!`,
-      )
-    })
-
     it(`throws an error if the permission input is invalid`, async () => {
       expect.assertions(1)
 

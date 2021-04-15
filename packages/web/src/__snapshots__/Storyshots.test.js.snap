@@ -3190,7 +3190,7 @@ exports[`Storyshots components/InputField Currency 1`] = `
       >
         <input
           aria-invalid={false}
-          className="MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+          className="MuiInput-input MuiInputBase-input css-yz9k0d-MuiInputBase-input"
           disabled={false}
           inputMode="numeric"
           onAnimationStart={[Function]}
@@ -3293,7 +3293,7 @@ exports[`Storyshots components/InputField Quantity 1`] = `
           >
             <input
               aria-invalid={false}
-              className="makeStyles-input-420 MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+              className="makeStyles-input-420 MuiInput-input MuiInputBase-input css-yz9k0d-MuiInputBase-input"
               disabled={false}
               onAnimationStart={[Function]}
               onBlur={[Function]}
@@ -3407,7 +3407,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input css-yz9k0d-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -3439,7 +3439,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input css-yz9k0d-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -3470,7 +3470,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input css-gga68z-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input css-yz9k0d-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -3506,7 +3506,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <input
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-gga68z-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd css-yz9k0d-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -3568,7 +3568,7 @@ exports[`Storyshots components/InputField Text 1`] = `
         >
           <textarea
             aria-invalid={false}
-            className="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline css-no2ni4-MuiInputBase-input"
+            className="MuiInput-input MuiInputBase-input MuiInputBase-inputMultiline css-rhrbtd-MuiInputBase-input"
             disabled={false}
             onAnimationStart={[Function]}
             onBlur={[Function]}

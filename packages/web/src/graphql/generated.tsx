@@ -351,7 +351,13 @@ export type AccountProfileQuery = {
   accountByUserName?: Maybe<
     Pick<
       Account,
-      'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
+      | 'id'
+      | 'email'
+      | 'username'
+      | 'displayName'
+      | 'roles'
+      | 'status'
+      | 'availability'
     >
   >
 }
@@ -1420,6 +1426,10 @@ export const AccountProfileDocument: DocumentNode = {
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'availability' },
+                },
               ],
             },
           },

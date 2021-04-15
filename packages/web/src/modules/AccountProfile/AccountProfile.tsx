@@ -1,12 +1,13 @@
 import { FC, useCallback, useMemo } from 'react'
 
-import { CardContent, Grid, makeStyles, Skeleton } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
-import { Button, PageContainer, SectionCard, Typography } from '@kathena/ui'
+import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
 import {
   useAccountProfileQuery,
   useUpdateAccountStatusMutation,
@@ -21,7 +22,7 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar()
   const params: { username: string } = useParams()
   const username = useMemo(() => params.username, [params])
-  const { data, loading } = useAccountProfileQuery({
+  const { data } = useAccountProfileQuery({
     variables: { username },
   })
   const [updateAccountStatus] = useUpdateAccountStatusMutation({
@@ -43,6 +44,7 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
       email: '',
       roles: [],
       status: '',
+      availability: '',
     }
   }, [data])
 
@@ -111,31 +113,28 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
             title="Thông tin tài khoản"
           >
             <CardContent>
-              <ContentItem
-                title="Tên người dùng"
-                content={account.displayName as ANY}
-                loading={loading}
-              />
-              <ContentItem
-                title="Tên đăng nhập"
-                content={account.username}
-                loading={loading}
-              />
-              <ContentItem
-                title="Email"
-                content={account.email}
-                loading={loading}
-              />
-              <ContentItem
-                title="Phân quyền"
-                content={account.roles.join(', ')}
-                loading={loading}
-              />
-              <ContentItem
-                title="Trạng thái"
-                content={account.status}
-                loading={loading}
-              />
+              <Grid container>
+                <Grid item xs={5} className={classes.avatarWrapper}>
+                  <AccountAvatar size={150} account={account as ANY} />
+                </Grid>
+                <Grid container item xs={7}>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Tên người dùng">
+                    {account.displayName}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Tên đăng nhập">
+                    {account.username}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Email">
+                    {account.email}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Phân quyền">
+                    {account.roles.join(', ')}
+                  </InfoBlock>
+                  <InfoBlock gridItem={{ xs: 12 }} label="Trạng thái">
+                    {account.status}
+                  </InfoBlock>
+                </Grid>
+              </Grid>
             </CardContent>
           </SectionCard>
         </Grid>
@@ -146,33 +145,11 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   root: {},
-  rootContent: {
-    marginBottom: '20px',
+  avatarWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }))
-
-type ContentItemProps = {
-  title: string
-  content: string | undefined
-  loading?: boolean
-}
-const ContentItem: FC<ContentItemProps> = (props) => {
-  const classes = useStyles(props)
-  const { title, content, loading } = props
-  return (
-    <div className={classes.rootContent}>
-      <Typography variant="h6">{title}: </Typography>
-      {!loading ? (
-        <Typography variant="body1">{content}</Typography>
-      ) : (
-        <Skeleton />
-      )}
-    </div>
-  )
-}
 
 export default AccountProfile
