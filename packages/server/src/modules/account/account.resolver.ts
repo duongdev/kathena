@@ -57,6 +57,18 @@ export class AccountResolver {
     return this.accountService.findOneAccount({ id, orgId: org.id })
   }
 
+  @Query((_returns) => Account, { nullable: true })
+  @UseAuthGuard()
+  async accountByUserName(
+    @Args('username') username: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<Account>> {
+    return this.accountService.findAccountByUsernameOrEmail({
+      usernameOrEmail: username,
+      orgId: org.id,
+    })
+  }
+
   @Query((_return) => OrgAccountsPayload)
   @UseAuthGuard(P.Hr_ListOrgAccounts)
   async orgAccounts(
