@@ -19,7 +19,7 @@ export const ACADEMIC_SUBJECT_LIST = `${ACADEMIC_SUBJECTS}`
 export const CREATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/create`
 export const UPDATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/update`
 
-export const ACADEMIC_SUBJECT_DETAIL = `${ACADEMIC_SUBJECTS}/:id/profile`
+export const ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
