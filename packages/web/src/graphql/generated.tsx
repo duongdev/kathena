@@ -343,6 +343,7 @@ export type AcademicSubjectListQuery = {
   }
 }
 
+
 export type AcademicSubjectDetailQueryVariables = Exact<{
   Id: Scalars['ID']
 }>
@@ -353,6 +354,7 @@ export type AcademicSubjectDetailQuery = {
     'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
   >
 }
+
 
 export type AccountProfileQueryVariables = Exact<{
   username: Scalars['String']
@@ -1377,6 +1379,7 @@ export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
 >
+
 export const AcademicSubjectDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -1510,6 +1513,7 @@ export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
 >
+
 export const AccountProfileDocument: DocumentNode = {
   kind: 'Document',
   definitions: [

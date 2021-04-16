@@ -12,6 +12,7 @@ import {
   UPDATE_ACADEMIC_SUBJECT,
   USER_PROFILE,
   ACADEMIC_SUBJECT_PROFILE,
+
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -24,6 +25,7 @@ const AccountProfile = lazy(() => import('modules/AccountProfile'))
 const AcademicSubjectProfile = lazy(
   () => import('modules/AcademicSubjectProfile'),
 )
+
 const OrgAccountList = lazy(
   () =>
     import(
@@ -57,6 +59,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         path={ACADEMIC_SUBJECT_PROFILE}
         component={AcademicSubjectProfile}
       />
+
       <Route path={USER_LIST} component={OrgAccountList} />
       <Route
         path={ACADEMIC_SUBJECT_LIST}
