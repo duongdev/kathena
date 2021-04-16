@@ -1,11 +1,15 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField } from 'core/utils/string'
+import { AuthService } from 'modules/auth/auth.service'
+import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 
 import { Nullable } from '../../types'
 
+import { CreateCourseInput } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
 
@@ -19,6 +23,8 @@ export class AcademicService {
     private readonly academicSubjectModel: ReturnModelType<
       typeof AcademicSubject
     >,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
     @InjectModel(Course)
     private readonly courseModle: ReturnModelType<typeof Course>,
   ) {}
@@ -173,11 +179,40 @@ export class AcademicService {
     return updatedAcademicSubject
   }
 
-  /// / async createCourse() {}
+  /**
+   * START COURSE
+   */
+
+  async createCourse(
+    courseInput: CreateCourseInput,
+  ): Promise<DocumentType<Course>> {
+    const canCreateCourse = await this.authService.accountHasPermission({
+      accountId: courseInput.createdByAccountId,
+      permission: Permission.Academic_CreateCourse,
+    })
+
+    const academicSubjectIsExist =
+      (await this.findAcademicSubjectById(courseInput.academicSubjectId)) !=
+      null
+
+    if (!canCreateCourse) {
+      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
+    }
+
+    if (!academicSubjectIsExist) {
+      throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
+    }
+
+    return any
+  }
 
   /// / async updateCourse() {}
 
   async findCourseById(id: string): Promise<DocumentType<Course> | null> {
     return this.courseModle.findById(id)
   }
+
+  /**
+   * END COURSE
+   */
 }
