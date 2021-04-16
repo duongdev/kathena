@@ -1,2 +1,2 @@
-export { default } from './AcademicSubjectProfile'
-export * from './AcademicSubjectProfile'
+export { default } from './AcademicSubjectDetail'
+export * from './AcademicSubjectDetail'

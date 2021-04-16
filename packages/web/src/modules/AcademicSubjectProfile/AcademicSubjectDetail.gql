@@ -1,4 +1,4 @@
-query QueryAcademicSubjectProfile($Id: ID!) {
+query AcademicSubjectDetail($Id: ID!) {
   academicSubject(id: $Id) {
     id
     code

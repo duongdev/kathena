@@ -1,26 +1,24 @@
 import { FC, useMemo } from 'react'
 
 import { Avatar, CardContent, Grid, makeStyles } from '@material-ui/core'
-import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { ANY } from '@kathena/types'
 import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
-import { useAccountProfileQuery } from 'graphql/generated'
+import { useAcademicSubjectDetailQuery } from 'graphql/generated'
 
-export type AcademicSubjectProfileProps = {}
+export type AcademicSubjectDetailProps = {}
 
-const AcademicSubjectProfile: FC<AcademicSubjectProfileProps> = (props) => {
+const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
   const classes = useStyles(props)
-  const params: { username: string } = useParams()
-  const username = useMemo(() => params.username, [params])
-  const { data } = useAccountProfileQuery({
-    variables: { username },
+  const params: { id: string } = useParams()
+  const id = useMemo(() => params.id, [params])
+  const { data } = useAcademicSubjectDetailQuery({
+    variables: { Id: id },
   })
-  const account = useMemo(() => {
-    if (data?.accountByUserName) {
-      return data.accountByUserName
+  const subjectDetail = useMemo(() => {
+    if (data?.academicSubject) {
+      return data.academicSubject
     }
     return {
       id: '',
@@ -29,13 +27,6 @@ const AcademicSubjectProfile: FC<AcademicSubjectProfileProps> = (props) => {
       description: '',
       imageFileId: '',
       publication: '',
-      // id: '',
-      // displayName: '',
-      // username: '',
-      // email: '',
-      // roles: [],
-      // status: '',
-      // availability: '',
     }
   }, [data])
   return (
@@ -55,28 +46,21 @@ const AcademicSubjectProfile: FC<AcademicSubjectProfileProps> = (props) => {
             <CardContent>
               <Grid container>
                 <Grid item xs={5} className={classes.imgSubject}>
-                  {/* <AccountAvatar size={150} account={account as ANY} /> */}
-                  <Avatar
-                    variant="rounded"
-                    src="https://picsum.photos/200/300"
-                  />
+                  <Avatar variant="rounded" src={subjectDetail.imageFileId} />
                 </Grid>
                 <Grid container item xs={7}>
                   <InfoBlock gridItem={{ xs: 12 }} label="Mã môn học">
-                    {account.id}
+                    {subjectDetail.code}
                   </InfoBlock>
-                  {/* <InfoBlock gridItem={{ xs: 12 }} label="Tên môn học">
-                    {account.name}
+                  <InfoBlock gridItem={{ xs: 12 }} label="Tên môn học">
+                    {subjectDetail.name}
                   </InfoBlock>
                   <InfoBlock gridItem={{ xs: 12 }} label="Mô tả">
-                    {account.description}
+                    <InfoBlock gridItem={{ xs: 8 }} label="">
+                      {subjectDetail.description}
+                    </InfoBlock>
                   </InfoBlock>
-                  <InfoBlock gridItem={{ xs: 12 }} label="Phân quyền">
-                    {account.roles.join(', ')}
-                  </InfoBlock>
-                  <InfoBlock gridItem={{ xs: 12 }} label="Trạng thái">
-                    {account.publication}
-                  </InfoBlock> */}
+
                 </Grid>
               </Grid>
             </CardContent>
@@ -96,4 +80,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default AcademicSubjectProfile
+export default AcademicSubjectDetail

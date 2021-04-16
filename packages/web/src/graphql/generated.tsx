@@ -343,6 +343,17 @@ export type AcademicSubjectListQuery = {
   }
 }
 
+export type AcademicSubjectDetailQueryVariables = Exact<{
+  Id: Scalars['ID']
+}>
+
+export type AcademicSubjectDetailQuery = {
+  academicSubject: Pick<
+    AcademicSubject,
+    'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
+  >
+}
+
 export type AccountProfileQueryVariables = Exact<{
   username: Scalars['String']
 }>
@@ -1365,6 +1376,139 @@ export type AcademicSubjectListLazyQueryHookResult = ReturnType<
 export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
+>
+export const AcademicSubjectDetailDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AcademicSubjectDetail' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'academicSubject' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'imageFileId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publication' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AcademicSubjectDetailProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables
+  >
+} &
+  TChildProps
+export function withAcademicSubjectDetail<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables,
+    AcademicSubjectDetailProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables,
+    AcademicSubjectDetailProps<TChildProps, TDataName>
+  >(AcademicSubjectDetailDocument, {
+    alias: 'academicSubjectDetail',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAcademicSubjectDetailQuery__
+ *
+ * To run a query within a React component, call `useAcademicSubjectDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAcademicSubjectDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAcademicSubjectDetailQuery({
+ *   variables: {
+ *      Id: // value for 'Id'
+ *   },
+ * });
+ */
+export function useAcademicSubjectDetailQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables
+  >(AcademicSubjectDetailDocument, options)
+}
+export function useAcademicSubjectDetailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AcademicSubjectDetailQuery,
+    AcademicSubjectDetailQueryVariables
+  >(AcademicSubjectDetailDocument, options)
+}
+export type AcademicSubjectDetailQueryHookResult = ReturnType<
+  typeof useAcademicSubjectDetailQuery
+>
+export type AcademicSubjectDetailLazyQueryHookResult = ReturnType<
+  typeof useAcademicSubjectDetailLazyQuery
+>
+export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
+  AcademicSubjectDetailQuery,
+  AcademicSubjectDetailQueryVariables
 >
 export const AccountProfileDocument: DocumentNode = {
   kind: 'Document',
