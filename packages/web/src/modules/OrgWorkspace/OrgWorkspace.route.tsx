@@ -53,7 +53,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
     <Switch>
       <Route path={USER_SELF_SETTINGS} component={AccountSettings} />
       <Route path={USER_PROFILE} component={AccountDetail} />
-      <Route path={ACADEMIC_SUBJECT_DETAIL} component={AcademicSubjectDetail} />
+      <Route path={ACADEMIC_SUBJECT} component={AcademicSubjectDetail} />
       <Route path={USER_LIST} component={OrgAccountList} />
       <Route
         path={ACADEMIC_SUBJECT_LIST}
