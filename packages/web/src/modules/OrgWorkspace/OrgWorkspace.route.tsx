@@ -20,7 +20,7 @@ const AccountSettings = lazy(
       'modules/AccountSettings' /* webpackChunkName: "modules/AccountSettings" */
     ),
 )
-const AccountDetail = lazy(() => import('modules/AcademicSubjectDetail'))
+const AccountProfile = lazy(() => import('modules/AccountProfile'))
 const AcademicSubjectDetail = lazy(
   () => import('modules/AcademicSubjectDetail'),
 )
@@ -52,7 +52,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
   <Suspense fallback={<Spinner p={4} center />}>
     <Switch>
       <Route path={USER_SELF_SETTINGS} component={AccountSettings} />
-      <Route path={USER_PROFILE} component={AccountDetail} />
+      <Route path={USER_PROFILE} component={AccountProfile} />
       <Route path={ACADEMIC_SUBJECT_DETAIL} component={AcademicSubjectDetail} />
       <Route path={USER_LIST} component={OrgAccountList} />
       <Route
