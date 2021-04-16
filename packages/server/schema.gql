@@ -151,6 +151,7 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
+  accountByUserName(username: String!): Account
   orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
