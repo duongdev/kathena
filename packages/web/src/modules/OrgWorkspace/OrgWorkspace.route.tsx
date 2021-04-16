@@ -11,7 +11,7 @@ import {
   ORG_SETTINGS,
   UPDATE_ACADEMIC_SUBJECT,
   USER_PROFILE,
-  ACADEMIC_SUBJECT_DETAIL,
+  ACADEMIC_SUBJECT,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
