@@ -56,9 +56,7 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                     {subjectDetail.name}
                   </InfoBlock>
                   <InfoBlock gridItem={{ xs: 12 }} label="Mô tả">
-                    <InfoBlock gridItem={{ xs: 8 }} label="">
-                      {subjectDetail.description}
-                    </InfoBlock>
+                    {subjectDetail.description}
                   </InfoBlock>
                 </Grid>
               </Grid>
