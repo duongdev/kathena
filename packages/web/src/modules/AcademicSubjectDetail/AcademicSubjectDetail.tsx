@@ -60,7 +60,6 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                       {subjectDetail.description}
                     </InfoBlock>
                   </InfoBlock>
-
                 </Grid>
               </Grid>
             </CardContent>
