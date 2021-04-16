@@ -3656,10 +3656,10 @@
     mkdirp "^1.0.4"
     multimatch "^5.0.0"
 
-"@typegoose/typegoose@8.0.0-beta.4":
-  version "8.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.4.tgz#99d616f5acab7a641b6e4fffd816ad94a815957a"
-  integrity sha512-1g1ms6Kz1T12SgNWgip1Cx8zQsIsaZ506VTrz9aJc2B8ny5EM/0ZO+/Ppe/23m/h/lJDADIhzIR5rbKUKJv+HA==
+"@typegoose/typegoose@8.0.0-beta.5":
+  version "8.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.5.tgz#bd18f5c0ba3ded0ca3a8ffc28e402f6c56a698aa"
+  integrity sha512-a9rc3zE2VgBMamOFDssVK9VyFV4Tk8UXOllQ85Swtqd5kpcSAI22YZClyR1GyiCHYfOeLdynlTS56ovkeCxk8g==
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
