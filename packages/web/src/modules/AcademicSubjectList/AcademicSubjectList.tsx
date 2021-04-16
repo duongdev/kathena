@@ -17,7 +17,7 @@ import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
 import {
   buildPath,
   CREATE_ACADEMIC_SUBJECT,
-  ACADEMIC_SUBJECT_DETAIL,
+  ACADEMIC_SUBJECT,
 } from 'utils/path-builder'
 
 export type AcademicSubjectListProps = {}
