@@ -26,7 +26,7 @@ export class AcademicService {
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
     @InjectModel(Course)
-    private readonly courseModle: ReturnModelType<typeof Course>,
+    private readonly courseModel: ReturnModelType<typeof Course>,
   ) {}
 
   async findAcademicSubjectByCode(
@@ -209,7 +209,7 @@ export class AcademicService {
   /// / async updateCourse() {}
 
   async findCourseById(id: string): Promise<DocumentType<Course> | null> {
-    return this.courseModle.findById(id)
+    return this.courseModel.findById(id)
   }
 
   /**
