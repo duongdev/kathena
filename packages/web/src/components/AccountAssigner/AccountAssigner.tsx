@@ -39,10 +39,6 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
 
   useEffect(() => {
     let active = true
-    if (inputValue === '') {
-      setOptions(value ? [value] : [])
-      return undefined
-    }
     if (active) {
       let newOptions = [] as Account[]
       if (value) {
@@ -59,7 +55,7 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
     return () => {
       active = false
     }
-  }, [value, inputValue, data?.orgAccounts.accounts])
+  }, [value, data?.orgAccounts.accounts])
 
   return (
     <Autocomplete
