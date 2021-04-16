@@ -20,7 +20,7 @@ export class AcademicService {
       typeof AcademicSubject
     >,
     @InjectModel(Course)
-    private readonly courseModle: ReturnModelType<typeof Course>,
+    private readonly courseModel: ReturnModelType<typeof Course>,
   ) {}
 
   async findAcademicSubjectByCode(
