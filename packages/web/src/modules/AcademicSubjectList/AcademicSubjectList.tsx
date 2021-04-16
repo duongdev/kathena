@@ -71,7 +71,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
                     className={classes.twoRows}
                   >
                     <Link
-                      to={buildPath(ACADEMIC_SUBJECT_DETAIL, {
+                      to={buildPath(ACADEMIC_SUBJECT, {
                         id: academicSubject.id,
                       })}
                     >
