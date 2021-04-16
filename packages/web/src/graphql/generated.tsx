@@ -1377,6 +1377,7 @@ export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
 >
+
 export const AcademicSubjectDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -1510,6 +1511,7 @@ export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
 >
+
 export const AccountProfileDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
