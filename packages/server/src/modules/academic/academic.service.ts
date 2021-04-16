@@ -178,6 +178,6 @@ export class AcademicService {
   /// / async updateCourse() {}
 
   async findCourseById(id: string): Promise<DocumentType<Course> | null> {
-    return this.courseModle.findById(id)
+    return this.courseModel.findById(id)
   }
 }
