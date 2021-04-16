@@ -173,11 +173,11 @@ export class AcademicService {
     return updatedAcademicSubject
   }
 
-  //  async createCourse() {}
+  /// / async createCourse() {}
 
-  // async updateCourse() {}
+  /// / async updateCourse() {}
 
-  // async findCourseById(id: string): Promise<DocumentType<Course> | null> {
-  //   return this.courseModle.findById(id)
-  // }
+  async findCourseById(id: string): Promise<DocumentType<Course> | null> {
+    return this.courseModle.findById(id)
+  }
 }

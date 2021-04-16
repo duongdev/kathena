@@ -39,3 +39,9 @@ export class UpdateAcademicSubjectInput {
   @IsOptional()
   description?: string
 }
+
+@InputType()
+export class CreateCourseInput {}
+
+@InputType()
+export class UpdateCourseInput {}
