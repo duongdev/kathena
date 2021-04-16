@@ -33,7 +33,11 @@ const CreateAcademicCourse: FC<CreateAcademicCourseProps> = (props) => {
           gridItem={{ xs: 8 }}
         >
           <CardContent>
-            <AccountAssigner label="Giáo viên đảm nhận" roles={['lecturer']} />
+            <AccountAssigner
+              label="Giáo viên đảm nhận"
+              roles={['lecturer']}
+              multiple
+            />
           </CardContent>
         </SectionCard>
       </Grid>

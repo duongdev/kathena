@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable no-console */
 import { FC, useEffect, useState } from 'react'
 
 import { Grid, TextField } from '@material-ui/core'
@@ -19,10 +20,11 @@ export type AccountAssignerProps = {
   label: string
   roles?: Role[]
   limit?: number
+  multiple?: boolean
 }
 
 const AccountAssigner: FC<AccountAssignerProps> = (props) => {
-  const { label, roles, limit } = props
+  const { label, roles, limit, multiple } = props
   const { $org: org } = useAuth()
   const [inputValue, setInputValue] = useState('')
   const { data, loading } = useOrgAccountListQuery({
@@ -34,42 +36,32 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
       roles,
     },
   })
-  const [value, setValue] = useState<Account | null>(null)
   const [options, setOptions] = useState<Account[]>([])
 
   useEffect(() => {
     let active = true
     if (active) {
       let newOptions = [] as Account[]
-      if (value) {
-        newOptions = [value]
-      }
       if (data?.orgAccounts.accounts) {
-        newOptions = [
-          ...newOptions,
-          ...(data.orgAccounts.accounts as Account[]),
-        ]
+        newOptions = [...(data.orgAccounts.accounts as Account[])]
       }
       setOptions(newOptions)
     }
     return () => {
       active = false
     }
-  }, [value, data?.orgAccounts.accounts])
+  }, [data?.orgAccounts.accounts])
 
   return (
     <Autocomplete
+      multiple={multiple}
       loading={loading}
       options={options}
       filterOptions={(x) => x}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={value}
-      onChange={(event, newValue: Account | null) => {
-        setOptions(newValue ? [newValue, ...options] : options)
-        setValue(newValue)
-      }}
+      onChange={(e, v) => console.log(v)}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue)
       }}
