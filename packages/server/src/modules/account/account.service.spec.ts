@@ -553,11 +553,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 2,
             skip: 2,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -579,11 +579,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 3,
             skip: 2,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -610,11 +610,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId1,
-          },
-          {
             limit: 1,
             skip: 0,
+          },
+          {
+            orgId: orgId1,
           },
         ),
       ).resolves.toMatchObject({
@@ -631,11 +631,11 @@ describe('account.service', () => {
       await expect(
         accountService.findAndPaginateAccounts(
           {
-            orgId: orgId2,
-          },
-          {
             limit: 2,
             skip: 0,
+          },
+          {
+            orgId: orgId2,
           },
         ),
       ).resolves.toMatchObject({
@@ -656,13 +656,13 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
           {
             limit: 0,
             skip: 0,
           },
+          {
+            orgId: orgId2,
+          },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -682,13 +682,13 @@ describe('account.service', () => {
 
       await expect(
         accountService.findAndPaginateAccounts(
-          {
-            orgId: orgId2,
-          },
           {
             limit: 0,
             skip: 1,
           },
+          {
+            orgId: orgId2,
+          },
         ),
       ).resolves.toMatchObject({
         accounts: [
@@ -699,6 +699,102 @@ describe('account.service', () => {
           },
         ],
         count: listCreatedAccountOrgId2.length,
+      })
+    })
+
+    it('returns array account and count find and pagination account with filter', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(accountService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const orgId = objectId()
+      const listCreatedAccountOrgId: ANY[] = []
+
+      const createAccountServiceInput: CreateAccountServiceInput = {
+        orgId,
+        email: 'leminhnhat1133@gmail.com',
+        password: '123456',
+        username: 'nhatminh0509',
+        roles: ['lecturer'],
+        displayName: 'Nhật Minh',
+      }
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'hieuliem@gmail.com',
+          username: 'hieuliem',
+          displayName: 'Hiếu Liêm',
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'thanhcanh@gmail.com',
+          username: 'thanhcanh',
+          displayName: 'Thanh Cảnh',
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'nhatnam@gmail.com',
+          username: 'nhatnam',
+          displayName: 'Nhật Nam',
+          roles: ['staff'],
+        }),
+      )
+
+      listCreatedAccountOrgId.push(
+        await accountService.createAccount({
+          ...createAccountServiceInput,
+          email: 'vanhai@gmail.com',
+          username: 'vanhai',
+          displayName: 'Văn Hải',
+        }),
+      )
+
+      jest
+        .spyOn(accountService, 'findAndPaginateAccounts')
+        .mockResolvedValueOnce({
+          accounts: [
+            {
+              email: 'vanhai@gmail.com',
+              username: 'vanhai',
+              displayName: 'Văn Hải',
+            },
+          ] as ANY,
+          count: listCreatedAccountOrgId.length,
+        })
+
+      await expect(
+        accountService.findAndPaginateAccounts(
+          { limit: 10, skip: 0 },
+          { orgId, searchText: 'Hải', roles: ['lecturer'] },
+        ),
+      ).resolves.toMatchObject({
+        accounts: [
+          {
+            email: 'vanhai@gmail.com',
+            username: 'vanhai',
+            displayName: 'Văn Hải',
+          },
+        ],
+        count: listCreatedAccountOrgId.length,
       })
     })
   })

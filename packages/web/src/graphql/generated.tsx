@@ -169,8 +169,8 @@ export type QueryAccountByUserNameArgs = {
 }
 
 export type QueryOrgAccountsArgs = {
+  filter: AccountsFilterInput
   pageOptions: PageOptionsInput
-  orgId: Scalars['ID']
 }
 
 export type QueryAcademicSubjectsArgs = {
@@ -182,6 +182,11 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type AccountsFilterInput = {
+  orgId: Scalars['ID']
+  roles?: Maybe<Array<Scalars['String']>>
+  searchText?: Maybe<Scalars['String']>
+}
 export type QueryFileArgs = {
   id: Scalars['ID']
 }
@@ -435,6 +440,8 @@ export type OrgAccountListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
+  roles?: Maybe<Array<Scalars['String']> | Scalars['String']>
 }>
 
 export type OrgAccountListQuery = {
@@ -2530,6 +2537,31 @@ export const OrgAccountListDocument: DocumentNode = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'roles' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'String' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -2565,10 +2597,35 @@ export const OrgAccountListDocument: DocumentNode = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'orgId' },
+                name: { kind: 'Name', value: 'filter' },
                 value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'orgId' },
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'orgId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'roles' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'roles' },
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -2660,6 +2717,8 @@ export function withOrgAccountList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
+ *      roles: // value for 'roles'
  *   },
  * });
  */
