@@ -133,8 +133,8 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
+  accountByUserName(username: String!): Account
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
