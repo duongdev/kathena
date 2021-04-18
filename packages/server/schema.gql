@@ -134,6 +134,11 @@ type AcademicSubjectsPayload {
   count: Int!
 }
 
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
+}
+
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
@@ -156,6 +161,7 @@ type Query {
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
 }
@@ -163,6 +169,11 @@ type Query {
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input CoursesFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 type Mutation {
@@ -179,8 +190,7 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
-  createCourse: Course!
-  updateCourse: Course!
+  findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
 }
 
