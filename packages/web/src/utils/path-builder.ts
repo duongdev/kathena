@@ -18,6 +18,10 @@ export const ACADEMIC_SUBJECTS = `${ACADEMIC_MODULE}/subjects`
 export const ACADEMIC_SUBJECT_LIST = `${ACADEMIC_SUBJECTS}`
 export const CREATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/create`
 export const UPDATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/update`
+export const ACADEMIC_COURSES = `${ACADEMIC_MODULE}/courses`
+export const ACADEMIC_COURSE_LIST = `${ACADEMIC_COURSES}`
+export const CREATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:idSubject/create`
+export const UPDATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:id/update`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
