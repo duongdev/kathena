@@ -57,25 +57,15 @@ export class CreateCourseInput {
   name: string
 
   @Field()
-  @IsNotEmpty({ message: 'Start day cannot be empty' })
-  startDate: Date
+  @IsNotEmpty({ message: 'Start date cannot be empty' })
+  startDate: string
 
   @Field()
   @IsNotEmpty({ message: 'Tuition fee cannot be empty' })
   tuitionFee: number
 
-  @Field({ defaultValue: Publication.Draft })
-  publicationState: Publication
-
-  @Field({ defaultValue: null })
-  publishedAt?: Date | null
-
-  @Field({ defaultValue: [] })
+  @Field((_type) => [String], { defaultValue: [] })
   lecturerIds?: string[]
-
-  @Field()
-  @IsNotEmpty({ message: 'Create account id cannot be empty' })
-  createdByAccountId: string
 }
 
 @InputType()

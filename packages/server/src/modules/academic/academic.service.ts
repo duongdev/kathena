@@ -1,5 +1,6 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { createECDH } from 'node:crypto'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField } from 'core/utils/string'
@@ -184,16 +185,33 @@ export class AcademicService {
    */
 
   async createCourse(
-    courseInput: CreateCourseInput,
+    creatorId: string,
+    orgId: string,
+    createCourseInput: CreateCourseInput,
   ): Promise<DocumentType<Course>> {
+    const {
+      academicSubjectId,
+      name,
+      code,
+      startDate,
+      tuitionFee,
+      lecturerIds,
+    } = createCourseInput
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    this.logger.verbose({ creatorId, orgId, createCourseInput })
+
     const canCreateCourse = await this.authService.accountHasPermission({
-      accountId: courseInput.createdByAccountId,
-      permission: Permission.Academic_CreateCourse,
+      accountId: creatorId,
+      permission: Permission.Academic_CreateAcademicSubject,
     })
 
     const academicSubjectIsExist =
-      (await this.findAcademicSubjectById(courseInput.academicSubjectId)) !=
-      null
+      (await this.findAcademicSubjectById(
+        createCourseInput.academicSubjectId,
+      )) !== null
 
     if (!canCreateCourse) {
       throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
@@ -203,7 +221,25 @@ export class AcademicService {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
     }
 
-    return any
+    const currentDate = new Date()
+
+    const startDateInput = new Date(createCourseInput.startDate)
+    if (startDateInput.getTime() < currentDate.getTime()) {
+      throw new Error('START_DATE_INVALID')
+    }
+    const a = new Date('2021-04-16T09:04:52.024+00:00')
+    const course = await this.courseModel.create({
+      orgId,
+      name,
+      code,
+      academicSubjectId,
+      startDate: a,
+      tuitionFee,
+      publication: Publication.Draft,
+    })
+
+    this.logger.log(course)
+    return course
   }
 
   /// / async updateCourse() {}
