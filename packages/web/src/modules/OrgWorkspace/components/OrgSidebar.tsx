@@ -47,7 +47,16 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
               strict: false,
             }),
           },
-          { key: 'courses', label: 'Khoá học' },
+          {
+            key: 'courses',
+            label: 'Khoá học',
+            link: ACADEMIC_SUBJECT_LIST,
+            active: !!matchPath(window.location.pathname, {
+              path: ACADEMIC_SUBJECT_LIST,
+              exact: false,
+              strict: false,
+            }),
+          },
         ],
       },
       {
