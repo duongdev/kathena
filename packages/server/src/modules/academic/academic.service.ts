@@ -232,11 +232,11 @@ export class AcademicService {
       orgId,
       name,
       code,
+      lecturerIds,
       academicSubjectId,
-      startDate: startDateInput.setHours(7, 0, 0, 0),
+      startDate: startDateInput,
       tuitionFee,
       publication: Publication.Draft,
-      lecturerIds,
     })
 
     return course
