@@ -1,6 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
-import { createECDH } from 'node:crypto'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField } from 'core/utils/string'
@@ -201,8 +200,6 @@ export class AcademicService {
       throw new Error(`Org ID is invalid`)
     }
 
-    this.logger.verbose({ creatorId, orgId, createCourseInput })
-
     const canCreateCourse = await this.authService.accountHasPermission({
       accountId: creatorId,
       permission: Permission.Academic_CreateAcademicSubject,
@@ -222,23 +219,26 @@ export class AcademicService {
     }
 
     const currentDate = new Date()
+    const startDateInput = new Date(Number.parseInt(startDate, 10))
 
-    const startDateInput = new Date(createCourseInput.startDate)
-    if (startDateInput.getTime() < currentDate.getTime()) {
+    if (
+      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+    ) {
       throw new Error('START_DATE_INVALID')
     }
-    const a = new Date('2021-04-16T09:04:52.024+00:00')
-    const course = await this.courseModel.create({
+
+    const course = this.courseModel.create({
+      createdByAccountId: creatorId,
       orgId,
       name,
       code,
       academicSubjectId,
-      startDate: a,
+      startDate: startDateInput.setHours(7, 0, 0, 0),
       tuitionFee,
       publication: Publication.Draft,
+      lecturerIds,
     })
 
-    this.logger.log(course)
     return course
   }
 

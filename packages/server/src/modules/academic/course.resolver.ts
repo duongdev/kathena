@@ -5,8 +5,6 @@ import { Logger, UseAuthGuard } from 'core'
 import { CurrentAccount, CurrentOrg } from 'core/auth'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
-
-// import { CreateCourse, UpdateCourse } from './academic.type'
 import { Org } from 'modules/org/models/Org'
 
 import { AcademicService } from './academic.service'
