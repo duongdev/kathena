@@ -88,7 +88,7 @@ export enum Permission {
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
-  Academic_FindCourseById = 'Academic_FindCourseById',
+  Academic_ListCourses = 'Academic_ListCourses',
   NoPermission = 'NoPermission',
 }
 
@@ -211,13 +211,14 @@ export type QueryCoursesArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryFileArgs = {
+  id: Scalars['ID']
+}
+
 export type AccountsFilterInput = {
   orgId: Scalars['ID']
   roles?: Maybe<Array<Scalars['String']>>
   searchText?: Maybe<Scalars['String']>
-}
-export type QueryFileArgs = {
-  id: Scalars['ID']
 }
 
 export type PageOptionsInput = {

@@ -5,9 +5,9 @@ query Courses($orgId: ID!, $skip: Int!, $limit: Int!) {
   ) {
     courses {
       id
-      code
       createdAt
       name
+      code
       orgId
       academicSubjectId
       startDate

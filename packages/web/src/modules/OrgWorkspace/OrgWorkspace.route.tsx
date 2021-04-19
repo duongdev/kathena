@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 import { Spinner } from '@kathena/ui'
 import {
   ACADEMIC_SUBJECT_LIST,
+  ACADEMIC_COURSE_LIST,
   USER_LIST,
   USER_SELF_SETTINGS,
   CREATE_ACADEMIC_SUBJECT,
@@ -31,6 +32,12 @@ const AcademicSubjectList = lazy(
   () =>
     import(
       'modules/AcademicSubjectList' /* webpackChunkName: "modules/OrgAccountList" */
+    ),
+)
+const CourseSubjectList = lazy(
+  () =>
+    import(
+      'modules/CourseSubjectList' /* webpackChunkName: "modules/CourseSubjectList" */
     ),
 )
 const CreateUpdateAcademicSubject = lazy(
@@ -62,6 +69,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         exact
         component={AcademicSubjectList}
       />
+      <Route path={ACADEMIC_COURSE_LIST} exact component={CourseSubjectList} />
       <Route
         path={CREATE_ACADEMIC_SUBJECT}
         exact

@@ -61,7 +61,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           loading={loading}
           columns={[
             {
-              label: 'Môn học',
+              label: 'Khóa học',
               skeleton: <Skeleton />,
               render: (academicSubject) => (
                 <>

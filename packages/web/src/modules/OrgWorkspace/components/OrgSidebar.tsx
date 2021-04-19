@@ -8,6 +8,7 @@ import {
   ACADEMIC_SUBJECT_LIST,
   ORG_SETTINGS,
   USER_LIST,
+  ACADEMIC_COURSE_LIST,
 } from 'utils/path-builder'
 
 export type OrgSidebarProps = {}
@@ -50,9 +51,9 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
           {
             key: 'courses',
             label: 'Khoá học',
-            link: ACADEMIC_SUBJECT_LIST,
+            link: ACADEMIC_COURSE_LIST,
             active: !!matchPath(window.location.pathname, {
-              path: ACADEMIC_SUBJECT_LIST,
+              path: ACADEMIC_COURSE_LIST,
               exact: false,
               strict: false,
             }),

@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import { PlusCircle } from 'phosphor-react'
 
 import {
@@ -13,133 +12,120 @@ import {
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
-import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
+import { Permission, useCoursesQuery } from 'graphql/generated'
 import {
   buildPath,
-  CREATE_ACADEMIC_SUBJECT,
-  UPDATE_ACADEMIC_SUBJECT,
+  CREATE_ACADEMIC_COURSE,
+  UPDATE_ACADEMIC_COURSE,
 } from 'utils/path-builder'
 
-export type AcademicSubjectListProps = {}
+export type CourseSubjectListProps = {}
 
-const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
+const CourseSubjectList: FC<CourseSubjectListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
-  const { data, loading } = useAcademicSubjectListQuery({
+  const { data, loading } = useCoursesQuery({
     variables: { orgId: org.id, limit: perPage, skip: page * perPage },
   })
 
-  const academicSubjectList = useMemo(
-    () => data?.academicSubjects.academicSubjects ?? [],
-    [data?.academicSubjects.academicSubjects],
-  )
+  const courseSubjectList = useMemo(() => data?.courses.courses ?? [], [
+    data?.courses.courses,
+  ])
 
-  const totalCount = useMemo(() => data?.academicSubjects.count ?? 0, [
-    data?.academicSubjects.count,
+  const totalCount = useMemo(() => data?.courses.count ?? 0, [
+    data?.courses.count,
   ])
 
   return (
-    <PageContainer
-      className={classes.root}
-      title="Danh sách môn học"
-      actions={[
-        <Button
-          variant="contained"
-          color="primary"
-          link={CREATE_ACADEMIC_SUBJECT}
-          startIcon={<PlusCircle />}
-        >
-          Thêm môn học
-        </Button>,
-      ]}
-    >
-      <Paper>
-        <DataTable
-          data={academicSubjectList}
-          rowKey="id"
-          loading={loading}
-          columns={[
-            {
-              label: 'Môn học',
-              skeleton: <Skeleton />,
-              render: (academicSubject) => (
-                <>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    className={classes.twoRows}
-                  >
-                    <Link
-                      to={buildPath(UPDATE_ACADEMIC_SUBJECT, {
-                        id: academicSubject.id,
-                      })}
-                    >
-                      {academicSubject.name}
-                    </Link>
-                  </Typography>
-                  <Typography
-                    variant="button"
-                    color="textSecondary"
-                    className={classes.twoRows}
-                  >
-                    {academicSubject.code}
-                  </Typography>
-                </>
-              ),
-            },
-            {
-              label: 'Mô tả',
-              field: 'description',
-              skeleton: <Skeleton />,
-              width: '45%',
-              render: ({ description }) => (
-                <Typography className={classes.twoRows}>
-                  {description}
-                </Typography>
-              ),
-            },
-            {
-              label: 'Trạng thái',
-              align: 'right',
-              skeleton: <Skeleton />,
-              render: ({ publication }) => (
-                <PublicationChip
-                  publication={publication}
-                  variant="outlined"
-                  size="small"
-                />
-              ),
-            },
-          ]}
-          pagination={{
-            count: totalCount,
-            rowsPerPage: perPage,
-            page,
-            onPageChange: (e, nextPage) => setPage(nextPage),
-            onRowsPerPageChange: (event) => setPerPage(+event.target.value),
-          }}
-        />
-      </Paper>
-    </PageContainer>
+    <>
+      <PageContainer
+        className={classes.root}
+        title="Danh sách khóa học"
+        actions={[
+          <Button
+            variant="contained"
+            color="primary"
+            link={CREATE_ACADEMIC_COURSE}
+            startIcon={<PlusCircle />}
+          >
+            Thêm khóa học
+          </Button>,
+        ]}
+      >
+        <Paper>
+          <DataTable
+            data={courseSubjectList}
+            rowKey="id"
+            loading={loading}
+            columns={[
+              {
+                label: 'Khóa học',
+                skeleton: <Skeleton />,
+                render: (courseSubject) => (
+                  <>
+                    <Typography variant="body1" fontWeight="bold">
+                      <Link
+                        to={buildPath(UPDATE_ACADEMIC_COURSE, {
+                          id: courseSubject.id,
+                        })}
+                      >
+                        {courseSubject.name}
+                      </Link>
+                    </Typography>
+                  </>
+                ),
+              },
+              {
+                label: 'Ngày tạo',
+                field: 'createdAt',
+                skeleton: <Skeleton />,
+                render: ({ createdAt }) => <Typography>{createdAt}</Typography>,
+              },
+              {
+                label: 'Học phí',
+                field: 'tuitionFee',
+                skeleton: <Skeleton />,
+                render: ({ tuitionFee }) => (
+                  <Typography>{tuitionFee}</Typography>
+                ),
+              },
+              {
+                label: 'Ngày bắt đầu',
+                field: 'startDate',
+                skeleton: <Skeleton />,
+                render: ({ startDate }) => <Typography>{startDate}</Typography>,
+              },
+              {
+                label: 'Giảng viên phụ trách',
+                field: 'lecturerIds',
+                skeleton: <Skeleton />,
+                render: ({ lecturerIds }) => (
+                  <Typography>{lecturerIds}</Typography>
+                ),
+              },
+            ]}
+            pagination={{
+              count: totalCount,
+              rowsPerPage: perPage,
+              page,
+              onPageChange: (e, nextPage) => setPage(nextPage),
+              onRowsPerPageChange: (event) => setPerPage(+event.target.value),
+            }}
+          />
+        </Paper>
+      </PageContainer>
+    </>
   )
 }
 
 const useStyles = makeStyles(() => ({
   root: {},
-  twoRows: {
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-  },
 }))
 
-const WithPermissionAcademicSubjectList = () => (
-  <WithAuth permission={Permission.Academic_ListAcademicSubjects}>
-    <AcademicSubjectList />
+const WithPermissionCourseSubjectList = () => (
+  <WithAuth permission={Permission.Academic_ListCourses}>
+    <CourseSubjectList />
   </WithAuth>
 )
-
-export default WithPermissionAcademicSubjectList
+export default WithPermissionCourseSubjectList
