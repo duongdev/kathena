@@ -127,6 +127,7 @@ type Course implements BaseModel {
   publicationState: Publication!
   publishedAt: DateTime!
   lecturerIds: [String!]!
+  createdByAccountId: ID!
 }
 
 type AcademicSubjectsPayload {
