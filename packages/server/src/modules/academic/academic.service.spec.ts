@@ -9,6 +9,7 @@ import { ANY } from 'types'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
+import { CreateCourseInput } from './academic.type'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -616,7 +617,38 @@ describe('academic.service', () => {
     })
   })
   describe('Course', () => {
-    describe('createCourse', () => {})
+    const createCourseInput: ANY = {
+      academicSubjectId: objectId(),
+      code: 'NodeJS-12',
+      name: 'Node Js Thang 12',
+      tuitionFee: 5000000,
+      lecturerIds: [],
+    }
+
+    describe('createCourse', () => {
+      it(`throws error "Org ID is invalid" if org id is invalid`, async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.createCourse(objectId(), objectId(), {
+            ...createCourseInput,
+            startDate: '1618765200000',
+          }),
+        ).rejects.toThrowError('Org ID is invalid')
+      })
+
+      it.todo(
+        `throws error "ACCOUNT_HAS_NOT_PERMISSION" if account has not permission`,
+      )
+
+      it.todo(
+        `throws error "ACADEMIC_SUBJECT_NOT_FOUND" if academic subject not found`,
+      )
+
+      it.todo(
+        `throws error "START_DATE_INVALID" if the entered date is invalid or less than the current date`,
+      )
+    })
 
     describe('updateCourse', () => {})
 
