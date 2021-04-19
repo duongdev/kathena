@@ -169,8 +169,8 @@ export type QueryAccountByUserNameArgs = {
 }
 
 export type QueryOrgAccountsArgs = {
+  filter: AccountsFilterInput
   pageOptions: PageOptionsInput
-  orgId: Scalars['ID']
 }
 
 export type QueryAcademicSubjectsArgs = {
@@ -182,6 +182,11 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type AccountsFilterInput = {
+  orgId: Scalars['ID']
+  roles?: Maybe<Array<Scalars['String']>>
+  searchText?: Maybe<Scalars['String']>
+}
 export type QueryFileArgs = {
   id: Scalars['ID']
 }
@@ -362,6 +367,18 @@ export type AccountProfileQuery = {
   >
 }
 
+export type UpdateAccountStatusMutationVariables = Exact<{
+  id: Scalars['ID']
+  status: Scalars['String']
+}>
+
+export type UpdateAccountStatusMutation = {
+  updateAccountStatus: Pick<
+    Account,
+    'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
+  >
+}
+
 export type UpdateSelfAccountMutationVariables = Exact<{
   accountId: Scalars['ID']
   update: UpdateAccountInput
@@ -423,6 +440,8 @@ export type OrgAccountListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
+  roles?: Maybe<Array<Scalars['String']> | Scalars['String']>
 }>
 
 export type OrgAccountListQuery = {
@@ -1509,6 +1528,153 @@ export type AccountProfileQueryResult = Apollo.QueryResult<
   AccountProfileQuery,
   AccountProfileQueryVariables
 >
+export const UpdateAccountStatusDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateAccountStatus' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'status' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateAccountStatus' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'status' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'status' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateAccountStatusMutationFn = Apollo.MutationFunction<
+  UpdateAccountStatusMutation,
+  UpdateAccountStatusMutationVariables
+>
+export type UpdateAccountStatusProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateAccountStatusMutation,
+    UpdateAccountStatusMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateAccountStatus<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateAccountStatusMutation,
+    UpdateAccountStatusMutationVariables,
+    UpdateAccountStatusProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateAccountStatusMutation,
+    UpdateAccountStatusMutationVariables,
+    UpdateAccountStatusProps<TChildProps, TDataName>
+  >(UpdateAccountStatusDocument, {
+    alias: 'updateAccountStatus',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateAccountStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountStatusMutation, { data, loading, error }] = useUpdateAccountStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateAccountStatusMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAccountStatusMutation,
+    UpdateAccountStatusMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateAccountStatusMutation,
+    UpdateAccountStatusMutationVariables
+  >(UpdateAccountStatusDocument, options)
+}
+export type UpdateAccountStatusMutationHookResult = ReturnType<
+  typeof useUpdateAccountStatusMutation
+>
+export type UpdateAccountStatusMutationResult = Apollo.MutationResult<UpdateAccountStatusMutation>
+export type UpdateAccountStatusMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAccountStatusMutation,
+  UpdateAccountStatusMutationVariables
+>
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -2371,6 +2537,31 @@ export const OrgAccountListDocument: DocumentNode = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'roles' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'String' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -2406,10 +2597,35 @@ export const OrgAccountListDocument: DocumentNode = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'orgId' },
+                name: { kind: 'Name', value: 'filter' },
                 value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'orgId' },
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'orgId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'roles' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'roles' },
+                      },
+                    },
+                  ],
                 },
               },
             ],
@@ -2501,6 +2717,8 @@ export function withOrgAccountList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
+ *      roles: // value for 'roles'
  *   },
  * });
  */

@@ -9,3 +9,13 @@ query AccountProfile($username: String!) {
     availability
   }
 }
+mutation UpdateAccountStatus($id: ID!,$status: String!) {
+  updateAccountStatus(id: $id, status: $status) {
+    id
+    email
+    username
+    displayName
+    roles
+    status
+  }
+}
