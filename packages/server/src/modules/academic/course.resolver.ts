@@ -1,5 +1,5 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Query } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ForbiddenError } from 'type-graphql'
 
 import { CurrentOrg, UseAuthGuard } from 'core'
@@ -11,7 +11,7 @@ import { PageOptionsInput } from 'types'
 import { AcademicService } from './academic.service'
 import { CoursesFilterInput, CoursesPayload } from './academic.type'
 import { Course } from './models/Course'
-
+@Resolver((_of) => Course)
 export class CourseResolver {
   constructor(private readonly academicService: AcademicService) {}
 
@@ -26,7 +26,7 @@ export class CourseResolver {
   // async updateCourse() {} //updateCourse: UpdateCourse, //@Args('input')
 
   @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_FindCourseById)
+  @UseAuthGuard()
   @UsePipes(ValidationPipe)
   async findCourseById(
     @Args('id', { type: () => ID }) constId: string,
@@ -35,7 +35,7 @@ export class CourseResolver {
   }
 
   @Query((_return) => CoursesPayload)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Academic_ListCourses)
   async courses(
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,

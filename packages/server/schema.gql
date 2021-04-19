@@ -70,7 +70,7 @@ enum Permission {
   OrgOffice_UpdateOrgOffice
   Academic_CreateCourse
   Academic_UpdateCourse
-  Academic_FindCourseById
+  Academic_ListCourses
   NoPermission
 }
 
