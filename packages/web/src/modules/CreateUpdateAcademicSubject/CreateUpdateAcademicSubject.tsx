@@ -279,7 +279,6 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                   <Button
                     variant="contained"
                     color="primary"
-                    size="large"
                     startIcon={<Check />}
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
