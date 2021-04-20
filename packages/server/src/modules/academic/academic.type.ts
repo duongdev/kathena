@@ -41,7 +41,30 @@ export class UpdateAcademicSubjectInput {
 }
 
 @InputType()
-export class CreateCourseInput {}
+export class CreateCourseInput {
+  @Field()
+  @IsNotEmpty({ message: 'Academic subject id cannot be empty' })
+  academicSubjectId: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Code cannot be empty' })
+  code: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Name cannot be empty' })
+  name: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Start date cannot be empty' })
+  startDate: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Tuition fee cannot be empty' })
+  tuitionFee: number
+
+  @Field((_type) => [String], { defaultValue: [] })
+  lecturerIds?: string[]
+}
 
 @InputType()
 export class UpdateCourseInput {}

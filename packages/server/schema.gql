@@ -127,6 +127,7 @@ type Course implements BaseModel {
   publicationState: Publication!
   publishedAt: DateTime!
   lecturerIds: [String!]!
+  createdByAccountId: ID!
 }
 
 type AcademicSubjectsPayload {
@@ -151,8 +152,8 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   accountByUserName(username: String!): Account
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
@@ -185,8 +186,8 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
-  createCourse: Course!
-  updateCourse: Course!
+  createCourse(input: CreateCourseInput!): Course!
+  findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
 }
 
@@ -218,6 +219,15 @@ scalar Upload
 input UpdateAcademicSubjectInput {
   name: String
   description: String
+}
+
+input CreateCourseInput {
+  academicSubjectId: String!
+  code: String!
+  name: String!
+  startDate: String!
+  tuitionFee: Float!
+  lecturerIds: [String!] = []
 }
 
 input CreateOrgOfficeInput {
