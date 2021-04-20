@@ -1,5 +1,5 @@
-query OrgAccountList($orgId: ID!, $skip: Int!, $limit: Int!) {
-  orgAccounts(pageOptions: { skip: $skip, limit: $limit }, orgId: $orgId) {
+query OrgAccountList($orgId: ID!, $skip: Int!, $limit: Int!,$searchText: String,$roles: [String!]) {
+  orgAccounts(pageOptions: { skip: $skip, limit: $limit },filter:{orgId: $orgId,searchText: $searchText,roles: $roles}) {
     accounts {
       id
       email

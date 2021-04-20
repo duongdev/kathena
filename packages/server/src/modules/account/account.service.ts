@@ -11,9 +11,9 @@ import {
   stringWithoutSpecialCharacters,
 } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
-import { Permission } from 'modules/auth/models'
+import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
-import { Nullable } from 'types'
+import { ANY, Nullable } from 'types'
 
 import { CreateAccountServiceInput } from './account.type'
 import { Account, AccountStatus } from './models/Account'
@@ -137,25 +137,43 @@ export class AccountService {
   }
 
   async findAndPaginateAccounts(
-    query: {
-      orgId: string
-    },
     pageOptions: {
       limit: number
       skip: number
     },
+    filter: {
+      orgId: string
+      searchText?: string
+      roles?: OrgRoleName[]
+    },
   ): Promise<{ accounts: DocumentType<Account>[]; count: number }> {
-    const { orgId } = query
+    const { orgId, searchText, roles } = filter
     const { limit, skip } = pageOptions
-
-    const accounts = await this.accountModel
-      .find({ orgId })
-      .sort({ _id: -1 })
-      .skip(skip)
-      .limit(limit)
-
+    const accountModel = this.accountModel.find({
+      orgId,
+    })
+    if (searchText) {
+      const search = removeExtraSpaces(filter.searchText)
+      if (search !== undefined && search !== '') {
+        accountModel.find({
+          $text: { $search: search },
+        })
+      }
+    }
+    if (roles) {
+      const arrQueryRoles: ANY = []
+      roles.map((role) => {
+        return arrQueryRoles.push({
+          roles: role,
+        })
+      })
+      accountModel.find({
+        $or: arrQueryRoles,
+      })
+    }
+    accountModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const accounts = await accountModel
     const count = await this.accountModel.countDocuments({ orgId })
-
     return { accounts, count }
   }
 

@@ -1,22 +1,37 @@
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
+import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
-import { useAccountProfileQuery } from 'graphql/generated'
+import {
+  useAccountProfileQuery,
+  useUpdateAccountStatusMutation,
+  AccountProfileDocument,
+  AccountStatus,
+} from 'graphql/generated'
 
 export type AccountProfileProps = {}
 
 const AccountProfile: FC<AccountProfileProps> = (props) => {
   const classes = useStyles(props)
+  const { enqueueSnackbar } = useSnackbar()
   const params: { username: string } = useParams()
   const username = useMemo(() => params.username, [params])
   const { data } = useAccountProfileQuery({
     variables: { username },
+  })
+  const [updateAccountStatus] = useUpdateAccountStatusMutation({
+    refetchQueries: [
+      {
+        query: AccountProfileDocument,
+        variables: { username },
+      },
+    ],
   })
   const account = useMemo(() => {
     if (data?.accountByUserName) {
@@ -32,13 +47,62 @@ const AccountProfile: FC<AccountProfileProps> = (props) => {
       availability: '',
     }
   }, [data])
+
+  const handleUpdateAccountStatus = useCallback(
+    async (input: string) => {
+      try {
+        if (account.id === '') return
+        const dataUpdated = (
+          await updateAccountStatus({
+            variables: {
+              id: account.id,
+              status: input,
+            },
+          })
+        ).data
+
+        const accountUpdated = dataUpdated?.updateAccountStatus
+
+        if (!accountUpdated) {
+          return
+        }
+        enqueueSnackbar(
+          `${
+            accountUpdated.status === AccountStatus.Active
+              ? 'Active'
+              : 'Deactivated'
+          } tài khoản thành công`,
+          { variant: 'success' },
+        )
+        // eslint-disable-next-line no-console
+        console.log(accountUpdated)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [updateAccountStatus, account.id, enqueueSnackbar],
+  )
   return (
     <div className={classes.root}>
       <PageContainer
         withBackButton
         maxWidth="md"
         title="Thông tin tài khoản"
-        actions={[<Button variant="contained">Activate</Button>]}
+        actions={[
+          <Button
+            variant="contained"
+            onClick={() =>
+              handleUpdateAccountStatus(
+                account.status === AccountStatus.Active
+                  ? AccountStatus.Deactivated
+                  : AccountStatus.Active,
+              )
+            }
+          >
+            {account.status === AccountStatus.Active ? 'Deactivate' : 'Active'}
+          </Button>,
+        ]}
       >
         <Grid container spacing={DASHBOARD_SPACING}>
           <SectionCard

@@ -53,12 +53,14 @@ export class Course extends BaseModel {
   publicationState: Publication
 
   @Field((_type) => Date)
-  @prop({ required: false.valueOf, type: Date })
+  @prop({ required: false, type: Date })
   publishedAt?: Date | null
 
   @Field((_type) => [String])
+  @prop({ type: [String], default: [] })
   lecturerIds: string[]
 
+  @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true })
   createdByAccountId: string
 }
