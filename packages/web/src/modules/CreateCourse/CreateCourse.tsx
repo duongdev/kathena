@@ -4,7 +4,7 @@ import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import { Check } from 'phosphor-react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import yup from '@kathena/libs/yup'
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -53,6 +53,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
   const params: { idSubject: string } = useParams()
+  const history = useHistory()
   const idSubject = useMemo(() => params.idSubject, [params.idSubject])
   const { data } = useFindAcademicSubjectByIdQuery({
     variables: {
@@ -97,6 +98,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
           return
         }
         enqueueSnackbar('Thêm khóa học thành công', { variant: 'success' })
+        history.push(ACADEMIC_COURSE_LIST)
         // eslint-disable-next-line no-console
         console.log(academicSubject)
       } catch (error) {
@@ -106,7 +108,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
         console.error(error)
       }
     },
-    [createCourse, academicSubject, enqueueSnackbar],
+    [createCourse, academicSubject, enqueueSnackbar, history],
   )
 
   return (
