@@ -70,7 +70,7 @@ enum Permission {
   OrgOffice_UpdateOrgOffice
   Academic_CreateCourse
   Academic_UpdateCourse
-  Academic_FindCourseById
+  Academic_ListCourses
   NoPermission
 }
 
@@ -135,6 +135,11 @@ type AcademicSubjectsPayload {
   count: Int!
 }
 
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
+}
+
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
@@ -157,6 +162,7 @@ type Query {
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
 }
@@ -170,6 +176,11 @@ input AccountsFilterInput {
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input CoursesFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 type Mutation {

@@ -13,6 +13,8 @@ import {
 @index({ name: 1, orgId: 1 })
 @index({ academicSubjectId: 1, orgId: 1 })
 @index({ publicationState: 1, orgId: 1 })
+@index({ code: 'text' })
+@index({ name: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class Course extends BaseModel {
   @Field((_type) => ID)

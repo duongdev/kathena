@@ -1,8 +1,9 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { AcademicSubject } from './models/AcademicSubject'
+import { Course } from './models/Course'
 
 @InputType()
 export class CreateAcademicSubjectInput {
@@ -68,3 +69,19 @@ export class CreateCourseInput {
 
 @InputType()
 export class UpdateCourseInput {}
+@ObjectType()
+export class CoursesPayload {
+  @Field((_type) => [Course])
+  courses: Course[]
+
+  @Field((_type) => Int)
+  count: number
+}
+@InputType()
+export class CoursesFilterInput {
+  @Field((_type) => ID)
+  orgId: string
+
+  @Field({ nullable: true })
+  searchText: string
+}

@@ -3,7 +3,7 @@ import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { Error, Promise } from 'mongoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
-import { normalizeCodeField } from 'core/utils/string'
+import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
@@ -280,6 +280,34 @@ export class AcademicService {
     return this.courseModel.findById(id)
   }
 
+  async findAndPaginateCourses(
+    pageOptions: {
+      limit: number
+      skip: number
+    },
+    filter: {
+      orgId: string
+      searchText?: string
+    },
+  ): Promise<{ courses: DocumentType<Course>[]; count: number }> {
+    const { orgId, searchText } = filter
+    const { limit, skip } = pageOptions
+    const courseModel = this.courseModel.find({
+      orgId,
+    })
+    if (searchText) {
+      const search = removeExtraSpaces(searchText)
+      if (search !== undefined && search !== '') {
+        courseModel.find({
+          $text: { $search: search },
+        })
+      }
+    }
+    courseModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const courses = await courseModel
+    const count = await this.courseModel.countDocuments({ orgId })
+    return { courses, count }
+  }
   /**
    * END COURSE
    */
