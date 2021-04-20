@@ -27,6 +27,7 @@ registerEnumType(AccountAvailability, { name: 'AccountAvailability' })
 
 @index({ username: 1, orgId: 1 }, { unique: true })
 @index({ email: 1, orgId: 1 }, { unique: true })
+@index({ displayName: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class Account extends BaseModel {
   @Field()
