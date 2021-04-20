@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { Grid, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
 import withComponentHocs from '../hocs/withComponentHocs'
 import InputFieldLabel, {
@@ -17,18 +17,14 @@ const InfoBlock = (props: InfoBlockProps) => {
   const { label, children, color } = props
   const classes = useStyles(props)
   return (
-    <Grid container className={classes.root}>
-      <Grid item xs={4}>
-        <InputFieldLabel color={color}>{label}</InputFieldLabel>
-      </Grid>
+    <div className={classes.root}>
+      <InputFieldLabel color={color}>{label}</InputFieldLabel>
       {typeof children === 'string' ? (
-        <Typography gridItem={{ xs: 8 }} variant="body1">
-          {children}
-        </Typography>
+        <Typography variant="body1">{children}</Typography>
       ) : (
         children
       )}
-    </Grid>
+    </div>
   )
 }
 
@@ -36,6 +32,7 @@ const useStyles = makeStyles({
   root: {
     margin: '10px 0',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'baseline',
   },
