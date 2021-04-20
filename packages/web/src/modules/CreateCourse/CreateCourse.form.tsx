@@ -1,80 +1,45 @@
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 
-import { CardContent, Grid, makeStyles } from '@material-ui/core'
-import AccountAssigner from 'components/AccountAssigner'
+import { CardContent, makeStyles, Stack } from '@material-ui/core'
+import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
 import { useFormikContext } from 'formik'
-import { useParams } from 'react-router-dom'
 
-import { DASHBOARD_SPACING } from '@kathena/theme'
-import { InfoBlock, SectionCard } from '@kathena/ui'
-import { useFindAcademicSubjectByIdQuery } from 'graphql/generated'
+import { CurrencyFormField, TextFormField } from '@kathena/ui'
 
 import { CourseFormInput, courseLabels as labels } from './CreateCourse'
 
 export type CreateCourseFormProps = {}
 
 const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formik = useFormikContext<CourseFormInput>()
-  const params: { idSubject: string } = useParams()
-  const idSubject = useMemo(() => params.idSubject, [params.idSubject])
-  const { data } = useFindAcademicSubjectByIdQuery({
-    variables: {
-      Id: idSubject,
-    },
-  })
-  const academicSubject = useMemo(() => data?.academicSubject, [
-    data?.academicSubject,
-  ])
 
   return (
-    <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard
-        maxContentHeight={false}
-        gridItem={{ xs: 4 }}
-        title="Thông tin môn học"
-      >
-        <CardContent>
-          <InfoBlock label="Code">{academicSubject?.code}</InfoBlock>
-          <InfoBlock label="Name">{academicSubject?.name}</InfoBlock>
-          <InfoBlock label="Description">
-            {academicSubject?.description}
-          </InfoBlock>
-        </CardContent>
-      </SectionCard>
-      <SectionCard
-        title="Thông tin khóa học"
-        maxContentHeight={false}
-        gridItem={{ xs: 8 }}
-      >
-        <CardContent>
-          <AccountAssigner
-            label="Giáo viên đảm nhận"
-            roles={['lecturer']}
-            multiple
-          />
-        </CardContent>
-      </SectionCard>
-    </Grid>
+    <CardContent className={classes.root}>
+      <Stack spacing={2}>
+        <TextFormField hidden name="academicSubjectId" />
+        <TextFormField required autoFocus name="name" label={labels.name} />
+        <TextFormField required name="code" label={labels.code} />
+        <CurrencyFormField
+          required
+          name="tuitionFee"
+          label={labels.tuitionFee}
+        />
+        <AccountAssignerFormField
+          name="lecturerIds"
+          label={labels.lecturerIds}
+          roles={['lecturer']}
+          multiple
+        />
+        <TextFormField type="date" name="startDate" label={labels.startDate} />
+      </Stack>
+    </CardContent>
   )
 }
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(() => ({
   root: {},
-  imageCard: {
-    position: 'relative',
-  },
-  imageCardContent: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  imageError: {
-    marginTop: spacing(2),
-    flexShrink: 0,
-    display: 'block',
-  },
 }))
 
 export default CreateCourseForm

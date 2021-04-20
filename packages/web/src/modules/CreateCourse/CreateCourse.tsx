@@ -1,11 +1,14 @@
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 
-import { makeStyles } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { Check } from 'phosphor-react'
+import { useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
-import { Button, PageContainer } from '@kathena/ui'
+import { DASHBOARD_SPACING } from '@kathena/theme'
+import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
+import { useFindAcademicSubjectByIdQuery } from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
 
 import CreateCourseForm from './CreateCourse.form'
@@ -36,22 +39,32 @@ const validationSchema: SchemaOf<CourseFormInput> = yup.object({
   tuitionFee: yup.number().label(labels.tuitionFee).min(0).required(),
   academicSubjectId: yup.string().label(labels.academicSubjectId).required(),
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
-  startDate: yup.string().label(labels.startDate).required(),
+  startDate: yup.string().label(labels.startDate).default(''),
 })
 
 const CreateCourse: FC<CreateCourseProps> = (props) => {
   const classes = useStyles(props)
+  const params: { idSubject: string } = useParams()
+  const idSubject = useMemo(() => params.idSubject, [params.idSubject])
+  const { data } = useFindAcademicSubjectByIdQuery({
+    variables: {
+      Id: idSubject,
+    },
+  })
+  const academicSubject = useMemo(() => data?.academicSubject, [
+    data?.academicSubject,
+  ])
 
   const initialValues: CourseFormInput = {
     code: '',
     name: '',
     tuitionFee: 0,
-    academicSubjectId: '',
+    academicSubjectId: academicSubject?.id ?? '',
     lecturerIds: [],
     startDate: '',
   }
 
-  const handleSubmitForm = useCallback((value) => value, [])
+  const handleSubmitForm = useCallback((value) => console.log(value), [])
 
   return (
     <Formik
@@ -78,7 +91,29 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
             </Button>,
           ]}
         >
-          <CreateCourseForm />
+          <Grid container spacing={DASHBOARD_SPACING}>
+            <SectionCard
+              gridItem={{ xs: 4 }}
+              fullHeight={false}
+              maxContentHeight={false}
+              title="Thông tin môn học"
+            >
+              <CardContent>
+                <InfoBlock label="Code">{academicSubject?.code}</InfoBlock>
+                <InfoBlock label="Name">{academicSubject?.name}</InfoBlock>
+                <InfoBlock label="Description">
+                  {academicSubject?.description}
+                </InfoBlock>
+              </CardContent>
+            </SectionCard>
+            <SectionCard
+              title="Thông tin khóa học"
+              gridItem={{ xs: 8 }}
+              maxContentHeight={false}
+            >
+              <CreateCourseForm />
+            </SectionCard>
+          </Grid>
         </PageContainer>
       )}
     </Formik>
