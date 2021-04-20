@@ -219,7 +219,7 @@ export class AcademicService {
     }
 
     const currentDate = new Date()
-    const startDateInput = new Date(Number.parseInt(startDate, 10))
+    const startDateInput = new Date(startDate)
 
     if (
       startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)

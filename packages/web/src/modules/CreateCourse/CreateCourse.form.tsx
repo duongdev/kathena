@@ -18,7 +18,6 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
   return (
     <CardContent className={classes.root}>
       <Stack spacing={2}>
-        <TextFormField hidden name="academicSubjectId" />
         <TextFormField required autoFocus name="name" label={labels.name} />
         <TextFormField required name="code" label={labels.code} />
         <CurrencyFormField

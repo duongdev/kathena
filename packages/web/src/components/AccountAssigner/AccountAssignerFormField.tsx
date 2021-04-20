@@ -27,6 +27,7 @@ const AccountAssignerFormField: FC<AccountAssignerFormFieldProps> = (props) =>
       <FieldComponent name={props.name}>
         {({ field, meta, form }: FieldProps) => {
           const error = form.submitCount > 0 && meta.touched && meta.error
+
           return (
             <AccountAssigner
               required={props.required}

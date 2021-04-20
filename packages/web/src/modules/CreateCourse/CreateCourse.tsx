@@ -2,13 +2,23 @@ import { FC, useCallback, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import { Check } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
-import yup, { SchemaOf } from '@kathena/libs/yup'
+import yup from '@kathena/libs/yup'
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
-import { useFindAcademicSubjectByIdQuery } from 'graphql/generated'
+import {
+  Button,
+  InfoBlock,
+  PageContainer,
+  renderApolloError,
+  SectionCard,
+} from '@kathena/ui'
+import {
+  useFindAcademicSubjectByIdQuery,
+  useCreateCourseMutation,
+} from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
 
 import CreateCourseForm from './CreateCourse.form'
@@ -19,31 +29,29 @@ export type CourseFormInput = {
   code: string
   name: string
   tuitionFee: number
-  academicSubjectId: string
-  lecturerIds: string[]
+  lecturerIds: Array<Account>
   startDate: string
 }
 
 const labels: { [k in keyof CourseFormInput]: string } = {
-  name: 'Tên môn học',
-  code: 'Mã môn học',
+  name: 'Tên khóa học',
+  code: 'Mã khóa học',
   tuitionFee: 'Học phí',
-  academicSubjectId: 'Môn học',
   lecturerIds: 'Giảng viên',
   startDate: 'Ngày bắt đầu',
 }
 
-const validationSchema: SchemaOf<CourseFormInput> = yup.object({
+const validationSchema = yup.object({
   name: yup.string().label(labels.name).trim().required(),
   code: yup.string().label(labels.code).trim().uppercase().required(),
   tuitionFee: yup.number().label(labels.tuitionFee).min(0).required(),
-  academicSubjectId: yup.string().label(labels.academicSubjectId).required(),
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
 })
 
 const CreateCourse: FC<CreateCourseProps> = (props) => {
   const classes = useStyles(props)
+  const { enqueueSnackbar } = useSnackbar()
   const params: { idSubject: string } = useParams()
   const idSubject = useMemo(() => params.idSubject, [params.idSubject])
   const { data } = useFindAcademicSubjectByIdQuery({
@@ -54,17 +62,52 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
   const academicSubject = useMemo(() => data?.academicSubject, [
     data?.academicSubject,
   ])
-
+  const [createCourse] = useCreateCourseMutation()
   const initialValues: CourseFormInput = {
     code: '',
     name: '',
     tuitionFee: 0,
-    academicSubjectId: academicSubject?.id ?? '',
     lecturerIds: [],
     startDate: '',
   }
 
-  const handleSubmitForm = useCallback((value) => console.log(value), [])
+  const handleSubmitForm = useCallback(
+    async (input: CourseFormInput) => {
+      try {
+        if (!academicSubject) return
+        const lecturerIds: string[] = []
+        if (input.lecturerIds.length)
+          input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
+        const { data: dataCreated } = await createCourse({
+          variables: {
+            input: {
+              academicSubjectId: academicSubject.id,
+              code: input.code,
+              name: input.name,
+              startDate: input.startDate,
+              tuitionFee: input.tuitionFee,
+              lecturerIds,
+            },
+          },
+        })
+
+        const course = dataCreated?.createCourse
+
+        if (!course) {
+          return
+        }
+        enqueueSnackbar('Thêm khóa học thành công', { variant: 'success' })
+        // eslint-disable-next-line no-console
+        console.log(academicSubject)
+      } catch (error) {
+        const errorMessage = renderApolloError(error)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [createCourse, academicSubject, enqueueSnackbar],
+  )
 
   return (
     <Formik
