@@ -182,13 +182,14 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type QueryFileArgs = {
+  id: Scalars['ID']
+}
+
 export type AccountsFilterInput = {
   orgId: Scalars['ID']
   roles?: Maybe<Array<Scalars['String']>>
   searchText?: Maybe<Scalars['String']>
-}
-export type QueryFileArgs = {
-  id: Scalars['ID']
 }
 
 export type PageOptionsInput = {
