@@ -6,6 +6,7 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
+import { AccountService } from '../account/account.service'
 import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
@@ -16,6 +17,7 @@ describe('academic.service', () => {
   let academicService: AcademicService
   let orgService: OrgService
   let authService: AuthService
+  let accountService: AccountService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -27,6 +29,7 @@ describe('academic.service', () => {
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
+    accountService = module.get<AccountService>(AccountService)
   })
 
   afterAll(async () => {
@@ -705,6 +708,54 @@ describe('academic.service', () => {
         ).rejects.toThrowError('START_DATE_INVALID')
       })
 
+      it(`throws error if the lecturerIds array containing lecturerId does not exist or is not a lecturer`, async () => {
+        expect.assertions(2)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accountAdmin = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhadmin.top@gmail.com',
+          password: '123456',
+          username: 'thanhcanhadmin',
+          roles: ['admin'],
+          displayName: 'Thanh Canh Admin',
+        })
+
+        const id = objectId()
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createCourse(objectId(), org.id, {
+            ...createCourseInput,
+            startDate: Date.now(),
+            lecturerIds: [id],
+          }),
+        ).rejects.toThrowError(`ID ${id} not found`)
+
+        await expect(
+          academicService.createCourse(objectId(), org.id, {
+            ...createCourseInput,
+            startDate: Date.now(),
+            lecturerIds: [accountAdmin.id],
+          }),
+        ).rejects.toThrowError(`Thanh Canh Admin not a lecturer`)
+      })
+
       it(`returns a course`, async () => {
         expect.assertions(1)
 
@@ -724,7 +775,7 @@ describe('academic.service', () => {
         await expect(
           academicService.createCourse(creatorId, orgId, {
             ...createCourseInput,
-            startDate: '1618765200000',
+            startDate: Date.now(),
           }),
         ).resolves.toMatchObject({
           code: 'NODEJS-12',

@@ -28,9 +28,6 @@ export class CourseResolver {
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<Course> {
-    this.logger.log(account)
-    this.logger.log(org)
-
     return this.academicService.createCourse(
       account.id,
       org.id,
