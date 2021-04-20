@@ -1,5 +1,6 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { ForbiddenError } from 'type-graphql'
 
 import { Logger, UseAuthGuard } from 'core'
 import { CurrentAccount, CurrentOrg } from 'core/auth'
@@ -7,8 +8,14 @@ import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 
+import { PageOptionsInput } from 'types'
+
 import { AcademicService } from './academic.service'
-import { CreateCourseInput } from './academic.type'
+import {
+  CoursesFilterInput,
+  CoursesPayload,
+  CreateCourseInput,
+} from './academic.type'
 import { Course } from './models/Course'
 
 @Resolver((_of) => Course)
@@ -28,9 +35,6 @@ export class CourseResolver {
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<Course> {
-    this.logger.log(account)
-    this.logger.log(org)
-
     return this.academicService.createCourse(
       account.id,
       org.id,
@@ -44,11 +48,24 @@ export class CourseResolver {
   // async updateCourse() {} //updateCourse: UpdateCourse, //@Args('input')
 
   @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_FindCourseById)
+  @UseAuthGuard()
   @UsePipes(ValidationPipe)
   async findCourseById(
     @Args('id', { type: () => ID }) constId: string,
   ): Promise<Course | null> {
     return this.academicService.findCourseById(constId)
+  }
+
+  @Query((_return) => CoursesPayload)
+  @UseAuthGuard(P.Academic_ListCourses)
+  async courses(
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @CurrentOrg() org: Org,
+    @Args('filter') filter: CoursesFilterInput,
+  ): Promise<CoursesPayload> {
+    if (org.id !== filter.orgId) {
+      throw new ForbiddenError()
+    }
+    return this.academicService.findAndPaginateCourses(pageOptions, filter)
   }
 }
