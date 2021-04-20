@@ -226,6 +226,7 @@ export class AcademicService {
     if (!canCreateCourse) {
       throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
     }
+
     if (!academicSubjectIsExist) {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
     }
