@@ -223,6 +223,10 @@ export class AcademicService {
         createCourseInput.academicSubjectId,
       )) !== null
 
+    if (!canCreateCourse) {
+      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
+    }
+
     if (!academicSubjectIsExist) {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
     }
@@ -251,8 +255,7 @@ export class AcademicService {
     })
 
     const currentDate = new Date()
-    const startDateInput = new Date(Number.parseInt(startDate, 10))
-
+    const startDateInput = new Date(startDate)
     if (
       startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
     ) {

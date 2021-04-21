@@ -629,7 +629,6 @@ describe('academic.service', () => {
       tuitionFee: 5000000,
       lecturerIds: [],
     }
-
     describe('createCourse', () => {
       it(`throws error "Org ID is invalid" if org id is invalid`, async () => {
         expect.assertions(1)
@@ -675,8 +674,8 @@ describe('academic.service', () => {
         ).rejects.toThrowError('ACADEMIC_SUBJECT_NOT_FOUND')
       })
 
-      it(`throws error "START_DATE_INVALID" if the entered date is invalid or less than the current date`, async () => {
-        expect.assertions(2)
+      it(`throws error "START_DATE_INVALID" if the entered date less than the current date`, async () => {
+        expect.assertions(1)
 
         jest
           .spyOn(orgService, 'validateOrgId')
@@ -691,19 +690,12 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
-        // Start date is invalid
-        await expect(
-          academicService.createCourse(objectId(), objectId(), {
-            ...createCourseInput,
-            startDate: '12342342',
-          }),
-        ).rejects.toThrowError('START_DATE_INVALID')
-
+        const date = new Date()
         // Start date less than the current date
         await expect(
           academicService.createCourse(objectId(), objectId(), {
             ...createCourseInput,
-            startDate: '1617235200000',
+            startDate: date.setDate(date.getDate() - 1),
           }),
         ).rejects.toThrowError('START_DATE_INVALID')
       })
