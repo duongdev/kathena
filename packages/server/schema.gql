@@ -133,8 +133,8 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   accountByUserName(username: String!): Account
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
@@ -168,6 +168,7 @@ type Mutation {
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
+  updateOrgOffice(input: UpdateOrgOfficeInput!): OrgOffice!
 }
 
 input CreateAccountInput {
@@ -204,4 +205,10 @@ input CreateOrgOfficeInput {
   name: String!
   address: String!
   phone: String!
+}
+
+input UpdateOrgOfficeInput {
+  name: String
+  address: String
+  phone: String
 }
