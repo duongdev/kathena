@@ -1,8 +1,9 @@
-import { FC } from 'react'
+import { FC, useCallback, useState } from 'react'
 
 import { CardContent, makeStyles } from '@material-ui/core'
 import { Plus } from 'phosphor-react'
 
+import { ANY } from '@kathena/types'
 import {
   Button,
   SectionCard,
@@ -14,6 +15,7 @@ import { Permission } from 'graphql/generated'
 
 import CreateOrgOfficeDialog from './CreateOrgOfficeDialog'
 import OrgOfficeList from './OrgOfficeList'
+import UpdateOrgOfficeDialog from './UpdateOrgOfficeDialog'
 
 export type OrgOfficeListCardProps = {}
 
@@ -25,6 +27,20 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
     handleOpenCreateDialog,
     handleCloseCreateDialog,
   ] = useDialogState()
+  const [
+    updateDialogOpen,
+    handleOpenUpdateDialog,
+    handleCloseUpdateDialog,
+  ] = useDialogState()
+  const [valueUpdate, setValueUpdate] = useState({ id: '' })
+
+  const receiveValueUpdate = useCallback(
+    (value) => {
+      setValueUpdate(value)
+      handleOpenUpdateDialog()
+    },
+    [setValueUpdate, handleOpenUpdateDialog],
+  )
 
   return (
     <SectionCard
@@ -47,8 +63,15 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
           onClose={handleCloseCreateDialog}
         />
       </RequiredPermission>
+      <RequiredPermission permission={Permission.OrgOffice_UpdateOrgOffice}>
+        <UpdateOrgOfficeDialog
+          open={updateDialogOpen}
+          onClose={handleCloseUpdateDialog}
+          orgOffice={valueUpdate as ANY}
+        />
+      </RequiredPermission>
       <CardContent>
-        <OrgOfficeList />
+        <OrgOfficeList receiveUpdateOrgOfficeValue={receiveValueUpdate} />
       </CardContent>
     </SectionCard>
   )
