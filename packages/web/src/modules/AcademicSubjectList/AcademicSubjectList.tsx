@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { makeStyles, Paper, Skeleton } from '@material-ui/core'
+import { makeStyles, Paper } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import { PlusCircle } from 'phosphor-react'
 
