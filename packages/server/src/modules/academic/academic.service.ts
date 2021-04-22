@@ -277,7 +277,42 @@ export class AcademicService {
     return course
   }
 
-  /// / async updateCourse() {}
+  async updateCourse(
+    query: { id: string; orgId: string },
+    update: {
+      name?: string
+      tuitionFee?: number
+      startDate?: string
+      lecturerIds?: string[]
+    },
+  ): Promise<DocumentType<Course>> {
+    const course = await this.courseModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
+
+    if (!course) {
+      throw new Error(`Couldn't find course to update`)
+    }
+    if (update.name) {
+      course.name = update.name
+    }
+    if (update.startDate) {
+      const startDateInput = new Date(update.startDate)
+      course.startDate = startDateInput
+    }
+    if (update.tuitionFee) {
+      course.tuitionFee = update.tuitionFee
+    }
+    if (update.lecturerIds) {
+      course.lecturerIds = update.lecturerIds
+    }
+
+    const courseUpdated = await course.save()
+    console.log(courseUpdated)
+
+    return courseUpdated
+  }
 
   async findCourseById(id: string): Promise<DocumentType<Course> | null> {
     return this.courseModel.findById(id)

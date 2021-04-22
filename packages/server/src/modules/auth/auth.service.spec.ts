@@ -48,6 +48,7 @@ describe('auth.service', () => {
         'Academic_SetAcademicSubjectPublication',
         'Academic_UpdateAcademicSubject',
         'Academic_ListCourses',
+        'Academic_UpdateCourse',
         'OrgOffice_UpdateOrgOffice',
       ]
 
@@ -187,6 +188,7 @@ describe('auth.service', () => {
                 "Academic_SetAcademicSubjectPublication",
                 "Academic_UpdateAcademicSubject",
                 "Academic_ListCourses",
+                "Academic_UpdateCourse",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",

@@ -198,6 +198,7 @@ type Mutation {
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
+  updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
@@ -240,6 +241,13 @@ input CreateCourseInput {
   startDate: String!
   tuitionFee: Float!
   lecturerIds: [String!] = []
+}
+
+input UpdateCourseInput {
+  name: String
+  tuitionFee: Float
+  startDate: String
+  lecturerIds: [String!]
 }
 
 input CreateOrgOfficeInput {

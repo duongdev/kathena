@@ -778,7 +778,237 @@ describe('academic.service', () => {
       })
     })
 
-    describe('updateCourse', () => {})
+    describe('updateCourse', () => {
+      it(`throws error if couldn't find course to update`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          academicService.updateCourse(
+            {
+              id: objectId(),
+              orgId: objectId(),
+            },
+            {
+              name: 'Con meo ngu ngoc ne anh',
+            },
+          ),
+        ).rejects.toThrowError(`Couldn't find course to update`)
+      })
+
+      it(`returns a course with a new name`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+
+        const creatorId = objectId()
+        const orgId = objectId()
+
+        const courseTest = await academicService.createCourse(
+          creatorId,
+          orgId,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+          },
+        )
+
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseTest)
+
+        await expect(
+          academicService.updateCourse(
+            {
+              id: objectId(),
+              orgId: objectId(),
+            },
+            {
+              name: 'NodeJS Thang Tu - La Loi Noi Doi Cua Anh',
+            },
+          ),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'NodeJS Thang Tu - La Loi Noi Doi Cua Anh',
+          tuitionFee: 5000000,
+        })
+      })
+
+      it(`returns a course with a new tuitionFee`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+
+        const creatorId = objectId()
+        const orgId = objectId()
+
+        const courseTest = await academicService.createCourse(
+          creatorId,
+          orgId,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+          },
+        )
+
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseTest)
+
+        await expect(
+          academicService.updateCourse(
+            {
+              id: objectId(),
+              orgId: objectId(),
+            },
+            {
+              tuitionFee: 3000,
+            },
+          ),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 3000,
+        })
+      })
+
+      it(`returns a course with a new lecturerIds`, async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accountLecturer = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai0911@gmail.com',
+          password: '123456',
+          username: 'haidev',
+          roles: ['lecturer'],
+          displayName: 'Nguyen Van Hai',
+        })
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const courseTest = await academicService.createCourse(
+          objectId(),
+          accountLecturer.orgId,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+          },
+        )
+
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseTest)
+
+        await expect(
+          academicService.updateCourse(
+            {
+              id: courseTest.id,
+              orgId: courseTest.orgId,
+            },
+            {
+              lecturerIds: [accountLecturer.id],
+            },
+          ),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+        })
+      })
+
+      it(`returns a course with a new startDate`, async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accountLecturer = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai0911@gmail.com',
+          password: '123456',
+          username: 'haidev',
+          roles: ['lecturer'],
+          displayName: 'Nguyen Van Hai',
+        })
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const courseTest = await academicService.createCourse(
+          objectId(),
+          accountLecturer.orgId,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+          },
+        )
+
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseTest)
+
+        await expect(
+          academicService.updateCourse(
+            {
+              id: courseTest.id,
+              orgId: courseTest.orgId,
+            },
+            {
+              startDate: '2018-3-3',
+            },
+          ),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+        })
+      })
+    })
 
     describe('findCourseById', () => {})
   })
