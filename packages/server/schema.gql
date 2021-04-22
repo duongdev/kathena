@@ -169,6 +169,7 @@ type Mutation {
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
+  findOrgOffices(keyWork: String!): [OrgOffice!]!
 }
 
 input CreateAccountInput {

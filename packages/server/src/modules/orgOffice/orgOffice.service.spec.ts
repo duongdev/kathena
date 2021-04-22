@@ -464,4 +464,100 @@ describe('orgOffice.service', () => {
       })
     })
   })
+
+  describe('findOrgOffices', () => {
+    it(`returns an empty array if the input values is empty or the input values do not match`, async () => {
+      expect.assertions(2)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      jest
+        .spyOn(orgOfficeService, 'findOrgOffices')
+        .mockResolvedValueOnce({
+          findOrgOffices: [],
+        } as any)
+        .mockResolvedValueOnce({
+          findOrgOffices: [],
+        } as any)
+
+      await expect(
+        orgOfficeService.findOrgOffices('maii', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [],
+      })
+
+      await expect(
+        orgOfficeService.findOrgOffices(' ', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [],
+      })
+    })
+
+    it(`returns an org office array`, async () => {
+      expect.assertions(2)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      jest
+        .spyOn(orgOfficeService, 'findOrgOffices')
+        .mockResolvedValueOnce({
+          findOrgOffices: [
+            {
+              name: 'Kmin Edu',
+              address: '25A Nguyễn Thị Lựu',
+              phone: '098765421',
+            },
+          ],
+        } as any)
+        .mockResolvedValueOnce({
+          findOrgOffices: [
+            {
+              name: 'Kmin Edu',
+              address: '25A Nguyễn Thị Lựu',
+              phone: '098765421',
+            },
+            {
+              name: 'Kmin Edu',
+              address: '25A Mai Thị Lựu',
+              phone: '098765421',
+            },
+          ],
+        } as any)
+
+      await expect(
+        orgOfficeService.findOrgOffices('mai', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [
+          {
+            name: 'Kmin Edu',
+            address: '25A Nguyễn Thị Lựu',
+            phone: '098765421',
+          },
+        ],
+      })
+
+      await expect(
+        orgOfficeService.findOrgOffices('Mai Thị Lựu', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [
+          {
+            name: 'Kmin Edu',
+            address: '25A Nguyễn Thị Lựu',
+            phone: '098765421',
+          },
+          {
+            name: 'Kmin Edu',
+            address: '25A Mai Thị Lựu',
+            phone: '098765421',
+          },
+        ],
+      })
+    })
+  })
 })

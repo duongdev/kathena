@@ -50,4 +50,13 @@ export class OrgOfficeResolver {
       input,
     )
   }
+
+  @Mutation((_returns) => [OrgOffice])
+  @UseAuthGuard(P.OrgOffice_ListOrgOffices)
+  async findOrgOffices(
+    @Args('keyWork', { type: () => String }) keyWork: string,
+    @CurrentOrg() org: Org,
+  ): Promise<OrgOffice[]> {
+    return this.orgOfficeService.findOrgOffices(keyWork, org.id)
+  }
 }
