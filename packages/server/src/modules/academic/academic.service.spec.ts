@@ -5,10 +5,6 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import {
-  CreateAccountInput,
-  CreateAccountServiceInput,
-} from 'modules/account/account.type'
 import { ANY } from 'types'
 
 import { AccountService } from '../account/account.service'
@@ -16,7 +12,6 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
-import { CreateCourseInput } from './academic.type'
 
 describe('academic.service', () => {
   let module: TestingModule
