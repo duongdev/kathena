@@ -68,6 +68,9 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Academic_CreateCourse
+  Academic_UpdateCourse
+  Academic_ListCourses
   NoPermission
 }
 
@@ -111,8 +114,29 @@ enum Publication {
   Published
 }
 
+type Course implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  academicSubjectId: ID!
+  code: String!
+  name: String!
+  startDate: DateTime!
+  tuitionFee: Float!
+  publicationState: Publication!
+  publishedAt: DateTime!
+  lecturerIds: [String!]!
+  createdByAccountId: ID!
+}
+
 type AcademicSubjectsPayload {
   academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
+type CoursesPayload {
+  courses: [Course!]!
   count: Int!
 }
 
@@ -133,17 +157,30 @@ type OrgOffice implements BaseModel {
 
 type Query {
   account(id: ID!): Account
-  orgAccounts(pageOptions: PageOptionsInput!, orgId: ID!): OrgAccountsPayload!
+  accountByUserName(username: String!): Account
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
+}
+
+input AccountsFilterInput {
+  orgId: ID!
+  roles: [String!]
+  searchText: String
 }
 
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input CoursesFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 type Mutation {
@@ -160,7 +197,10 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  createCourse(input: CreateCourseInput!): Course!
+  findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
+  updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
 }
 
 input CreateAccountInput {
@@ -193,8 +233,23 @@ input UpdateAcademicSubjectInput {
   description: String
 }
 
+input CreateCourseInput {
+  academicSubjectId: String!
+  code: String!
+  name: String!
+  startDate: String!
+  tuitionFee: Float!
+  lecturerIds: [String!] = []
+}
+
 input CreateOrgOfficeInput {
   name: String!
   address: String!
   phone: String!
+}
+
+input UpdateOrgOfficeInput {
+  name: String
+  address: String
+  phone: String
 }

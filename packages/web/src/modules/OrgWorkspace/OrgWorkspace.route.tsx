@@ -10,6 +10,8 @@ import {
   CREATE_ACADEMIC_SUBJECT,
   ORG_SETTINGS,
   UPDATE_ACADEMIC_SUBJECT,
+  USER_PROFILE,
+  CREATE_ACADEMIC_COURSE,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -18,6 +20,7 @@ const AccountSettings = lazy(
       'modules/AccountSettings' /* webpackChunkName: "modules/AccountSettings" */
     ),
 )
+const AccountProfile = lazy(() => import('modules/AccountProfile'))
 const OrgAccountList = lazy(
   () =>
     import(
@@ -36,6 +39,12 @@ const CreateUpdateAcademicSubject = lazy(
       'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/CreateUpdateAcademicSubject" */
     ),
 )
+const CreateCourse = lazy(
+  () =>
+    import(
+      'modules/CreateCourse' /* webpackChunkName: "modules/CreateCourse" */
+    ),
+)
 const OrgSettings = lazy(
   () =>
     import('modules/OrgSettings' /* webpackChunkName: "modules/OrgSettings" */),
@@ -46,6 +55,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
   <Suspense fallback={<Spinner p={4} center />}>
     <Switch>
       <Route path={USER_SELF_SETTINGS} component={AccountSettings} />
+      <Route path={USER_PROFILE} component={AccountProfile} />
       <Route path={USER_LIST} component={OrgAccountList} />
       <Route
         path={ACADEMIC_SUBJECT_LIST}
@@ -62,6 +72,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         exact
         component={CreateUpdateAcademicSubject}
       />
+      <Route path={CREATE_ACADEMIC_COURSE} exact component={CreateCourse} />
       <Route path={ORG_SETTINGS} exact component={OrgSettings} />
     </Switch>
   </Suspense>

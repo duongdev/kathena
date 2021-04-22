@@ -1,8 +1,9 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql'
+import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { AcademicSubject } from './models/AcademicSubject'
+import { Course } from './models/Course'
 
 @InputType()
 export class CreateAcademicSubjectInput {
@@ -41,7 +42,46 @@ export class UpdateAcademicSubjectInput {
 }
 
 @InputType()
-export class CreateCourse {}
+export class CreateCourseInput {
+  @Field()
+  @IsNotEmpty({ message: 'Academic subject id cannot be empty' })
+  academicSubjectId: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Code cannot be empty' })
+  code: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Name cannot be empty' })
+  name: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Start date cannot be empty' })
+  startDate: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Tuition fee cannot be empty' })
+  tuitionFee: number
+
+  @Field((_type) => [String], { defaultValue: [] })
+  lecturerIds?: string[]
+}
 
 @InputType()
-export class UpdateCourse {}
+export class UpdateCourseInput {}
+@ObjectType()
+export class CoursesPayload {
+  @Field((_type) => [Course])
+  courses: Course[]
+
+  @Field((_type) => Int)
+  count: number
+}
+@InputType()
+export class CoursesFilterInput {
+  @Field((_type) => ID)
+  orgId: string
+
+  @Field({ nullable: true })
+  searchText: string
+}

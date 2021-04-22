@@ -15,13 +15,13 @@ export enum Permission {
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
 
-  Academic_CreateCourse = 'Academic_CreateCourse',
-  Academic_UpdateCourse = 'Academic_UpdateCourse',
-  Academic_FindCourseById = 'Academic_FindCourseById',
-
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+
+  Academic_CreateCourse = 'Academic_CreateCourse',
+  Academic_UpdateCourse = 'Academic_UpdateCourse',
+  Academic_ListCourses = 'Academic_ListCourses',
 
   /** For testing purpose */
   NoPermission = 'NoPermission',
