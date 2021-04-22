@@ -1,4 +1,3 @@
-import { GraphQLSchemaBuilder } from '@nestjs/graphql/dist/graphql-schema.builder'
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
