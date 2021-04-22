@@ -81,7 +81,7 @@ export class UpdateCourseInput {
   @IsOptional()
   startDate?: string
 
-  @Field((_type) => [String], { nullable: true })
+  @Field((_type) => [ID], { nullable: true })
   @IsOptional()
   lecturerIds?: string[]
 }
