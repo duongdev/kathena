@@ -809,17 +809,21 @@ describe('academic.service', () => {
         jest
           .spyOn(academicService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(academicService['authService'], 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(testObject)
+          .mockResolvedValueOnce(testObject)
 
         jest
           .spyOn(academicService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce(testObject)
           .mockResolvedValueOnce(testObject)
 
         const courseCreated = await academicService.createCourse(
@@ -847,9 +851,9 @@ describe('academic.service', () => {
         })
 
         await expect(
-          academicService.findCourseById(courseCreated.id, orgId),
+          academicService.findCourseById(courseCreated2.id, orgId),
         ).resolves.toMatchObject({
-          code: 'NodeJS-13',
+          code: 'NODEJS-13',
           name: 'Node Js Thang 1',
           tuitionFee: 9000000,
         })
