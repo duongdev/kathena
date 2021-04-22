@@ -309,8 +309,6 @@ export class AcademicService {
     }
 
     const courseUpdated = await course.save()
-    console.log(courseUpdated)
-
     return courseUpdated
   }
 
