@@ -1,11 +1,17 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { Error, Promise } from 'mongoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
+import { AccountService } from 'modules/account/account.service'
+import { AuthService } from 'modules/auth/auth.service'
+import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 
 import { Nullable } from '../../types'
 
+import { CreateCourseInput } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
 
@@ -15,10 +21,17 @@ export class AcademicService {
 
   constructor(
     private readonly orgService: OrgService,
+
     @InjectModel(AcademicSubject)
     private readonly academicSubjectModel: ReturnModelType<
       typeof AcademicSubject
     >,
+
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
+
+    private readonly accountService: AccountService,
+
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
   ) {}
@@ -173,7 +186,96 @@ export class AcademicService {
     return updatedAcademicSubject
   }
 
-  /// / async createCourse() {}
+  /**
+   * START COURSE
+   */
+
+  async createCourse(
+    creatorId: string,
+    orgId: string,
+    createCourseInput: CreateCourseInput,
+  ): Promise<DocumentType<Course>> {
+    const {
+      academicSubjectId,
+      name,
+      code,
+      startDate,
+      tuitionFee,
+      lecturerIds,
+    } = createCourseInput
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    // Can create course
+    const canCreateCourse = await this.authService.accountHasPermission({
+      accountId: creatorId,
+      permission: Permission.Academic_CreateAcademicSubject,
+    })
+
+    if (!canCreateCourse) {
+      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
+    }
+
+    // Check the existence of academic subject
+    const academicSubjectIsExist =
+      (await this.findAcademicSubjectById(
+        createCourseInput.academicSubjectId,
+      )) !== null
+
+    if (!canCreateCourse) {
+      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
+    }
+
+    if (!academicSubjectIsExist) {
+      throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
+    }
+
+    // Must be an array lecturer
+    const argsLecturer = createCourseInput.lecturerIds?.map(async (id) => {
+      const account = await this.accountService.findOneAccount({
+        id,
+        orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${id} not found`))
+      }
+      if (!account?.roles.includes('lecturer')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} not a lecturer`),
+        )
+      }
+
+      return id
+    })
+
+    await Promise.all(argsLecturer).catch((err) => {
+      throw new Error(err)
+    })
+
+    const currentDate = new Date()
+    const startDateInput = new Date(startDate)
+    if (
+      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error('START_DATE_INVALID')
+    }
+
+    const course = this.courseModel.create({
+      createdByAccountId: creatorId,
+      orgId,
+      name,
+      code,
+      lecturerIds,
+      academicSubjectId,
+      startDate: startDateInput,
+      tuitionFee,
+      publication: Publication.Draft,
+    })
+
+    return course
+  }
 
   /// / async updateCourse() {}
 
@@ -209,4 +311,7 @@ export class AcademicService {
     const count = await this.courseModel.countDocuments({ orgId })
     return { courses, count }
   }
+  /**
+   * END COURSE
+   */
 }

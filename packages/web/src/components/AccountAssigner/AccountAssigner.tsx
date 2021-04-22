@@ -4,7 +4,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import { Grid, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, AutocompleteProps } from '@material-ui/lab'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
@@ -16,15 +16,17 @@ import { Account, useOrgAccountListQuery } from 'graphql/generated'
 
 type Role = 'owner' | 'admin' | 'staff' | 'lecturer' | 'student'
 
-export type AccountAssignerProps = {
+export type AccountAssignerProps = Omit<
+  AutocompleteProps<Account, boolean, boolean, boolean>,
+  'options' | 'renderInput'
+> & {
   label: string
   roles?: Role[]
   limit?: number
-  multiple?: boolean
 }
 
 const AccountAssigner: FC<AccountAssignerProps> = (props) => {
-  const { label, roles, limit, multiple } = props
+  const { label, roles, limit, ...autocompleteProps } = props
   const { $org: org } = useAuth()
   const [inputValue, setInputValue] = useState('')
   const { data, loading } = useOrgAccountListQuery({
@@ -54,14 +56,12 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
 
   return (
     <Autocomplete
-      multiple={multiple}
       loading={loading}
       options={options}
       filterOptions={(x) => x}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      onChange={(e, v) => console.log(v)}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue)
       }}
@@ -102,6 +102,7 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
           </Grid>
         )
       }}
+      {...autocompleteProps}
     />
   )
 }

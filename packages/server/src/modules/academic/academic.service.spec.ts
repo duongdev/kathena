@@ -6,6 +6,8 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
 
+import { AccountService } from '../account/account.service'
+import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
@@ -14,6 +16,8 @@ describe('academic.service', () => {
   let module: TestingModule
   let academicService: AcademicService
   let orgService: OrgService
+  let authService: AuthService
+  let accountService: AccountService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -24,6 +28,8 @@ describe('academic.service', () => {
 
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
+    authService = module.get<AuthService>(AuthService)
+    accountService = module.get<AccountService>(AccountService)
   })
 
   afterAll(async () => {
@@ -616,7 +622,161 @@ describe('academic.service', () => {
     })
   })
   describe('Course', () => {
-    describe('createCourse', () => {})
+    const createCourseInput: ANY = {
+      academicSubjectId: objectId(),
+      code: 'NodeJS-12',
+      name: 'Node Js Thang 12',
+      tuitionFee: 5000000,
+      lecturerIds: [],
+    }
+    describe('createCourse', () => {
+      it(`throws error "Org ID is invalid" if org id is invalid`, async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.createCourse(objectId(), objectId(), {
+            ...createCourseInput,
+            startDate: '1618765200000',
+          }),
+        ).rejects.toThrowError('Org ID is invalid')
+      })
+
+      it(`throws error "ACCOUNT_HAS_NOT_PERMISSION" if account has not permission`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createCourse(objectId(), objectId(), {
+            ...createCourseInput,
+            startDate: '1618765200000',
+          }),
+        ).rejects.toThrowError('ACCOUNT_HAS_NOT_PERMISSION')
+      })
+
+      it(`throws error "ACADEMIC_SUBJECT_NOT_FOUND" if academic subject not found`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createCourse(objectId(), objectId(), {
+            ...createCourseInput,
+            startDate: '1618765200000',
+          }),
+        ).rejects.toThrowError('ACADEMIC_SUBJECT_NOT_FOUND')
+      })
+
+      it(`throws error "START_DATE_INVALID" if the entered date less than the current date`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const date = new Date()
+        // Start date less than the current date
+        await expect(
+          academicService.createCourse(objectId(), objectId(), {
+            ...createCourseInput,
+            startDate: date.setDate(date.getDate() - 1),
+          }),
+        ).rejects.toThrowError('START_DATE_INVALID')
+      })
+
+      it(`throws error if the lecturerIds array containing lecturerId does not exist or is not a lecturer`, async () => {
+        expect.assertions(2)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accountAdmin = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhadmin.top@gmail.com',
+          password: '123456',
+          username: 'thanhcanhadmin',
+          roles: ['admin'],
+          displayName: 'Thanh Canh Admin',
+        })
+
+        const id = objectId()
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createCourse(objectId(), org.id, {
+            ...createCourseInput,
+            startDate: Date.now(),
+            lecturerIds: [id],
+          }),
+        ).rejects.toThrowError(`ID ${id} not found`)
+
+        await expect(
+          academicService.createCourse(objectId(), org.id, {
+            ...createCourseInput,
+            startDate: Date.now(),
+            lecturerIds: [accountAdmin.id],
+          }),
+        ).rejects.toThrowError(`Thanh Canh Admin not a lecturer`)
+      })
+
+      it(`returns a course`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+
+        const creatorId = objectId()
+        const orgId = objectId()
+
+        await expect(
+          academicService.createCourse(creatorId, orgId, {
+            ...createCourseInput,
+            startDate: Date.now(),
+          }),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+          publicationState: Publication.Draft,
+        })
+      })
+    })
 
     describe('updateCourse', () => {})
 
