@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
@@ -7,7 +7,7 @@ import { Org } from 'modules/org/models/Org'
 
 import { OrgOffice } from './models/OrgOffice'
 import { OrgOfficeService } from './orgOffice.service'
-import { CreateOrgOfficeInput } from './orgOffice.types'
+import { CreateOrgOfficeInput, UpdateOrgOfficeInput } from './orgOffice.types'
 
 @Resolver((_of) => OrgOffice)
 export class OrgOfficeResolver {
@@ -32,5 +32,22 @@ export class OrgOfficeResolver {
       createdByAccountId: account.id,
       orgId: org.id,
     })
+  }
+
+  @Mutation((_returns) => OrgOffice)
+  @UseAuthGuard(P.OrgOffice_UpdateOrgOffice)
+  async updateOrgOffice(
+    @Args('id', { type: () => ID }) orgOfficeId: string,
+    @Args('input', { type: () => UpdateOrgOfficeInput })
+    input: UpdateOrgOfficeInput,
+    @CurrentOrg() org: Org,
+  ): Promise<OrgOffice> {
+    return this.orgOfficeService.updateOrgOffice(
+      {
+        id: orgOfficeId,
+        orgId: org.id,
+      },
+      input,
+    )
   }
 }
