@@ -3170,7 +3170,7 @@ exports[`Storyshots components/Button Text Button 1`] = `
 
 exports[`Storyshots components/InputField Currency 1`] = `
 <div
-  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-atf1cg-MuiPaper-root"
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiBox-root css-atf1cg-MuiPaper-root"
 >
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
@@ -3211,7 +3211,7 @@ exports[`Storyshots components/InputField Currency 1`] = `
 
 exports[`Storyshots components/InputField Quantity 1`] = `
 <div
-  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-atf1cg-MuiPaper-root"
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiBox-root css-atf1cg-MuiPaper-root"
 >
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
@@ -3384,7 +3384,7 @@ exports[`Storyshots components/InputField Quantity 1`] = `
 
 exports[`Storyshots components/InputField Text 1`] = `
 <div
-  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-atf1cg-MuiPaper-root"
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiBox-root css-atf1cg-MuiPaper-root"
 >
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 css-f1hklk-MuiGrid-root"
@@ -3517,7 +3517,7 @@ exports[`Storyshots components/InputField Text 1`] = `
             type="text"
           />
           <div
-            className="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-standard MuiInputAdornment-hiddenLabel MuiInputAdornment-sizeSmall css-1laqsz7-MuiInputAdornment-root"
+            className="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
           >
             <svg
               fill="primary"
@@ -3587,7 +3587,7 @@ exports[`Storyshots components/InputField Text 1`] = `
 
 exports[`Storyshots components/SidebarMenu Basic 1`] = `
 <div
-  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-1vjjj5l-MuiPaper-root"
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiBox-root css-1vjjj5l-MuiPaper-root"
 >
   <div
     className="makeStyles-root-421"
@@ -3717,7 +3717,7 @@ exports[`Storyshots components/SidebarMenu Basic 1`] = `
 
 exports[`Storyshots components/Typography All Variants Demo 1`] = `
 <div
-  className="css-1a8w37c"
+  className="css-1a8w37c MuiBox-root"
 >
   <h1
     className="MuiTypography-root MuiTypography-h1 MuiTypography-gutterBottom css-byost0-MuiTypography-root"
@@ -3800,6 +3800,11 @@ exports[`Storyshots containers/DashboardContainer Basic 1`] = `
   </header>
   <div
     className="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-391 css-7ik032-MuiDrawer-docked"
+    classes={
+      Object {
+        "paper": "makeStyles-drawerPaper-392",
+      }
+    }
   >
     <div
       className="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 makeStyles-drawerPaper-392 MuiDrawer-paper MuiDrawer-paperAnchorLeft MuiDrawer-paperAnchorDockedLeft css-1g93cup-MuiPaper-root-MuiDrawer-paper"

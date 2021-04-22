@@ -200,6 +200,7 @@ type Mutation {
   createCourse(input: CreateCourseInput!): Course!
   findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
+  updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
 }
 
 input CreateAccountInput {
@@ -245,4 +246,10 @@ input CreateOrgOfficeInput {
   name: String!
   address: String!
   phone: String!
+}
+
+input UpdateOrgOfficeInput {
+  name: String
+  address: String
+  phone: String
 }
