@@ -7,6 +7,7 @@ import { OrgService } from 'modules/org/org.service'
 import { Nullable } from '../../types'
 
 import { AcademicSubject } from './models/AcademicSubject'
+import { Course } from './models/Course'
 
 @Service()
 export class AcademicService {
@@ -18,6 +19,9 @@ export class AcademicService {
     private readonly academicSubjectModel: ReturnModelType<
       typeof AcademicSubject
     >,
+
+    @InjectModel(Course)
+    private readonly course: ReturnModelType<typeof Course>,
   ) {}
 
   async findAcademicSubjectByCode(
@@ -168,5 +172,13 @@ export class AcademicService {
     const updatedAcademicSubject = await academicSubject.save()
 
     return updatedAcademicSubject
+  }
+
+  //  async createCourse() {}
+
+  // async updateCourse() {}
+
+  async findCourseById(id: string): Promise<DocumentType<Course> | null> {
+    return this.course.findById(id)
   }
 }
