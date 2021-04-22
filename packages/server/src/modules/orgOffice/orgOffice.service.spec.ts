@@ -478,10 +478,10 @@ describe('orgOffice.service', () => {
         .spyOn(orgOfficeService, 'findOrgOffices')
         .mockResolvedValueOnce({
           findOrgOffices: [],
-        } as any)
+        } as ANY)
         .mockResolvedValueOnce({
           findOrgOffices: [],
-        } as any)
+        } as ANY)
 
       await expect(
         orgOfficeService.findOrgOffices('maii', org.id),
@@ -514,7 +514,7 @@ describe('orgOffice.service', () => {
               phone: '098765421',
             },
           ],
-        } as any)
+        } as ANY)
         .mockResolvedValueOnce({
           findOrgOffices: [
             {
@@ -528,7 +528,7 @@ describe('orgOffice.service', () => {
               phone: '098765421',
             },
           ],
-        } as any)
+        } as ANY)
 
       await expect(
         orgOfficeService.findOrgOffices('mai', org.id),
