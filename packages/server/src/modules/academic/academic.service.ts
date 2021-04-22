@@ -283,7 +283,7 @@ export class AcademicService {
     id: string,
     orgId: string,
   ): Promise<DocumentType<Course> | null> {
-    return this.courseModel.findOne({ id, orgId })
+    return this.courseModel.findOne({ _id: id, orgId })
   }
 
   async findAndPaginateCourses(

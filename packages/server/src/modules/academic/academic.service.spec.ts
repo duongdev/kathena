@@ -796,7 +796,7 @@ describe('academic.service', () => {
       })
 
       it('returns a Course if found', async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const orgId = objectId()
         const createrId = objectId()
@@ -824,17 +824,41 @@ describe('academic.service', () => {
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(testObject)
 
+        jest
+          .spyOn(academicService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce(testObject)
+
         const courseCreated = await academicService.createCourse(
           createrId,
           orgId,
           coutseInput,
         )
-
-        console.log(courseCreated)
+        const courseCreated2 = await academicService.createCourse(
+          createrId,
+          orgId,
+          {
+            ...coutseInput,
+            code: 'NodeJS-13',
+            name: 'Node Js Thang 1',
+            tuitionFee: 9000000,
+          },
+        )
 
         await expect(
-          academicService.findCourseById(orgId, orgId),
-        ).resolves.toBeNull()
+          academicService.findCourseById(courseCreated.id, orgId),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+        })
+
+        await expect(
+          academicService.findCourseById(courseCreated.id, orgId),
+        ).resolves.toMatchObject({
+          code: 'NodeJS-13',
+          name: 'Node Js Thang 1',
+          tuitionFee: 9000000,
+        })
       })
     })
   })
