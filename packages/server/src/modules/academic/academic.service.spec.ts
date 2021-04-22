@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
+import { CreateCourseInput } from './academic.type'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -781,5 +782,220 @@ describe('academic.service', () => {
     describe('updateCourse', () => {})
 
     describe('findCourseById', () => {})
+
+    describe('findAndPaginateCourses', () => {
+      it('returns array course and count find and pagination course', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin',
+          namespace: 'kmin-edu',
+        })
+
+        const creatorAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'admin@gmail.com',
+          password: '123456',
+          username: 'admin',
+          roles: ['admin'],
+          displayName: 'Admin',
+        })
+
+        const lecturerAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'lecturer@gmail.com',
+          password: '123456',
+          username: 'lecturer',
+          roles: ['lecturer'],
+          displayName: 'Lecturer',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          code: 'HTML',
+          createdByAccountId: creatorAccount.id,
+          description: 'HTML',
+          imageFileId: objectId(),
+          name: 'HTMl',
+          orgId: org.id,
+        })
+
+        const listCreatedCourses: ANY[] = []
+        const date = new Date()
+        const createCourse: CreateCourseInput = {
+          academicSubjectId: academicSubject.id,
+          code: 'FEBCT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: date.toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [lecturerAccount.id],
+        }
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'FEBCT2',
+            name: 'Lập trình Frontend cơ bản tháng 2',
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'FEBCT2',
+            name: 'Lập trình Backend cơ bản tháng 2',
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'BEBC',
+          }),
+        )
+
+        await expect(
+          academicService.findAndPaginateCourses(
+            {
+              limit: 2,
+              skip: 2,
+            },
+            {
+              orgId: org.id,
+            },
+          ),
+        ).resolves.toMatchObject({
+          courses: [
+            {
+              code: 'FEBCT2',
+              name: 'Lập trình Frontend cơ bản tháng 2',
+            },
+            {
+              code: 'FEBCT1',
+              name: 'Frontend cơ bản tháng 1',
+            },
+          ],
+          count: listCreatedCourses.length,
+        })
+      })
+
+      it('returns array course and count find and pagination course with filter', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin',
+          namespace: 'kmin-edu',
+        })
+
+        const creatorAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'admin@gmail.com',
+          password: '123456',
+          username: 'admin',
+          roles: ['admin'],
+          displayName: 'Admin',
+        })
+
+        const lecturerAccount1 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'lecturer@gmail.com',
+          password: '123456',
+          username: 'lecturer',
+          roles: ['lecturer'],
+          displayName: 'Lecturer',
+        })
+
+        const lecturerAccount2 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'lecturer2@gmail.com',
+          password: '123456',
+          username: 'lecturer2',
+          roles: ['lecturer'],
+          displayName: 'Lecturer',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          code: 'HTML',
+          createdByAccountId: creatorAccount.id,
+          description: 'HTML',
+          imageFileId: objectId(),
+          name: 'HTMl',
+          orgId: org.id,
+        })
+
+        const listCreatedCourses: ANY[] = []
+        const date = new Date()
+        const createCourse: CreateCourseInput = {
+          academicSubjectId: academicSubject.id,
+          code: 'FEBCT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: date.toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [lecturerAccount1.id],
+        }
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'FEBCT2',
+            name: 'Lập trình Frontend cơ bản tháng 2',
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'BEBCT1',
+            name: 'Lập trình Backend cơ bản tháng 1',
+            lecturerIds: [lecturerAccount2.id],
+          }),
+        )
+
+        listCreatedCourses.push(
+          await academicService.createCourse(creatorAccount.id, org.id, {
+            ...createCourse,
+            code: 'BEBCT2',
+            name: 'Lập trình Backend cơ bản tháng 2',
+            lecturerIds: [lecturerAccount2.id],
+          }),
+        )
+
+        await expect(
+          academicService.findAndPaginateCourses(
+            {
+              limit: 2,
+              skip: 0,
+            },
+            {
+              orgId: org.id,
+              lecturerIds: [lecturerAccount2.id],
+            },
+          ),
+        ).resolves.toMatchObject({
+          courses: [
+            {
+              code: 'BEBCT2',
+              name: 'Lập trình Backend cơ bản tháng 2',
+            },
+            {
+              code: 'BEBCT1',
+              name: 'Lập trình Backend cơ bản tháng 1',
+            },
+          ],
+          count: listCreatedCourses.length,
+        })
+      })
+    })
   })
 })

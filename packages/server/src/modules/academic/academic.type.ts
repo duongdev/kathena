@@ -84,4 +84,7 @@ export class CoursesFilterInput {
 
   @Field({ nullable: true })
   searchText: string
+
+  @Field((_type) => [ID], { nullable: true })
+  lecturerIds: string[]
 }

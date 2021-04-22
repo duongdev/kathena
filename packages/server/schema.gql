@@ -181,6 +181,7 @@ input PageOptionsInput {
 input CoursesFilterInput {
   orgId: ID!
   searchText: String
+  lecturerIds: [ID!]
 }
 
 type Mutation {
