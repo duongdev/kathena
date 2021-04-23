@@ -10,11 +10,14 @@ import {
 } from '@material-ui/core'
 import { Pencil } from 'phosphor-react'
 
+import { ANY } from '@kathena/types'
 import { ApolloErrorList, Typography } from '@kathena/ui'
 import { ContentSkeleton } from '@kathena/ui/skeletons/ContentSkeleton'
 import { useListOrgOfficesQuery } from 'graphql/generated'
 
-export type OrgOfficeListProps = {}
+export type OrgOfficeListProps = {
+  receiveUpdateOrgOfficeValue: ANY
+}
 
 const OrgOfficeList: FC<OrgOfficeListProps> = (props) => {
   const classes = useStyles(props)
@@ -43,7 +46,9 @@ const OrgOfficeList: FC<OrgOfficeListProps> = (props) => {
             secondary={`${orgOffice.phone} – ${orgOffice.address}`}
           />
           <ListItemSecondaryAction>
-            <IconButton>
+            <IconButton
+              onClick={() => props.receiveUpdateOrgOfficeValue(orgOffice)}
+            >
               <Pencil />
             </IconButton>
           </ListItemSecondaryAction>

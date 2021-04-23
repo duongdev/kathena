@@ -140,6 +140,7 @@ type Query {
   academicSubject(id: ID!): AcademicSubject!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
+  orgOffice(id: ID!): OrgOffice!
 }
 
 input AccountsFilterInput {
