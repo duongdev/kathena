@@ -13,7 +13,12 @@ export const staff: Role = {
     P.Academic_ListAcademicSubjects,
     P.Academic_SetAcademicSubjectPublication,
     P.Academic_UpdateAcademicSubject,
+    P.Academic_ListCourses,
+    P.Academic_UpdateCourse,
+    P.Academic_CreateCourse,
     P.OrgOffice_ListOrgOffices,
+    P.OrgOffice_CreateOrgOffice,
+    P.OrgOffice_UpdateOrgOffice,
   ],
 }
 
