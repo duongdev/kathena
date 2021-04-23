@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
+import { Course } from './models/Course'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -933,21 +934,22 @@ describe('academic.service', () => {
         jest
           .spyOn(academicService['courseModel'], 'findOne')
           .mockResolvedValueOnce(courseTest)
+        const expectLecturerIds: string[] = []
+        expectLecturerIds.push(accountLecturer.id)
 
-        await expect(
-          academicService.updateCourse(
-            {
-              id: courseTest.id,
-              orgId: courseTest.orgId,
-            },
-            {
-              lecturerIds: [accountLecturer.id],
-            },
-          ),
-        ).resolves.toMatchObject({
-          code: 'NODEJS-12',
-          name: 'Node Js Thang 12',
-        })
+        const lecturerArray = await academicService.updateCourse(
+          {
+            id: courseTest.id,
+            orgId: courseTest.orgId,
+          },
+          {
+            lecturerIds: [accountLecturer.id],
+          },
+        )
+
+        await expect(lecturerArray.lecturerIds.toString()).toBe(
+          expectLecturerIds.toString(),
+        )
       })
 
       it(`returns a course with a new startDate`, async () => {
@@ -993,20 +995,20 @@ describe('academic.service', () => {
           .spyOn(academicService['courseModel'], 'findOne')
           .mockResolvedValueOnce(courseTest)
 
-        await expect(
-          academicService.updateCourse(
-            {
-              id: courseTest.id,
-              orgId: courseTest.orgId,
-            },
-            {
-              startDate: '2018-3-3',
-            },
-          ),
-        ).resolves.toMatchObject({
-          code: 'NODEJS-12',
-          name: 'Node Js Thang 12',
-        })
+        const updated = await academicService.updateCourse(
+          {
+            id: courseTest.id,
+            orgId: courseTest.orgId,
+          },
+          {
+            startDate: '2018-3-3',
+          },
+        )
+        const dateUpdated = new Date(updated.startDate).toString()
+        const expectDate = new Date(
+          new Date('2018-3-3').setHours(7, 0, 0, 0),
+        ).toString()
+        expect(dateUpdated).toBe(expectDate)
       })
     })
 

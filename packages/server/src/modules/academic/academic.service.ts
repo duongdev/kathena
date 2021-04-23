@@ -298,7 +298,9 @@ export class AcademicService {
       course.name = update.name
     }
     if (update.startDate) {
-      const startDateInput = new Date(update.startDate)
+      const startDateInput = new Date(
+        new Date(update.startDate).setHours(7, 0, 0, 0),
+      )
       course.startDate = startDateInput
     }
     if (update.tuitionFee) {
