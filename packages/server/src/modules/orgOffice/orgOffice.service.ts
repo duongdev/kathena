@@ -121,7 +121,7 @@ export class OrgOfficeService {
   }
 
   // Search by name, address and phone number
-  async findOrgOffices(keyWord: string, orgId: string): Promise<OrgOffice[]> {
+  async findOrgOffices(searchText: string, orgId: string): Promise<OrgOffice[]> {
     const handleName = removeExtraSpaces(keyWord)
 
     if (handleName === undefined) return []
