@@ -132,16 +132,18 @@ export class OrgOfficeService {
 
       if (handleName !== undefined) {
         // returns the OrgOffice list by searchText
-        return orgOfficeModel.find({
+        const listOrgOffices = await orgOfficeModel.find({
           $text: {
             $search: searchText,
           },
           orgId,
         })
+        return listOrgOffices
       }
     }
 
     // return all OrgOffice in Org
-    return orgOfficeModel.find({ orgId })
+    const listOrgOffices = await orgOfficeModel.find({ orgId })
+    return listOrgOffices
   }
 }
