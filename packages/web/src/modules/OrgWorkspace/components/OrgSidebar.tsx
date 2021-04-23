@@ -5,6 +5,7 @@ import { matchPath } from 'react-router-dom'
 
 import { SidebarMenu } from '@kathena/ui'
 import {
+  ACADEMIC_COURSE_LIST,
   ACADEMIC_SUBJECT_LIST,
   ORG_SETTINGS,
   USER_LIST,
@@ -47,7 +48,16 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
               strict: false,
             }),
           },
-          { key: 'courses', label: 'Khoá học' },
+          {
+            key: 'courses',
+            label: 'Khoá học',
+            link: ACADEMIC_COURSE_LIST,
+            active: !!matchPath(window.location.pathname, {
+              path: ACADEMIC_COURSE_LIST,
+              exact: false,
+              strict: false,
+            }),
+          },
         ],
       },
       {

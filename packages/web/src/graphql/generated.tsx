@@ -88,7 +88,7 @@ export enum Permission {
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
-  Academic_FindCourseById = 'Academic_FindCourseById',
+  Academic_ListCourses = 'Academic_ListCourses',
   NoPermission = 'NoPermission',
 }
 
@@ -153,6 +153,11 @@ export type AcademicSubjectsPayload = {
   count: Scalars['Int']
 }
 
+export type CoursesPayload = {
+  courses: Array<Course>
+  count: Scalars['Int']
+}
+
 export type OrgAccountsPayload = {
   accounts: Array<Account>
   count: Scalars['Int']
@@ -175,6 +180,7 @@ export type Query = {
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
+  courses: CoursesPayload
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
@@ -202,6 +208,11 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type QueryCoursesArgs = {
+  filter: CoursesFilterInput
+  pageOptions: PageOptionsInput
+}
+
 export type QueryFileArgs = {
   id: Scalars['ID']
 }
@@ -221,6 +232,12 @@ export type PageOptionsInput = {
   limit: Scalars['Int']
 }
 
+export type CoursesFilterInput = {
+  orgId: Scalars['ID']
+  searchText?: Maybe<Scalars['String']>
+  lecturerIds?: Maybe<Array<Scalars['ID']>>
+}
+
 export type Mutation = {
   createOrgAccount: Account
   updateAccount: Account
@@ -230,9 +247,11 @@ export type Mutation = {
   updateAcademicSubjectPublication: AcademicSubject
   updateAcademicSubject: AcademicSubject
   createCourse: Course
+  updateCourse: Course
   findCourseById: Course
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
+  findOrgOffices: Array<OrgOffice>
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -273,6 +292,11 @@ export type MutationCreateCourseArgs = {
   input: CreateCourseInput
 }
 
+export type MutationUpdateCourseArgs = {
+  updateInput: UpdateCourseInput
+  id: Scalars['ID']
+}
+
 export type MutationFindCourseByIdArgs = {
   id: Scalars['ID']
 }
@@ -284,6 +308,11 @@ export type MutationCreateOrgOfficeArgs = {
 export type MutationUpdateOrgOfficeArgs = {
   input: UpdateOrgOfficeInput
   id: Scalars['ID']
+}
+
+export type MutationFindOrgOfficesArgs = {
+  searchText?: Maybe<Scalars['String']>
+  orgId?: Maybe<Scalars['ID']>
 }
 
 export type CreateAccountInput = {
@@ -319,6 +348,13 @@ export type CreateCourseInput = {
   name: Scalars['String']
   startDate: Scalars['String']
   tuitionFee: Scalars['Float']
+  lecturerIds?: Maybe<Array<Scalars['String']>>
+}
+
+export type UpdateCourseInput = {
+  name?: Maybe<Scalars['String']>
+  tuitionFee?: Maybe<Scalars['Float']>
+  startDate?: Maybe<Scalars['String']>
   lecturerIds?: Maybe<Array<Scalars['String']>>
 }
 
@@ -442,6 +478,31 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 
 export type UpdateSelfAccountMutation = {
   updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+}
+
+export type CoursesQueryVariables = Exact<{
+  orgId: Scalars['ID']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type CoursesQuery = {
+  courses: Pick<CoursesPayload, 'count'> & {
+    courses: Array<
+      Pick<
+        Course,
+        | 'id'
+        | 'createdAt'
+        | 'name'
+        | 'code'
+        | 'orgId'
+        | 'academicSubjectId'
+        | 'startDate'
+        | 'tuitionFee'
+        | 'lecturerIds'
+      >
+    >
+  }
 }
 
 export type CreateCourseMutationVariables = Exact<{
@@ -1903,6 +1964,218 @@ export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAc
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
+>
+export const CoursesDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Courses' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orgId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'courses' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'orgId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'courses' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'academicSubjectId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tuitionFee' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lecturerIds' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CoursesProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CoursesQuery,
+    CoursesQueryVariables
+  >
+} &
+  TChildProps
+export function withCourses<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CoursesQuery,
+    CoursesQueryVariables,
+    CoursesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CoursesQuery,
+    CoursesQueryVariables,
+    CoursesProps<TChildProps, TDataName>
+  >(CoursesDocument, {
+    alias: 'courses',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCoursesQuery__
+ *
+ * To run a query within a React component, call `useCoursesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCoursesQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useCoursesQuery(
+  baseOptions: Apollo.QueryHookOptions<CoursesQuery, CoursesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<CoursesQuery, CoursesQueryVariables>(
+    CoursesDocument,
+    options,
+  )
+}
+export function useCoursesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CoursesQuery,
+    CoursesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<CoursesQuery, CoursesQueryVariables>(
+    CoursesDocument,
+    options,
+  )
+}
+export type CoursesQueryHookResult = ReturnType<typeof useCoursesQuery>
+export type CoursesLazyQueryHookResult = ReturnType<typeof useCoursesLazyQuery>
+export type CoursesQueryResult = Apollo.QueryResult<
+  CoursesQuery,
+  CoursesQueryVariables
 >
 export const CreateCourseDocument: DocumentNode = {
   kind: 'Document',
