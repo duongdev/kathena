@@ -746,7 +746,7 @@ describe('academic.service', () => {
             startDate: Date.now(),
             lecturerIds: [accountAdmin.id],
           }),
-        ).rejects.toThrowError(`Thanh Canh Admin not a lecturer`)
+        ).rejects.toThrowError(`Thanh Canh Admin isn't a lecturer`)
       })
 
       it(`returns a course`, async () => {
@@ -780,8 +780,6 @@ describe('academic.service', () => {
     })
 
     describe('updateCourse', () => {})
-
-    describe('findCourseById', () => {})
 
     describe('findAndPaginateCourses', () => {
       it('returns array course and count find and pagination course', async () => {
@@ -994,6 +992,86 @@ describe('academic.service', () => {
             },
           ],
           count: listCreatedCourses.length,
+        })
+      })
+    })
+
+    describe('findCourseById', () => {
+      it('returns null if not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.findCourseById(objectId(), objectId()),
+        ).resolves.toBeNull()
+      })
+
+      it('returns a Course if found', async () => {
+        expect.assertions(2)
+
+        const orgId = objectId()
+        const createrId = objectId()
+        const coutseInput: ANY = {
+          academicSubjectId: objectId(),
+          code: 'NodeJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+          lecturerIds: [],
+          startDate: Date.now(),
+        }
+        const testObject: ANY = {
+          name: 'test',
+        }
+
+        jest
+          .spyOn(academicService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['authService'], 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(testObject)
+          .mockResolvedValueOnce(testObject)
+
+        jest
+          .spyOn(academicService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce(testObject)
+          .mockResolvedValueOnce(testObject)
+
+        const courseCreated = await academicService.createCourse(
+          createrId,
+          orgId,
+          coutseInput,
+        )
+        const courseCreated2 = await academicService.createCourse(
+          createrId,
+          orgId,
+          {
+            ...coutseInput,
+            code: 'NodeJS-13',
+            name: 'Node Js Thang 1',
+            tuitionFee: 9000000,
+          },
+        )
+
+        await expect(
+          academicService.findCourseById(courseCreated.id, orgId),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+        })
+
+        await expect(
+          academicService.findCourseById(courseCreated2.id, orgId),
+        ).resolves.toMatchObject({
+          code: 'NODEJS-13',
+          name: 'Node Js Thang 1',
+          tuitionFee: 9000000,
         })
       })
     })

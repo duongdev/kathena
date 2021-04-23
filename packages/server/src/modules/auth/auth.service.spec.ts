@@ -43,12 +43,16 @@ describe('auth.service', () => {
         'Hr_Access',
         'Hr_CreateOrgAccount',
         'Hr_ListOrgAccounts',
+        'Hr_UpdateOrgAccountStatus',
         'Academic_CreateAcademicSubject',
         'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
         'Academic_UpdateAcademicSubject',
-        'Academic_ListCourses',
+        'OrgOffice_ListOrgOffices',
+        'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
+        'Academic_ListCourses',
+        'Academic_CreateCourse',
       ]
 
       jest
@@ -186,10 +190,11 @@ describe('auth.service', () => {
                 "Academic_ListAcademicSubjects",
                 "Academic_SetAcademicSubjectPublication",
                 "Academic_UpdateAcademicSubject",
-                "Academic_ListCourses",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
+                "Academic_ListCourses",
+                "Academic_CreateCourse",
               ]
             `)
     })

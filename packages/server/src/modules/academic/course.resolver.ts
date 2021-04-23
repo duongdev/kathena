@@ -47,12 +47,13 @@ export class CourseResolver {
   // async updateCourse() {} //updateCourse: UpdateCourse, //@Args('input')
 
   @Mutation((_returns) => Course)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Academic_ListCourses)
   @UsePipes(ValidationPipe)
   async findCourseById(
     @Args('id', { type: () => ID }) constId: string,
+    @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.findCourseById(constId)
+    return this.academicService.findCourseById(constId, org.id)
   }
 
   @Query((_return) => CoursesPayload)

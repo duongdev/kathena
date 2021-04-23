@@ -243,7 +243,7 @@ export class AcademicService {
       }
       if (!account?.roles.includes('lecturer')) {
         return Promise.reject(
-          new Error(`${account?.displayName} not a lecturer`),
+          new Error(`${account?.displayName} isn't a lecturer`),
         )
       }
 
@@ -279,8 +279,11 @@ export class AcademicService {
 
   /// / async updateCourse() {}
 
-  async findCourseById(id: string): Promise<DocumentType<Course> | null> {
-    return this.courseModel.findById(id)
+  async findCourseById(
+    id: string,
+    orgId: string,
+  ): Promise<DocumentType<Course> | null> {
+    return this.courseModel.findOne({ _id: id, orgId })
   }
 
   async findAndPaginateCourses(
