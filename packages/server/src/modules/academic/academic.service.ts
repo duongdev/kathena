@@ -9,7 +9,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 
-import { Nullable } from '../../types'
+import { ANY, Nullable } from '../../types'
 
 import { CreateCourseInput } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
@@ -243,7 +243,7 @@ export class AcademicService {
       }
       if (!account?.roles.includes('lecturer')) {
         return Promise.reject(
-          new Error(`${account?.displayName} not a lecturer`),
+          new Error(`${account?.displayName} isn't a lecturer`),
         )
       }
 
@@ -314,8 +314,11 @@ export class AcademicService {
     return courseUpdated
   }
 
-  async findCourseById(id: string): Promise<DocumentType<Course> | null> {
-    return this.courseModel.findById(id)
+  async findCourseById(
+    id: string,
+    orgId: string,
+  ): Promise<DocumentType<Course> | null> {
+    return this.courseModel.findOne({ _id: id, orgId })
   }
 
   async findAndPaginateCourses(
@@ -326,9 +329,10 @@ export class AcademicService {
     filter: {
       orgId: string
       searchText?: string
+      lecturerIds?: string[]
     },
   ): Promise<{ courses: DocumentType<Course>[]; count: number }> {
-    const { orgId, searchText } = filter
+    const { orgId, searchText, lecturerIds } = filter
     const { limit, skip } = pageOptions
     const courseModel = this.courseModel.find({
       orgId,
@@ -340,6 +344,17 @@ export class AcademicService {
           $text: { $search: search },
         })
       }
+    }
+    if (lecturerIds) {
+      const arrQueryLecturerIds: ANY = []
+      lecturerIds.map((lecturerId) => {
+        return arrQueryLecturerIds.push({
+          lecturerIds: lecturerId,
+        })
+      })
+      courseModel.find({
+        $or: arrQueryLecturerIds,
+      })
     }
     courseModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const courses = await courseModel
