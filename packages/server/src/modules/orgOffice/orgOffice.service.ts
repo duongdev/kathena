@@ -119,4 +119,31 @@ export class OrgOfficeService {
   ): Promise<Nullable<DocumentType<OrgOffice>>> {
     return this.orgOfficeModel.findById(id)
   }
+
+  // Search by name, address and phone number
+  async findOrgOffices(
+    orgId: string,
+    searchText?: string,
+  ): Promise<OrgOffice[]> {
+    const { orgOfficeModel } = this
+
+    if (searchText) {
+      const handleName = removeExtraSpaces(searchText)
+
+      if (handleName !== undefined) {
+        // returns the OrgOffice list by searchText
+        const listOrgOffices = await orgOfficeModel.find({
+          $text: {
+            $search: searchText,
+          },
+          orgId,
+        })
+        return listOrgOffices
+      }
+    }
+
+    // return all OrgOffice in Org
+    const listOrgOffices = await orgOfficeModel.find({ orgId })
+    return listOrgOffices
+  }
 }

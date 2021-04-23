@@ -204,6 +204,7 @@ type Mutation {
   findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
+  findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
 }
 
 input CreateAccountInput {
