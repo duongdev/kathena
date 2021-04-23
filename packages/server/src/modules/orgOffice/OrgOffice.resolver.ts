@@ -57,6 +57,6 @@ export class OrgOfficeResolver {
     @Args('searchText', { type: () => String }) searchText: string,
     @CurrentOrg() org: Org,
   ): Promise<OrgOffice[]> {
-    return this.orgOfficeService.findOrgOffices(keyWork, org.id)
+    return this.orgOfficeService.findOrgOffices(searchText, org.id)
   }
 }
