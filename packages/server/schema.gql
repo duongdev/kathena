@@ -68,6 +68,9 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Academic_CreateCourse
+  Academic_UpdateCourse
+  Academic_ListCourses
   NoPermission
 }
 
@@ -111,8 +114,29 @@ enum Publication {
   Published
 }
 
+type Course implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  academicSubjectId: ID!
+  code: String!
+  name: String!
+  startDate: DateTime!
+  tuitionFee: Float!
+  publicationState: Publication!
+  publishedAt: DateTime!
+  lecturerIds: [String!]!
+  createdByAccountId: ID!
+}
+
 type AcademicSubjectsPayload {
   academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
+type CoursesPayload {
+  courses: [Course!]!
   count: Int!
 }
 
@@ -138,6 +162,7 @@ type Query {
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
@@ -154,6 +179,12 @@ input PageOptionsInput {
   limit: Int!
 }
 
+input CoursesFilterInput {
+  orgId: ID!
+  searchText: String
+  lecturerIds: [ID!]
+}
+
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
@@ -168,6 +199,9 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  createCourse(input: CreateCourseInput!): Course!
+  updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
+  findCourseById(id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -201,6 +235,22 @@ scalar Upload
 input UpdateAcademicSubjectInput {
   name: String
   description: String
+}
+
+input CreateCourseInput {
+  academicSubjectId: String!
+  code: String!
+  name: String!
+  startDate: String!
+  tuitionFee: Float!
+  lecturerIds: [String!] = []
+}
+
+input UpdateCourseInput {
+  name: String
+  tuitionFee: Float
+  startDate: String
+  lecturerIds: [String!]
 }
 
 input CreateOrgOfficeInput {

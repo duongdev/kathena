@@ -39,10 +39,10 @@ const CreateUpdateAcademicSubject = lazy(
       'modules/CreateUpdateAcademicSubject' /* webpackChunkName: "modules/CreateUpdateAcademicSubject" */
     ),
 )
-const CreateAcademicCourse = lazy(
+const CreateCourse = lazy(
   () =>
     import(
-      'modules/CreateAcademicCourse' /* webpackChunkName: "modules/CreateAcademicCourse" */
+      'modules/CreateCourse' /* webpackChunkName: "modules/CreateCourse" */
     ),
 )
 const OrgSettings = lazy(
@@ -72,11 +72,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         exact
         component={CreateUpdateAcademicSubject}
       />
-      <Route
-        path={CREATE_ACADEMIC_COURSE}
-        exact
-        component={CreateAcademicCourse}
-      />
+      <Route path={CREATE_ACADEMIC_COURSE} exact component={CreateCourse} />
       <Route path={ORG_SETTINGS} exact component={OrgSettings} />
     </Switch>
   </Suspense>

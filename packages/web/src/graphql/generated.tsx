@@ -86,6 +86,9 @@ export enum Permission {
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+  Academic_CreateCourse = 'Academic_CreateCourse',
+  Academic_UpdateCourse = 'Academic_UpdateCourse',
+  Academic_FindCourseById = 'Academic_FindCourseById',
   NoPermission = 'NoPermission',
 }
 
@@ -127,6 +130,22 @@ export type AcademicSubject = BaseModel & {
 export enum Publication {
   Draft = 'Draft',
   Published = 'Published',
+}
+
+export type Course = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  academicSubjectId: Scalars['ID']
+  code: Scalars['String']
+  name: Scalars['String']
+  startDate: Scalars['DateTime']
+  tuitionFee: Scalars['Float']
+  publicationState: Publication
+  publishedAt: Scalars['DateTime']
+  lecturerIds: Array<Scalars['String']>
+  createdByAccountId: Scalars['ID']
 }
 
 export type AcademicSubjectsPayload = {
@@ -210,6 +229,8 @@ export type Mutation = {
   createAcademicSubject: AcademicSubject
   updateAcademicSubjectPublication: AcademicSubject
   updateAcademicSubject: AcademicSubject
+  createCourse: Course
+  findCourseById: Course
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
 }
@@ -248,6 +269,14 @@ export type MutationUpdateAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type MutationCreateCourseArgs = {
+  input: CreateCourseInput
+}
+
+export type MutationFindCourseByIdArgs = {
+  id: Scalars['ID']
+}
+
 export type MutationCreateOrgOfficeArgs = {
   input: CreateOrgOfficeInput
 }
@@ -282,6 +311,15 @@ export type CreateAcademicSubjectInput = {
 export type UpdateAcademicSubjectInput = {
   name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
+}
+
+export type CreateCourseInput = {
+  academicSubjectId: Scalars['String']
+  code: Scalars['String']
+  name: Scalars['String']
+  startDate: Scalars['String']
+  tuitionFee: Scalars['Float']
+  lecturerIds?: Maybe<Array<Scalars['String']>>
 }
 
 export type CreateOrgOfficeInput = {
@@ -404,6 +442,14 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 
 export type UpdateSelfAccountMutation = {
   updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+}
+
+export type CreateCourseMutationVariables = Exact<{
+  input: CreateCourseInput
+}>
+
+export type CreateCourseMutation = {
+  createCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
 export type CreateAcademicSubjectMutationVariables = Exact<{
@@ -1857,6 +1903,133 @@ export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAc
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
+>
+export const CreateCourseDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateCourseInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateCourseMutationFn = Apollo.MutationFunction<
+  CreateCourseMutation,
+  CreateCourseMutationVariables
+>
+export type CreateCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateCourseMutation,
+    CreateCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateCourseMutation,
+    CreateCourseMutationVariables,
+    CreateCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateCourseMutation,
+    CreateCourseMutationVariables,
+    CreateCourseProps<TChildProps, TDataName>
+  >(CreateCourseDocument, {
+    alias: 'createCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateCourseMutation__
+ *
+ * To run a mutation, you first call `useCreateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCourseMutation, { data, loading, error }] = useCreateCourseMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCourseMutation,
+    CreateCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateCourseMutation,
+    CreateCourseMutationVariables
+  >(CreateCourseDocument, options)
+}
+export type CreateCourseMutationHookResult = ReturnType<
+  typeof useCreateCourseMutation
+>
+export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>
+export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
+  CreateCourseMutation,
+  CreateCourseMutationVariables
 >
 export const CreateAcademicSubjectDocument: DocumentNode = {
   kind: 'Document',
