@@ -13,3 +13,19 @@ mutation CreateOrgOffice($input: CreateOrgOfficeInput!) {
     name
   }
 }
+
+mutation UpdateOrgOffice($id: ID!, $input: UpdateOrgOfficeInput!) {
+  updateOrgOffice(id: $id, input: $input) {
+    id
+    name
+  }
+}
+
+query OrgOffice($id: ID!) {
+  orgOffice(id: $id){
+    id
+    name
+    address
+    phone
+  }
+}

@@ -177,6 +177,7 @@ export type Query = {
   academicSubject: AcademicSubject
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
+  orgOffice: OrgOffice
 }
 
 export type QueryAccountArgs = {
@@ -205,6 +206,10 @@ export type QueryFileArgs = {
   id: Scalars['ID']
 }
 
+export type QueryOrgOfficeArgs = {
+  id: Scalars['ID']
+}
+
 export type AccountsFilterInput = {
   orgId: Scalars['ID']
   roles?: Maybe<Array<Scalars['String']>>
@@ -227,6 +232,7 @@ export type Mutation = {
   createCourse: Course
   findCourseById: Course
   createOrgOffice: OrgOffice
+  updateOrgOffice: OrgOffice
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -275,6 +281,11 @@ export type MutationCreateOrgOfficeArgs = {
   input: CreateOrgOfficeInput
 }
 
+export type MutationUpdateOrgOfficeArgs = {
+  input: UpdateOrgOfficeInput
+  id: Scalars['ID']
+}
+
 export type CreateAccountInput = {
   username: Scalars['String']
   email: Scalars['String']
@@ -315,6 +326,12 @@ export type CreateOrgOfficeInput = {
   name: Scalars['String']
   address: Scalars['String']
   phone: Scalars['String']
+}
+
+export type UpdateOrgOfficeInput = {
+  name?: Maybe<Scalars['String']>
+  address?: Maybe<Scalars['String']>
+  phone?: Maybe<Scalars['String']>
 }
 
 export type AuthAccountFragment = Pick<
@@ -520,6 +537,23 @@ export type CreateOrgOfficeMutationVariables = Exact<{
 
 export type CreateOrgOfficeMutation = {
   createOrgOffice: Pick<OrgOffice, 'id' | 'name'>
+}
+
+export type UpdateOrgOfficeMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UpdateOrgOfficeInput
+}>
+
+export type UpdateOrgOfficeMutation = {
+  updateOrgOffice: Pick<OrgOffice, 'id' | 'name'>
+}
+
+export type OrgOfficeQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type OrgOfficeQuery = {
+  orgOffice: Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>
 }
 
 export const AuthAccountFragmentDoc: DocumentNode = {
@@ -3165,4 +3199,273 @@ export type CreateOrgOfficeMutationResult = Apollo.MutationResult<CreateOrgOffic
 export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
+>
+export const UpdateOrgOfficeDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateOrgOffice' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateOrgOfficeInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateOrgOffice' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateOrgOfficeMutationFn = Apollo.MutationFunction<
+  UpdateOrgOfficeMutation,
+  UpdateOrgOfficeMutationVariables
+>
+export type UpdateOrgOfficeProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateOrgOfficeMutation,
+    UpdateOrgOfficeMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateOrgOffice<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateOrgOfficeMutation,
+    UpdateOrgOfficeMutationVariables,
+    UpdateOrgOfficeProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateOrgOfficeMutation,
+    UpdateOrgOfficeMutationVariables,
+    UpdateOrgOfficeProps<TChildProps, TDataName>
+  >(UpdateOrgOfficeDocument, {
+    alias: 'updateOrgOffice',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateOrgOfficeMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrgOfficeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrgOfficeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrgOfficeMutation, { data, loading, error }] = useUpdateOrgOfficeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateOrgOfficeMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateOrgOfficeMutation,
+    UpdateOrgOfficeMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateOrgOfficeMutation,
+    UpdateOrgOfficeMutationVariables
+  >(UpdateOrgOfficeDocument, options)
+}
+export type UpdateOrgOfficeMutationHookResult = ReturnType<
+  typeof useUpdateOrgOfficeMutation
+>
+export type UpdateOrgOfficeMutationResult = Apollo.MutationResult<UpdateOrgOfficeMutation>
+export type UpdateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
+  UpdateOrgOfficeMutation,
+  UpdateOrgOfficeMutationVariables
+>
+export const OrgOfficeDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'OrgOffice' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'orgOffice' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'phone' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type OrgOfficeProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    OrgOfficeQuery,
+    OrgOfficeQueryVariables
+  >
+} &
+  TChildProps
+export function withOrgOffice<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    OrgOfficeQuery,
+    OrgOfficeQueryVariables,
+    OrgOfficeProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    OrgOfficeQuery,
+    OrgOfficeQueryVariables,
+    OrgOfficeProps<TChildProps, TDataName>
+  >(OrgOfficeDocument, {
+    alias: 'orgOffice',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useOrgOfficeQuery__
+ *
+ * To run a query within a React component, call `useOrgOfficeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrgOfficeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrgOfficeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrgOfficeQuery(
+  baseOptions: Apollo.QueryHookOptions<OrgOfficeQuery, OrgOfficeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<OrgOfficeQuery, OrgOfficeQueryVariables>(
+    OrgOfficeDocument,
+    options,
+  )
+}
+export function useOrgOfficeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    OrgOfficeQuery,
+    OrgOfficeQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<OrgOfficeQuery, OrgOfficeQueryVariables>(
+    OrgOfficeDocument,
+    options,
+  )
+}
+export type OrgOfficeQueryHookResult = ReturnType<typeof useOrgOfficeQuery>
+export type OrgOfficeLazyQueryHookResult = ReturnType<
+  typeof useOrgOfficeLazyQuery
+>
+export type OrgOfficeQueryResult = Apollo.QueryResult<
+  OrgOfficeQuery,
+  OrgOfficeQueryVariables
 >
