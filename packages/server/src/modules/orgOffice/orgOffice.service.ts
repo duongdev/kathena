@@ -128,7 +128,7 @@ export class OrgOfficeService {
 
     const listOrgOffice = await this.orgOfficeModel.find({
       $text: {
-        $search: keyWord,
+        $search: searchText,
       },
       orgId,
     })
