@@ -11,7 +11,6 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
-import { Course } from './models/Course'
 
 describe('academic.service', () => {
   let module: TestingModule
