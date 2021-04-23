@@ -310,8 +310,8 @@ export class AcademicService {
       course.lecturerIds = update.lecturerIds
     }
 
-    const courseUpdated = await course.save()
-    return courseUpdated
+    const updated = await course.save()
+    return updated
   }
 
   async findCourseById(
