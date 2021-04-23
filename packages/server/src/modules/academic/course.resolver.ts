@@ -14,6 +14,7 @@ import {
   CoursesFilterInput,
   CoursesPayload,
   CreateCourseInput,
+  UpdateCourseInput,
 } from './academic.type'
 import { Course } from './models/Course'
 
@@ -41,10 +42,22 @@ export class CourseResolver {
     )
   }
 
-  // @Mutation((_returns) => Course)
-  // @UseAuthGuard(P.Academic_UpdateCourse)
-  // @UsePipes(ValidationPipe)
-  // async updateCourse() {} //updateCourse: UpdateCourse, //@Args('input')
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_UpdateCourse)
+  @UsePipes(ValidationPipe)
+  async updateCourse(
+    @Args('id', { type: () => ID }) courseId: string,
+    @Args('updateInput') updateInput: UpdateCourseInput,
+    @CurrentOrg() currentOrg: Org,
+  ): Promise<Course> {
+    return this.academicService.updateCourse(
+      {
+        id: courseId,
+        orgId: currentOrg.id,
+      },
+      updateInput,
+    )
+  }
 
   @Mutation((_returns) => Course)
   @UseAuthGuard(P.Academic_ListCourses)

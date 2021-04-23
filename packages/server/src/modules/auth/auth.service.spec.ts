@@ -48,11 +48,12 @@ describe('auth.service', () => {
         'Academic_ListAcademicSubjects',
         'Academic_SetAcademicSubjectPublication',
         'Academic_UpdateAcademicSubject',
+        'Academic_ListCourses',
+        'Academic_UpdateCourse',
+        'Academic_CreateCourse',
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
-        'Academic_ListCourses',
-        'Academic_CreateCourse',
       ]
 
       jest
@@ -190,11 +191,12 @@ describe('auth.service', () => {
                 "Academic_ListAcademicSubjects",
                 "Academic_SetAcademicSubjectPublication",
                 "Academic_UpdateAcademicSubject",
+                "Academic_ListCourses",
+                "Academic_UpdateCourse",
+                "Academic_CreateCourse",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
-                "Academic_ListCourses",
-                "Academic_CreateCourse",
               ]
             `)
     })

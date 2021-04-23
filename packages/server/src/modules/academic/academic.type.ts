@@ -68,7 +68,24 @@ export class CreateCourseInput {
 }
 
 @InputType()
-export class UpdateCourseInput {}
+export class UpdateCourseInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  name?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  tuitionFee?: number
+
+  @Field({ nullable: true })
+  @IsOptional()
+  startDate?: string
+
+  @Field((_type) => [ID], { nullable: true })
+  @IsOptional()
+  lecturerIds?: string[]
+}
+
 @ObjectType()
 export class CoursesPayload {
   @Field((_type) => [Course])
