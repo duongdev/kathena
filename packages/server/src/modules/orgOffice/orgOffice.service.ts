@@ -121,20 +121,27 @@ export class OrgOfficeService {
   }
 
   // Search by name, address and phone number
-  async findOrgOffices(searchText: string, orgId: string): Promise<OrgOffice[]> {
-    const handleName = removeExtraSpaces(keyWord)
+  async findOrgOffices(
+    orgId: string,
+    searchText?: string,
+  ): Promise<OrgOffice[]> {
+    const { orgOfficeModel } = this
 
-    if (handleName === undefined) return []
+    if (searchText) {
+      const handleName = removeExtraSpaces(searchText)
 
-    const listOrgOffice = await this.orgOfficeModel.find({
-      $text: {
-        $search: searchText,
-      },
-      orgId,
-    })
+      if (handleName !== undefined) {
+        // returns the OrgOffice list by searchText
+        return orgOfficeModel.find({
+          $text: {
+            $search: searchText,
+          },
+          orgId,
+        })
+      }
+    }
 
-    this.logger.log(listOrgOffice)
-
-    return listOrgOffice
+    // return all OrgOffice in Org
+    return orgOfficeModel.find({ orgId })
   }
 }

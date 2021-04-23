@@ -1,4 +1,5 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
@@ -54,9 +55,14 @@ export class OrgOfficeResolver {
   @Mutation((_returns) => [OrgOffice])
   @UseAuthGuard(P.OrgOffice_ListOrgOffices)
   async findOrgOffices(
-    @Args('searchText', { type: () => String }) searchText: string,
     @CurrentOrg() org: Org,
+    @Args('orgId', { type: () => ID, nullable: true }) orgId: string,
+    @Args('searchText', { type: () => String, nullable: true })
+    searchText?: string,
   ): Promise<OrgOffice[]> {
-    return this.orgOfficeService.findOrgOffices(searchText, org.id)
+    if (orgId !== org.id) {
+      throw new ForbiddenError()
+    }
+    return this.orgOfficeService.findOrgOffices(orgId, searchText)
   }
 }
