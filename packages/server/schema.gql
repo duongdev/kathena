@@ -249,7 +249,7 @@ input UpdateCourseInput {
   name: String
   tuitionFee: Float
   startDate: String
-  lecturerIds: [String!]
+  lecturerIds: [ID!]
 }
 
 input CreateOrgOfficeInput {
