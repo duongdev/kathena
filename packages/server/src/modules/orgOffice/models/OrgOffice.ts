@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { prop } from '@typegoose/typegoose'
+import { index, prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
 import { BaseModel } from 'core'
-
+@index({ name: 'text', address: 'text', phone: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class OrgOffice extends BaseModel {
   @Field()

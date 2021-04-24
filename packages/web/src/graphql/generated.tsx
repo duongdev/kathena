@@ -89,6 +89,7 @@ export enum Permission {
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
   Academic_ListCourses = 'Academic_ListCourses',
+  Academic_FindCourseById = 'Academic_FindCourseById',
   NoPermission = 'NoPermission',
 }
 
