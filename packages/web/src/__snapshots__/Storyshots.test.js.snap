@@ -3176,18 +3176,26 @@ exports[`Storyshots components/InfoBlock Basic 1`] = `
     className="MuiGrid-root MuiGrid-item css-10texkh-MuiGrid-root"
   >
     <div
-      className="makeStyles-root-400"
+      className="MuiGrid-root MuiGrid-container makeStyles-root-400 css-15fev7r-MuiGrid-root"
     >
-      <p
-        className="makeStyles-label-402 MuiTypography-root MuiTypography-body2 css-yud7sz-MuiTypography-root"
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4 css-1fo1y4c-MuiGrid-root"
       >
-        Tên người dùng
-      </p>
-      <p
-        className="MuiTypography-root MuiTypography-body1 css-1f7ol4h-MuiTypography-root"
+        <p
+          className="makeStyles-label-402 MuiTypography-root MuiTypography-body2 css-yud7sz-MuiTypography-root"
+        >
+          Tên người dùng
+        </p>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-8 css-x542pv-MuiGrid-root"
       >
-        Minh Nhật
-      </p>
+        <p
+          className="MuiTypography-root MuiTypography-body1 css-1f7ol4h-MuiTypography-root"
+        >
+          Minh Nhật
+        </p>
+      </div>
     </div>
   </div>
 </div>
