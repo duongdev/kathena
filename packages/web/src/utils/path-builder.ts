@@ -22,7 +22,7 @@ export const ACADEMIC_COURSES = `${ACADEMIC_MODULE}/courses`
 export const ACADEMIC_COURSE_LIST = `${ACADEMIC_COURSES}`
 export const CREATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:idSubject/create`
 export const UPDATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:id/update`
-
+export const ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id`
 export const TEACHING_MODULE = `${ORG_WORKSPACE}/teaching`
 export const TEACHING_COURSES = `${TEACHING_MODULE}/courses`
 export const TEACHING_COURSE_LIST = `${TEACHING_COURSES}`
