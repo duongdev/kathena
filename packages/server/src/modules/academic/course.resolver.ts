@@ -70,7 +70,7 @@ export class CourseResolver {
   }
 
   @Query((_return) => CoursesPayload)
-  @UseAuthGuard(P.Academic_ListCourses)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
   async courses(
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,

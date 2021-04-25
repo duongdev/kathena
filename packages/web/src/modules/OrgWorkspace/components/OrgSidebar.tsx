@@ -1,12 +1,13 @@
 import { FC } from 'react'
 
-import { Book, Nut, Users } from 'phosphor-react'
+import { Book, Nut, Users, BookOpen } from 'phosphor-react'
 import { matchPath } from 'react-router-dom'
 
 import { SidebarMenu } from '@kathena/ui'
 import {
   ACADEMIC_SUBJECT_LIST,
   ORG_SETTINGS,
+  TEACHING_COURSE_LIST,
   USER_LIST,
 } from 'utils/path-builder'
 
@@ -48,6 +49,23 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
             }),
           },
           { key: 'courses', label: 'Khoá học' },
+        ],
+      },
+      {
+        key: 'teaching',
+        title: 'Đang Dạy',
+        icon: BookOpen,
+        items: [
+          {
+            key: 'courses',
+            label: 'Khóa học',
+            link: TEACHING_COURSE_LIST,
+            active: !!matchPath(window.location.pathname, {
+              path: TEACHING_COURSE_LIST,
+              exact: false,
+              strict: false,
+            }),
+          },
         ],
       },
       {

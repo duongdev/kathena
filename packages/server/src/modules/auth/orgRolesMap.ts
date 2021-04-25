@@ -31,7 +31,7 @@ export const student: Role = {
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [],
+  permissions: [P.Academic_ListAcademicSubjects],
 }
 
 export const admin: Role = {
