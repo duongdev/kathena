@@ -60,6 +60,10 @@ export class Course extends BaseModel {
   @prop({ type: [String], default: [] })
   lecturerIds: string[]
 
+  @Field((_type) => [String])
+  @prop({ type: [String], default: [] })
+  studentIds: string[]
+
   @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true })
   createdByAccountId: string
