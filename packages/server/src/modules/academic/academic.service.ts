@@ -210,7 +210,7 @@ export class AcademicService {
     // Can create course
     const canCreateCourse = await this.authService.accountHasPermission({
       accountId: creatorId,
-      permission: Permission.Academic_CreateAcademicSubject,
+      permission: Permission.Academic_CreateCourse,
     })
 
     if (!canCreateCourse) {
@@ -239,7 +239,7 @@ export class AcademicService {
       })
 
       if (!account) {
-        return Promise.reject(new Error(`ID ${id} not found`))
+        return Promise.reject(new Error(`ID ${id} is not found`))
       }
       if (!account?.roles.includes('lecturer')) {
         return Promise.reject(
@@ -360,6 +360,70 @@ export class AcademicService {
     const courses = await courseModel
     const count = await this.courseModel.countDocuments({ orgId })
     return { courses, count }
+  }
+
+  async addLecturesToCourse(
+    query: {
+      adderId: string
+      orgId: string
+      courseId: string
+    },
+    lecturerIds?: string[],
+  ): Promise<DocumentType<Course>> {
+    // Can create course
+    const canCreateCourse = await this.authService.accountHasPermission({
+      accountId: query.adderId,
+      permission: Permission.Academic_UpdateCourse,
+    })
+
+    if (!canCreateCourse) {
+      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
+    }
+
+    const course = await this.courseModel.findOne({
+      _id: query.courseId,
+      orgId: query.orgId,
+    })
+
+    if (!course) {
+      throw new Error(`Course isn't found`)
+    }
+
+    // Must be an array lecturer
+    if (lecturerIds) {
+      const argsLecturer = lecturerIds.map(async (id) => {
+        const account = await this.accountService.findOneAccount({
+          id,
+          orgId: query.orgId,
+        })
+
+        if (!account) {
+          return Promise.reject(new Error(`ID ${id} is not found`))
+        }
+        if (!account?.roles.includes('lecturer')) {
+          return Promise.reject(
+            new Error(`${account?.displayName} isn't a lecturer`),
+          )
+        }
+
+        // Check lecturer is exists
+        if (course.lecturerIds.includes(id)) {
+          return Promise.reject(new Error(`ID ${id} is exists`))
+        }
+        return id
+      })
+
+      await Promise.all(argsLecturer).catch((err) => {
+        throw new Error(err)
+      })
+
+      lecturerIds.forEach((id) => {
+        course.lecturerIds.push(id)
+      })
+    }
+
+    const courseAfter = await course.save()
+    return courseAfter
   }
   /**
    * END COURSE

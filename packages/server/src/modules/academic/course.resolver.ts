@@ -28,7 +28,7 @@ export class CourseResolver {
   ) {}
 
   @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_CreateAcademicSubject)
+  @UseAuthGuard(P.Academic_CreateCourse)
   @UsePipes(ValidationPipe)
   async createCourse(
     @Args('input') createCourseInput: CreateCourseInput,
@@ -67,6 +67,26 @@ export class CourseResolver {
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
     return this.academicService.findCourseById(constId, org.id)
+  }
+
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_UpdateCourse)
+  @UsePipes(ValidationPipe)
+  async addLecturesToCourse(
+    @Args('adderId', { type: () => ID }) adderId: string,
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @CurrentOrg() org: Org,
+    @Args('lecturerIds', { type: () => [String], nullable: true })
+    lecturerIds?: string[],
+  ): Promise<Course | null> {
+    return this.academicService.addLecturesToCourse(
+      {
+        adderId,
+        orgId: org.id,
+        courseId,
+      },
+      lecturerIds,
+    )
   }
 
   @Query((_return) => CoursesPayload)
