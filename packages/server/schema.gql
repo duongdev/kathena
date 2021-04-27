@@ -127,6 +127,7 @@ type Course implements BaseModel {
   publicationState: Publication!
   publishedAt: DateTime!
   lecturerIds: [String!]!
+  studentIds: [String!]!
   createdByAccountId: ID!
 }
 
@@ -183,6 +184,7 @@ input CoursesFilterInput {
   orgId: ID!
   searchText: String
   lecturerIds: [ID!]
+  studentIds: [ID!]
 }
 
 type Mutation {

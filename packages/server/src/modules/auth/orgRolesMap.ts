@@ -25,13 +25,13 @@ export const staff: Role = {
 export const student: Role = {
   name: 'student',
   priority: 4,
-  permissions: [],
+  permissions: [P.Academic_ListAcademicSubjects],
 }
 
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [],
+  permissions: [P.Academic_ListAcademicSubjects],
 }
 
 export const admin: Role = {

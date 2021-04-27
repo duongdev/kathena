@@ -2,100 +2,88 @@ import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
-import { PlusCircle } from 'phosphor-react'
+import format from 'date-fns/format'
 
 import {
-  Button,
   DataTable,
-  Link,
   PageContainer,
   Typography,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
-import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
-import {
-  buildPath,
-  CREATE_ACADEMIC_SUBJECT,
-  ACADEMIC_SUBJECT,
-} from 'utils/path-builder'
+import { Permission, useTeachingCourseListQuery } from 'graphql/generated'
 
-export type AcademicSubjectListProps = {}
+export type TeachingCourseListProps = {}
 
-const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
+const TeachingCourseList: FC<TeachingCourseListProps> = (props) => {
   const classes = useStyles(props)
-  const { $org: org } = useAuth()
+  const { $org: org, $account: account } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
-  const { data, loading } = useAcademicSubjectListQuery({
-    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
+  const { data, loading } = useTeachingCourseListQuery({
+    variables: {
+      orgId: org.id,
+      limit: perPage,
+      skip: page * perPage,
+      lecturerIds: account.id,
+    },
   })
 
-  const academicSubjectList = useMemo(
-    () => data?.academicSubjects.academicSubjects ?? [],
-    [data?.academicSubjects.academicSubjects],
-  )
+  const courses = useMemo(() => data?.courses.courses ?? [], [
+    data?.courses.courses,
+  ])
 
-  const totalCount = useMemo(() => data?.academicSubjects.count ?? 0, [
-    data?.academicSubjects.count,
+  const totalCount = useMemo(() => data?.courses.count ?? 0, [
+    data?.courses.count,
   ])
 
   return (
-    <PageContainer
-      className={classes.root}
-      title="Danh sách môn học"
-      actions={[
-        <Button
-          variant="contained"
-          color="primary"
-          link={CREATE_ACADEMIC_SUBJECT}
-          startIcon={<PlusCircle />}
-        >
-          Thêm môn học
-        </Button>,
-      ]}
-    >
+    <PageContainer className={classes.root} title="Danh sách khóa học đang dạy">
       <Paper>
         <DataTable
-          data={academicSubjectList}
+          data={courses}
           rowKey="id"
           loading={loading}
           columns={[
             {
-              label: 'Môn học',
+              label: 'Khóa học',
               skeleton: <Skeleton />,
-              render: (academicSubject) => (
+              render: (course) => (
                 <>
                   <Typography
                     variant="body1"
                     fontWeight="bold"
                     className={classes.twoRows}
                   >
-                    <Link
-                      to={buildPath(ACADEMIC_SUBJECT, {
-                        id: academicSubject.id,
-                      })}
-                    >
-                      {academicSubject.name}
-                    </Link>
+                    {course.name}
                   </Typography>
                   <Typography
                     variant="button"
                     color="textSecondary"
                     className={classes.twoRows}
                   >
-                    {academicSubject.code}
+                    {course.code}
                   </Typography>
                 </>
               ),
             },
             {
-              label: 'Mô tả',
-              field: 'description',
+              label: 'Học phí',
               skeleton: <Skeleton />,
-              width: '45%',
-              render: ({ description }) => (
+              render: ({ tuitionFee }) => (
                 <Typography className={classes.twoRows}>
-                  {description}
+                  {new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  }).format(tuitionFee)}
+                </Typography>
+              ),
+            },
+            {
+              label: 'Ngày bắt đầu',
+              skeleton: <Skeleton />,
+              render: ({ startDate }) => (
+                <Typography className={classes.twoRows}>
+                  {format(new Date(startDate), 'dd/MM/yyyy')}
                 </Typography>
               ),
             },
@@ -103,9 +91,9 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
               label: 'Trạng thái',
               align: 'right',
               skeleton: <Skeleton />,
-              render: ({ publication }) => (
+              render: ({ publicationState }) => (
                 <PublicationChip
-                  publication={publication}
+                  publication={publicationState}
                   variant="outlined"
                   size="small"
                 />
@@ -136,10 +124,10 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const WithPermissionAcademicSubjectList = () => (
+const WithPermissionTeachingCourseList = () => (
   <WithAuth permission={Permission.Academic_ListAcademicSubjects}>
-    <AcademicSubjectList />
+    <TeachingCourseList />
   </WithAuth>
 )
 
-export default WithPermissionAcademicSubjectList
+export default WithPermissionTeachingCourseList

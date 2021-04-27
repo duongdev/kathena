@@ -330,9 +330,10 @@ export class AcademicService {
       orgId: string
       searchText?: string
       lecturerIds?: string[]
+      studentIds?: string[]
     },
   ): Promise<{ courses: DocumentType<Course>[]; count: number }> {
-    const { orgId, searchText, lecturerIds } = filter
+    const { orgId, searchText, lecturerIds, studentIds } = filter
     const { limit, skip } = pageOptions
     const courseModel = this.courseModel.find({
       orgId,
@@ -354,6 +355,17 @@ export class AcademicService {
       })
       courseModel.find({
         $or: arrQueryLecturerIds,
+      })
+    }
+    if (studentIds) {
+      const arrQueryStudentIds: ANY = []
+      studentIds.map((studentId) => {
+        return arrQueryStudentIds.push({
+          studentIds: studentId,
+        })
+      })
+      courseModel.find({
+        $or: arrQueryStudentIds,
       })
     }
     courseModel.sort({ _id: -1 }).skip(skip).limit(limit)

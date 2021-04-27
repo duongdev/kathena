@@ -68,12 +68,16 @@ Array [
   },
   Object {
     "name": "lecturer",
-    "permissions": Array [],
+    "permissions": Array [
+      "Academic_ListAcademicSubjects",
+    ],
     "priority": 4,
   },
   Object {
     "name": "student",
-    "permissions": Array [],
+    "permissions": Array [
+      "Academic_ListAcademicSubjects",
+    ],
     "priority": 4,
   },
 ]

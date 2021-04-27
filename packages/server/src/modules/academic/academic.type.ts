@@ -104,4 +104,7 @@ export class CoursesFilterInput {
 
   @Field((_type) => [ID], { nullable: true })
   lecturerIds: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  studentIds: string[]
 }
