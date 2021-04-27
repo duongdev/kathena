@@ -71,6 +71,7 @@ enum Permission {
   Academic_CreateCourse
   Academic_UpdateCourse
   Academic_ListCourses
+  Academic_RemoveStudentsFromCourse
   NoPermission
 }
 
@@ -204,6 +205,7 @@ type Mutation {
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   findCourseById(id: ID!): Course!
+  removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
