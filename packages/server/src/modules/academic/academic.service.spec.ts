@@ -1308,14 +1308,6 @@ describe('academic.service', () => {
     })
 
     describe('removeLecturersFromCourse', () => {
-      const course: ANY = {
-        academicSubjectId: objectId(),
-        code: 'NodeJS-12',
-        name: 'Node Js Thang 12',
-        tuitionFee: 5000000,
-        startDate: '2021-04-27',
-      }
-
       it(`throws error if couldn't find course to remove lecturers`, async () => {
         expect.assertions(1)
 
