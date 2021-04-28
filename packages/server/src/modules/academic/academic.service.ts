@@ -391,37 +391,35 @@ export class AcademicService {
     }
 
     // Must be an array lecturer
-    if (lecturerIds) {
-      const argsLecturer = lecturerIds.map(async (id) => {
-        const account = await this.accountService.findOneAccount({
-          id,
-          orgId: query.orgId,
-        })
-
-        if (!account) {
-          return Promise.reject(new Error(`ID ${id} is not found`))
-        }
-        if (!account?.roles.includes('lecturer')) {
-          return Promise.reject(
-            new Error(`${account?.displayName} isn't a lecturer`),
-          )
-        }
-
-        // Check lecturer is exists
-        if (course.lecturerIds.includes(id)) {
-          return Promise.reject(new Error(`ID ${id} is exists`))
-        }
-        return id
+    const argsLecturer = lecturerIds.map(async (id) => {
+      const account = await this.accountService.findOneAccount({
+        id,
+        orgId: query.orgId,
       })
 
-      await Promise.all(argsLecturer).catch((err) => {
-        throw new Error(err)
-      })
+      if (!account) {
+        return Promise.reject(new Error(`ID ${id} is not found`))
+      }
+      if (!account?.roles.includes('lecturer')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a lecturer`),
+        )
+      }
 
-      lecturerIds.forEach((id) => {
-        course.lecturerIds.push(id)
-      })
-    }
+      // Check lecturer is exists
+      if (course.lecturerIds.includes(id)) {
+        return Promise.reject(new Error(`ID ${id} is exists`))
+      }
+      return id
+    })
+
+    await Promise.all(argsLecturer).catch((err) => {
+      throw new Error(err)
+    })
+
+    lecturerIds.forEach((id) => {
+      course.lecturerIds.push(id)
+    })
 
     const courseAfter = await course.save()
     return courseAfter
