@@ -4,7 +4,6 @@ import { Types } from 'mongoose'
 
 import {
   BaseModel,
-  returnUnchanged,
   Publication,
   normalizeCodeField,
   removeExtraSpaces,
@@ -14,6 +13,8 @@ import {
 @index({ name: 1, orgId: 1 })
 @index({ academicSubjectId: 1, orgId: 1 })
 @index({ publicationState: 1, orgId: 1 })
+@index({ code: 'text' })
+@index({ name: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class Course extends BaseModel {
   @Field((_type) => ID)
@@ -25,8 +26,8 @@ export class Course extends BaseModel {
     required: true,
     trim: true,
     index: true,
-    set: normalizeCodeField,
-    get: returnUnchanged,
+    set: (code: string) => normalizeCodeField(code),
+    get: (code: string) => code,
   })
   code: string
 
@@ -34,8 +35,8 @@ export class Course extends BaseModel {
   @prop({
     required: true,
     trim: true,
-    set: removeExtraSpaces,
-    get: returnUnchanged,
+    set: (name: string) => removeExtraSpaces(name),
+    get: (code: string) => code,
   })
   name: string
 
@@ -52,12 +53,18 @@ export class Course extends BaseModel {
   publicationState: Publication
 
   @Field((_type) => Date)
-  @prop({ required: false.valueOf, type: Date })
+  @prop({ required: false, type: Date })
   publishedAt?: Date | null
 
-  @Field()
+  @Field((_type) => [String])
+  @prop({ type: [String], default: [] })
   lecturerIds: string[]
 
+  @Field((_type) => [String])
+  @prop({ type: [String], default: [] })
+  studentIds: string[]
+
+  @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true })
   createdByAccountId: string
 }

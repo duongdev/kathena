@@ -50,19 +50,22 @@ describe('orgOffice.service', () => {
       expect.assertions(1)
 
       await expect(
-        orgOfficeService.updateOrgOffice({
-          id: objectId(),
-          name: 'Học viện khoa học máy tính kmin',
-          address: '25A Mai Thi Luu',
-          phone: '0973797634',
-          updatedByAccountId: objectId(),
-          orgId: objectId(),
-        }),
+        orgOfficeService.updateOrgOffice(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            name: 'Học viện khoa học máy tính kmin',
+            address: '25A Mai Thi Luu',
+            phone: '0973797634',
+          },
+        ),
       ).rejects.toThrowError('INVALID_ORG_ID')
     })
 
-    it('returns the updated OrgOffice', async () => {
-      expect.assertions(4)
+    it('returns an OrgOffice with new name', async () => {
+      expect.assertions(1)
 
       jest
         .spyOn(orgOfficeService['orgService'], 'validateOrgId')
@@ -86,63 +89,95 @@ describe('orgOffice.service', () => {
       })
 
       await expect(
-        orgOfficeService.updateOrgOffice({
-          id: orgOffice.id,
-          name: 'Học viện khoa học máy tính kmin',
-          address: '25A Mai Thi Luu',
-          phone: '0973797634',
-          updatedByAccountId: objectId(),
-          orgId: orgId.id,
-        }),
+        orgOfficeService.updateOrgOffice(
+          {
+            id: orgOffice.id,
+            orgId: orgId.id,
+          },
+          {
+            name: 'Học viện khoa học máy tính kmin',
+          },
+        ),
       ).resolves.toMatchObject({
         name: 'Học viện khoa học máy tính kmin',
+      })
+    })
+
+    it('returns an OrgOffice with new address', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgOfficeService['orgService'], 'validateOrgId')
+        .mockResolvedValue(true as never)
+
+      jest
+        .spyOn(orgOfficeService['authService'], 'accountHasPermission')
+        .mockResolvedValue(true as never)
+
+      const orgId = await orgService.createOrg({
+        name: 'A',
+        namespace: 'admin-a',
+      })
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        name: 'Kmin Academy',
         address: '25A Mai Thi Luu',
         phone: '0973797634',
+        createdByAccountId: objectId(),
+        orgId: orgId.id,
       })
 
       await expect(
-        orgOfficeService.updateOrgOffice({
-          id: orgOffice.id,
-          name: 'Học viện khoa học máy tính kmin',
-          address: 'Tần 81 landmark 81',
-          phone: '0973797634',
-          updatedByAccountId: objectId(),
-          orgId: orgId.id,
-        }),
+        orgOfficeService.updateOrgOffice(
+          {
+            id: orgOffice.id,
+            orgId: orgId.id,
+          },
+          {
+            address: 'Long an',
+          },
+        ),
       ).resolves.toMatchObject({
-        name: 'Học viện khoa học máy tính kmin',
-        address: 'Tần 81 landmark 81',
+        address: 'Long an',
+      })
+    })
+
+    it('returns an OrgOffice with new phone', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgOfficeService['orgService'], 'validateOrgId')
+        .mockResolvedValue(true as never)
+
+      jest
+        .spyOn(orgOfficeService['authService'], 'accountHasPermission')
+        .mockResolvedValue(true as never)
+
+      const orgId = await orgService.createOrg({
+        name: 'A',
+        namespace: 'admin-a',
+      })
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        name: 'Kmin Academy',
+        address: '25A Mai Thi Luu',
         phone: '0973797634',
+        createdByAccountId: objectId(),
+        orgId: orgId.id,
       })
 
       await expect(
-        orgOfficeService.updateOrgOffice({
-          id: orgOffice.id,
-          name: 'Học viện khoa học máy tính kmin',
-          address: 'Tần 81 landmark 81',
-          phone: '0388889999',
-          updatedByAccountId: objectId(),
-          orgId: orgId.id,
-        }),
+        orgOfficeService.updateOrgOffice(
+          {
+            id: orgOffice.id,
+            orgId: orgId.id,
+          },
+          {
+            phone: '0704917152',
+          },
+        ),
       ).resolves.toMatchObject({
-        name: 'Học viện khoa học máy tính kmin',
-        address: 'Tần 81 landmark 81',
-        phone: '0388889999',
-      })
-
-      await expect(
-        orgOfficeService.updateOrgOffice({
-          id: orgOffice.id,
-          name: 'Kmin Academy Học viện khoa học máy tính',
-          address: 'Tần 69 tòa nhà Bitexco',
-          phone: '0388888888',
-          updatedByAccountId: objectId(),
-          orgId: orgId.id,
-        }),
-      ).resolves.toMatchObject({
-        name: 'Kmin Academy Học viện khoa học máy tính',
-        address: 'Tần 69 tòa nhà Bitexco',
-        phone: '0388888888',
+        phone: '0704917152',
       })
     })
 
@@ -158,15 +193,18 @@ describe('orgOffice.service', () => {
         .mockResolvedValue(true as never)
 
       await expect(
-        orgOfficeService.updateOrgOffice({
-          id: objectId(),
-          name: 'Học viện khoa học máy tính kmin',
-          address: '25A Mai Thi Luu',
-          phone: '0973797634',
-          updatedByAccountId: objectId(),
-          orgId: objectId(),
-        }),
-      ).rejects.toThrowError(`CAN'T_UPDATE_ORG_OFFICE`)
+        orgOfficeService.updateOrgOffice(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            name: 'Học viện khoa học máy tính kmin',
+            address: '25A Mai Thi Luu',
+            phone: '0973797634',
+          },
+        ),
+      ).rejects.toThrowError(`Couldn't find office to update`)
     })
   })
   describe('createOrgOffice', () => {
@@ -423,6 +461,133 @@ describe('orgOffice.service', () => {
         name: 'Kmin Academy 1',
         address: '25A Mai Thi Luu',
         phone: '0973797634',
+      })
+    })
+  })
+
+  describe('findOrgOffices', () => {
+    it(`returns an empty array if the input values do not match`, async () => {
+      expect.assertions(2)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      jest
+        .spyOn(orgOfficeService, 'findOrgOffices')
+        .mockResolvedValueOnce({
+          findOrgOffices: [],
+        } as ANY)
+        .mockResolvedValueOnce({
+          findOrgOffices: [],
+        } as ANY)
+
+      await expect(
+        orgOfficeService.findOrgOffices(org.id, 'maii'),
+      ).resolves.toMatchObject({
+        findOrgOffices: [],
+      })
+
+      await expect(
+        orgOfficeService.findOrgOffices(org.id, '  '),
+      ).resolves.toMatchObject({
+        findOrgOffices: [],
+      })
+    })
+
+    it(`returns an org office array`, async () => {
+      expect.assertions(3)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      jest
+        .spyOn(orgOfficeService, 'findOrgOffices')
+        .mockResolvedValueOnce({
+          findOrgOffices: [
+            {
+              name: 'Kmin Edu',
+              address: '25A Nguyễn Thị Lựu',
+              phone: '098765421',
+            },
+          ],
+        } as ANY)
+        .mockResolvedValueOnce({
+          findOrgOffices: [
+            {
+              name: 'Kmin Edu',
+              address: '25A Nguyễn Thị Lựu',
+              phone: '098765421',
+            },
+            {
+              name: 'Kmin Edu',
+              address: '25A Mai Thị Lựu',
+              phone: '098765421',
+            },
+          ],
+        } as ANY)
+        .mockResolvedValueOnce({
+          findOrgOffices: [
+            {
+              name: 'Kmin Edu',
+              address: '25A Nguyễn Thị Lựu',
+              phone: '098765421',
+            },
+            {
+              name: 'Kmin Edu',
+              address: '25A Mai Thị Lựu',
+              phone: '098765421',
+            },
+          ],
+        } as ANY)
+
+      await expect(
+        orgOfficeService.findOrgOffices('mai', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [
+          {
+            name: 'Kmin Edu',
+            address: '25A Nguyễn Thị Lựu',
+            phone: '098765421',
+          },
+        ],
+      })
+
+      await expect(
+        orgOfficeService.findOrgOffices('Mai Thị Lựu', org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [
+          {
+            name: 'Kmin Edu',
+            address: '25A Nguyễn Thị Lựu',
+            phone: '098765421',
+          },
+          {
+            name: 'Kmin Edu',
+            address: '25A Mai Thị Lựu',
+            phone: '098765421',
+          },
+        ],
+      })
+
+      await expect(
+        orgOfficeService.findOrgOffices(org.id),
+      ).resolves.toMatchObject({
+        findOrgOffices: [
+          {
+            name: 'Kmin Edu',
+            address: '25A Nguyễn Thị Lựu',
+            phone: '098765421',
+          },
+          {
+            name: 'Kmin Edu',
+            address: '25A Mai Thị Lựu',
+            phone: '098765421',
+          },
+        ],
       })
     })
   })

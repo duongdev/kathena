@@ -58,14 +58,17 @@ export class OrgOfficeService {
     return orgOffice
   }
 
-  async updateOrgOffice(input: {
-    id: string
-    name: string
-    address: string
-    phone: string
-    updatedByAccountId: string
-    orgId: string
-  }): Promise<DocumentType<OrgOffice>> {
+  async updateOrgOffice(
+    query: {
+      id: string
+      orgId: string
+    },
+    input: {
+      name?: string
+      address?: string
+      phone?: string
+    },
+  ): Promise<DocumentType<OrgOffice>> {
     const inputUpdate = { ...input }
 
     this.logger.log(
@@ -73,43 +76,34 @@ export class OrgOfficeService {
     )
     this.logger.verbose(inputUpdate)
 
-    if (!(await this.orgService.validateOrgId(inputUpdate.orgId))) {
+    if (!(await this.orgService.validateOrgId(query.orgId))) {
       throw new Error('INVALID_ORG_ID')
     }
 
-    if (
-      !(await this.authService.accountHasPermission({
-        accountId: inputUpdate.updatedByAccountId,
-        permission: P.OrgOffice_UpdateOrgOffice,
-      }))
-    ) {
-      throw new ForbiddenError()
-    }
-
-    const query = {
-      /* eslint-disable no-underscore-dangle */
-      _id: inputUpdate.id,
-      orgId: inputUpdate.orgId,
-    }
-
-    const update = {
-      name: removeExtraSpaces(inputUpdate.name),
-      address: removeExtraSpaces(inputUpdate.address),
-      phone: inputUpdate.phone.replace(/\s/g, ''),
-      updatedByAccountId: inputUpdate.updatedByAccountId,
-    }
-
-    const orgOffice = await this.orgOfficeModel.findOneAndUpdate(
-      query,
-      update,
-      { new: true },
-    )
+    const orgOffice = await this.orgOfficeModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
 
     if (!orgOffice) {
-      throw new Error(`CAN'T_UPDATE_ORG_OFFICE`)
+      throw new Error(`Couldn't find office to update`)
     }
 
-    return orgOffice
+    if (input.name) {
+      orgOffice.name = input.name
+    }
+
+    if (input.address) {
+      orgOffice.address = input.address
+    }
+
+    if (input.phone) {
+      orgOffice.phone = input.phone
+    }
+
+    const updated = await orgOffice.save()
+
+    return updated
   }
 
   async findOrgOfficesByOrgId(orgId: string): Promise<OrgOffice[]> {
@@ -124,5 +118,32 @@ export class OrgOfficeService {
     id: string,
   ): Promise<Nullable<DocumentType<OrgOffice>>> {
     return this.orgOfficeModel.findById(id)
+  }
+
+  // Search by name, address and phone number
+  async findOrgOffices(
+    orgId: string,
+    searchText?: string,
+  ): Promise<OrgOffice[]> {
+    const { orgOfficeModel } = this
+
+    if (searchText) {
+      const handleName = removeExtraSpaces(searchText)
+
+      if (handleName !== undefined) {
+        // returns the OrgOffice list by searchText
+        const listOrgOffices = await orgOfficeModel.find({
+          $text: {
+            $search: searchText,
+          },
+          orgId,
+        })
+        return listOrgOffices
+      }
+    }
+
+    // return all OrgOffice in Org
+    const listOrgOffices = await orgOfficeModel.find({ orgId })
+    return listOrgOffices
   }
 }

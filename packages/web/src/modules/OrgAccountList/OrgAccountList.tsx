@@ -10,6 +10,7 @@ import { UserPlus } from 'phosphor-react'
 import {
   Button,
   DataTable,
+  Link,
   PageContainer,
   Typography,
   usePagination,
@@ -17,6 +18,7 @@ import {
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useOrgAccountListQuery } from 'graphql/generated'
 import { CreateAccountDialog } from 'modules/CreateUpdateAccount'
+import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
 export type OrgAccountListProps = {}
 
@@ -81,7 +83,15 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
               label: 'Tên người dùng',
               render: (account) => (
                 <>
-                  <AccountDisplayName variant="body1" account={account} />
+                  <Link
+                    to={buildPath(USER_PROFILE, { username: account.username })}
+                  >
+                    <AccountDisplayName
+                      className={classes.pointer}
+                      variant="body1"
+                      account={account}
+                    />
+                  </Link>
                   <Typography variant="body2" color="textSecondary">
                     @{account.username}
                   </Typography>
@@ -116,6 +126,9 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   root: {},
+  pointer: {
+    cursor: 'pointer',
+  },
 }))
 
 const WithPermissionOrgAccountList = () => (
