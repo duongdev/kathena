@@ -396,7 +396,7 @@ export class AcademicService {
       })
 
       if (!account) {
-        return Promise.reject(new Error(`ID ${id} not found`))
+        return Promise.reject(new Error(`ID ${id} is not found`))
       }
       if (!account?.roles.includes('student')) {
         return Promise.reject(
