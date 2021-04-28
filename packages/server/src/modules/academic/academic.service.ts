@@ -395,7 +395,7 @@ export class AcademicService {
       })
 
       if (!account) {
-        return Promise.reject(new Error(`ID ${id} not found`))
+        return Promise.reject(new Error(`ID ${id} is not found`))
       }
 
       if (!account?.roles.includes('lecturer')) {
@@ -424,7 +424,6 @@ export class AcademicService {
 
     course.lecturerIds = listLecturerOfCourse
     const courseUpdated = course.save()
-
     return courseUpdated
   }
   /**
