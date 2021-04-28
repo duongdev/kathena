@@ -1316,7 +1316,7 @@ describe('academic.service', () => {
         startDate: '2021-04-27',
       }
 
-      it(`throw error if couldn't find course to remove lecturers`, async () => {
+      it(`throws error if couldn't find course to remove lecturers`, async () => {
         expect.assertions(1)
 
         jest
