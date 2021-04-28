@@ -373,6 +373,57 @@ export class AcademicService {
     const count = await this.courseModel.countDocuments({ orgId })
     return { courses, count }
   }
+
+  async addStudentsToCourse(
+    query: {
+      orgId: string
+      courseId: string
+    },
+    studentIds: string[],
+  ): Promise<DocumentType<Course>> {
+    const course = await this.courseModel.findOne({
+      _id: query.courseId,
+      orgId: query.orgId,
+    })
+
+    if (!course) {
+      throw new Error(`Course isn't found`)
+    }
+
+    // Must be an array lecturer
+    const argsLecturer = studentIds.map(async (id) => {
+      const account = await this.accountService.findOneAccount({
+        id,
+        orgId: query.orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${id} is not found`))
+      }
+      if (!account?.roles.includes('student')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a student`),
+        )
+      }
+
+      // Check studentId is exists
+      if (course.studentIds.includes(id)) {
+        return Promise.reject(new Error(`${account.displayName} is exists`))
+      }
+      return id
+    })
+
+    await Promise.all(argsLecturer).catch((err) => {
+      throw new Error(err)
+    })
+
+    studentIds.forEach((id) => {
+      course.studentIds.push(id)
+    })
+
+    const courseAfter = await course.save()
+    return courseAfter
+  }
   /**
    * END COURSE
    */

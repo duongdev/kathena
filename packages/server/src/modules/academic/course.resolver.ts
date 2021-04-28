@@ -81,4 +81,21 @@ export class CourseResolver {
     }
     return this.academicService.findAndPaginateCourses(pageOptions, filter)
   }
+
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_AddStudentsToCourse)
+  async addStudentsToCourse(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @CurrentOrg() org: Org,
+    @Args('lecturerIds', { type: () => [String] })
+    studentIds: string[],
+  ): Promise<Course | null> {
+    return this.academicService.addStudentsToCourse(
+      {
+        orgId: org.id,
+        courseId,
+      },
+      studentIds,
+    )
+  }
 }
