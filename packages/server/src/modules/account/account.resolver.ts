@@ -127,7 +127,7 @@ export class AccountResolver {
       return AccountAvailability.Offline
     }
 
-    const minutesDiff = differenceInMinutes(account.lastActivityAt, new Date())
+    const minutesDiff = differenceInMinutes(new Date(), account.lastActivityAt)
 
     if (minutesDiff <= 1) {
       return AccountAvailability.Online

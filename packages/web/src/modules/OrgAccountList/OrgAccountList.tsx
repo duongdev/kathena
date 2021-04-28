@@ -1,10 +1,11 @@
-import { FC, useCallback, useMemo, useState } from 'react'
+import { FC, useMemo } from 'react'
 
 import { Chip, makeStyles, Paper, Skeleton } from '@material-ui/core'
 import AccountAvatar, {
   AccountAvatarSkeleton,
 } from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
+import AccountStatusChip from 'components/AccountStatusChip'
 import { UserPlus } from 'phosphor-react'
 
 import {
@@ -13,6 +14,7 @@ import {
   Link,
   PageContainer,
   Typography,
+  useDialogState,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
@@ -29,16 +31,11 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   const { data, loading, refetch } = useOrgAccountListQuery({
     variables: { orgId: org.id, limit: perPage, skip: page * perPage },
   })
-  const [createAccountDialogOpen, setCreateAccountDialogOpen] = useState(false)
-
-  const handleOpenCreateAccountDialog = useCallback(
-    () => setCreateAccountDialogOpen(true),
-    [],
-  )
-  const handleCloseCreateAccountDialog = useCallback(
-    () => setCreateAccountDialogOpen(false),
-    [],
-  )
+  const [
+    createAccountDialogOpen,
+    openCreateAccountDialog,
+    closeCreateAccountDialog,
+  ] = useDialogState()
 
   const accounts = useMemo(() => data?.orgAccounts.accounts ?? [], [
     data?.orgAccounts.accounts,
@@ -56,7 +53,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
           variant="contained"
           color="primary"
           startIcon={<UserPlus />}
-          onClick={handleOpenCreateAccountDialog}
+          onClick={openCreateAccountDialog}
         >
           Thêm người dùng
         </Button>,
@@ -64,7 +61,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
     >
       <CreateAccountDialog
         open={createAccountDialogOpen}
-        onClose={handleCloseCreateAccountDialog}
+        onClose={closeCreateAccountDialog}
         onSuccess={refetch}
       />
 
@@ -108,6 +105,13 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
               label: 'Phân quyền',
               render: (account) =>
                 account.roles.map((role) => <Chip key={role} label={role} />),
+              skeleton: <Skeleton />,
+            },
+            {
+              label: 'Trạng thái',
+              render: (account) => (
+                <AccountStatusChip status={account.status} />
+              ),
               skeleton: <Skeleton />,
             },
           ]}
