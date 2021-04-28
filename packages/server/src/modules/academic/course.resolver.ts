@@ -98,4 +98,20 @@ export class CourseResolver {
       studentIds,
     )
   }
+
+  @UseAuthGuard(P.Academic_RemoveLecturersFromCourse)
+  @UsePipes(ValidationPipe)
+  async removeLecturersFromCourse(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('lecturerIds', { type: () => [ID] }) lecturerIds: string[],
+    @CurrentOrg() org: Org,
+  ): Promise<Course | null> {
+    return this.academicService.removeLecturersFromCourse(
+      {
+        id,
+        orgId: org.id,
+      },
+      lecturerIds,
+    )
+  }
 }

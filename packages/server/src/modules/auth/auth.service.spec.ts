@@ -37,7 +37,7 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(10)
+      expect.assertions(11)
 
       const resultPermissions: ANY = [
         'Hr_Access',
@@ -52,6 +52,7 @@ describe('auth.service', () => {
         'Academic_UpdateCourse',
         'Academic_CreateCourse',
         'Academic_RemoveStudentsFromCourse',
+        'Academic_RemoveLecturersFromCourse',
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
@@ -59,6 +60,7 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -136,6 +138,13 @@ describe('auth.service', () => {
       await expect(
         authService.accountHasPermission({
           accountId: objectId().toString(),
+          permission: 'Academic_RemoveLecturersFromCourse',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
           permission: 'OrgOffice_UpdateOrgOffice',
         }),
       ).resolves.toBe(true)
@@ -204,6 +213,7 @@ describe('auth.service', () => {
                 "Academic_UpdateCourse",
                 "Academic_CreateCourse",
                 "Academic_RemoveStudentsFromCourse",
+                "Academic_RemoveLecturersFromCourse",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
