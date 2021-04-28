@@ -9,6 +9,7 @@ import React, { ReactNode, useCallback } from 'react'
 import {
   Fade,
   makeStyles,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -156,16 +157,18 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
               {props.loading && props.data.length === 0
                 ? repeatArray(props.skeletonCount ?? 5).map((idx) => (
                     <TableRow className={classes.rowItem} key={idx}>
-                      {props.columns.map((column, idx) => (
-                        <TableCell
-                          align={column.align}
-                          padding={column.padding}
-                          key={`${column.label}-${column.field || idx}`}
-                          style={{ width: column.width }}
-                        >
-                          {column.skeleton}
-                        </TableCell>
-                      ))}
+                      {props.columns.map(
+                        ({ skeleton = <Skeleton />, ...column }, idx) => (
+                          <TableCell
+                            align={column.align}
+                            padding={column.padding}
+                            key={`${column.label}-${column.field || idx}`}
+                            style={{ width: column.width }}
+                          >
+                            {skeleton}
+                          </TableCell>
+                        ),
+                      )}
                     </TableRow>
                   ))
                 : props.data.map((row, idx) => (
