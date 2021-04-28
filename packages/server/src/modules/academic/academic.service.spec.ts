@@ -1356,7 +1356,7 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`ID ${lecturerId} is not found`)
       })
 
-      it('throws error if the account isn't a lecturer', async () => {
+      it('throws error if the account is not a lecturer', async () => {
         expect.assertions(1)
 
         const account: ANY = {
@@ -1430,7 +1430,7 @@ describe('academic.service', () => {
         )
       })
 
-      it(`returns a new course`, async () => {
+      it(`returns the course with updated lecturerIds`, async () => {
         expect.assertions(1)
 
         const org = await orgService.createOrg({
