@@ -83,6 +83,22 @@ export class CourseResolver {
   }
 
   @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_RemoveStudentsFromCourse)
+  @UsePipes(ValidationPipe)
+  async removeStudentsFromCourse(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('studentIds', { type: () => [ID] }) studentIds: string[],
+    @CurrentOrg() org: Org,
+  ): Promise<Course | null> {
+    return this.academicService.removeStudentsFromCourse(
+      {
+        id,
+        orgId: org.id,
+      },
+      studentIds,
+    )
+  }
+
   @UseAuthGuard(P.Academic_RemoveLecturersFromCourse)
   @UsePipes(ValidationPipe)
   async removeLecturersFromCourse(
