@@ -1430,7 +1430,7 @@ describe('academic.service', () => {
         )
       })
 
-      it(`return a new course`, async () => {
+      it(`returns a new course`, async () => {
         expect.assertions(1)
 
         const org = await orgService.createOrg({
