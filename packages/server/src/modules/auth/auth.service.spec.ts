@@ -194,6 +194,7 @@ describe('auth.service', () => {
                 "Academic_ListCourses",
                 "Academic_UpdateCourse",
                 "Academic_CreateCourse",
+                "Academic_AddLecturersToCourse",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",

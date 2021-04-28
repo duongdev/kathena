@@ -70,18 +70,16 @@ export class CourseResolver {
   }
 
   @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_UpdateCourse)
+  @UseAuthGuard(P.Academic_AddLecturersToCourse)
   @UsePipes(ValidationPipe)
   async addLecturesToCourse(
-    @Args('adderId', { type: () => ID }) adderId: string,
     @Args('courseId', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
-    @Args('lecturerIds', { type: () => [String], nullable: true })
-    lecturerIds?: string[],
+    @Args('lecturerIds', { type: () => [String] })
+    lecturerIds: string[],
   ): Promise<Course | null> {
-    return this.academicService.addLecturesToCourse(
+    return this.academicService.addLecturersToCourse(
       {
-        adderId,
         orgId: org.id,
         courseId,
       },

@@ -374,24 +374,13 @@ export class AcademicService {
     return { courses, count }
   }
 
-  async addLecturesToCourse(
+  async addLecturersToCourse(
     query: {
-      adderId: string
       orgId: string
       courseId: string
     },
-    lecturerIds?: string[],
+    lecturerIds: string[],
   ): Promise<DocumentType<Course>> {
-    // Can create course
-    const canCreateCourse = await this.authService.accountHasPermission({
-      accountId: query.adderId,
-      permission: Permission.Academic_UpdateCourse,
-    })
-
-    if (!canCreateCourse) {
-      throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
-    }
-
     const course = await this.courseModel.findOne({
       _id: query.courseId,
       orgId: query.orgId,

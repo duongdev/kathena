@@ -1307,7 +1307,7 @@ describe('academic.service', () => {
       })
     })
 
-    describe('addLecturesToCourse', () => {
+    describe('addLecturersToCourse', () => {
       const course: ANY = {
         academicSubjectId: objectId(),
         code: 'NodeJS-12',
@@ -1315,20 +1315,6 @@ describe('academic.service', () => {
         tuitionFee: 5000000,
         startDate: '2021-04-27',
       }
-      it('throws error if the account is not permission', async () => {
-        expect.assertions(1)
-
-        await expect(
-          academicService.addLecturesToCourse(
-            {
-              adderId: objectId(),
-              orgId: objectId(),
-              courseId: objectId(),
-            },
-            [objectId()],
-          ),
-        ).rejects.toThrowError('ACCOUNT_HAS_NOT_PERMISSION')
-      })
 
       it('throws error if the course is not found', async () => {
         expect.assertions(1)
@@ -1338,9 +1324,8 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
 
         await expect(
-          academicService.addLecturesToCourse(
+          academicService.addLecturersToCourse(
             {
-              adderId: objectId(),
               orgId: objectId(),
               courseId: objectId(),
             },
@@ -1361,9 +1346,8 @@ describe('academic.service', () => {
 
         const lecturerId = objectId()
         await expect(
-          academicService.addLecturesToCourse(
+          academicService.addLecturersToCourse(
             {
-              adderId: objectId(),
               orgId: objectId(),
               courseId: objectId(),
             },
@@ -1395,9 +1379,8 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(account as ANY)
 
         await expect(
-          academicService.addLecturesToCourse(
+          academicService.addLecturersToCourse(
             {
-              adderId: objectId(),
               orgId: objectId(),
               courseId: objectId(),
             },
@@ -1435,9 +1418,8 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(account as ANY)
 
         await expect(
-          academicService.addLecturesToCourse(
+          academicService.addLecturersToCourse(
             {
-              adderId: objectId(),
               orgId: objectId(),
               courseId: courseData.id,
             },
@@ -1497,9 +1479,8 @@ describe('academic.service', () => {
 
         const lecturerIds = [accountLecturer.id]
 
-        const courseAfter = await academicService.addLecturesToCourse(
+        const courseAfter = await academicService.addLecturersToCourse(
           {
-            adderId: accountAdmin.id,
             orgId: org.id,
             courseId: courseBefore.id,
           },
