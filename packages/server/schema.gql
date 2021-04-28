@@ -205,7 +205,7 @@ type Mutation {
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   findCourseById(id: ID!): Course!
-  addLecturesToCourse(lecturerIds: [String!]!, courseId: ID!): Course!
+  addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
