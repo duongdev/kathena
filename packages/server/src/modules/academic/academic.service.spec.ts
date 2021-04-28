@@ -1356,7 +1356,7 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`ID ${lecturerId} is not found`)
       })
 
-      it('throws error if the account cannot a lecturer', async () => {
+      it('throws error if the account isn't a lecturer', async () => {
         expect.assertions(1)
 
         const account: ANY = {
