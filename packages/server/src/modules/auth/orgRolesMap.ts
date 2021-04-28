@@ -13,20 +13,25 @@ export const staff: Role = {
     P.Academic_ListAcademicSubjects,
     P.Academic_SetAcademicSubjectPublication,
     P.Academic_UpdateAcademicSubject,
+    P.Academic_ListCourses,
+    P.Academic_UpdateCourse,
+    P.Academic_CreateCourse,
     P.OrgOffice_ListOrgOffices,
+    P.OrgOffice_CreateOrgOffice,
+    P.OrgOffice_UpdateOrgOffice,
   ],
 }
 
 export const student: Role = {
   name: 'student',
   priority: 4,
-  permissions: [],
+  permissions: [P.Academic_ListAcademicSubjects],
 }
 
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [],
+  permissions: [P.Academic_ListAcademicSubjects],
 }
 
 export const admin: Role = {

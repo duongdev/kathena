@@ -1,0 +1,19 @@
+query Courses($orgId: ID!, $skip: Int!, $limit: Int!) {
+  courses(
+    pageOptions: { skip: $skip, limit: $limit }
+    filter: { orgId: $orgId }
+  ) {
+    courses {
+      id
+      createdAt
+      name
+      code
+      orgId
+      academicSubjectId
+      startDate
+      tuitionFee
+      lecturerIds
+    }
+    count
+  }
+}

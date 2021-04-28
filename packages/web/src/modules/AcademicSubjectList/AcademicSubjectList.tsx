@@ -17,7 +17,7 @@ import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
 import {
   buildPath,
   CREATE_ACADEMIC_SUBJECT,
-  UPDATE_ACADEMIC_SUBJECT,
+  ACADEMIC_SUBJECT,
 } from 'utils/path-builder'
 
 export type AcademicSubjectListProps = {}
@@ -70,7 +70,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
                     className={classes.twoRows}
                   >
                     <Link
-                      to={buildPath(UPDATE_ACADEMIC_SUBJECT, {
+                      to={buildPath(ACADEMIC_SUBJECT, {
                         id: academicSubject.id,
                       })}
                     >
