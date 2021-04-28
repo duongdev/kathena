@@ -408,7 +408,7 @@ export class AcademicService {
 
       // Check lecturer is exists
       if (course.lecturerIds.includes(id)) {
-        return Promise.reject(new Error(`ID ${id} is exists`))
+        return Promise.reject(new Error(`${account.displayName} is exists`))
       }
       return id
     })
