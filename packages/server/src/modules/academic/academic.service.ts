@@ -380,7 +380,7 @@ export class AcademicService {
       orgId: string
     },
     lecturerIds: string[],
-  ): Promise<DocumentType<Course> | null> {
+  ): Promise<DocumentType<Course>> {
     const { id, orgId } = query
     const course = await this.findCourseById(id, orgId)
 
@@ -395,7 +395,7 @@ export class AcademicService {
       })
 
       if (!account) {
-        return Promise.reject(new Error(`ID ${id} is not found`))
+        return Promise.reject(new Error(`ID ${lecturerId} is not found`))
       }
 
       if (!account?.roles.includes('lecturer')) {

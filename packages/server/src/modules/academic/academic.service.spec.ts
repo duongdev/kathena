@@ -1308,6 +1308,14 @@ describe('academic.service', () => {
     })
 
     describe('removeLecturersFromCourse', () => {
+      const courseDemo: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 3000,
+        startDate: '2021-04-27',
+      }
+
       it(`throws error if couldn't find course to remove lecturers`, async () => {
         expect.assertions(1)
 
@@ -1326,52 +1334,59 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`Couldn't find course to remove lecturers`)
       })
 
-      it(`throws error if the lecturerIds array containing lecturerId does not exist or is not a lecturer`, async () => {
-        expect.assertions(2)
+      it('throws error if the account cannot be found', async () => {
+        expect.assertions(1)
 
-        const org = await orgService.createOrg({
-          namespace: 'kmin-edu',
-          name: 'Kmin Academy',
-        })
-
-        const accountAdmin = await accountService.createAccount({
-          orgId: org.id,
-          email: 'vanhai0911@gmail.com',
-          password: '123456',
-          username: 'haidev',
-          roles: ['admin'],
-          displayName: 'Nguyen Van Hai',
-        })
-
-        const id = objectId()
-        jest
-          .spyOn(orgService, 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
         jest
           .spyOn(authService, 'accountHasPermission')
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseDemo as ANY)
+
+        const lecturerId = objectId()
+        await expect(
+          academicService.removeLecturersFromCourse(
+            {
+              id: courseDemo.id,
+              orgId: courseDemo.orgId,
+            },
+            [lecturerId],
+          ),
+        ).rejects.toThrowError(`ID ${lecturerId} is not found`)
+      })
+
+      it('throws error if the account cannot a lecturer', async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          orgId: objectId(),
+          email: 'vanhai0911@gmail.com',
+          password: '1234567',
+          username: 'haidev',
+          roles: ['owner', 'admin'],
+          displayName: 'Nguyen Van Hai',
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
           .mockResolvedValueOnce(true as never)
         jest
-          .spyOn(academicService, 'findAcademicSubjectById')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseDemo as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
 
         await expect(
-          academicService.createCourse(objectId(), org.id, {
-            ...createCourseInput,
-            startDate: Date.now(),
-            lecturerIds: [id],
-          }),
-        ).rejects.toThrowError(`ID ${id} not found`)
-
-        await expect(
-          academicService.createCourse(objectId(), org.id, {
-            ...createCourseInput,
-            startDate: Date.now(),
-            lecturerIds: [accountAdmin.id],
-          }),
-        ).rejects.toThrowError(`${accountAdmin.displayName} isn't a lecturer`)
+          academicService.removeLecturersFromCourse(
+            {
+              id: courseDemo.id,
+              orgId: courseDemo.orgId,
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} isn't a lecturer`)
       })
 
       it('throws error if id lecturer is not a lecturer of course', async () => {
@@ -1468,7 +1483,7 @@ describe('academic.service', () => {
           .spyOn(academicService['courseModel'], 'findOne')
           .mockResolvedValueOnce(courseTest)
 
-        const lecturerIds = [accountLecturer2.id]
+        const lecturerIdstest = [accountLecturer2.id]
 
         const courseUpdate = await academicService.removeLecturersFromCourse(
           {
@@ -1477,10 +1492,8 @@ describe('academic.service', () => {
           },
           [accountLecturer.id],
         )
-
         await expect(
-          JSON.stringify(lecturerIds) ===
-            JSON.stringify(courseUpdate.lecturerIds),
+          courseUpdate.lecturerIds.toString() === lecturerIdstest.toString(),
         ).toBeTruthy()
       })
     })
