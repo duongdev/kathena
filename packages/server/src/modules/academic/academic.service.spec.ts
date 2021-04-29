@@ -1389,7 +1389,7 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`${account.displayName} isn't a student`)
       })
 
-      it('throws error if id lecturer already exists in the list', async () => {
+      it('throws error if id student already exists in the list', async () => {
         expect.assertions(1)
 
         const account: ANY = {
