@@ -390,7 +390,7 @@ export class AcademicService {
       throw new Error(`Course isn't found`)
     }
 
-    // Must be an array lecturer
+    // Must be an array student
     const argsLecturer = studentIds.map(async (id) => {
       const account = await this.accountService.findOneAccount({
         id,
