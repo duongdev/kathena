@@ -37,7 +37,7 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(9)
+      expect.assertions(11)
 
       const resultPermissions: ANY = [
         'Hr_Access',
@@ -52,6 +52,8 @@ describe('auth.service', () => {
         'Academic_UpdateCourse',
         'Academic_CreateCourse',
         'Academic_AddStudentsToCourse',
+        'Academic_RemoveStudentsFromCourse',
+        'Academic_RemoveLecturersFromCourse',
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
@@ -59,6 +61,8 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -122,6 +126,20 @@ describe('auth.service', () => {
         authService.accountHasPermission({
           accountId: objectId().toString(),
           permission: 'Academic_ListCourses',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_RemoveStudentsFromCourse',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_RemoveLecturersFromCourse',
         }),
       ).resolves.toBe(true)
 
@@ -196,6 +214,8 @@ describe('auth.service', () => {
                 "Academic_UpdateCourse",
                 "Academic_CreateCourse",
                 "Academic_AddStudentsToCourse",
+                "Academic_RemoveStudentsFromCourse",
+                "Academic_RemoveLecturersFromCourse",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",

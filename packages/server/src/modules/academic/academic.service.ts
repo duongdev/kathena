@@ -424,6 +424,112 @@ export class AcademicService {
     const courseAfter = await course.save()
     return courseAfter
   }
+
+  async removeStudentsFromCourse(
+    query: {
+      id: string
+      orgId: string
+    },
+    studentIds: string[],
+  ): Promise<DocumentType<Course> | null> {
+    const { id, orgId } = query
+
+    const course = await this.findCourseById(id, orgId)
+
+    if (!course) {
+      throw new Error("Couldn't find course to remove students")
+    }
+
+    const arrStudent = studentIds.map(async (studentId) => {
+      const account = await this.accountService.findOneAccount({
+        id: studentId,
+        orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${id} is not found`))
+      }
+      if (!account?.roles.includes('student')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a student`),
+        )
+      }
+      if (!course.studentIds.includes(studentId)) {
+        return Promise.reject(
+          new Error(`${account.displayName} isn't a student of ${course.name}`),
+        )
+      }
+
+      return id
+    })
+
+    await Promise.all(arrStudent).catch((err) => {
+      throw new Error(err)
+    })
+    const { studentIds: listStudentOfCourse } = course
+    studentIds.map((studentId) =>
+      listStudentOfCourse.splice(listStudentOfCourse.indexOf(studentId), 1),
+    )
+
+    course.studentIds = listStudentOfCourse
+
+    const courseUpdated = course.save()
+
+    return courseUpdated
+  }
+
+  async removeLecturersFromCourse(
+    query: {
+      id: string
+      orgId: string
+    },
+    lecturerIds: string[],
+  ): Promise<DocumentType<Course>> {
+    const { id, orgId } = query
+    const course = await this.findCourseById(id, orgId)
+
+    if (!course) {
+      throw new Error(`Couldn't find course to remove lecturers`)
+    }
+
+    const arrLecturer = lecturerIds.map(async (lecturerId) => {
+      const account = await this.accountService.findOneAccount({
+        id: lecturerId,
+        orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${lecturerId} is not found`))
+      }
+
+      if (!account?.roles.includes('lecturer')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a lecturer`),
+        )
+      }
+
+      if (!course.lecturerIds.includes(lecturerId)) {
+        return Promise.reject(
+          new Error(
+            `${account.displayName} isn't a lecturer of ${course.name}`,
+          ),
+        )
+      }
+      return id
+    })
+
+    await Promise.all(arrLecturer).catch((err) => {
+      throw new Error(err)
+    })
+    const { lecturerIds: listLecturerOfCourse } = course
+    lecturerIds.map((lecturerId) =>
+      listLecturerOfCourse.splice(listLecturerOfCourse.indexOf(lecturerId), 1),
+    )
+
+    course.lecturerIds = listLecturerOfCourse
+    const courseUpdated = course.save()
+    return courseUpdated
+  }
   /**
    * END COURSE
    */

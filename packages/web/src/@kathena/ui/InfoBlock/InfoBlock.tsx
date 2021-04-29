@@ -34,11 +34,10 @@ const InfoBlock = (props: InfoBlockProps) => {
 
 const useStyles = makeStyles({
   root: {
-    margin: '10px 0',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
+    // margin: '10px 0',
+    // display: 'flex',
+    // justifyContent: 'space-between',
+    // alignItems: 'baseline',
   },
   text: {
     textAlign: 'right',
