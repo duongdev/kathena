@@ -270,7 +270,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     >
       {(formik) => (
         <PageContainer
-          title={createMode ? 'Thêm môn học mới' : 'Chỉnh sửa môn học'}
+          title={createMode ? 'Thêm môn học mới' : data?.academicSubject.name}
           backButtonLabel="Danh sách môn học"
           withBackButton={ACADEMIC_SUBJECT_LIST}
           actions={
@@ -279,7 +279,6 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                   <Button
                     variant="contained"
                     color="primary"
-                    size="large"
                     startIcon={<Check />}
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
@@ -289,9 +288,8 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                 ]
               : [
                   <Button
-                    variant="contained"
+                    // variant="contained"
                     color="primary"
-                    size="large"
                     onClick={() => handleUpdateAcademicSubjectPublication(id)}
                     startIcon={
                       data?.academicSubject.publication ===
@@ -309,13 +307,12 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                   <Button
                     variant="contained"
                     color="primary"
-                    size="large"
                     disabled={formik.values === formik.initialValues}
                     startIcon={<Check />}
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
                   >
-                    Sửa môn học
+                    Lưu thay đổi
                   </Button>,
                 ]
           }

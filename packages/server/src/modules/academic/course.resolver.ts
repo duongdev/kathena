@@ -99,4 +99,37 @@ export class CourseResolver {
     }
     return this.academicService.findAndPaginateCourses(pageOptions, filter)
   }
+
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_RemoveStudentsFromCourse)
+  @UsePipes(ValidationPipe)
+  async removeStudentsFromCourse(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('studentIds', { type: () => [ID] }) studentIds: string[],
+    @CurrentOrg() org: Org,
+  ): Promise<Course | null> {
+    return this.academicService.removeStudentsFromCourse(
+      {
+        id,
+        orgId: org.id,
+      },
+      studentIds,
+    )
+  }
+
+  @UseAuthGuard(P.Academic_RemoveLecturersFromCourse)
+  @UsePipes(ValidationPipe)
+  async removeLecturersFromCourse(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('lecturerIds', { type: () => [ID] }) lecturerIds: string[],
+    @CurrentOrg() org: Org,
+  ): Promise<Course | null> {
+    return this.academicService.removeLecturersFromCourse(
+      {
+        id,
+        orgId: org.id,
+      },
+      lecturerIds,
+    )
+  }
 }

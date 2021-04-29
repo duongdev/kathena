@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { makeStyles, Paper, Skeleton } from '@material-ui/core'
+import { makeStyles, Paper } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import { PlusCircle } from 'phosphor-react'
 
@@ -62,7 +62,6 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           columns={[
             {
               label: 'Môn học',
-              skeleton: <Skeleton />,
               render: (academicSubject) => (
                 <>
                   <Typography
@@ -91,7 +90,6 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
             {
               label: 'Mô tả',
               field: 'description',
-              skeleton: <Skeleton />,
               width: '45%',
               render: ({ description }) => (
                 <Typography className={classes.twoRows}>
@@ -101,14 +99,8 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
             },
             {
               label: 'Trạng thái',
-              align: 'right',
-              skeleton: <Skeleton />,
               render: ({ publication }) => (
-                <PublicationChip
-                  publication={publication}
-                  variant="outlined"
-                  size="small"
-                />
+                <PublicationChip publication={publication} />
               ),
             },
           ]}

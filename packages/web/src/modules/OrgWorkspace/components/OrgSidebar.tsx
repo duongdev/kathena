@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { Book, Nut, Users, BookOpen } from 'phosphor-react'
+import { Book, Nut, Users, BookOpen, GraduationCap } from 'phosphor-react'
 import { matchPath } from 'react-router-dom'
 
 import { SidebarMenu } from '@kathena/ui'
@@ -8,6 +8,7 @@ import {
   ACADEMIC_COURSE_LIST,
   ACADEMIC_SUBJECT_LIST,
   ORG_SETTINGS,
+  STUDYING_COURSE_LIST,
   TEACHING_COURSE_LIST,
   USER_LIST,
 } from 'utils/path-builder'
@@ -72,6 +73,23 @@ const OrgSidebar: FC<OrgSidebarProps> = () => (
             link: TEACHING_COURSE_LIST,
             active: !!matchPath(window.location.pathname, {
               path: TEACHING_COURSE_LIST,
+              exact: false,
+              strict: false,
+            }),
+          },
+        ],
+      },
+      {
+        key: 'studying',
+        title: 'Đang Học',
+        icon: GraduationCap,
+        items: [
+          {
+            key: 'courses',
+            label: 'Khóa học',
+            link: STUDYING_COURSE_LIST,
+            active: !!matchPath(window.location.pathname, {
+              path: STUDYING_COURSE_LIST,
               exact: false,
               strict: false,
             }),
