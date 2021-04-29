@@ -87,7 +87,7 @@ export class CourseResolver {
   async addStudentsToCourse(
     @Args('courseId', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
-    @Args('lecturerIds', { type: () => [String] })
+    @Args('studentIds', { type: () => [ID] })
     studentIds: string[],
   ): Promise<Course | null> {
     return this.academicService.addStudentsToCourse(
