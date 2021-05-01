@@ -440,7 +440,9 @@ export type ImageFileQueryVariables = Exact<{
 }>
 
 export type ImageFileQuery = {
-  file?: Maybe<Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size'>>
+  file?: Maybe<
+    Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size' | 'signedUrl'>
+  >
 }
 
 export type AcademicSubjectDetailQueryVariables = Exact<{
@@ -1454,6 +1456,7 @@ export const ImageFileDocument: DocumentNode = {
                 { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'size' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'signedUrl' } },
               ],
             },
           },

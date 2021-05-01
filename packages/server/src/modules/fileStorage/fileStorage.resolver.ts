@@ -30,6 +30,6 @@ export class FileStorageResolver {
   async signedUrl(@Parent() file: File): Promise<Nullable<string>> {
     const { name } = file
 
-    return `https://${config.APP_DOMAIN}/files/${name}`
+    return `http://${config.APP_DOMAIN}/files/${name}`
   }
 }

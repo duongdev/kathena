@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react'
 
-import { Avatar, CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import Image from 'components/Image'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -54,9 +55,13 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
           title="Thông tin môn học"
         >
           <CardContent>
-            <Grid container>
+            <Grid container spacing={2}>
               <Grid item xs={12} md={5} className={classes.imgSubject}>
-                <Avatar variant="rounded" src={subject.imageFileId} />
+                <Image
+                  fileId={subject.imageFileId}
+                  style={{ height: '100%' }}
+                  variant="background"
+                />
               </Grid>
               <Grid item xs={12} md={7}>
                 <Stack spacing={2}>
