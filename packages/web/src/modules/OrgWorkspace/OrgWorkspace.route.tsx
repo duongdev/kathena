@@ -16,6 +16,7 @@ import {
   ACADEMIC_COURSE_LIST,
   TEACHING_COURSE_LIST,
   STUDYING_COURSE_LIST,
+  TEACHING_COURSE,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -72,6 +73,12 @@ const StudyingCourseList = lazy(
       'modules/StudyingCourseList'
     ) /* webpackChunkName: "modules/StudyingCourseList" */,
 )
+const TeachingCourse = lazy(
+  () =>
+    import(
+      'modules/TeachingCourse'
+    ) /* webpackChunkName: "modules/TeachingCourse" */,
+)
 
 export type OrgWorkspaceRouteProps = {}
 
@@ -102,6 +109,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       <Route path={ORG_SETTINGS} exact component={OrgSettings} />
       <Route path={TEACHING_COURSE_LIST} exact component={TeachingCourseList} />
       <Route path={STUDYING_COURSE_LIST} exact component={StudyingCourseList} />
+      <Route path={TEACHING_COURSE} exact component={TeachingCourse} />
     </Switch>
   </Suspense>
 )

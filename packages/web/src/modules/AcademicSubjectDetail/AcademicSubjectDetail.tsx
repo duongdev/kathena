@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { Button, InfoBlock, PageContainer, SectionCard } from '@kathena/ui'
 import { useAcademicSubjectDetailQuery } from 'graphql/generated'
+import { buildPath, CREATE_ACADEMIC_COURSE } from 'utils/path-builder'
 
 export type AcademicSubjectDetailProps = {}
 
@@ -35,7 +36,16 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
         withBackButton
         maxWidth="md"
         title="Thông tin môn học"
-        actions={[<Button variant="contained">Activate</Button>]}
+        actions={[
+          <Button variant="contained">Activate</Button>,
+          <Button
+            link={buildPath(CREATE_ACADEMIC_COURSE, {
+              idSubject: subjectDetail.id,
+            })}
+          >
+            Thêm khóa học
+          </Button>,
+        ]}
       >
         <Grid container spacing={DASHBOARD_SPACING}>
           <SectionCard

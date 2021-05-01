@@ -1,0 +1,13 @@
+query CourseDetail($id: ID!) {
+  findCourseById(id: $id) {
+    id
+    orgId
+    name
+    code
+    tuitionFee
+    startDate
+    lecturerIds
+    studentIds
+    publicationState
+  }
+}
