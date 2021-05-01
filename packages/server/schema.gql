@@ -226,7 +226,7 @@ type Mutation {
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   findCourseById(id: ID!): Course!
-  addStudentsToCourse(lecturerIds: [String!]!, courseId: ID!): Course!
+  addStudentsToCourse(studentIds: [String!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
