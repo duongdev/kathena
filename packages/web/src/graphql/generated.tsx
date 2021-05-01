@@ -435,7 +435,7 @@ export type AccountDisplayNameQuery = {
 }
 
 export type AcademicSubjectDetailQueryVariables = Exact<{
-  Id: Scalars['ID']
+  id: Scalars['ID']
 }>
 
 export type AcademicSubjectDetailQuery = {
@@ -1414,7 +1414,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
           type: {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
@@ -1433,7 +1433,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
                 name: { kind: 'Name', value: 'id' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'Id' },
+                  name: { kind: 'Name', value: 'id' },
                 },
               },
             ],
@@ -1499,7 +1499,7 @@ export function withAcademicSubjectDetail<
  * @example
  * const { data, loading, error } = useAcademicSubjectDetailQuery({
  *   variables: {
- *      Id: // value for 'Id'
+ *      id: // value for 'id'
  *   },
  * });
  */
