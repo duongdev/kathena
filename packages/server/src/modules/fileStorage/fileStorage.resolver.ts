@@ -1,5 +1,13 @@
-import { Args, ID, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  ID,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 
+import { config } from 'core'
 import { UseAuthGuard } from 'core/auth'
 import { Nullable } from 'types'
 
@@ -16,5 +24,12 @@ export class FileStorageResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<Nullable<File>> {
     return this.fileStorageService.findFileById(id)
+  }
+
+  @ResolveField((_returns) => String, { nullable: true })
+  async signedUrl(@Parent() file: File): Promise<Nullable<string>> {
+    const { name } = file
+
+    return `https://${config.APP_DOMAIN}/files/${name}`
   }
 }
