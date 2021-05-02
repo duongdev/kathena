@@ -3,13 +3,17 @@
 /* eslint-disable no-console */
 import { FC, useEffect, useState } from 'react'
 
-import { Grid, TextField } from '@material-ui/core'
-import { Autocomplete, AutocompleteProps } from '@material-ui/lab'
+import {
+  Grid,
+  TextField,
+  Autocomplete,
+  AutocompleteProps,
+} from '@material-ui/core'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 
-import { ANY } from '@kathena/types'
+import { ANY, TODO } from '@kathena/types'
 import { Typography, withComponentHocs } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { Account, useOrgAccountListQuery } from 'graphql/generated'
@@ -78,7 +82,7 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
           margin="normal"
         />
       )}
-      renderOption={(option) => {
+      renderOption={(option: TODO) => {
         const matches = match(option.displayName as ANY, inputValue)
         const parts = parse(option.displayName as ANY, matches)
         return (
