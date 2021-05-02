@@ -27,9 +27,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""
-Status of an account.
-"""
+"""Status of an account."""
 enum AccountStatus {
   Pending
   Active
@@ -74,6 +72,7 @@ enum Permission {
   Academic_UpdateCourse
   Academic_ListCourses
   Academic_AddStudentsToCourse
+  Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
   NoPermission
@@ -96,6 +95,7 @@ type File implements BaseModel {
   mimeType: String!
   storageProvider: FileLocation!
   storageProviderIdentifier: String!
+  signedUrl: String
 }
 
 enum FileLocation {
@@ -164,20 +164,11 @@ type OrgOffice implements BaseModel {
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
-  orgAccounts(
-    filter: AccountsFilterInput!
-    pageOptions: PageOptionsInput!
-  ): OrgAccountsPayload!
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(
-    pageOptions: PageOptionsInput!
-    orgId: ID!
-  ): AcademicSubjectsPayload!
+  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
-  courses(
-    filter: CoursesFilterInput!
-    pageOptions: PageOptionsInput!
-  ): CoursesPayload!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
@@ -208,27 +199,18 @@ type Mutation {
   signIn(
     password: String!
 
-    """
-    Could be username or email
-    """
+    """Could be username or email"""
     identity: String!
     orgNamespace: String!
   ): SignInPayload!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
-  updateAcademicSubjectPublication(
-    publication: String!
-    id: ID!
-  ): AcademicSubject!
-  updateAcademicSubject(
-    updateInput: UpdateAcademicSubjectInput!
-    id: ID!
-  ): AcademicSubject!
+  updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
+  updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   findCourseById(id: ID!): Course!
-  addStudentsToCourse(studentIds: [String!]!, courseId: ID!): Course!
-  removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
-  removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
+  addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
+  addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -256,9 +238,7 @@ input CreateAcademicSubjectInput {
   image: Upload!
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input UpdateAcademicSubjectInput {

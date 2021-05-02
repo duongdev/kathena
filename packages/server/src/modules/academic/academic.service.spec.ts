@@ -738,7 +738,7 @@ describe('academic.service', () => {
             startDate: Date.now(),
             lecturerIds: [id],
           }),
-        ).rejects.toThrowError(`ID ${id} not found`)
+        ).rejects.toThrowError(`ID ${id} is not found`)
 
         await expect(
           academicService.createCourse(objectId(), org.id, {
@@ -1356,7 +1356,7 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`ID ${studentId} is not found`)
       })
 
-      it('throws error if the account cannot a student', async () => {
+      it(`throws error if the account isn't a student`, async () => {
         expect.assertions(1)
 
         const account: ANY = {
@@ -1489,6 +1489,193 @@ describe('academic.service', () => {
 
         await expect(
           JSON.stringify(studentIds) === JSON.stringify(courseAfter.studentIds),
+        ).toBeTruthy()
+      })
+    })
+
+    describe('addLecturersToCourse', () => {
+      const course: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        startDate: '2021-04-27',
+      }
+
+      it('throws error if the course is not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.addLecturersToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+          ),
+        ).rejects.toThrowError("Course isn't found")
+      })
+
+      it('throws error if the lecturer account cannot be found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(course as ANY)
+
+        const lecturerId = objectId()
+        await expect(
+          academicService.addLecturersToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [lecturerId],
+          ),
+        ).rejects.toThrowError(`ID ${lecturerId} is not found`)
+      })
+
+      it(`throws error if the account isn't a lecturer`, async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          orgId: objectId(),
+          email: 'huynhthanhcanh.top@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['owner', 'admin'],
+          displayName: 'Thanh Canh',
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(course as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.addLecturersToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} isn't a lecturer`)
+      })
+
+      it('throws error if id lecturer already exists in the list', async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          id: objectId(),
+          orgId: objectId(),
+          email: 'huynhthanhcanh.top@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['lecturer'],
+          displayName: 'Thanh Canh',
+        }
+
+        const courseData: ANY = {
+          ...createCourseInput,
+          lecturerIds: [account.id],
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseData as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.addLecturersToCourse(
+            {
+              orgId: objectId(),
+              courseId: courseData.id,
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} is exists`)
+      })
+
+      it('returns the course after updating', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin-edu',
+          namespace: 'Kmin Academic',
+        })
+
+        const accountAdmin = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhadmin.top@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['admin'],
+          displayName: 'Thanh Canh',
+        })
+
+        const accountLecturer = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhlecturer.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh',
+          roles: ['lecturer'],
+          displayName: 'Thanh Thanh',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          name: 'Frontend cơ bản',
+          orgId: org.id,
+          code: 'FEBASIC',
+          description: 'Lập trình frontend cơ bản',
+          imageFileId: objectId(),
+          createdByAccountId: objectId(),
+        })
+
+        const courseBefore = await academicService.createCourse(
+          accountAdmin.id,
+          org.id,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+            academicSubjectId: academicSubject.id,
+          },
+        )
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+
+        const lecturerIds = [accountLecturer.id]
+
+        const courseAfter = await academicService.addLecturersToCourse(
+          {
+            orgId: org.id,
+            courseId: courseBefore.id,
+          },
+          [accountLecturer.id],
+        )
+
+        await expect(
+          JSON.stringify(lecturerIds) ===
+            JSON.stringify(courseAfter.lecturerIds),
         ).toBeTruthy()
       })
     })

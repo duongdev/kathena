@@ -89,6 +89,9 @@ export enum Permission {
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
   Academic_ListCourses = 'Academic_ListCourses',
+  Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
+  Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
+  Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   NoPermission = 'NoPermission',
 }
 
@@ -109,6 +112,7 @@ export type File = BaseModel & {
   mimeType: Scalars['String']
   storageProvider: FileLocation
   storageProviderIdentifier: Scalars['String']
+  signedUrl?: Maybe<Scalars['String']>
 }
 
 export enum FileLocation {
@@ -251,6 +255,8 @@ export type Mutation = {
   createCourse: Course
   updateCourse: Course
   findCourseById: Course
+  addLecturesToCourse: Course
+  removeStudentsFromCourse: Course
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -300,6 +306,16 @@ export type MutationUpdateCourseArgs = {
 }
 
 export type MutationFindCourseByIdArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationAddLecturesToCourseArgs = {
+  lecturerIds: Array<Scalars['ID']>
+  courseId: Scalars['ID']
+}
+
+export type MutationRemoveStudentsFromCourseArgs = {
+  studentIds: Array<Scalars['ID']>
   id: Scalars['ID']
 }
 
@@ -419,8 +435,18 @@ export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
+export type ImageFileQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type ImageFileQuery = {
+  file?: Maybe<
+    Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size' | 'signedUrl'>
+  >
+}
+
 export type AcademicSubjectDetailQueryVariables = Exact<{
-  Id: Scalars['ID']
+  id: Scalars['ID']
 }>
 
 export type AcademicSubjectDetailQuery = {
@@ -1389,6 +1415,134 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
+export const ImageFileDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ImageFile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'file' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'size' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'signedUrl' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ImageFileProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ImageFileQuery,
+    ImageFileQueryVariables
+  >
+} &
+  TChildProps
+export function withImageFile<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ImageFileQuery,
+    ImageFileQueryVariables,
+    ImageFileProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ImageFileQuery,
+    ImageFileQueryVariables,
+    ImageFileProps<TChildProps, TDataName>
+  >(ImageFileDocument, {
+    alias: 'imageFile',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useImageFileQuery__
+ *
+ * To run a query within a React component, call `useImageFileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImageFileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImageFileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useImageFileQuery(
+  baseOptions: Apollo.QueryHookOptions<ImageFileQuery, ImageFileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ImageFileQuery, ImageFileQueryVariables>(
+    ImageFileDocument,
+    options,
+  )
+}
+export function useImageFileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ImageFileQuery,
+    ImageFileQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ImageFileQuery, ImageFileQueryVariables>(
+    ImageFileDocument,
+    options,
+  )
+}
+export type ImageFileQueryHookResult = ReturnType<typeof useImageFileQuery>
+export type ImageFileLazyQueryHookResult = ReturnType<
+  typeof useImageFileLazyQuery
+>
+export type ImageFileQueryResult = Apollo.QueryResult<
+  ImageFileQuery,
+  ImageFileQueryVariables
+>
 export const AcademicSubjectDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -1399,7 +1553,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
           type: {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
@@ -1418,7 +1572,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
                 name: { kind: 'Name', value: 'id' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'Id' },
+                  name: { kind: 'Name', value: 'id' },
                 },
               },
             ],
@@ -1484,7 +1638,7 @@ export function withAcademicSubjectDetail<
  * @example
  * const { data, loading, error } = useAcademicSubjectDetailQuery({
  *   variables: {
- *      Id: // value for 'Id'
+ *      id: // value for 'id'
  *   },
  * });
  */

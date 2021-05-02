@@ -1,0 +1,10 @@
+query ImageFile($id: ID!) {
+  file(id: $id) {
+    id
+    orgId
+    mimeType
+    name
+    size
+    signedUrl
+  }
+}
