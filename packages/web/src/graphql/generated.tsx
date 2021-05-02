@@ -89,6 +89,9 @@ export enum Permission {
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
   Academic_ListCourses = 'Academic_ListCourses',
+  Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
+  Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
+  Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   NoPermission = 'NoPermission',
 }
 
@@ -251,6 +254,8 @@ export type Mutation = {
   createCourse: Course
   updateCourse: Course
   findCourseById: Course
+  addLecturesToCourse: Course
+  removeStudentsFromCourse: Course
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -300,6 +305,16 @@ export type MutationUpdateCourseArgs = {
 }
 
 export type MutationFindCourseByIdArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationAddLecturesToCourseArgs = {
+  lecturerIds: Array<Scalars['ID']>
+  courseId: Scalars['ID']
+}
+
+export type MutationRemoveStudentsFromCourseArgs = {
+  studentIds: Array<Scalars['ID']>
   id: Scalars['ID']
 }
 
