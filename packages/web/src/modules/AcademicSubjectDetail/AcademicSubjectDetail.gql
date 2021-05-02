@@ -1,5 +1,5 @@
-query AcademicSubjectDetail($Id: ID!) {
-  academicSubject(id: $Id) {
+query AcademicSubjectDetail($id: ID!) {
+  academicSubject(id: $id) {
     id
     code
     name
