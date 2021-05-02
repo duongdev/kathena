@@ -16,7 +16,7 @@
     "reinstall": "yarn clean && yarn install",
     "lint": "yarn workspaces run lint",
     "build": "sh ./scripts/build.sh",
-    "start": "yarn workspace server start:prod",
+    "start": "env && yarn workspace server start:prod",
     "test": "sh ./scripts/test.sh",
     "prepare": "husky install",
     "start:server": "yarn workspace server start:dev",
