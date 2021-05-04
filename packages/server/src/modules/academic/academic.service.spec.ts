@@ -1398,13 +1398,13 @@ describe('academic.service', () => {
           email: 'hieuliem33@gmail.com',
           password: '123456',
           username: 'liemdang',
-          roles: ['lecturer'],
+          roles: ['student'],
           displayName: 'YamiDoki',
         }
 
         const courseData: ANY = {
           ...createCourseInput,
-          lecturerIds: [account.id],
+          studentIds: [account.id],
         }
 
         jest
