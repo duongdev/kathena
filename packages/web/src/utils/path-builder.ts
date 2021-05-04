@@ -32,6 +32,7 @@ export const TEACHING_COURSE = `${TEACHING_COURSES}/:id/detail`
 export const STUDYING_MODULE = `${ORG_WORKSPACE}/studying`
 export const STUDYING_COURSES = `${STUDYING_MODULE}/courses`
 export const STUDYING_COURSE_LIST = `${STUDYING_COURSES}`
+export const STUDYING_COURSE = `${STUDYING_COURSES}/:id/detail`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
