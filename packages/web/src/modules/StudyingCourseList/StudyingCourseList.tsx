@@ -6,12 +6,14 @@ import format from 'date-fns/format'
 
 import {
   DataTable,
+  Link,
   PageContainer,
   Typography,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useStudyingCourseListQuery } from 'graphql/generated'
+import { buildPath, STUDYING_COURSE } from 'utils/path-builder'
 
 export type StudyingCourseListProps = {}
 
@@ -49,13 +51,15 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
               skeleton: <Skeleton />,
               render: (course) => (
                 <>
-                  <Typography
-                    variant="body1"
-                    fontWeight="bold"
-                    className={classes.twoRows}
-                  >
-                    {course.name}
-                  </Typography>
+                  <Link to={buildPath(STUDYING_COURSE, { id: course.id })}>
+                    <Typography
+                      color="body1"
+                      fontWeight="bold"
+                      className={classes.twoRows}
+                    >
+                      {course.name}
+                    </Typography>
+                  </Link>
                   <Typography
                     variant="button"
                     color="textSecondary"

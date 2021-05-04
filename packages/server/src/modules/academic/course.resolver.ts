@@ -59,14 +59,13 @@ export class CourseResolver {
     )
   }
 
-  @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_ListCourses)
-  @UsePipes(ValidationPipe)
+  @Query((_return) => Course)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
   async findCourseById(
-    @Args('id', { type: () => ID }) constId: string,
+    @Args('id', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.findCourseById(constId, org.id)
+    return this.academicService.findCourseById(courseId, org.id)
   }
 
   @Mutation((_returns) => Course)

@@ -176,10 +176,8 @@ type Query {
     orgId: ID!
   ): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
-  courses(
-    filter: CoursesFilterInput!
-    pageOptions: PageOptionsInput!
-  ): CoursesPayload!
+  findCourseById(id: ID!): Course!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
@@ -227,7 +225,6 @@ type Mutation {
   ): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
-  findCourseById(id: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
