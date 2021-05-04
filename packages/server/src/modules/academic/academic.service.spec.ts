@@ -1307,6 +1307,192 @@ describe('academic.service', () => {
       })
     })
 
+    describe('addStudentsToCourse', () => {
+      const course: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        startDate: '2021-04-27',
+      }
+
+      it('throws error if the course is not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.addStudentsToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+          ),
+        ).rejects.toThrowError("Course isn't found")
+      })
+
+      it('throws error if the student account cannot be found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(course as ANY)
+
+        const studentId = objectId()
+        await expect(
+          academicService.addStudentsToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [studentId],
+          ),
+        ).rejects.toThrowError(`ID ${studentId} is not found`)
+      })
+
+      it(`throws error if the account isn't a student`, async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          orgId: objectId(),
+          email: 'hieuliem33@gmail.com',
+          password: '123456',
+          username: 'liemdang',
+          roles: ['owner', 'admin'],
+          displayName: 'YamiDoki',
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(course as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.addStudentsToCourse(
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} isn't a student`)
+      })
+
+      it('throws error if id student already exists in the list', async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          id: objectId(),
+          orgId: objectId(),
+          email: 'hieuliem33@gmail.com',
+          password: '123456',
+          username: 'liemdang',
+          roles: ['student'],
+          displayName: 'YamiDoki',
+        }
+
+        const courseData: ANY = {
+          ...createCourseInput,
+          studentIds: [account.id],
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseData as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.addStudentsToCourse(
+            {
+              orgId: objectId(),
+              courseId: courseData.id,
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} is exists`)
+      })
+
+      it('returns the course after updating', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin-edu',
+          namespace: 'Kmin Academic',
+        })
+
+        const accountAdmin = await accountService.createAccount({
+          orgId: org.id,
+          email: 'Adminhieuliem33@gmail.com',
+          password: '123456',
+          username: 'Adminliemdang',
+          roles: ['admin'],
+          displayName: 'AdminYamiDoki',
+        })
+
+        const accountStudent = await accountService.createAccount({
+          orgId: org.id,
+          email: 'Studenthieuliem33@gmail.com',
+          password: '123456',
+          username: 'Studentliemdang',
+          roles: ['student'],
+          displayName: 'StudentYamiDoki',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          name: 'Frontend cơ bản',
+          orgId: org.id,
+          code: 'FEBASIC',
+          description: 'Lập trình frontend cơ bản',
+          imageFileId: objectId(),
+          createdByAccountId: objectId(),
+        })
+
+        const courseBefore = await academicService.createCourse(
+          accountAdmin.id,
+          org.id,
+          {
+            ...createCourseInput,
+            startDate: Date.now(),
+            academicSubjectId: academicSubject.id,
+          },
+        )
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+
+        const studentIds = [accountStudent.id]
+
+        const courseAfter = await academicService.addStudentsToCourse(
+          {
+            orgId: org.id,
+            courseId: courseBefore.id,
+          },
+          [accountStudent.id],
+        )
+
+        await expect(
+          JSON.stringify(studentIds) === JSON.stringify(courseAfter.studentIds),
+        ).toBeTruthy()
+      })
+    })
+
     describe('addLecturersToCourse', () => {
       const course: ANY = {
         academicSubjectId: objectId(),
@@ -1356,7 +1542,7 @@ describe('academic.service', () => {
         ).rejects.toThrowError(`ID ${lecturerId} is not found`)
       })
 
-      it('throws error if the account cannot a lecturer', async () => {
+      it(`throws error if the account isn't a lecturer`, async () => {
         expect.assertions(1)
 
         const account: ANY = {
