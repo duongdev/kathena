@@ -62,6 +62,7 @@ const ImageComponent = ({ signedUrl, alt, variant, ...rest }: ANY) => {
         backgroundImage: `url("${src}")`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+        backgroundSize: 'contain',
         ...rest.style,
       }}
     />
