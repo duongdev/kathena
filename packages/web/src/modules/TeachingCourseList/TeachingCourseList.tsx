@@ -57,7 +57,7 @@ const TeachingCourseList: FC<TeachingCourseListProps> = (props) => {
                       fontWeight="bold"
                       className={classes.twoRows}
                     >
-                      {course.code}
+                      {course.name}
                     </Typography>
                   </Link>
                   <Typography
