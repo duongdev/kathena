@@ -1425,7 +1425,7 @@ describe('academic.service', () => {
             },
             [account.id],
           ),
-        ).rejects.toThrowError(`${account.displayName} isn't a student`)
+        ).rejects.toThrowError(`${account.displayName} is exists`)
       })
 
       it('returns the course after updating', async () => {
