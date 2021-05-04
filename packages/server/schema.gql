@@ -167,6 +167,7 @@ type Query {
   authenticate: AuthenticatePayload!
   academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
@@ -207,7 +208,6 @@ type Mutation {
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
-  findCourseById(id: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!

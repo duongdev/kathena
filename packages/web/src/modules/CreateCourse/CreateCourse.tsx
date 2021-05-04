@@ -15,9 +15,11 @@ import {
   renderApolloError,
   SectionCard,
 } from '@kathena/ui'
+import { useAuth } from 'common/auth'
 import {
   useFindAcademicSubjectByIdQuery,
   useCreateCourseMutation,
+  CoursesDocument,
 } from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
 
@@ -55,6 +57,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
   const params: { idSubject: string } = useParams()
   const history = useHistory()
   const idSubject = useMemo(() => params.idSubject, [params.idSubject])
+  const { $org: org } = useAuth()
   const { data } = useFindAcademicSubjectByIdQuery({
     variables: {
       Id: idSubject,
@@ -63,7 +66,14 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
   const academicSubject = useMemo(() => data?.academicSubject, [
     data?.academicSubject,
   ])
-  const [createCourse] = useCreateCourseMutation()
+  const [createCourse] = useCreateCourseMutation({
+    refetchQueries: [
+      {
+        query: CoursesDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+    ],
+  })
   const initialValues: CourseFormInput = {
     code: '',
     name: '',

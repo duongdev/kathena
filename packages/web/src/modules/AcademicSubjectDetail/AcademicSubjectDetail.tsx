@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@kathena/ui'
 import { useAcademicSubjectDetailQuery } from 'graphql/generated'
+import { buildPath, CREATE_ACADEMIC_COURSE } from 'utils/path-builder'
 
 export type AcademicSubjectDetailProps = {}
 
@@ -46,7 +47,16 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
       withBackButton
       maxWidth="md"
       title={subject.name}
-      actions={[<Button variant="contained">Activate</Button>]}
+      actions={[
+        <Button variant="contained">Activate</Button>,
+        <Button
+          link={buildPath(CREATE_ACADEMIC_COURSE, {
+            idSubject: subject.id,
+          })}
+        >
+          Thêm khóa học
+        </Button>,
+      ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard

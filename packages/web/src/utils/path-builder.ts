@@ -27,6 +27,7 @@ export const ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/detail`
 export const TEACHING_MODULE = `${ORG_WORKSPACE}/teaching`
 export const TEACHING_COURSES = `${TEACHING_MODULE}/courses`
 export const TEACHING_COURSE_LIST = `${TEACHING_COURSES}`
+export const TEACHING_COURSE = `${TEACHING_COURSES}/:id/detail`
 
 export const STUDYING_MODULE = `${ORG_WORKSPACE}/studying`
 export const STUDYING_COURSES = `${STUDYING_MODULE}/courses`
