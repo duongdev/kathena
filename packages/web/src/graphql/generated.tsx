@@ -185,6 +185,7 @@ export type Query = {
   authenticate: AuthenticatePayload
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
+  findCourseById: Course
   courses: CoursesPayload
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
@@ -210,6 +211,10 @@ export type QueryAcademicSubjectsArgs = {
 }
 
 export type QueryAcademicSubjectArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryFindCourseByIdArgs = {
   id: Scalars['ID']
 }
 
@@ -302,20 +307,6 @@ export type MutationCreateCourseArgs = {
 
 export type MutationUpdateCourseArgs = {
   updateInput: UpdateCourseInput
-  id: Scalars['ID']
-}
-
-export type MutationFindCourseByIdArgs = {
-  id: Scalars['ID']
-}
-
-export type MutationAddLecturesToCourseArgs = {
-  lecturerIds: Array<Scalars['ID']>
-  courseId: Scalars['ID']
-}
-
-export type MutationRemoveStudentsFromCourseArgs = {
-  studentIds: Array<Scalars['ID']>
   id: Scalars['ID']
 }
 
@@ -680,6 +671,25 @@ export type StudyingCourseListQuery = {
       >
     >
   }
+}
+
+export type CourseDetailQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type CourseDetailQuery = {
+  findCourseById: Pick<
+    Course,
+    | 'id'
+    | 'orgId'
+    | 'name'
+    | 'code'
+    | 'tuitionFee'
+    | 'startDate'
+    | 'lecturerIds'
+    | 'studentIds'
+    | 'publicationState'
+  >
 }
 
 export type TeachingCourseListQueryVariables = Exact<{
@@ -4334,6 +4344,145 @@ export type StudyingCourseListLazyQueryHookResult = ReturnType<
 export type StudyingCourseListQueryResult = Apollo.QueryResult<
   StudyingCourseListQuery,
   StudyingCourseListQueryVariables
+>
+export const CourseDetailDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'CourseDetail' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findCourseById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tuitionFee' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CourseDetailProps<
+  TChildProps = {},
+  TDataName extends string = 'data'
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CourseDetailQuery,
+    CourseDetailQueryVariables
+  >
+} &
+  TChildProps
+export function withCourseDetail<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CourseDetailQuery,
+    CourseDetailQueryVariables,
+    CourseDetailProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CourseDetailQuery,
+    CourseDetailQueryVariables,
+    CourseDetailProps<TChildProps, TDataName>
+  >(CourseDetailDocument, {
+    alias: 'courseDetail',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCourseDetailQuery__
+ *
+ * To run a query within a React component, call `useCourseDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCourseDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCourseDetailQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCourseDetailQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    CourseDetailQuery,
+    CourseDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<CourseDetailQuery, CourseDetailQueryVariables>(
+    CourseDetailDocument,
+    options,
+  )
+}
+export function useCourseDetailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CourseDetailQuery,
+    CourseDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<CourseDetailQuery, CourseDetailQueryVariables>(
+    CourseDetailDocument,
+    options,
+  )
+}
+export type CourseDetailQueryHookResult = ReturnType<
+  typeof useCourseDetailQuery
+>
+export type CourseDetailLazyQueryHookResult = ReturnType<
+  typeof useCourseDetailLazyQuery
+>
+export type CourseDetailQueryResult = Apollo.QueryResult<
+  CourseDetailQuery,
+  CourseDetailQueryVariables
 >
 export const TeachingCourseListDocument: DocumentNode = {
   kind: 'Document',

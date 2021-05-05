@@ -59,14 +59,13 @@ export class CourseResolver {
     )
   }
 
-  @Mutation((_returns) => Course)
-  @UseAuthGuard(P.Academic_ListCourses)
-  @UsePipes(ValidationPipe)
+  @Query((_return) => Course)
+  @UseAuthGuard(P.Academic_ListAcademicSubjects)
   async findCourseById(
-    @Args('id', { type: () => ID }) constId: string,
+    @Args('id', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.findCourseById(constId, org.id)
+    return this.academicService.findCourseById(courseId, org.id)
   }
 
   @Mutation((_returns) => Course)
@@ -101,6 +100,22 @@ export class CourseResolver {
   }
 
   @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_AddStudentsToCourse)
+  async addStudentsToCourse(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @CurrentOrg() org: Org,
+    @Args('studentIds', { type: () => [ID] })
+    studentIds: string[],
+  ): Promise<Course | null> {
+    return this.academicService.addStudentsToCourse(
+      {
+        orgId: org.id,
+        courseId,
+      },
+      studentIds,
+    )
+  }
+
   @UseAuthGuard(P.Academic_RemoveStudentsFromCourse)
   @UsePipes(ValidationPipe)
   async removeStudentsFromCourse(
