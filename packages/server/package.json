@@ -39,7 +39,7 @@
     "date-fns": "2.21.2",
     "dotenv": "8.5.1",
     "fastify-static": "4.0.1",
-    "file-type": "16.3.0",
+    "file-type": "16.4.0",
     "graphql": "15.5.0",
     "graphql-tools": "7.0.4",
     "graphql-upload": "11.0.0",
