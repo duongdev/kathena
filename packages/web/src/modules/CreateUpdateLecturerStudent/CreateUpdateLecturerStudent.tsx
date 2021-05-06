@@ -1,30 +1,19 @@
 import { FC, useMemo, useState } from 'react'
 
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  CardContent,
-  createStyles,
-  Grid,
-  makeStyles,
-} from '@material-ui/core'
+import { CardContent, Grid, makeStyles, IconButton } from '@material-ui/core'
+import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
-import format from 'date-fns/format'
-import { CaretDown } from 'phosphor-react'
+import { UserPlus, DotsThreeVertical } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import {
-  InfoBlock,
+  Button,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
-  Typography,
 } from '@kathena/ui'
 import { useCourseDetailQuery } from 'graphql/generated'
-
-import AccountInfoRow from '../TeachingCourse/AccountInfoRow'
 
 export type CreateUpdateLecturerStudentProps = {}
 
@@ -58,46 +47,59 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     <PageContainer
       withBackButton
       maxWidth="lg"
-      title={course.name}
-      subtitle={`${`Tên khóa học${  course.code}`}`}
+      subtitle={`${`Mã khóa học : ${course.code}`}`}
+      title={`${`Tên khóa học : ${course.name}`}`}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin giảng viên"
+          action={
+            <Button
+              startIcon={<UserPlus />}
+              size="small"
+              // onClick={handleOpenCreateDialog}
+            />
+          }
         >
           {/* Giảng viên */}
           <CardContent>
-            <Grid container spacing={2}>
-              <InfoBlock gridItem={{ xs: 12 }} label="Giảng viên đảm nhận">
-                {course.lecturerIds.map((lecturerId) => (
-                  <>
-                    <AccountInfoRow
-                      key={lecturerId}
-                      gridItem={{ xs: 4 }}
-                      accountId={lecturerId}
-                    />
-                  </>
-                ))}
-              </InfoBlock>
-            </Grid>
+            <>
+              {course.lecturerIds.map((lecturerId) => (
+                <Grid
+                  container
+                  spacing={2}
+                  className={classes.displayName}
+                  key={lecturerId}
+                >
+                  <Grid item md={1}>
+                    <AccountAvatar accountId={lecturerId} />
+                  </Grid>
+                  <Grid item md={10}>
+                    <AccountDisplayName accountId={lecturerId} />
+                  </Grid>
+                  <Grid item md={1}>
+                    <IconButton
+                      size="small"
+                      // onClick={handleClick}
+                    >
+                      <DotsThreeVertical size={30} />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
+            </>
           </CardContent>
         </SectionCard>
       </Grid>
     </PageContainer>
   )
 }
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {},
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: '33.33%',
-      flexShrink: 0,
-    },
-  }),
-)
+const useStyles = makeStyles({
+  displayName: {
+    alignItems: 'center',
+  },
+})
 
 export default CreateUpdateLecturerStudent

@@ -1,0 +1,23 @@
+query TeachingCourseList(
+  $orgId: ID!
+  $skip: Int!
+  $limit: Int!
+  $lecturerIds: [ID!]
+) {
+  courses(
+    pageOptions: { skip: $skip, limit: $limit }
+    filter: { orgId: $orgId, lecturerIds: $lecturerIds }
+  ) {
+    courses {
+      id
+      orgId
+      name
+      code
+      tuitionFee
+      startDate
+      lecturerIds
+      publicationState
+    }
+    count
+  }
+}
