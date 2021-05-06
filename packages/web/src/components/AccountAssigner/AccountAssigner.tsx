@@ -3,8 +3,12 @@
 /* eslint-disable no-console */
 import { FC, useEffect, useState } from 'react'
 
-import { Grid, TextField, AutocompleteProps } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import {
+  Grid,
+  TextField,
+  AutocompleteProps,
+  Autocomplete,
+} from '@material-ui/core'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
