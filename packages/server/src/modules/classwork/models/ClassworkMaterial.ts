@@ -15,7 +15,7 @@ registerEnumType(ClassworkType, {
 })
 
 @ObjectType({ implements: [BaseModel] })
-export class Classwork extends BaseModel {
+export class ClassworkMaterial extends BaseModel {
   @Field()
   @prop({ required: true })
   courseId: string

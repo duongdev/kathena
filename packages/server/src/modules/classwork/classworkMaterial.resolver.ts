@@ -16,14 +16,15 @@ import {
 
 // import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
 import { AuthService } from 'modules/auth/auth.service'
+// import { P } from 'modules/auth/models'
 // import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { Classwork } from './models/Classwork'
+import { ClassworkMaterial } from './models/ClassworkMaterial'
 
-@Resolver((_of) => Classwork)
-export class AssignmentsResolver {
+@Resolver((_of) => ClassworkMaterial)
+export class ClassworkMaterialResolver {
   constructor(
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
@@ -31,12 +32,12 @@ export class AssignmentsResolver {
   ) {}
 
   /**
-   *START ASSIGNMENTS RESOLVER
+   *START MATERIAL RESOLVER
    */
 
   // TODO: Delete this line and start the code here
 
   /**
-   * END ASSIGNMENTS RESOLVER
+   * END MATERIAL RESOLVER
    */
 }

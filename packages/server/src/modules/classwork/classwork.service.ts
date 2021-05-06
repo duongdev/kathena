@@ -15,15 +15,23 @@ import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // import { ANY, Nullable } from 'types'
 
-import { Classwork } from './models/Classwork'
+import { ClassworkAssignments } from './models/ClassworkAssignments'
+import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Service()
 export class ClassworkService {
-  private readonly logger = new Logger(Classwork.name)
+  private readonly logger = new Logger(ClassworkService.name)
 
   constructor(
-    @InjectModel(Classwork)
-    private readonly classworkModel: ReturnModelType<typeof Classwork>,
+    @InjectModel(ClassworkAssignments)
+    private readonly classworkAssignmentsModel: ReturnModelType<
+      typeof ClassworkAssignments
+    >,
+
+    @InjectModel(ClassworkMaterial)
+    private readonly classworkMaterialModel: ReturnModelType<
+      typeof ClassworkMaterial
+    >,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,

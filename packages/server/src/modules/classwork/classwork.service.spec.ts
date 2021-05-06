@@ -7,11 +7,11 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 // import { Role } from 'modules/auth/models'
 // import { ANY } from 'types'
 
-// import { ClassworkService } from './classwork.service'
+import { ClassworkService } from './classwork.service'
 
 describe('classwork.service', () => {
   let module: TestingModule
-  // let classworkService: ClassworkService
+  let classworkService: ClassworkService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('classwork.service', () => {
 
     module = await createTestingModule(testDb.uri)
 
-    // classworkService = module.get<ClassworkService>(ClassworkService)
+    classworkService = module.get<ClassworkService>(ClassworkService)
   })
 
   afterAll(async () => {
@@ -31,6 +31,10 @@ describe('classwork.service', () => {
     await mongooseConnection.dropDatabase()
     jest.resetAllMocks()
     jest.restoreAllMocks()
+  })
+
+  it('should be defined', () => {
+    expect(classworkService).toBeDefined()
   })
 
   /**
