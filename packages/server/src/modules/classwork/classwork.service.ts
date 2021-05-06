@@ -47,7 +47,7 @@ export class ClassworkService {
   // TODO: Delete this line and start the code here
 
   /**
-   * END CLASSWORK
+   * END CLASSWORK MATERIAL
    */
 
   /**
@@ -57,6 +57,6 @@ export class ClassworkService {
   // TODO: Delete this line and start the code here
 
   /**
-   * END CLASSWORK
+   * END CLASSWORK ASSIGNMENT
    */
 }
