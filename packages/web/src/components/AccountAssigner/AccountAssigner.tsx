@@ -6,14 +6,14 @@ import { FC, useEffect, useState } from 'react'
 import {
   Grid,
   TextField,
-  Autocomplete,
   AutocompleteProps,
+  Autocomplete,
 } from '@material-ui/core'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 
-import { ANY, TODO } from '@kathena/types'
+import { ANY } from '@kathena/types'
 import { Typography, withComponentHocs } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { Account, useOrgAccountListQuery } from 'graphql/generated'
@@ -62,10 +62,6 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
     <Autocomplete
       loading={loading}
       options={options}
-      filterOptions={(x) => x}
-      autoComplete
-      includeInputInList
-      filterSelectedOptions
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue)
       }}
@@ -82,28 +78,30 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
           margin="normal"
         />
       )}
-      renderOption={(option: TODO) => {
+      renderOption={(p, option) => {
         const matches = match(option.displayName as ANY, inputValue)
         const parts = parse(option.displayName as ANY, matches)
         return (
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <AccountAvatar size={24} account={option} />
+          <li {...p}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <AccountAvatar size={24} account={option} />
+              </Grid>
+              <Grid item xs>
+                {parts.map((part, index) => (
+                  <span
+                    key={index}
+                    style={{ fontWeight: part.highlight ? 700 : 400 }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+                <Typography variant="body2" color="textSecondary">
+                  @{option.username}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs>
-              {parts.map((part, index) => (
-                <span
-                  key={index}
-                  style={{ fontWeight: part.highlight ? 700 : 400 }}
-                >
-                  {part.text}
-                </span>
-              ))}
-              <Typography variant="body2" color="textSecondary">
-                @{option.username}
-              </Typography>
-            </Grid>
-          </Grid>
+          </li>
         )
       }}
       {...autocompleteProps}
