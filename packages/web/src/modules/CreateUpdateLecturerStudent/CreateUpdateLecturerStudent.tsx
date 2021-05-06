@@ -1,6 +1,12 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useMemo, MouseEvent, useCallback, useState } from 'react'
 
-import { CardContent, Grid, makeStyles, IconButton } from '@material-ui/core'
+import {
+  CardContent,
+  Grid,
+  makeStyles,
+  IconButton,
+  Popover,
+} from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import { UserPlus, DotsThreeVertical } from 'phosphor-react'
@@ -15,25 +21,29 @@ import {
 } from '@kathena/ui'
 import { useCourseDetailQuery } from 'graphql/generated'
 
+import CurrentMenu from './CurrentMenu'
+
 export type CreateUpdateLecturerStudentProps = {}
 
 const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => {
   const classes = useStyles()
+  const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }, [])
+  const handleClose = useCallback(() => {
+    setAnchorEl(null)
+  }, [])
+
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+
+  // Mo chi tiet :
+  const open = useMemo(() => Boolean(anchorEl), [anchorEl])
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
   const course = useMemo(() => data?.findCourseById, [data])
-
-  const [expanded, setExpanded] = useState<string | false>(false)
-
-  const handleChange = (panel: string) => (
-    event: React.ChangeEvent<{}>,
-    isExpanded: boolean,
-  ) => {
-    setExpanded(isExpanded ? panel : false)
-  }
 
   if (loading) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -80,12 +90,25 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                     <AccountDisplayName accountId={lecturerId} />
                   </Grid>
                   <Grid item md={1}>
-                    <IconButton
-                      size="small"
-                      // onClick={handleClick}
-                    >
+                    <IconButton size="small" onClick={handleClick}>
                       <DotsThreeVertical size={30} />
                     </IconButton>
+                    <Popover
+                      id={lecturerId}
+                      open={open}
+                      anchorEl={anchorEl}
+                      onClose={handleClose}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                    >
+                      <CurrentMenu onClose={handleClose} />
+                    </Popover>
                   </Grid>
                 </Grid>
               ))}
