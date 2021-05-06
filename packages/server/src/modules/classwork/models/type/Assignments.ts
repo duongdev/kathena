@@ -1,6 +1,5 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Field, ObjectType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
-import { Types } from 'mongoose'
 
 import { Classwork } from '../Classwork'
 
