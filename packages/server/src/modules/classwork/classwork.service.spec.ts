@@ -11,7 +11,7 @@ import { ClassworkService } from './classwork.service'
 
 describe('classwork.service', () => {
   let module: TestingModule
-  let classworkService: ClassworkService
+  // let classworkService: ClassworkService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('classwork.service', () => {
 
     module = await createTestingModule(testDb.uri)
 
-    classworkService = module.get<ClassworkService>(ClassworkService)
+    // classworkService = module.get<ClassworkService>(ClassworkService)
   })
 
   afterAll(async () => {
