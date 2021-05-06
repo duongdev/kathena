@@ -8,6 +8,8 @@ import { useImage } from 'react-image'
 import { ANY } from '@kathena/types'
 import { useImageFileQuery } from 'graphql/generated'
 
+import ImgNotFound from './NotFound.jpg'
+
 export type ImageProps = {
   fileId: string
   variant?: 'img' | 'background'
@@ -49,12 +51,11 @@ const Image: FC<ImageProps> = (props) => {
 
 const ImageComponent = ({ signedUrl, alt, variant, ...rest }: ANY) => {
   const { src } = useImage({
-    srcList: signedUrl ?? '',
+    srcList: [signedUrl ?? '', ImgNotFound],
   })
 
   if (!variant || variant === 'img')
     return <img src={src} alt={alt} {...rest} />
-
   return (
     <div
       {...rest}
@@ -62,6 +63,7 @@ const ImageComponent = ({ signedUrl, alt, variant, ...rest }: ANY) => {
         backgroundImage: `url("${src}")`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
+        backgroundSize: 'contain',
         ...rest.style,
       }}
     />

@@ -69,7 +69,7 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
               <Grid item xs={12} md={5} className={classes.imgSubject}>
                 <Image
                   fileId={subject.imageFileId}
-                  style={{ height: '100%' }}
+                  style={{ height: '100%', width: '100%' }}
                   variant="background"
                 />
               </Grid>
