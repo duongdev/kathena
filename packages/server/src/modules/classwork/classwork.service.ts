@@ -41,7 +41,17 @@ export class ClassworkService {
   ) {}
 
   /**
-   * START CLASSWORK
+   * START CLASSWORK MATERIAL
+   */
+
+  // TODO: Delete this line and start the code here
+
+  /**
+   * END CLASSWORK
+   */
+
+  /**
+   * START CLASSWORK ASSIGNMENT
    */
 
   // TODO: Delete this line and start the code here
