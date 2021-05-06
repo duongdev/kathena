@@ -75,8 +75,6 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
         />
       )}
       renderOption={(p, option) => {
-        console.log(p)
-
         const matches = match(option.displayName as ANY, inputValue)
         const parts = parse(option.displayName as ANY, matches)
         return (
