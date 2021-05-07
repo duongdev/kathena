@@ -22,6 +22,7 @@ import {
 import { useCourseDetailQuery } from 'graphql/generated'
 
 import CurrentMenu from './CurrentMenu'
+import MenuLecturer from './MenuLecturer'
 
 export type CreateUpdateLecturerStudentProps = {}
 
@@ -30,16 +31,35 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }, [])
+
+  // Thêm giảng viên
+  const handleOpenCreateLecturer = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      setOpenLecturer(event.currentTarget)
+      console.log(event.currentTarget)
+    },
+    [],
+  )
   const handleClose = useCallback(() => {
     setAnchorEl(null)
+    setOpenLecturer(null)
   }, [])
 
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [openLecturer, setOpenLecturer] = useState<HTMLButtonElement | null>(
+    null,
+  )
 
   // Mo chi tiet :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
+  const id = useMemo(() => (open ? 'simple-popover' : undefined), [open])
+  const openLec = useMemo(() => Boolean(openLecturer), [openLecturer])
+  const idOpenLecturer = useMemo(() => (open ? 'simple-popover' : undefined), [
+    open,
+  ])
+
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
@@ -66,11 +86,29 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
           gridItem={{ xs: 12 }}
           title="Thông tin giảng viên"
           action={
-            <Button
-              startIcon={<UserPlus />}
-              size="small"
-              // onClick={handleOpenCreateDialog}
-            />
+            <>
+              <Button
+                startIcon={<UserPlus />}
+                size="small"
+                onClick={handleOpenCreateLecturer}
+              />
+              <Popover
+                id={idOpenLecturer}
+                open={openLec}
+                anchorEl={openLecturer}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <MenuLecturer onClose={handleClose} />
+              </Popover>
+            </>
           }
         >
           {/* Giảng viên */}
@@ -94,7 +132,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                       <DotsThreeVertical size={30} />
                     </IconButton>
                     <Popover
-                      id={lecturerId}
+                      id={id}
                       open={open}
                       anchorEl={anchorEl}
                       onClose={handleClose}
