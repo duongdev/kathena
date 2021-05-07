@@ -38,12 +38,22 @@ describe('classwork.service', () => {
   })
 
   /**
-   * START CLASSWORK
+   * START CLASSWORK MATERIAL
    */
 
   // TODO: Delete this line and start the code here
 
   /**
-   * END CLASSWORK
+   * END CLASSWORK MATERIAL
+   */
+
+  /**
+   * START CLASSWORK ASSIGNMENTS
+   */
+
+  // TODO: Delete this line and start the code here
+
+  /**
+   * END CLASSWORK ASSIGNMENTS
    */
 })
