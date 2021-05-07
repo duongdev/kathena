@@ -8,7 +8,7 @@ import { config } from 'core'
 import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
-import { ClassworkModule } from 'modules/classwork/classwork.module'
+// import { ClassworkModule } from 'modules/classwork/classwork.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
@@ -24,7 +24,7 @@ export const appModules = [
   AcademicModule,
   FileStorageModule,
   OrgOfficeModule,
-  ClassworkModule,
+  // ClassworkModule,
 ]
 
 @Module({
