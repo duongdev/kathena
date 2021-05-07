@@ -99,7 +99,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'center',
+                  horizontal: 'left',
                 }}
                 transformOrigin={{
                   vertical: 'top',

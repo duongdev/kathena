@@ -1,11 +1,11 @@
 import { FC, useCallback } from 'react'
 
-import { CardContent, Stack, makeStyles } from '@material-ui/core'
+import { CardContent, makeStyles } from '@material-ui/core'
 import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
-import { useFormikContext, Formik } from 'formik'
+import { Formik } from 'formik'
 
 import yup from '@kathena/libs/yup'
-import { TextFormField, Button } from '@kathena/ui'
+import { SectionCard, Button } from '@kathena/ui'
 
 export type CurrentMenuProps = {
   onClose?: () => void
@@ -39,14 +39,32 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
       onSubmit={handleClickAndClose}
     >
       {(formik) => (
-        <CardContent className={classes.root}>
-          <AccountAssignerFormField
-            name="lecturerIds"
-            label={labels.lecturerIds}
-            roles={['lecturer']}
-            multiple
-          />
-        </CardContent>
+        <SectionCard
+          gridItem={{ xs: 12 }}
+          fullHeight={false}
+          maxContentHeight={false}
+          title="Danh sách giảng viên"
+          action={
+            <Button
+              variant="text"
+              size="medium"
+              color="primary"
+              onClick={formik.submitForm}
+              loading={formik.isSubmitting}
+            >
+              Thêm
+            </Button>
+          }
+        >
+          <CardContent>
+            <AccountAssignerFormField
+              name="lecturerIds"
+              label={labels.lecturerIds}
+              roles={['lecturer']}
+              multiple
+            />
+          </CardContent>
+        </SectionCard>
       )}
     </Formik>
   )
