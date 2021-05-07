@@ -36,7 +36,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   const handleOpenCreateLecturer = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       setOpenLecturer(event.currentTarget)
-      console.log(event.currentTarget)
+      // console.log(event.currentTarget)
     },
     [],
   )

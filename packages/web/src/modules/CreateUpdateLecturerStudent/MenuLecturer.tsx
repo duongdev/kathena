@@ -1,28 +1,54 @@
 import { FC, useCallback } from 'react'
 
-import { List, ListItem, ListItemText, makeStyles } from '@material-ui/core'
+import { CardContent, Stack, makeStyles } from '@material-ui/core'
+import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
+import { useFormikContext, Formik } from 'formik'
+
+import yup from '@kathena/libs/yup'
+import { TextFormField, Button } from '@kathena/ui'
 
 export type CurrentMenuProps = {
   onClose?: () => void
+}
+export type LecturerFormInput = {
+  lecturerIds: Array<Account>
+}
+const labels: { [k in keyof LecturerFormInput]: string } = {
+  lecturerIds: 'Giảng viên',
+}
+const validationSchema = yup.object({
+  lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
+})
+const initialValues: LecturerFormInput = {
+  lecturerIds: [],
 }
 
 const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const { onClose } = props
   const classes = useStyles(props)
+  // const formik = useFormikContext<LecturerFormInput>()
 
   const handleClickAndClose = useCallback(() => {
     onClose?.()
   }, [onClose])
 
   return (
-    <List className={classes.root} dense>
-      <ListItem button onClick={handleClickAndClose}>
-        <ListItemText>Lecturer</ListItemText>
-      </ListItem>
-      <ListItem button onClick={handleClickAndClose}>
-        <ListItemText>Lectuerer</ListItemText>
-      </ListItem>
-    </List>
+    <Formik
+      validationSchema={validationSchema}
+      initialValues={initialValues}
+      onSubmit={handleClickAndClose}
+    >
+      {(formik) => (
+        <CardContent className={classes.root}>
+          <AccountAssignerFormField
+            name="lecturerIds"
+            label={labels.lecturerIds}
+            roles={['lecturer']}
+            multiple
+          />
+        </CardContent>
+      )}
+    </Formik>
   )
 }
 
