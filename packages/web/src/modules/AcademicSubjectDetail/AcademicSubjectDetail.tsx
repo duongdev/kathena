@@ -60,14 +60,11 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
       maxWidth="md"
       title={subject.name}
       actions={[
-        <Button variant="contained" onClick={handleOpenUpdateImageDialog}>
-          Sửa hình ảnh
-        </Button>,
         <Button
           variant="contained"
           link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
         >
-          Sửa thông tin
+          Sửa môn học
         </Button>,
         <Button
           variant="contained"
@@ -97,6 +94,11 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                   fileId={subject.imageFileId}
                   style={{ height: '100%', width: '100%' }}
                   variant="background"
+                  actions={[
+                    <Button onClick={handleOpenUpdateImageDialog}>
+                      Sửa hình ảnh
+                    </Button>,
+                  ]}
                 />
               </Grid>
               <Grid item xs={12} md={7}>

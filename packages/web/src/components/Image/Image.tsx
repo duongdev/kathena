@@ -1,6 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-props-no-spreading */
-import { FC, HTMLAttributes, ImgHTMLAttributes, Suspense, useMemo } from 'react'
+import {
+  FC,
+  HTMLAttributes,
+  ImgHTMLAttributes,
+  Suspense,
+  useMemo,
+  ReactNode,
+} from 'react'
 
 import { makeStyles, Skeleton } from '@material-ui/core'
 import { useImage } from 'react-image'
@@ -13,6 +20,7 @@ import ImgNotFound from './NotFound.jpg'
 export type ImageProps = {
   fileId: string
   variant?: 'img' | 'background'
+  actions?: ReactNode[]
 } & Partial<
   ImgHTMLAttributes<HTMLImageElement> | HTMLAttributes<HTMLDivElement>
 >
@@ -49,7 +57,9 @@ const Image: FC<ImageProps> = (props) => {
   )
 }
 
-const ImageComponent = ({ signedUrl, alt, variant, ...rest }: ANY) => {
+const ImageComponent = (props: ANY) => {
+  const { signedUrl, alt, variant, actions, ...rest } = props
+  const classes = useStyles(props)
   const { src } = useImage({
     srcList: [signedUrl ?? '', ImgNotFound],
   })
@@ -64,14 +74,27 @@ const ImageComponent = ({ signedUrl, alt, variant, ...rest }: ANY) => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'contain',
+        position: 'relative',
         ...rest.style,
       }}
-    />
+    >
+      <div className={classes.actionsWrapper}>
+        {actions && actions.map((action: ReactNode) => action)}
+      </div>
+    </div>
   )
 }
 
 const useStyles = makeStyles(() => ({
   root: {},
+  actionsWrapper: {
+    position: 'absolute',
+    bottom: -30,
+    width: '100%',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
 }))
 
 export default Image
