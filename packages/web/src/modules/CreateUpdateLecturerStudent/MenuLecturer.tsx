@@ -4,14 +4,14 @@ import { CardContent, makeStyles } from '@material-ui/core'
 import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import yup from '@kathena/libs/yup'
-import { SectionCard, Button } from '@kathena/ui'
+import { Button, SectionCard } from '@kathena/ui'
 import {
-  useFindCourseByIdQuery,
-  useAddLecturesToCourseMutation,
   AddLecturesToCourseDocument,
+  useAddLecturesToCourseMutation,
+  useCourseDetailQuery,
 } from 'graphql/generated'
 
 export type CurrentMenuProps = {
@@ -33,59 +33,57 @@ const initialValues: LecturerFormInput = {
 const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const { onClose } = props
   const { enqueueSnackbar } = useSnackbar()
-
   const classes = useStyles(props)
-
-  const params: { idCourse: string } = useParams()
-  const idCourse = useMemo(() => params.idCourse, [params.idCourse])
-  const { data } = useFindCourseByIdQuery({
-    variables: {
-      id: idCourse,
-    },
+  const params: { id: string } = useParams()
+  const courseId = useMemo(() => params.id, [params.id])
+  const { data } = useCourseDetailQuery({
+    variables: { id: courseId },
   })
   const courseLecturer = useMemo(() => data?.findCourseById, [
     data?.findCourseById,
   ])
-  console.log(`courseLecturer: ${params.idCourse}`)
-  const [addLecturer] = useAddLecturesToCourseMutation({
+
+  const [addLecturesToCourse] = useAddLecturesToCourseMutation({
     refetchQueries: [
       {
         query: AddLecturesToCourseDocument,
-        variables: { idCourse, courseLecturer },
+        variables: {
+          courseId,
+          lecturerIds: courseLecturer?.lecturerIds,
+        },
       },
     ],
   })
   const handelAddAndClose = useCallback(
     async (input: LecturerFormInput) => {
       try {
-        if (!input.lecturerIds.length) {
-          // console.log("input.lecturerIds", input.lecturerIds)
-          enqueueSnackbar('Thêm giảng viên thất bại', { variant: 'error' })
-          onClose?.()
+        if (!courseLecturer?.id) {
           return
         }
         const lecturerIds: string[] = []
-        if (input.lecturerIds) {
+        if (input.lecturerIds.length) {
           input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
         }
-        console.log('lecturerIds', lecturerIds)
-        console.log('params.idCourse', courseLecturer?.code)
-
-        const { data: dataCreated } = await addLecturer({
+        const { data: dataCreated } = await addLecturesToCourse({
           variables: {
-            // name: input.lecturerIds,
             lecturerIds,
-            courseId: params.idCourse,
+            courseId: courseLecturer.id,
           },
         })
+        const lecturer = dataCreated?.addLecturesToCourse
+
+        if (!lecturer) {
+          return
+        }
         enqueueSnackbar('Thêm giảng viên thành công', { variant: 'success' })
         onClose?.()
+        return
       } catch (error) {
         enqueueSnackbar('Thêm giảng viên thất bại', { variant: 'error' })
         onClose?.()
       }
     },
-    [enqueueSnackbar, onClose, addLecturer, courseLecturer, params.idCourse],
+    [enqueueSnackbar, onClose, addLecturesToCourse, courseLecturer],
   )
   return (
     <Formik
@@ -113,6 +111,7 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
         >
           <CardContent>
             <AccountAssignerFormField
+              className={classes.root}
               name="lecturerIds"
               label={labels.lecturerIds}
               roles={['lecturer']}
