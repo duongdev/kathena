@@ -8,3 +8,9 @@ query AcademicSubjectDetail($id: ID!) {
     publication
   }
 }
+mutation UpdateFile($id: ID!,$newFile: Upload!){
+  updateFile(id: $id, newFile: $newFile) {
+    id
+    name
+  }
+}

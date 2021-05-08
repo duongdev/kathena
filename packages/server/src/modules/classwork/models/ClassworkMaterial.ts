@@ -1,6 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
-import { Types } from 'mongoose'
+// import { Types } from 'mongoose'
 
 import { BaseModel, Publication } from 'core'
 
@@ -31,9 +31,9 @@ export class ClassworkMaterial extends BaseModel {
   @Field({ nullable: true })
   description?: string
 
-  @Field()
-  @prop({ type: [Types.ObjectId] })
-  attachments?: string[]
+  // @Field() Cái này đang lỗi nên comment để làm tiếp
+  // @prop({ type: [Types.ObjectId] })
+  // attachments?: string[]
 
   @Field()
   @prop({ required: true, index: true, default: Publication.Draft })

@@ -1,11 +1,14 @@
+import { UsePipes, ValidationPipe } from '@nestjs/common'
 import {
   Args,
   ID,
+  Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { config } from 'core'
 import { UseAuthGuard } from 'core/auth'
@@ -31,5 +34,23 @@ export class FileStorageResolver {
     const { name } = file
 
     return `http://${config.APP_DOMAIN}/files/${name}`
+  }
+
+  @Mutation((_returns) => File)
+  @UseAuthGuard()
+  @UsePipes(ValidationPipe)
+  async updateFile(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('newFile', { type: () => GraphQLUpload }) newFile: FileUpload,
+  ): Promise<Nullable<File>> {
+    const { createReadStream, filename, encoding } = newFile
+
+    // eslint-disable-next-line no-console
+    console.log('encoding', encoding)
+
+    return this.fileStorageService.updateFile(id, {
+      readStream: createReadStream(),
+      originalFileName: filename,
+    })
   }
 }

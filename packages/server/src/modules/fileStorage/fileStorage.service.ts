@@ -5,6 +5,7 @@ import {
   readFileSync,
   ReadStream,
   Stats,
+  stat,
   statSync,
   unlink,
   unlinkSync,
@@ -168,5 +169,51 @@ export class FileStorageService {
 
   async findFileById(fileId: string): Promise<Nullable<DocumentType<File>>> {
     return this.fileModel.findById(fileId)
+  }
+
+  async updateFile(
+    fileId: string,
+    newFile: {
+      readStream
+      originalFileName
+    },
+  ): Promise<DocumentType<File>> {
+    const { readStream, originalFileName } = newFile
+    const file = await this.findFileById(fileId)
+
+    if (!file) {
+      throw new Error(`Couldn't find file to update`)
+    }
+    stat(file.storageProviderIdentifier, (err, stats) => {
+      if (stats) {
+        unlink(file.storageProviderIdentifier, (error) => {
+          return error
+        })
+      }
+    })
+
+    const {
+      stats,
+      buffer,
+      extension,
+      mimeType,
+    } = await this.convertReadStreamToFileData(originalFileName, readStream)
+
+    const fileName = originalFileName.includes(extension)
+      ? originalFileName
+      : `${originalFileName}.${extension}`
+
+    const { filePath } = await this.uploadToLocalStorage({
+      buffer,
+      fileName,
+    })
+
+    file.mimeType = mimeType
+    file.size = stats.size
+    file.name = originalFileName
+    file.storageProviderIdentifier = filePath
+
+    const updatedFile = file.save()
+    return updatedFile
   }
 }
