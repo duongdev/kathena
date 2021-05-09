@@ -25,6 +25,23 @@ export type Scalars = {
   Upload: any
 }
 
+export type AcademicSubject = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  code: Scalars['String']
+  description: Scalars['String']
+  publication: Publication
+  imageFileId: Scalars['String']
+}
+
+export type AcademicSubjectsPayload = {
+  academicSubjects: Array<AcademicSubject>
+  count: Scalars['Int']
+}
+
 export type Account = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -38,11 +55,10 @@ export type Account = BaseModel & {
   availability: AccountAvailability
 }
 
-export type BaseModel = {
-  id: Scalars['ID']
-  orgId: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
+export enum AccountAvailability {
+  Online = 'Online',
+  Offline = 'Offline',
+  Away = 'Away',
 }
 
 /** Status of an account. */
@@ -52,19 +68,10 @@ export enum AccountStatus {
   Deactivated = 'Deactivated',
 }
 
-export enum AccountAvailability {
-  Online = 'Online',
-  Offline = 'Offline',
-  Away = 'Away',
-}
-
-export type Org = BaseModel & {
-  id: Scalars['ID']
+export type AccountsFilterInput = {
   orgId: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  namespace: Scalars['String']
-  name: Scalars['String']
+  roles?: Maybe<Array<Scalars['String']>>
+  searchText?: Maybe<Scalars['String']>
 }
 
 export type AuthenticatePayload = {
@@ -73,67 +80,11 @@ export type AuthenticatePayload = {
   permissions: Array<Permission>
 }
 
-export enum Permission {
-  Hr_Access = 'Hr_Access',
-  Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
-  Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
-  Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
-  Hr_UpdateOrgAccountStatus = 'Hr_UpdateOrgAccountStatus',
-  Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
-  Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
-  Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
-  Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
-  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
-  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
-  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
-  Academic_CreateCourse = 'Academic_CreateCourse',
-  Academic_UpdateCourse = 'Academic_UpdateCourse',
-  Academic_ListCourses = 'Academic_ListCourses',
-  Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
-  Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
-  Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
-  NoPermission = 'NoPermission',
-}
-
-export type SignInPayload = {
-  token: Scalars['String']
-  account: Account
-  org: Org
-  permissions: Array<Permission>
-}
-
-export type File = BaseModel & {
+export type BaseModel = {
   id: Scalars['ID']
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  name: Scalars['String']
-  size: Scalars['Int']
-  mimeType: Scalars['String']
-  storageProvider: FileLocation
-  storageProviderIdentifier: Scalars['String']
-  signedUrl?: Maybe<Scalars['String']>
-}
-
-export enum FileLocation {
-  LocalStorage = 'LocalStorage',
-}
-
-export type AcademicSubject = BaseModel & {
-  id: Scalars['ID']
-  orgId: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  name: Scalars['String']
-  code: Scalars['String']
-  description: Scalars['String']
-  publication: Publication
-  imageFileId: Scalars['String']
-}
-
-export enum Publication {
-  Draft = 'Draft',
-  Published = 'Published',
 }
 
 export type Course = BaseModel & {
@@ -153,14 +104,161 @@ export type Course = BaseModel & {
   createdByAccountId: Scalars['ID']
 }
 
-export type AcademicSubjectsPayload = {
-  academicSubjects: Array<AcademicSubject>
-  count: Scalars['Int']
+export type CoursesFilterInput = {
+  orgId: Scalars['ID']
+  searchText?: Maybe<Scalars['String']>
+  lecturerIds?: Maybe<Array<Scalars['ID']>>
+  studentIds?: Maybe<Array<Scalars['ID']>>
 }
 
 export type CoursesPayload = {
   courses: Array<Course>
   count: Scalars['Int']
+}
+
+export type CreateAcademicSubjectInput = {
+  name: Scalars['String']
+  code: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  image: Scalars['Upload']
+}
+
+export type CreateAccountInput = {
+  username: Scalars['String']
+  email: Scalars['String']
+  displayName?: Maybe<Scalars['String']>
+  roles: Array<Scalars['String']>
+}
+
+export type CreateCourseInput = {
+  academicSubjectId: Scalars['String']
+  code: Scalars['String']
+  name: Scalars['String']
+  startDate: Scalars['String']
+  tuitionFee: Scalars['Float']
+  lecturerIds?: Maybe<Array<Scalars['String']>>
+}
+
+export type CreateOrgOfficeInput = {
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
+}
+
+export type File = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  size: Scalars['Int']
+  mimeType: Scalars['String']
+  storageProvider: FileLocation
+  storageProviderIdentifier: Scalars['String']
+  signedUrl?: Maybe<Scalars['String']>
+}
+
+export enum FileLocation {
+  LocalStorage = 'LocalStorage',
+}
+
+export type Mutation = {
+  createOrgAccount: Account
+  updateAccount: Account
+  updateAccountStatus: Account
+  signIn: SignInPayload
+  createAcademicSubject: AcademicSubject
+  updateAcademicSubjectPublication: AcademicSubject
+  updateAcademicSubject: AcademicSubject
+  createCourse: Course
+  updateCourse: Course
+  addLecturesToCourse: Course
+  addStudentsToCourse: Course
+  updateFile: File
+  createOrgOffice: OrgOffice
+  updateOrgOffice: OrgOffice
+  findOrgOffices: Array<OrgOffice>
+}
+
+export type MutationCreateOrgAccountArgs = {
+  input: CreateAccountInput
+}
+
+export type MutationUpdateAccountArgs = {
+  updateInput: UpdateAccountInput
+  id: Scalars['ID']
+}
+
+export type MutationUpdateAccountStatusArgs = {
+  status: Scalars['String']
+  id: Scalars['ID']
+}
+
+export type MutationSignInArgs = {
+  password: Scalars['String']
+  identity: Scalars['String']
+  orgNamespace: Scalars['String']
+}
+
+export type MutationCreateAcademicSubjectArgs = {
+  input: CreateAcademicSubjectInput
+}
+
+export type MutationUpdateAcademicSubjectPublicationArgs = {
+  publication: Scalars['String']
+  id: Scalars['ID']
+}
+
+export type MutationUpdateAcademicSubjectArgs = {
+  updateInput: UpdateAcademicSubjectInput
+  id: Scalars['ID']
+}
+
+export type MutationCreateCourseArgs = {
+  input: CreateCourseInput
+}
+
+export type MutationUpdateCourseArgs = {
+  updateInput: UpdateCourseInput
+  id: Scalars['ID']
+}
+
+export type MutationAddLecturesToCourseArgs = {
+  lecturerIds: Array<Scalars['ID']>
+  courseId: Scalars['ID']
+}
+
+export type MutationAddStudentsToCourseArgs = {
+  studentIds: Array<Scalars['ID']>
+  courseId: Scalars['ID']
+}
+
+export type MutationUpdateFileArgs = {
+  newFile: Scalars['Upload']
+  id: Scalars['ID']
+}
+
+export type MutationCreateOrgOfficeArgs = {
+  input: CreateOrgOfficeInput
+}
+
+export type MutationUpdateOrgOfficeArgs = {
+  input: UpdateOrgOfficeInput
+  id: Scalars['ID']
+}
+
+export type MutationFindOrgOfficesArgs = {
+  searchText?: Maybe<Scalars['String']>
+  orgId?: Maybe<Scalars['ID']>
+}
+
+export type Org = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  namespace: Scalars['String']
+  name: Scalars['String']
 }
 
 export type OrgAccountsPayload = {
@@ -176,6 +274,39 @@ export type OrgOffice = BaseModel & {
   name: Scalars['String']
   address: Scalars['String']
   phone: Scalars['String']
+}
+
+export type PageOptionsInput = {
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}
+
+export enum Permission {
+  Hr_Access = 'Hr_Access',
+  Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
+  Hr_ListOrgAccounts = 'Hr_ListOrgAccounts',
+  Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
+  Hr_UpdateOrgAccountStatus = 'Hr_UpdateOrgAccountStatus',
+  Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
+  Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
+  Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
+  Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+  Academic_CreateCourse = 'Academic_CreateCourse',
+  Academic_UpdateCourse = 'Academic_UpdateCourse',
+  Academic_ListCourses = 'Academic_ListCourses',
+  Academic_AddStudentsToCourse = 'Academic_AddStudentsToCourse',
+  Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
+  Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
+  Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
+  NoPermission = 'NoPermission',
+}
+
+export enum Publication {
+  Draft = 'Draft',
+  Published = 'Published',
 }
 
 export type Query = {
@@ -231,104 +362,16 @@ export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
 
-export type AccountsFilterInput = {
-  orgId: Scalars['ID']
-  roles?: Maybe<Array<Scalars['String']>>
-  searchText?: Maybe<Scalars['String']>
+export type SignInPayload = {
+  token: Scalars['String']
+  account: Account
+  org: Org
+  permissions: Array<Permission>
 }
 
-export type PageOptionsInput = {
-  skip: Scalars['Int']
-  limit: Scalars['Int']
-}
-
-export type CoursesFilterInput = {
-  orgId: Scalars['ID']
-  searchText?: Maybe<Scalars['String']>
-  lecturerIds?: Maybe<Array<Scalars['ID']>>
-  studentIds?: Maybe<Array<Scalars['ID']>>
-}
-
-export type Mutation = {
-  createOrgAccount: Account
-  updateAccount: Account
-  updateAccountStatus: Account
-  signIn: SignInPayload
-  createAcademicSubject: AcademicSubject
-  updateAcademicSubjectPublication: AcademicSubject
-  updateAcademicSubject: AcademicSubject
-  createCourse: Course
-  updateCourse: Course
-  findCourseById: Course
-  addLecturesToCourse: Course
-  removeStudentsFromCourse: Course
-  createOrgOffice: OrgOffice
-  updateOrgOffice: OrgOffice
-  findOrgOffices: Array<OrgOffice>
-}
-
-export type MutationCreateOrgAccountArgs = {
-  input: CreateAccountInput
-}
-
-export type MutationUpdateAccountArgs = {
-  updateInput: UpdateAccountInput
-  id: Scalars['ID']
-}
-
-export type MutationUpdateAccountStatusArgs = {
-  status: Scalars['String']
-  id: Scalars['ID']
-}
-
-export type MutationSignInArgs = {
-  password: Scalars['String']
-  identity: Scalars['String']
-  orgNamespace: Scalars['String']
-}
-
-export type MutationCreateAcademicSubjectArgs = {
-  input: CreateAcademicSubjectInput
-}
-
-export type MutationUpdateAcademicSubjectPublicationArgs = {
-  publication: Scalars['String']
-  id: Scalars['ID']
-}
-
-export type MutationUpdateAcademicSubjectArgs = {
-  updateInput: UpdateAcademicSubjectInput
-  id: Scalars['ID']
-}
-
-export type MutationCreateCourseArgs = {
-  input: CreateCourseInput
-}
-
-export type MutationUpdateCourseArgs = {
-  updateInput: UpdateCourseInput
-  id: Scalars['ID']
-}
-
-export type MutationCreateOrgOfficeArgs = {
-  input: CreateOrgOfficeInput
-}
-
-export type MutationUpdateOrgOfficeArgs = {
-  input: UpdateOrgOfficeInput
-  id: Scalars['ID']
-}
-
-export type MutationFindOrgOfficesArgs = {
-  searchText?: Maybe<Scalars['String']>
-  orgId?: Maybe<Scalars['ID']>
-}
-
-export type CreateAccountInput = {
-  username: Scalars['String']
-  email: Scalars['String']
-  displayName?: Maybe<Scalars['String']>
-  roles: Array<Scalars['String']>
+export type UpdateAcademicSubjectInput = {
+  name?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
 }
 
 export type UpdateAccountInput = {
@@ -339,38 +382,11 @@ export type UpdateAccountInput = {
   password?: Maybe<Scalars['String']>
 }
 
-export type CreateAcademicSubjectInput = {
-  name: Scalars['String']
-  code: Scalars['String']
-  description?: Maybe<Scalars['String']>
-  image: Scalars['Upload']
-}
-
-export type UpdateAcademicSubjectInput = {
-  name?: Maybe<Scalars['String']>
-  description?: Maybe<Scalars['String']>
-}
-
-export type CreateCourseInput = {
-  academicSubjectId: Scalars['String']
-  code: Scalars['String']
-  name: Scalars['String']
-  startDate: Scalars['String']
-  tuitionFee: Scalars['Float']
-  lecturerIds?: Maybe<Array<Scalars['String']>>
-}
-
 export type UpdateCourseInput = {
   name?: Maybe<Scalars['String']>
   tuitionFee?: Maybe<Scalars['Float']>
   startDate?: Maybe<Scalars['String']>
   lecturerIds?: Maybe<Array<Scalars['ID']>>
-}
-
-export type CreateOrgOfficeInput = {
-  name: Scalars['String']
-  address: Scalars['String']
-  phone: Scalars['String']
 }
 
 export type UpdateOrgOfficeInput = {
@@ -446,6 +462,13 @@ export type AcademicSubjectDetailQuery = {
     'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
   >
 }
+
+export type UpdateFileMutationVariables = Exact<{
+  id: Scalars['ID']
+  newFile: Scalars['Upload']
+}>
+
+export type UpdateFileMutation = { updateFile: Pick<File, 'id' | 'name'> }
 
 export type AcademicSubjectListQueryVariables = Exact<{
   orgId: Scalars['ID']
@@ -1685,6 +1708,149 @@ export type AcademicSubjectDetailLazyQueryHookResult = ReturnType<
 export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
+>
+export const UpdateFileDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateFile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'newFile' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Upload' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateFile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'newFile' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'newFile' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateFileMutationFn = Apollo.MutationFunction<
+  UpdateFileMutation,
+  UpdateFileMutationVariables
+>
+export type UpdateFileProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateFileMutation,
+    UpdateFileMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateFile<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateFileMutation,
+    UpdateFileMutationVariables,
+    UpdateFileProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateFileMutation,
+    UpdateFileMutationVariables,
+    UpdateFileProps<TChildProps, TDataName>
+  >(UpdateFileDocument, {
+    alias: 'updateFile',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateFileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFileMutation, { data, loading, error }] = useUpdateFileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      newFile: // value for 'newFile'
+ *   },
+ * });
+ */
+export function useUpdateFileMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFileMutation,
+    UpdateFileMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(
+    UpdateFileDocument,
+    options,
+  )
+}
+export type UpdateFileMutationHookResult = ReturnType<
+  typeof useUpdateFileMutation
+>
+export type UpdateFileMutationResult = Apollo.MutationResult<UpdateFileMutation>
+export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFileMutation,
+  UpdateFileMutationVariables
 >
 export const AcademicSubjectListDocument: DocumentNode = {
   kind: 'Document',
