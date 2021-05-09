@@ -42,14 +42,13 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const courseLecturer = useMemo(() => data?.findCourseById, [
     data?.findCourseById,
   ])
-
   const [addLecturesToCourse] = useAddLecturesToCourseMutation({
     refetchQueries: [
       {
         query: AddLecturesToCourseDocument,
         variables: {
           courseId,
-          lecturerIds: courseLecturer?.lecturerIds,
+          lecturerIds: initialValues.lecturerIds,
         },
       },
     ],
@@ -57,7 +56,8 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const handelAddAndClose = useCallback(
     async (input: LecturerFormInput) => {
       try {
-        if (!courseLecturer?.id) {
+        if (!courseLecturer?.id || !input?.lecturerIds) {
+          enqueueSnackbar('Thêm giảng viên thất bại', { variant: 'error' })
           return
         }
         const lecturerIds: string[] = []
@@ -66,12 +66,11 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
         }
         const { data: dataCreated } = await addLecturesToCourse({
           variables: {
-            lecturerIds,
             courseId: courseLecturer.id,
+            lecturerIds,
           },
         })
         const lecturer = dataCreated?.addLecturesToCourse
-
         if (!lecturer) {
           return
         }

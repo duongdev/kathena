@@ -8,6 +8,7 @@ mutation AddLecturesToCourse($lecturerIds: [ID!]!, $courseId: ID!) {
 
 query FindCourseById($id: ID!) {
   findCourseById(id: $id) {
+    id
     code
     name
     lecturerIds

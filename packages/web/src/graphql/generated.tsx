@@ -615,7 +615,10 @@ export type FindCourseByIdQueryVariables = Exact<{
 }>
 
 export type FindCourseByIdQuery = {
-  findCourseById: Pick<Course, 'code' | 'name' | 'lecturerIds' | 'studentIds'>
+  findCourseById: Pick<
+    Course,
+    'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
+  >
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -3557,6 +3560,7 @@ export const FindCourseByIdDocument: DocumentNode = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
