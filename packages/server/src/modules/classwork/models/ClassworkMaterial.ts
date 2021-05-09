@@ -1,6 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
-// import { Types } from 'mongoose'
+import { Types } from 'mongoose'
 
 import { BaseModel, Publication } from 'core'
 
