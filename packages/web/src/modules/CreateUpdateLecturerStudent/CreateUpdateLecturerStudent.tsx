@@ -100,8 +100,8 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     <PageContainer
       withBackButton
       maxWidth="lg"
-      subtitle={`${`Mã khóa học : ${course.code}`}`}
-      title={`${`Tên khóa học : ${course.name}`}`}
+      subtitle={course.code}
+      title={course.name}
     >
       {/* Giảng viên  start */}
       <Grid container spacing={DASHBOARD_SPACING}>

@@ -101,6 +101,7 @@ const MenuStudent: FC<MenuStudentProps> = (props) => {
         >
           <CardContent>
             <AccountAssignerFormField
+              filterSelectedOptions
               className={classes.root}
               name="studentIds"
               label={labels.studentIds}
