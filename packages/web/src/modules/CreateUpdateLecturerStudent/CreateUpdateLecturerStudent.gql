@@ -5,6 +5,13 @@ mutation AddLecturesToCourse($lecturerIds: [ID!]!, $courseId: ID!) {
     lecturerIds
   }
 }
+mutation AddStudentToCourse($studentIds: [ID!]!, $courseId: ID!) {
+  addStudentsToCourse(courseId: $courseId, studentIds: $studentIds) {
+    id
+    name
+    studentIds
+  }
+}
 
 query FindCourseById($id: ID!) {
   findCourseById(id: $id) {

@@ -1,15 +1,16 @@
-import { FC, useMemo, MouseEvent, useCallback, useState } from 'react'
+import { FC, MouseEvent, useCallback, useMemo, useState } from 'react'
 
 import {
   CardContent,
   Grid,
-  makeStyles,
   IconButton,
+  makeStyles,
   Popover,
+  Stack,
 } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
-import { UserPlus, DotsThreeVertical } from 'phosphor-react'
+import { Trash, UserPlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -21,29 +22,46 @@ import {
 } from '@kathena/ui'
 import { useCourseDetailQuery } from 'graphql/generated'
 
-import CurrentMenu from './CurrentMenu'
 import MenuLecturer from './MenuLecturer'
+import MenuStudent from './MenuStudent'
 
 export type CreateUpdateLecturerStudentProps = {}
 
 const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => {
   const classes = useStyles()
-  const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }, [])
 
-  // Thêm giảng viên
+  // Thêm giảng viên start----------------------------
   const handleOpenCreateLecturer = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       setOpenLecturer(event.currentTarget)
-      // console.log(event.currentTarget)
     },
     [],
   )
+  // Thêm giảng viên end----------------------------
+  // Thêm giảng viên start----------------------------
+  const handleOpenCreateStudent = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      setOpenStudent(event.currentTarget)
+    },
+    [],
+  )
+  // Thêm giảng viên end----------------------------
+
   const handleClose = useCallback(() => {
     setAnchorEl(null)
     setOpenLecturer(null)
+    setOpenStudent(null)
   }, [])
+
+  // Xóa giảng viên start----------------------------
+  const handelDeleteLecturer = useCallback(
+    (event: MouseEvent<HTMLButtonElement>, lecturerId) => {
+      // console.log(event);
+      console.log(`id lecturerId: ${lecturerId}`)
+    },
+    [],
+  )
+  // Xóa giảng viên end----------------------------
 
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
@@ -51,12 +69,16 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   const [openLecturer, setOpenLecturer] = useState<HTMLButtonElement | null>(
     null,
   )
+  const [openStudent, setOpenStudent] = useState<HTMLButtonElement | null>(null)
 
-  // Mo chi tiet :
+  // Mo chi tiet Lectuerer :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
-  const id = useMemo(() => (open ? 'simple-popover' : undefined), [open])
   const openLec = useMemo(() => Boolean(openLecturer), [openLecturer])
   const idOpenLecturer = useMemo(() => (open ? 'simple-popover' : undefined), [
+    open,
+  ])
+  const openStu = useMemo(() => Boolean(openStudent), [openStudent])
+  const idOpenStudent = useMemo(() => (open ? 'simple-popover' : undefined), [
     open,
   ])
 
@@ -70,7 +92,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   }
 
   if (!course) {
-    return <div>Course not found</div>
+    return <div>Không có khóa học nào</div>
   }
 
   return (
@@ -80,6 +102,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
       subtitle={`${`Mã khóa học : ${course.code}`}`}
       title={`${`Tên khóa học : ${course.name}`}`}
     >
+      {/* Giảng viên  start */}
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
@@ -111,7 +134,6 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
             </>
           }
         >
-          {/* Giảng viên */}
           <CardContent>
             <>
               {course.lecturerIds.map((lecturerId) => (
@@ -128,11 +150,20 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                     <AccountDisplayName accountId={lecturerId} />
                   </Grid>
                   <Grid item md={1}>
-                    <IconButton size="small" onClick={handleClick}>
+                    <IconButton
+                      onClick={(e) => {
+                        handelDeleteLecturer(e, lecturerId)
+                      }}
+                    >
+                      <Trash />
+                    </IconButton>
+                  </Grid>
+                  {/* <Grid item md={1}>
+                    <IconButton size="small" onClick={handleClick} key={lecturerId}>
                       <DotsThreeVertical size={30} />
                     </IconButton>
                     <Popover
-                      id={id}
+                      key={lecturerId}
                       open={open}
                       anchorEl={anchorEl}
                       onClose={handleClose}
@@ -145,15 +176,84 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                         horizontal: 'center',
                       }}
                     >
-                      <CurrentMenu onClose={handleClose} />
+                      <List dense key={lecturerId}>
+                        <ListItem button onClick={((e) => { submit(lecturerId) })} >
+                          <ListItemText>Email</ListItemText>
+                        </ListItem>
+                        <ListItem button onClick={((e) => { submit(lecturerId) })}>
+                          <ListItemText >Xóa</ListItemText>
+                        </ListItem>
+                      </List>
                     </Popover>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               ))}
             </>
           </CardContent>
         </SectionCard>
       </Grid>
+      {/* Giảng viên  end */}
+      <Stack mt={2}>
+        {/* Học viên  start */}
+        <Grid container spacing={DASHBOARD_SPACING}>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin học viên"
+            action={
+              <>
+                <Button
+                  startIcon={<UserPlus />}
+                  size="small"
+                  onClick={handleOpenCreateStudent}
+                />
+                <Popover
+                  id={idOpenStudent}
+                  open={openStu}
+                  anchorEl={openStudent}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                >
+                  <MenuStudent onClose={handleClose} />
+                </Popover>
+              </>
+            }
+          >
+            <CardContent>
+              <>
+                {course.studentIds.map((studentId) => (
+                  <Grid
+                    container
+                    spacing={2}
+                    className={classes.displayName}
+                    key={studentId}
+                  >
+                    <Grid item md={1}>
+                      <AccountAvatar accountId={studentId} />
+                    </Grid>
+                    <Grid item md={10}>
+                      <AccountDisplayName accountId={studentId} />
+                    </Grid>
+                    <Grid item md={1}>
+                      <IconButton>
+                        <Trash />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            </CardContent>
+          </SectionCard>
+        </Grid>
+        {/* Học viên  end */}
+      </Stack>
     </PageContainer>
   )
 }

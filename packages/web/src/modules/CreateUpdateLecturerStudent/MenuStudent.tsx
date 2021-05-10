@@ -9,28 +9,28 @@ import { useParams } from 'react-router-dom'
 import yup from '@kathena/libs/yup'
 import { Button, SectionCard } from '@kathena/ui'
 import {
-  AddLecturesToCourseDocument,
-  useAddLecturesToCourseMutation,
+  AddStudentToCourseDocument,
+  useAddStudentToCourseMutation,
   useCourseDetailQuery,
 } from 'graphql/generated'
 
-export type CurrentMenuProps = {
+export type MenuStudentProps = {
   onClose?: () => void
 }
-export type LecturerFormInput = {
-  lecturerIds: Array<Account>
+export type StudentFormInput = {
+  studentIds: Array<Account>
 }
-const labels: { [k in keyof LecturerFormInput]: string } = {
-  lecturerIds: 'Giảng viên',
+const labels: { [k in keyof StudentFormInput]: string } = {
+  studentIds: 'Học viên',
 }
 const validationSchema = yup.object({
-  lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
+  studentIds: yup.array().label(labels.studentIds).notRequired(),
 })
-const initialValues: LecturerFormInput = {
-  lecturerIds: [],
+const initialValues: StudentFormInput = {
+  studentIds: [],
 }
 
-const CurrentMenu: FC<CurrentMenuProps> = (props) => {
+const MenuStudent: FC<MenuStudentProps> = (props) => {
   const { onClose } = props
   const { enqueueSnackbar } = useSnackbar()
   const classes = useStyles(props)
@@ -39,53 +39,53 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const { data } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  const courseLecturer = useMemo(() => data?.findCourseById, [
+  const courseStudent = useMemo(() => data?.findCourseById, [
     data?.findCourseById,
   ])
-  const [addLecturesToCourse] = useAddLecturesToCourseMutation({
+  const [addStudentsToCourse] = useAddStudentToCourseMutation({
     refetchQueries: [
       {
-        query: AddLecturesToCourseDocument,
+        query: AddStudentToCourseDocument,
         variables: {
           courseId,
-          lecturerIds: initialValues.lecturerIds,
+          studentIds: initialValues.studentIds,
         },
       },
     ],
   })
   const handelAddAndClose = useCallback(
-    async (input: LecturerFormInput) => {
+    async (input: StudentFormInput) => {
       try {
-        if (!courseLecturer?.id || !input?.lecturerIds) {
-          enqueueSnackbar('Thêm giảng viên thất bại', { variant: 'error' })
+        if (!courseStudent?.id || !input?.studentIds) {
+          enqueueSnackbar('Thêm học viên thất bại', { variant: 'error' })
           return
         }
-        const lecturerIds: string[] = []
-        if (input.lecturerIds.length) {
-          input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
+        const studentIds: string[] = []
+        if (input.studentIds.length) {
+          input.studentIds.map((student) => studentIds.push(student.id))
         }
-        const { data: dataCreated } = await addLecturesToCourse({
+        const { data: dataCreated } = await addStudentsToCourse({
           variables: {
-            courseId: courseLecturer.id,
-            lecturerIds,
+            courseId: courseStudent.id,
+            studentIds,
           },
         })
-        const lecturer = dataCreated?.addLecturesToCourse
-        if (!lecturer) {
+        const student = dataCreated?.addStudentsToCourse
+        if (!student) {
           return
         }
-        enqueueSnackbar('Thêm giảng viên thành công', { variant: 'success' })
+        enqueueSnackbar('Thêm học viên thành công', { variant: 'success' })
         onClose?.()
         return
       } catch (error) {
         enqueueSnackbar(
-          'Thêm thất bại: Giảng viên đã có trong danh sách khóa học',
+          'Thêm thất bại: Học viên đã có trong danh sách khóa học',
           { variant: 'error' },
         )
         onClose?.()
       }
     },
-    [enqueueSnackbar, onClose, addLecturesToCourse, courseLecturer],
+    [enqueueSnackbar, onClose, addStudentsToCourse, courseStudent],
   )
   return (
     <Formik
@@ -98,7 +98,7 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
           gridItem={{ xs: 12 }}
           fullHeight={false}
           maxContentHeight={false}
-          title="Danh sách giảng viên"
+          title="Danh sách học viên"
           action={
             <Button
               variant="text"
@@ -114,9 +114,9 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
           <CardContent>
             <AccountAssignerFormField
               className={classes.root}
-              name="lecturerIds"
-              label={labels.lecturerIds}
-              roles={['lecturer']}
+              name="studentIds"
+              label={labels.studentIds}
+              roles={['student']}
               multiple
             />
           </CardContent>
@@ -130,4 +130,4 @@ const useStyles = makeStyles(() => ({
   root: {},
 }))
 
-export default CurrentMenu
+export default MenuStudent
