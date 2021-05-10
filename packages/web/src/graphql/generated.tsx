@@ -174,6 +174,8 @@ export type Mutation = {
   updateCourse: Course
   addLecturesToCourse: Course
   addStudentsToCourse: Course
+  removeStudentsFromCourse: Course
+  removeLecturersFromCourse: Course
   updateFile: File
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
@@ -231,6 +233,16 @@ export type MutationAddLecturesToCourseArgs = {
 export type MutationAddStudentsToCourseArgs = {
   studentIds: Array<Scalars['ID']>
   courseId: Scalars['ID']
+}
+
+export type MutationRemoveStudentsFromCourseArgs = {
+  studentIds: Array<Scalars['ID']>
+  id: Scalars['ID']
+}
+
+export type MutationRemoveLecturersFromCourseArgs = {
+  lecturerIds: Array<Scalars['ID']>
+  id: Scalars['ID']
 }
 
 export type MutationUpdateFileArgs = {
@@ -641,6 +653,15 @@ export type FindCourseByIdQuery = {
     Course,
     'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
   >
+}
+
+export type RemoveLecturersFromCourseMutationVariables = Exact<{
+  lecturerIds: Array<Scalars['ID']> | Scalars['ID']
+  id: Scalars['ID']
+}>
+
+export type RemoveLecturersFromCourseMutation = {
+  removeLecturersFromCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -3973,6 +3994,156 @@ export type FindCourseByIdLazyQueryHookResult = ReturnType<
 export type FindCourseByIdQueryResult = Apollo.QueryResult<
   FindCourseByIdQuery,
   FindCourseByIdQueryVariables
+>
+export const RemoveLecturersFromCourseDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveLecturersFromCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lecturerIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'removeLecturersFromCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lecturerIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lecturerIds' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
+  RemoveLecturersFromCourseMutation,
+  RemoveLecturersFromCourseMutationVariables
+>
+export type RemoveLecturersFromCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveLecturersFromCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables,
+    RemoveLecturersFromCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables,
+    RemoveLecturersFromCourseProps<TChildProps, TDataName>
+  >(RemoveLecturersFromCourseDocument, {
+    alias: 'removeLecturersFromCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveLecturersFromCourseMutation__
+ *
+ * To run a mutation, you first call `useRemoveLecturersFromCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLecturersFromCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLecturersFromCourseMutation, { data, loading, error }] = useRemoveLecturersFromCourseMutation({
+ *   variables: {
+ *      lecturerIds: // value for 'lecturerIds'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveLecturersFromCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >(RemoveLecturersFromCourseDocument, options)
+}
+export type RemoveLecturersFromCourseMutationHookResult = ReturnType<
+  typeof useRemoveLecturersFromCourseMutation
+>
+export type RemoveLecturersFromCourseMutationResult = Apollo.MutationResult<RemoveLecturersFromCourseMutation>
+export type RemoveLecturersFromCourseMutationOptions = Apollo.BaseMutationOptions<
+  RemoveLecturersFromCourseMutation,
+  RemoveLecturersFromCourseMutationVariables
 >
 export const OrgAccountListDocument: DocumentNode = {
   kind: 'Document',

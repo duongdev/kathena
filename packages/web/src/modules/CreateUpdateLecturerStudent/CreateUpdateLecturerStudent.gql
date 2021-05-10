@@ -22,3 +22,10 @@ query FindCourseById($id: ID!) {
     studentIds
   }
 }
+mutation RemoveLecturersFromCourse($lecturerIds: [ID!]!, $id: ID!) {
+  removeLecturersFromCourse(lecturerIds: $lecturerIds, id: $id) {
+    id
+    code
+    name
+  }
+}

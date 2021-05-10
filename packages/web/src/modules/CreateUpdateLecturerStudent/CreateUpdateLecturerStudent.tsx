@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
+import { useSnackbar } from 'notistack'
 import { Trash, UserPlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
@@ -20,16 +21,26 @@ import {
   PageContainerSkeleton,
   SectionCard,
 } from '@kathena/ui'
-import { useCourseDetailQuery } from 'graphql/generated'
+import {
+  useCourseDetailQuery,
+  useRemoveLecturersFromCourseMutation,
+} from 'graphql/generated'
 
 import MenuLecturer from './MenuLecturer'
 import MenuStudent from './MenuStudent'
 
-export type CreateUpdateLecturerStudentProps = {}
+export type CreateUpdateLecturerStudentProps = {
+  idLecturer: string
+}
 
 const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => {
   const classes = useStyles()
-
+  const { enqueueSnackbar } = useSnackbar()
+  const params: { id: string } = useParams()
+  const courseId = useMemo(() => params.id, [params])
+  const { data, loading } = useCourseDetailQuery({
+    variables: { id: courseId },
+  })
   // Thêm giảng viên start----------------------------
   const handleOpenCreateLecturer = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -47,31 +58,37 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     [],
   )
   // Thêm học viên end----------------------------
-
+  // Xóa giảng viên start----------------------------
+  const [deleteLecturerToCourse] = useRemoveLecturersFromCourseMutation()
+  const handelDeleteLecturer = useCallback(
+    (event: MouseEvent<HTMLButtonElement>, lecturerId, id) => {
+      try {
+        deleteLecturerToCourse({
+          variables: {
+            lecturerIds: lecturerId,
+            id,
+          },
+        })
+        enqueueSnackbar('Xóa thành công', { variant: 'success' })
+        return
+      } catch (error) {
+        enqueueSnackbar('Xóa thất bại', { variant: 'error' })
+      }
+    },
+    [enqueueSnackbar, deleteLecturerToCourse],
+  )
+  // Xóa giảng viên end----------------------------
   const handleClose = useCallback(() => {
     setAnchorEl(null)
     setOpenLecturer(null)
     setOpenStudent(null)
   }, [])
 
-  // Xóa giảng viên start----------------------------
-  // const handelDeleteLecturer = useCallback(
-  //   (event: MouseEvent<HTMLButtonElement>, lecturerId) => {
-  //     // console.log(event);
-  //     // console.log(`id lecturerId: ${lecturerId}`)
-  //   },
-  //   [],
-  // )
-  // Xóa giảng viên end----------------------------
-
-  const params: { id: string } = useParams()
-  const courseId = useMemo(() => params.id, [params])
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const [openLecturer, setOpenLecturer] = useState<HTMLButtonElement | null>(
     null,
   )
   const [openStudent, setOpenStudent] = useState<HTMLButtonElement | null>(null)
-
   // Mo chi tiet Lectuerer :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
   const openLec = useMemo(() => Boolean(openLecturer), [openLecturer])
@@ -83,9 +100,6 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     open,
   ])
 
-  const { data, loading } = useCourseDetailQuery({
-    variables: { id: courseId },
-  })
   const course = useMemo(() => data?.findCourseById, [data])
 
   if (loading) {
@@ -152,9 +166,9 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                   </Grid>
                   <Grid item md={1}>
                     <IconButton
-                    // onClick={(e) => {
-                    //   handelDeleteLecturer(e, lecturerId)
-                    // }}
+                      onClick={(e) => {
+                        handelDeleteLecturer(e, lecturerId, course.id)
+                      }}
                     >
                       <Trash />
                     </IconButton>
