@@ -116,6 +116,7 @@ export class CourseResolver {
     )
   }
 
+  @Mutation((_returns) => Course)
   @UseAuthGuard(P.Academic_RemoveStudentsFromCourse)
   @UsePipes(ValidationPipe)
   async removeStudentsFromCourse(
@@ -132,6 +133,7 @@ export class CourseResolver {
     )
   }
 
+  @Mutation((_returns) => Course)
   @UseAuthGuard(P.Academic_RemoveLecturersFromCourse)
   @UsePipes(ValidationPipe)
   async removeLecturersFromCourse(
