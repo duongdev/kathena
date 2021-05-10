@@ -15,8 +15,8 @@ import { Course } from './models/Course'
 
 @Module({
   imports: [
-    forwardRef(() => OrgService),
     TypegooseModule.forFeature([AcademicSubject, Course]),
+    forwardRef(() => OrgService),
     forwardRef(() => AuthService),
     forwardRef(() => AccountService),
     OrgModule,

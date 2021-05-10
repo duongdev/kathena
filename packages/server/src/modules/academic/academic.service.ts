@@ -20,22 +20,22 @@ export class AcademicService {
   private readonly logger = new Logger(AcademicService.name)
 
   constructor(
-    @Inject(forwardRef(() => OrgService))
-    private readonly orgService: OrgService,
-
     @InjectModel(AcademicSubject)
     private readonly academicSubjectModel: ReturnModelType<
       typeof AcademicSubject
     >,
+
+    @InjectModel(Course)
+    private readonly courseModel: ReturnModelType<typeof Course>,
+
+    @Inject(forwardRef(() => OrgService))
+    private readonly orgService: OrgService,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
-
-    @InjectModel(Course)
-    private readonly courseModel: ReturnModelType<typeof Course>,
   ) {}
 
   async findAcademicSubjectByCode(
