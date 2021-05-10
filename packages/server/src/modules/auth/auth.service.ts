@@ -21,8 +21,9 @@ export class AuthService {
 
   constructor(
     @Inject(forwardRef(() => AccountService))
-    private readonly academicService: AcademicService,
     private readonly accountService: AccountService,
+    @Inject(forwardRef(() => AcademicService))
+    private readonly academicService: AcademicService,
     private readonly orgService: OrgService,
   ) {}
 
