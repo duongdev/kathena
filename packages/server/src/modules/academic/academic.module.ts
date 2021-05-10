@@ -1,8 +1,11 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
+import { AccountService } from 'modules/account/account.service'
+import { AuthService } from 'modules/auth/auth.service'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
+import { OrgService } from 'modules/org/org.service'
 
 import { AcademicService } from './academic.service'
 import { AcademicSubjectResolver } from './academicSubject.resolver'
@@ -12,7 +15,10 @@ import { Course } from './models/Course'
 
 @Module({
   imports: [
+    forwardRef(() => OrgService),
     TypegooseModule.forFeature([AcademicSubject, Course]),
+    forwardRef(() => AuthService),
+    forwardRef(() => AccountService),
     OrgModule,
     FileStorageModule,
   ],

@@ -20,6 +20,7 @@ export class AcademicService {
   private readonly logger = new Logger(AcademicService.name)
 
   constructor(
+    @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
 
     @InjectModel(AcademicSubject)
