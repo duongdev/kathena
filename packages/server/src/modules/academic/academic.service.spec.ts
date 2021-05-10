@@ -1870,5 +1870,213 @@ describe('academic.service', () => {
         ).toBeTruthy()
       })
     })
+
+    describe('removeStudentsFromCourse', () => {
+      const courseDemo: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 3000,
+        startDate: '2021-04-27',
+      }
+
+      it(`throws error if couldn't find course to remove students`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          academicService.removeStudentsFromCourse(
+            {
+              id: objectId(),
+              orgId: objectId(),
+            },
+            ['6088bcfabac39423861f6102'],
+          ),
+        ).rejects.toThrowError(`Couldn't find course to remove students`)
+      })
+
+      it('throws error if the account cannot be found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseDemo as ANY)
+
+        const studentId = objectId()
+        await expect(
+          academicService.removeStudentsFromCourse(
+            {
+              id: courseDemo.id,
+              orgId: courseDemo.orgId,
+            },
+            [studentId],
+          ),
+        ).rejects.toThrowError(`ID ${studentId} is not found`)
+      })
+
+      it('throws error if the account is not a student', async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          orgId: objectId(),
+          email: 'vanhai0911@gmail.com',
+          password: '1234567',
+          username: 'haidev',
+          roles: ['owner', 'admin'],
+          displayName: 'Nguyen Van Hai',
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseDemo as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.removeStudentsFromCourse(
+            {
+              id: courseDemo.id,
+              orgId: courseDemo.orgId,
+            },
+            [account.id],
+          ),
+        ).rejects.toThrowError(`${account.displayName} isn't a student`)
+      })
+
+      it('throws error if id student is not a student of course', async () => {
+        expect.assertions(1)
+
+        const account: ANY = {
+          id: objectId(),
+          orgId: objectId(),
+          email: 'vanhai0911@gmail.com',
+          password: '1234567',
+          username: 'haidev',
+          roles: ['student'],
+          displayName: 'Nguyen Van Hai',
+        }
+
+        const courseData: ANY = {
+          ...createCourseInput,
+          studentIds: [account.id],
+        }
+
+        jest
+          .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(academicService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(courseData as ANY)
+        jest
+          .spyOn(accountService, 'findOneAccount')
+          .mockResolvedValueOnce(account as ANY)
+
+        await expect(
+          academicService.removeStudentsFromCourse(
+            {
+              id: objectId(),
+              orgId: courseData.id,
+            },
+            [objectId()],
+          ),
+        ).rejects.toThrowError(
+          `${account.displayName} isn't a student of ${courseData.name}`,
+        )
+      })
+
+      it(`returns the course with updated studentIds`, async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin',
+          namespace: 'kmin-edu',
+        })
+
+        const creatorAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'admin@gmail.com',
+          password: '123456',
+          username: 'admin',
+          roles: ['admin'],
+          displayName: 'Admin',
+        })
+
+        const lecturerAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai@gmail.com',
+          password: '123456',
+          username: 'haine',
+          roles: ['lecturer'],
+          displayName: 'Hai Nguyen',
+        })
+
+        const studentAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai00911@gmail.com',
+          password: '123456',
+          username: 'hainene',
+          roles: ['student'],
+          displayName: 'Hai Nguyen',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          code: 'HTML',
+          createdByAccountId: creatorAccount.id,
+          description: 'HTML',
+          imageFileId: objectId(),
+          name: 'HTMl',
+          orgId: org.id,
+        })
+
+        const date = new Date()
+        const createCourse: CreateCourseInput = {
+          academicSubjectId: academicSubject.id,
+          code: 'FEBCT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: date.toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [lecturerAccount.id],
+        }
+
+        const course = await academicService.createCourse(
+          creatorAccount.id,
+          org.id,
+          {
+            ...createCourse,
+          },
+        )
+
+        await academicService.addStudentsToCourse(
+          {
+            orgId: org.id,
+            courseId: course.id,
+          },
+          [studentAccount.id],
+        )
+
+        const courseUpdate = await academicService.removeStudentsFromCourse(
+          {
+            id: course.id,
+            orgId: course.orgId,
+          },
+          [studentAccount.id],
+        )
+        const studentIdsTest = []
+        const { studentIds } = courseUpdate as ANY
+        await expect(
+          studentIds.toString() === studentIdsTest.toString(),
+        ).toBeTruthy()
+      })
+    })
   })
 })
