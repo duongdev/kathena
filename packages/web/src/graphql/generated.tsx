@@ -174,6 +174,7 @@ export type Mutation = {
   updateCourse: Course
   addLecturesToCourse: Course
   addStudentsToCourse: Course
+  updateFile: File
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -230,6 +231,11 @@ export type MutationAddLecturesToCourseArgs = {
 export type MutationAddStudentsToCourseArgs = {
   studentIds: Array<Scalars['ID']>
   courseId: Scalars['ID']
+}
+
+export type MutationUpdateFileArgs = {
+  newFile: Scalars['Upload']
+  id: Scalars['ID']
 }
 
 export type MutationCreateOrgOfficeArgs = {
@@ -456,6 +462,13 @@ export type AcademicSubjectDetailQuery = {
     'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
   >
 }
+
+export type UpdateFileMutationVariables = Exact<{
+  id: Scalars['ID']
+  newFile: Scalars['Upload']
+}>
+
+export type UpdateFileMutation = { updateFile: Pick<File, 'id' | 'name'> }
 
 export type AcademicSubjectListQueryVariables = Exact<{
   orgId: Scalars['ID']
@@ -1724,6 +1737,149 @@ export type AcademicSubjectDetailLazyQueryHookResult = ReturnType<
 export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
+>
+export const UpdateFileDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateFile' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'newFile' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Upload' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateFile' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'newFile' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'newFile' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateFileMutationFn = Apollo.MutationFunction<
+  UpdateFileMutation,
+  UpdateFileMutationVariables
+>
+export type UpdateFileProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateFileMutation,
+    UpdateFileMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateFile<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate'
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateFileMutation,
+    UpdateFileMutationVariables,
+    UpdateFileProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateFileMutation,
+    UpdateFileMutationVariables,
+    UpdateFileProps<TChildProps, TDataName>
+  >(UpdateFileDocument, {
+    alias: 'updateFile',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateFileMutation__
+ *
+ * To run a mutation, you first call `useUpdateFileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFileMutation, { data, loading, error }] = useUpdateFileMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      newFile: // value for 'newFile'
+ *   },
+ * });
+ */
+export function useUpdateFileMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateFileMutation,
+    UpdateFileMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateFileMutation, UpdateFileMutationVariables>(
+    UpdateFileDocument,
+    options,
+  )
+}
+export type UpdateFileMutationHookResult = ReturnType<
+  typeof useUpdateFileMutation
+>
+export type UpdateFileMutationResult = Apollo.MutationResult<UpdateFileMutation>
+export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<
+  UpdateFileMutation,
+  UpdateFileMutationVariables
 >
 export const AcademicSubjectListDocument: DocumentNode = {
   kind: 'Document',

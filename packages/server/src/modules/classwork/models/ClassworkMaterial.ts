@@ -31,9 +31,9 @@ export class ClassworkMaterial extends BaseModel {
   @Field({ nullable: true })
   description?: string
 
-  @Field()
-  @prop({ type: Types.ObjectId })
-  attachments: string
+  @Field((_type) => [String])
+  @prop({ type: [Types.ObjectId] })
+  attachments?: string[]
 
   @Field()
   @prop({ required: true, index: true, default: Publication.Draft })

@@ -12,14 +12,26 @@ import {
   PageContainerSkeleton,
   SectionCard,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
 import { useAcademicSubjectDetailQuery } from 'graphql/generated'
-import { buildPath, CREATE_ACADEMIC_COURSE } from 'utils/path-builder'
+import {
+  buildPath,
+  CREATE_ACADEMIC_COURSE,
+  UPDATE_ACADEMIC_SUBJECT,
+} from 'utils/path-builder'
+
+import UpdateImageAcademicSubjectDialog from './components/UpdateImageAcademicSubjectDialog'
 
 export type AcademicSubjectDetailProps = {}
 
 const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
   const classes = useStyles(props)
+  const [
+    updateImageDialogOpen,
+    handleOpenUpdateImageDialog,
+    handleCloseUpdateImageDialog,
+  ] = useDialogState()
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params])
   const { data, loading } = useAcademicSubjectDetailQuery({
@@ -48,8 +60,14 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
       maxWidth="md"
       title={subject.name}
       actions={[
-        <Button variant="contained">Activate</Button>,
         <Button
+          variant="contained"
+          link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
+        >
+          Sửa môn học
+        </Button>,
+        <Button
+          variant="contained"
           link={buildPath(CREATE_ACADEMIC_COURSE, {
             idSubject: subject.id,
           })}
@@ -64,6 +82,11 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
           gridItem={{ xs: 12 }}
           title="Thông tin môn học"
         >
+          <UpdateImageAcademicSubjectDialog
+            imageId={subject.imageFileId}
+            onClose={handleCloseUpdateImageDialog}
+            open={updateImageDialogOpen}
+          />
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12} md={5} className={classes.imgSubject}>
@@ -71,6 +94,11 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                   fileId={subject.imageFileId}
                   style={{ height: '100%', width: '100%' }}
                   variant="background"
+                  actions={[
+                    <Button onClick={handleOpenUpdateImageDialog}>
+                      Sửa hình ảnh
+                    </Button>,
+                  ]}
                 />
               </Grid>
               <Grid item xs={12} md={7}>
