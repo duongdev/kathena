@@ -38,14 +38,15 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     [],
   )
   // Thêm giảng viên end----------------------------
-  // Thêm giảng viên start----------------------------
+
+  // Thêm học viên start----------------------------
   const handleOpenCreateStudent = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       setOpenStudent(event.currentTarget)
     },
     [],
   )
-  // Thêm giảng viên end----------------------------
+  // Thêm học viên end----------------------------
 
   const handleClose = useCallback(() => {
     setAnchorEl(null)
@@ -54,13 +55,13 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   }, [])
 
   // Xóa giảng viên start----------------------------
-  const handelDeleteLecturer = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, lecturerId) => {
-      // console.log(event);
-      console.log(`id lecturerId: ${lecturerId}`)
-    },
-    [],
-  )
+  // const handelDeleteLecturer = useCallback(
+  //   (event: MouseEvent<HTMLButtonElement>, lecturerId) => {
+  //     // console.log(event);
+  //     // console.log(`id lecturerId: ${lecturerId}`)
+  //   },
+  //   [],
+  // )
   // Xóa giảng viên end----------------------------
 
   const params: { id: string } = useParams()
@@ -151,41 +152,13 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                   </Grid>
                   <Grid item md={1}>
                     <IconButton
-                      onClick={(e) => {
-                        handelDeleteLecturer(e, lecturerId)
-                      }}
+                    // onClick={(e) => {
+                    //   handelDeleteLecturer(e, lecturerId)
+                    // }}
                     >
                       <Trash />
                     </IconButton>
                   </Grid>
-                  {/* <Grid item md={1}>
-                    <IconButton size="small" onClick={handleClick} key={lecturerId}>
-                      <DotsThreeVertical size={30} />
-                    </IconButton>
-                    <Popover
-                      key={lecturerId}
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                      }}
-                    >
-                      <List dense key={lecturerId}>
-                        <ListItem button onClick={((e) => { submit(lecturerId) })} >
-                          <ListItemText>Email</ListItemText>
-                        </ListItem>
-                        <ListItem button onClick={((e) => { submit(lecturerId) })}>
-                          <ListItemText >Xóa</ListItemText>
-                        </ListItem>
-                      </List>
-                    </Popover>
-                  </Grid> */}
                 </Grid>
               ))}
             </>

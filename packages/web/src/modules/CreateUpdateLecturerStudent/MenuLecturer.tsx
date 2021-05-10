@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom'
 import yup from '@kathena/libs/yup'
 import { Button, SectionCard } from '@kathena/ui'
 import {
-  AddLecturesToCourseDocument,
   useAddLecturesToCourseMutation,
   useCourseDetailQuery,
 } from 'graphql/generated'
@@ -24,7 +23,7 @@ const labels: { [k in keyof LecturerFormInput]: string } = {
   lecturerIds: 'Giảng viên',
 }
 const validationSchema = yup.object({
-  lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
+  lecturerIds: yup.array().label(labels.lecturerIds).required(),
 })
 const initialValues: LecturerFormInput = {
   lecturerIds: [],
@@ -42,21 +41,11 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const courseLecturer = useMemo(() => data?.findCourseById, [
     data?.findCourseById,
   ])
-  const [addLecturesToCourse] = useAddLecturesToCourseMutation({
-    refetchQueries: [
-      {
-        query: AddLecturesToCourseDocument,
-        variables: {
-          courseId,
-          lecturerIds: initialValues.lecturerIds,
-        },
-      },
-    ],
-  })
+  const [addLecturesToCourse] = useAddLecturesToCourseMutation()
   const handelAddAndClose = useCallback(
     async (input: LecturerFormInput) => {
       try {
-        if (!courseLecturer?.id || !input?.lecturerIds) {
+        if (!courseLecturer?.id || input.lecturerIds.length <= 0) {
           enqueueSnackbar('Thêm giảng viên thất bại', { variant: 'error' })
           return
         }

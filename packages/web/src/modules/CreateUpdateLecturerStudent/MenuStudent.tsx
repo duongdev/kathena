@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom'
 import yup from '@kathena/libs/yup'
 import { Button, SectionCard } from '@kathena/ui'
 import {
-  AddStudentToCourseDocument,
   useAddStudentToCourseMutation,
   useCourseDetailQuery,
 } from 'graphql/generated'
@@ -29,7 +28,6 @@ const validationSchema = yup.object({
 const initialValues: StudentFormInput = {
   studentIds: [],
 }
-
 const MenuStudent: FC<MenuStudentProps> = (props) => {
   const { onClose } = props
   const { enqueueSnackbar } = useSnackbar()
@@ -42,21 +40,11 @@ const MenuStudent: FC<MenuStudentProps> = (props) => {
   const courseStudent = useMemo(() => data?.findCourseById, [
     data?.findCourseById,
   ])
-  const [addStudentsToCourse] = useAddStudentToCourseMutation({
-    refetchQueries: [
-      {
-        query: AddStudentToCourseDocument,
-        variables: {
-          courseId,
-          studentIds: initialValues.studentIds,
-        },
-      },
-    ],
-  })
+  const [addStudentsToCourse] = useAddStudentToCourseMutation()
   const handelAddAndClose = useCallback(
     async (input: StudentFormInput) => {
       try {
-        if (!courseStudent?.id || !input?.studentIds) {
+        if (!courseStudent?.id || input.studentIds.length <= 0) {
           enqueueSnackbar('Thêm học viên thất bại', { variant: 'error' })
           return
         }
