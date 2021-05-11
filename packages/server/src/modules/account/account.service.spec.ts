@@ -199,7 +199,10 @@ describe('account.service', () => {
 
       expect(account.password).not.toBe(createAccountServiceInput.password)
       expect(
-        compareSync(createAccountServiceInput.password, account.password),
+        compareSync(
+          createAccountServiceInput.password as ANY,
+          account.password,
+        ),
       ).toBe(true)
     })
 
