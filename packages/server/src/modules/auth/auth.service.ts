@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken'
 import { keyBy, uniq } from 'lodash'
 
 import { config, Logger, Service } from 'core'
+import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { Account } from 'modules/account/models/Account'
 import { Org } from 'modules/org/models/Org'
@@ -21,6 +22,8 @@ export class AuthService {
   constructor(
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
+    @Inject(forwardRef(() => AcademicService))
+    private readonly academicService: AcademicService,
     private readonly orgService: OrgService,
   ) {}
 
