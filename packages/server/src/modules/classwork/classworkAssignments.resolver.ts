@@ -1,22 +1,25 @@
 import {
   forwardRef,
-  Inject /** , UsePipes, ValidationPipe */,
+  Inject,
+  Logger,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common'
 import {
-  /** Args,
+  Args,
   ID,
   Mutation,
   Parent,
   Query,
-  ResolveField, */
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql'
 // import { differenceInMinutes } from 'date-fns'
 // import { ForbiddenError } from 'type-graphql'
 
-// import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
+import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
 import { AuthService } from 'modules/auth/auth.service'
-// import { Org } from 'modules/org/models/Org'
+import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
@@ -24,7 +27,10 @@ import { ClassworkAssignments } from './models/ClassworkAssignments'
 
 @Resolver((_of) => ClassworkAssignments)
 export class ClassworkAssignmentsResolver {
+  private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
+
   constructor(
+    @Inject(forwardRef(() => ClassworkService))
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
@@ -34,7 +40,20 @@ export class ClassworkAssignmentsResolver {
    *START ASSIGNMENTS RESOLVER
    */
 
-  // TODO: Delete this line and start the code here
+  @Mutation((_returns) => [ClassworkAssignments])
+  @UsePipes(ValidationPipe)
+  async findClassworkAssignments(
+    @Args('courseId', { type: () => ID, nullable: true }) courseId: string,
+    @Args('searchText', { type: () => String, nullable: true })
+    searchText: string,
+    @CurrentOrg() org: Org,
+  ): Promise<ClassworkAssignments[]> {
+    return this.classworkService.findClassworkAssignments(
+      org.id,
+      courseId,
+      searchText,
+    )
+  }
 
   /**
    * END ASSIGNMENTS RESOLVER

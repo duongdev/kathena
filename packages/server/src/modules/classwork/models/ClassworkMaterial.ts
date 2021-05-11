@@ -1,5 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { prop } from '@typegoose/typegoose'
+import { index, prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
 import { BaseModel, Publication } from 'core'
@@ -14,6 +14,7 @@ registerEnumType(ClassworkType, {
   description: 'Type of a classwork',
 })
 
+@index({ title: 'text', type: 'text', publicationState: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class ClassworkMaterial extends BaseModel {
   @Field()

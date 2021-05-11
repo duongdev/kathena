@@ -10,6 +10,7 @@ import { Service, InjectModel, Logger } from 'core'
 //   removeExtraSpaces,
 //   stringWithoutSpecialCharacters,
 // } from 'core/utils/string'
+import { Course } from 'modules/academic/models/Course'
 import { AuthService } from 'modules/auth/auth.service'
 // import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
@@ -33,6 +34,9 @@ export class ClassworkService {
       typeof ClassworkMaterial
     >,
 
+    @InjectModel(Course)
+    private readonly courseModel: ReturnModelType<typeof Course>,
+
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
@@ -54,7 +58,37 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
-  // TODO: Delete this line and start the code here
+  async findClassworkAssignments(
+    orgId: string,
+    courseId?: string,
+    searchText?: string,
+  ): Promise<ClassworkAssignments[]> {
+    const { classworkAssignmentsModel, courseModel } = this
+
+    if (searchText) {
+      if (courseId) {
+        const course = courseModel.findById(courseId)
+        if (!course) {
+          throw new Error('Course not found')
+        }
+      }
+      // returns the classwork assignments list by searchText
+      const listClassworkAssignments = await classworkAssignmentsModel.find({
+        $text: {
+          $search: searchText,
+        },
+        orgId,
+        courseId,
+      })
+      return listClassworkAssignments
+    }
+
+    // return all classwork assignments in Classwork
+    const listClassworkAssignments = await classworkAssignmentsModel.find({
+      orgId,
+    })
+    return listClassworkAssignments
+  }
 
   /**
    * END CLASSWORK ASSIGNMENT
