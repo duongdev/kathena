@@ -30,6 +30,7 @@ export class AcademicService {
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
+    @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
 
     @InjectModel(Course)
