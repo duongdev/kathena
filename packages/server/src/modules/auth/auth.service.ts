@@ -197,6 +197,7 @@ export class AuthService {
     if (course === null) {
       throw new Error('Course is not found')
     }
+
     return course.lecturerIds.includes(account.id)
   }
 }

@@ -1,6 +1,6 @@
 import { forwardRef, Global, Module } from '@nestjs/common'
 
-import { AcademicService } from 'modules/academic/academic.service'
+import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { OrgModule } from 'modules/org/org.module'
 
@@ -11,7 +11,7 @@ import { AuthService } from './auth.service'
 @Module({
   imports: [
     forwardRef(() => AccountModule),
-    forwardRef(() => AcademicService),
+    forwardRef(() => AcademicModule),
     OrgModule,
   ],
   providers: [AuthResolver, AuthService],
