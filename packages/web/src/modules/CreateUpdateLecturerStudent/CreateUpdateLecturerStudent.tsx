@@ -25,6 +25,7 @@ import {
   useCourseDetailQuery,
   useRemoveLecturersFromCourseMutation,
   useRemoveStudentsFromCourseMutation,
+  FindCourseByIdDocument,
 } from 'graphql/generated'
 
 import MenuLecturer from './MenuLecturer'
@@ -60,7 +61,14 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   )
   // Thêm học viên end----------------------------
   // Xóa giảng viên start----------------------------
-  const [deleteLecturerToCourse] = useRemoveLecturersFromCourseMutation()
+  const [deleteLecturerToCourse] = useRemoveLecturersFromCourseMutation({
+    refetchQueries: [
+      {
+        query: FindCourseByIdDocument,
+        variables: { id: courseId },
+      },
+    ],
+  })
   const handelDeleteLecturer = useCallback(
     async (lecturerId, id) => {
       try {
@@ -83,8 +91,15 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     [enqueueSnackbar, deleteLecturerToCourse],
   )
   // Xóa giảng viên end----------------------------
-  // Xóa giảng viên start----------------------------
-  const [deleteStudentToCourse] = useRemoveStudentsFromCourseMutation()
+  // Xóa học viên start----------------------------
+  const [deleteStudentToCourse] = useRemoveStudentsFromCourseMutation({
+    refetchQueries: [
+      {
+        query: FindCourseByIdDocument,
+        variables: { id: courseId },
+      },
+    ],
+  })
   const handelDeleteStudent = useCallback(
     async (student, id) => {
       try {
@@ -106,7 +121,7 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
     },
     [enqueueSnackbar, deleteStudentToCourse],
   )
-  // Xóa giảng viên end----------------------------
+  // Xóa học viên end----------------------------
   const handleClose = useCallback(() => {
     setAnchorEl(null)
     setOpenLecturer(null)
