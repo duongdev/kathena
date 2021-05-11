@@ -24,6 +24,7 @@ import {
 import {
   useCourseDetailQuery,
   useRemoveLecturersFromCourseMutation,
+  useRemoveStudentsFromCourseMutation,
 } from 'graphql/generated'
 
 import MenuLecturer from './MenuLecturer'
@@ -61,9 +62,13 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   // Xóa giảng viên start----------------------------
   const [deleteLecturerToCourse] = useRemoveLecturersFromCourseMutation()
   const handelDeleteLecturer = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, lecturerId, id) => {
+    async (lecturerId, id) => {
       try {
-        deleteLecturerToCourse({
+        if (lecturerId === null || id === null) {
+          enqueueSnackbar('Xóa thất bại', { variant: 'error' })
+          return
+        }
+        await deleteLecturerToCourse({
           variables: {
             lecturerIds: lecturerId,
             id,
@@ -76,6 +81,30 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
       }
     },
     [enqueueSnackbar, deleteLecturerToCourse],
+  )
+  // Xóa giảng viên end----------------------------
+  // Xóa giảng viên start----------------------------
+  const [deleteStudentToCourse] = useRemoveStudentsFromCourseMutation()
+  const handelDeleteStudent = useCallback(
+    async (student, id) => {
+      try {
+        if (student === null || id === null) {
+          enqueueSnackbar('Xóa thất bại', { variant: 'error' })
+          return
+        }
+        await deleteStudentToCourse({
+          variables: {
+            studentIds: student,
+            id,
+          },
+        })
+        enqueueSnackbar('Xóa thành công', { variant: 'success' })
+        return
+      } catch (error) {
+        enqueueSnackbar('Xóa thất bại', { variant: 'error' })
+      }
+    },
+    [enqueueSnackbar, deleteStudentToCourse],
   )
   // Xóa giảng viên end----------------------------
   const handleClose = useCallback(() => {
@@ -99,7 +128,6 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
   const idOpenStudent = useMemo(() => (open ? 'simple-popover' : undefined), [
     open,
   ])
-
   const course = useMemo(() => data?.findCourseById, [data])
 
   if (loading) {
@@ -166,8 +194,8 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                   </Grid>
                   <Grid item md={1}>
                     <IconButton
-                      onClick={(e) => {
-                        handelDeleteLecturer(e, lecturerId, course.id)
+                      onClick={() => {
+                        handelDeleteLecturer(lecturerId, course.id)
                       }}
                     >
                       <Trash />
@@ -229,7 +257,11 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                       <AccountDisplayName accountId={studentId} />
                     </Grid>
                     <Grid item md={1}>
-                      <IconButton>
+                      <IconButton
+                        onClick={() => {
+                          handelDeleteStudent(studentId, course.id)
+                        }}
+                      >
                         <Trash />
                       </IconButton>
                     </Grid>

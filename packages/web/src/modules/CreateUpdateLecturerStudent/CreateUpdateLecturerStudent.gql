@@ -29,3 +29,10 @@ mutation RemoveLecturersFromCourse($lecturerIds: [ID!]!, $id: ID!) {
     name
   }
 }
+mutation RemoveStudentsFromCourse($studentIds: [ID!]!, $id: ID!) {
+  removeStudentsFromCourse(studentIds: $studentIds, id: $id) {
+    id
+    code
+    name
+  }
+}
