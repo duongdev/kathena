@@ -603,7 +603,7 @@ describe('auth.service', () => {
       ).rejects.toThrowError(`Account is not found`)
     })
 
-    it('throw error if course is not found', async () => {
+    it('throws error if course is not found', async () => {
       expect.assertions(1)
 
       const account: ANY = {
