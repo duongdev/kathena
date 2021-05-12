@@ -27,6 +27,8 @@ export enum Permission {
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
 
+  Classwork_CreateClassworkAssignments = 'Classwork_CreateClassworkAssignments',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

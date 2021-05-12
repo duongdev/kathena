@@ -23,6 +23,7 @@ export const staff: Role = {
     P.OrgOffice_ListOrgOffices,
     P.OrgOffice_CreateOrgOffice,
     P.OrgOffice_UpdateOrgOffice,
+    P.Classwork_CreateClassworkAssignments,
   ],
 }
 
