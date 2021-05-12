@@ -13,7 +13,7 @@ import {
   useCourseDetailQuery,
 } from 'graphql/generated'
 
-export type MenuStudentProps = {
+export type AddStudentProps = {
   onClose?: () => void
 }
 export type StudentFormInput = {
@@ -28,7 +28,7 @@ const validationSchema = yup.object({
 const initialValues: StudentFormInput = {
   studentIds: [],
 }
-const MenuStudent: FC<MenuStudentProps> = (props) => {
+const AddStudent: FC<AddStudentProps> = (props) => {
   const { onClose } = props
   const { enqueueSnackbar } = useSnackbar()
   const classes = useStyles(props)
@@ -119,4 +119,4 @@ const useStyles = makeStyles(() => ({
   root: {},
 }))
 
-export default MenuStudent
+export default AddStudent

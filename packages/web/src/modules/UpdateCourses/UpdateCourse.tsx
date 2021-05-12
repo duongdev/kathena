@@ -28,14 +28,14 @@ import {
   FindCourseByIdDocument,
 } from 'graphql/generated'
 
-import MenuLecturer from './MenuLecturer'
-import MenuStudent from './MenuStudent'
+import AddLecturer from './AddLecturer'
+import AddStudent from './AddStudent'
 
-export type CreateUpdateLecturerStudentProps = {
+export type UpdateCourseProps = {
   idLecturer: string
 }
 
-const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => {
+const UpdateCourse: FC<UpdateCourseProps> = () => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const params: { id: string } = useParams()
@@ -187,38 +187,36 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                   horizontal: 'center',
                 }}
               >
-                <MenuLecturer onClose={handleClose} />
+                <AddLecturer onClose={handleClose} />
               </Popover>
             </>
           }
         >
           <CardContent>
-            <>
-              {course.lecturerIds.map((lecturerId) => (
-                <Grid
-                  container
-                  spacing={2}
-                  className={classes.displayName}
-                  key={lecturerId}
-                >
-                  <Grid item md={1}>
-                    <AccountAvatar accountId={lecturerId} />
-                  </Grid>
-                  <Grid item md={10}>
-                    <AccountDisplayName accountId={lecturerId} />
-                  </Grid>
-                  <Grid item md={1}>
-                    <IconButton
-                      onClick={() => {
-                        handelDeleteLecturer(lecturerId, course.id)
-                      }}
-                    >
-                      <Trash />
-                    </IconButton>
-                  </Grid>
+            {course.lecturerIds.map((lecturerId) => (
+              <Grid
+                container
+                spacing={2}
+                className={classes.displayName}
+                key={lecturerId}
+              >
+                <Grid item md={1}>
+                  <AccountAvatar accountId={lecturerId} />
                 </Grid>
-              ))}
-            </>
+                <Grid item md={10}>
+                  <AccountDisplayName accountId={lecturerId} />
+                </Grid>
+                <Grid item md={1}>
+                  <IconButton
+                    onClick={() => {
+                      handelDeleteLecturer(lecturerId, course.id)
+                    }}
+                  >
+                    <Trash />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))}
           </CardContent>
         </SectionCard>
       </Grid>
@@ -251,38 +249,36 @@ const CreateUpdateLecturerStudent: FC<CreateUpdateLecturerStudentProps> = () => 
                     horizontal: 'center',
                   }}
                 >
-                  <MenuStudent onClose={handleClose} />
+                  <AddStudent onClose={handleClose} />
                 </Popover>
               </>
             }
           >
             <CardContent>
-              <>
-                {course.studentIds.map((studentId) => (
-                  <Grid
-                    container
-                    spacing={2}
-                    className={classes.displayName}
-                    key={studentId}
-                  >
-                    <Grid item md={1}>
-                      <AccountAvatar accountId={studentId} />
-                    </Grid>
-                    <Grid item md={10}>
-                      <AccountDisplayName accountId={studentId} />
-                    </Grid>
-                    <Grid item md={1}>
-                      <IconButton
-                        onClick={() => {
-                          handelDeleteStudent(studentId, course.id)
-                        }}
-                      >
-                        <Trash />
-                      </IconButton>
-                    </Grid>
+              {course.studentIds.map((studentId) => (
+                <Grid
+                  container
+                  spacing={2}
+                  className={classes.displayName}
+                  key={studentId}
+                >
+                  <Grid item md={1}>
+                    <AccountAvatar accountId={studentId} />
                   </Grid>
-                ))}
-              </>
+                  <Grid item md={10}>
+                    <AccountDisplayName accountId={studentId} />
+                  </Grid>
+                  <Grid item md={1}>
+                    <IconButton
+                      onClick={() => {
+                        handelDeleteStudent(studentId, course.id)
+                      }}
+                    >
+                      <Trash />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
             </CardContent>
           </SectionCard>
         </Grid>
@@ -297,4 +293,4 @@ const useStyles = makeStyles({
   },
 })
 
-export default CreateUpdateLecturerStudent
+export default UpdateCourse
