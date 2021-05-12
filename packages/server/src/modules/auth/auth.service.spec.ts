@@ -5,6 +5,8 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { AcademicService } from 'modules/academic/academic.service'
+import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
@@ -15,6 +17,8 @@ describe('auth.service', () => {
   let module: TestingModule
   let authService: AuthService
   let mongooseConnection: Connection
+  let academicService: AcademicService
+  let orgService: OrgService
 
   beforeAll(async () => {
     const testDb = await initTestDb()
@@ -23,6 +27,10 @@ describe('auth.service', () => {
     module = await createTestingModule(testDb.uri)
 
     authService = module.get<AuthService>(AuthService)
+
+    academicService = module.get<AcademicService>(AcademicService)
+
+    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
@@ -584,6 +592,124 @@ describe('auth.service', () => {
       await expect(
         authService.getAccountRoles(account.id),
       ).resolves.toMatchSnapshot()
+    })
+  })
+  describe('canAccountManageCourse', () => {
+    it('throw error if account is not found', async () => {
+      expect.assertions(1)
+      // console.log(
+      //   await authService.canAccountManageCourse(objectId(), objectId()),
+      // )
+
+      await expect(
+        authService.canAccountManageCourse(objectId(), objectId()),
+      ).rejects.toThrowError(`Account is not found`)
+    })
+
+    it('throws error if course is not found', async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        orgId: objectId(),
+      }
+
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValueOnce(account as ANY)
+
+      await expect(
+        authService.canAccountManageCourse(objectId(), account.orgId),
+      ).rejects.toThrowError(`Course is not found`)
+    })
+
+    it('returns true if account can manage course', async () => {
+      expect.assertions(3)
+
+      const courseInpust: ANY = {
+        academicSubjectId: objectId(),
+        code: 'string',
+        name: 'string',
+        startDate: Date.now(),
+        tuitionFee: 123123,
+        lecturerIds: [],
+      }
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const course = await academicService.createCourse(
+        objectId(),
+        objectId(),
+        courseInpust,
+      )
+
+      const courseEdited = {
+        lecturerIds: [objectId(), objectId(), objectId()],
+      }
+
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValueOnce({ id: courseEdited.lecturerIds[0] } as ANY)
+        .mockResolvedValueOnce({ id: courseEdited.lecturerIds[1] } as ANY)
+        .mockResolvedValueOnce({ id: courseEdited.lecturerIds[2] } as ANY)
+
+      jest
+        .spyOn(authService['academicService'], 'findCourseById')
+        .mockResolvedValueOnce(courseEdited as ANY)
+        .mockResolvedValueOnce(courseEdited as ANY)
+        .mockResolvedValueOnce(courseEdited as ANY)
+
+      await expect(
+        authService.canAccountManageCourse(
+          courseEdited.lecturerIds[0],
+          course.id,
+        ),
+      ).resolves.toBeTruthy()
+
+      await expect(
+        authService.canAccountManageCourse(
+          courseEdited.lecturerIds[1],
+          course.id,
+        ),
+      ).resolves.toBeTruthy()
+
+      await expect(
+        authService.canAccountManageCourse(
+          courseEdited.lecturerIds[2],
+          course.id,
+        ),
+      ).resolves.toBeTruthy()
+    })
+
+    it('returns false if account can manage course', async () => {
+      expect.assertions(1)
+
+      const account: ANY = {
+        orgId: objectId(),
+      }
+
+      const academic: ANY = {
+        lecturerIds: [account.orgId],
+      }
+
+      jest
+        .spyOn(authService['accountService'], 'findAccountById')
+        .mockResolvedValueOnce(account as ANY)
+
+      jest
+        .spyOn(authService['academicService'], 'findCourseById')
+        .mockResolvedValueOnce(academic as ANY)
+
+      await expect(
+        authService.canAccountManageCourse(objectId(), objectId()),
+      ).resolves.toBeFalsy()
     })
   })
 })
