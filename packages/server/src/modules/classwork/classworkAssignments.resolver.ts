@@ -40,14 +40,14 @@ export class ClassworkAssignmentsResolver {
    *START ASSIGNMENTS RESOLVER
    */
 
-  @Mutation((_returns) => [ClassworkAssignments])
+  @Mutation((_returns) => [ClassworkAssignment])
   @UsePipes(ValidationPipe)
   async findClassworkAssignments(
     @Args('courseId', { type: () => ID, nullable: true }) courseId: string,
     @Args('searchText', { type: () => String, nullable: true })
     searchText: string,
     @CurrentOrg() org: Org,
-  ): Promise<ClassworkAssignments[]> {
+  ): Promise<ClassworkAssignment[]> {
     return this.classworkService.findClassworkAssignments(
       org.id,
       courseId,
