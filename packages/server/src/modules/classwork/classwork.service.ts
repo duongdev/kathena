@@ -62,7 +62,7 @@ export class ClassworkService {
     orgId: string,
     courseId?: string,
     searchText?: string,
-  ): Promise<ClassworkAssignments[]> {
+  ): Promise<ClassworkAssignment[]> {
     const { classworkAssignmentsModel, courseModel } = this
 
     if (searchText) {
