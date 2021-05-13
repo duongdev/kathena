@@ -8,6 +8,8 @@ import {
   ResolveField, */
   Resolver,
 } from '@nestjs/graphql'
+
+import { ANY } from 'types'
 // import { differenceInMinutes } from 'date-fns'
 // import { ForbiddenError } from 'type-graphql'
 
@@ -25,13 +27,13 @@ export class ResultClassworkUnionResolver {
    */
 
   @ResolveField()
-  resolveType(value: { type: ClassworkType }) {
+  resolveType(value: { type: ClassworkType }): [...ANY] {
     if (value.type === ClassworkType.Material) {
-      return 'ClassworkMaterial'
+      return ['ClassworkMaterial']
     }
 
     if (value.type === ClassworkType.Assignment) {
-      return 'ClassworkAssignment'
+      return ['ClassworkAssignment']
     }
 
     return ['ClassworkMaterial', 'ClassworkAssignment']
