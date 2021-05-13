@@ -3,7 +3,7 @@ import { prop } from '@typegoose/typegoose'
 
 import { Classwork, ClassworkType } from './Classwork'
 
-@ObjectType({ implements: [Classwork] })
+@ObjectType()
 export class ClassworkAssignment extends Classwork {
   @Field((_type) => Date)
   @prop({ type: Date, required: true })
