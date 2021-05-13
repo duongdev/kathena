@@ -133,7 +133,7 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
     null,
   )
   const [openStudent, setOpenStudent] = useState<HTMLButtonElement | null>(null)
-  // Mo chi tiet Lectuerer :
+  // Mở chi tiết Lecturer :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
   const openLec = useMemo(() => Boolean(openLecturer), [openLecturer])
   const idOpenLecturer = useMemo(() => (open ? 'simple-popover' : undefined), [
@@ -174,17 +174,18 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                 onClick={handleOpenCreateLecturer}
               />
               <Popover
+                style={{ width: '89%' }}
                 id={idOpenLecturer}
                 open={openLec}
                 anchorEl={openLecturer}
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'left',
+                  horizontal: 'right',
                 }}
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'center',
+                  horizontal: 'right',
                 }}
               >
                 <AddLecturer onClose={handleClose} />
@@ -236,17 +237,18 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                   onClick={handleOpenCreateStudent}
                 />
                 <Popover
+                  style={{ width: '89%' }}
                   id={idOpenStudent}
                   open={openStu}
                   anchorEl={openStudent}
                   onClose={handleClose}
                   anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'left',
+                    horizontal: 'right',
                   }}
                   transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'right',
                   }}
                 >
                   <AddStudent onClose={handleClose} />
