@@ -47,8 +47,9 @@ export class ClassworkService {
    */
 
   async createClassworkAssignments(
-    creatorId: string,
+    // creatorId: string,
     courseId: string,
+    // orgId: string,
     createClassworkAssignmentsInput,
   ): Promise<DocumentType<ClassworkAssignments>> {
     const {
@@ -68,7 +69,6 @@ export class ClassworkService {
     // )
 
     const classworkAssignments = this.classworkAssignmentsModel.create({
-      createdByAccountId: creatorId,
       courseId,
       title,
       type,
