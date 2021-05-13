@@ -21,9 +21,9 @@ import { AuthService } from 'modules/auth/auth.service'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { ClassworkMaterial } from './models/ClassworkMaterial'
+import { Classwork } from './models/Classwork'
 
-@Resolver((_of) => ClassworkMaterial)
+@Resolver((_of) => Classwork)
 export class ClassworkMaterialResolver {
   constructor(
     private readonly classworkService: ClassworkService,

@@ -20,9 +20,9 @@ import { AuthService } from 'modules/auth/auth.service'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { ClassworkAssignments } from './models/ClassworkAssignments'
+import { ClassworkAssignment } from './models/ClassworkAssignment'
 
-@Resolver((_of) => ClassworkAssignments)
+@Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
   constructor(
     private readonly classworkService: ClassworkService,
