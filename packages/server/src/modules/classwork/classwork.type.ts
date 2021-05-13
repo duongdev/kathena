@@ -16,11 +16,11 @@ export const ResultClassworkUnion = createUnionType({
   types: () => [ClassworkMaterial, ClassworkAssignment],
   resolveType(value) {
     if (value.type === ClassworkType.Material) {
-      return ClassworkMaterial
+      return [ClassworkMaterial]
     }
 
     if (value.type === ClassworkType.Assignment) {
-      return ClassworkAssignment
+      return [ClassworkAssignment]
     }
 
     return [ClassworkMaterial, ClassworkAssignment]
