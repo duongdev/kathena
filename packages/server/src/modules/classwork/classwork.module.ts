@@ -1,7 +1,6 @@
 import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
-import { Course } from 'modules/academic/models/Course'
 import { AuthModule } from 'modules/auth/auth.module'
 
 import { ClassworkService } from './classwork.service'
