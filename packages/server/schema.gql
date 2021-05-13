@@ -109,7 +109,7 @@ enum Permission {
   Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
-  Classwork_CreateClassworkAssignments
+  Classwork_CreateClassworkAssignment
   NoPermission
 }
 

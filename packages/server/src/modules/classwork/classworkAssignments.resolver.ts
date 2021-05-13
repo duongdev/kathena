@@ -4,9 +4,9 @@ import {
 } from '@nestjs/common'
 import {
   /** Args,
-  ID,
+  ID, */
   Mutation,
-  Parent,
+  /* Parent,
   Query,
   ResolveField, */
   Resolver,
@@ -35,7 +35,10 @@ export class ClassworkAssignmentsResolver {
    */
 
   // TODO: Delete this line and start the code here
-
+  @Mutation((_returns) => ClassworkAssignment)
+  async abc(): Promise<ClassworkAssignment[]> {
+    return []
+  }
   /**
    * END ASSIGNMENTS RESOLVER
    */

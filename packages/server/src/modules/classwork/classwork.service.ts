@@ -15,6 +15,9 @@ import { AuthService } from 'modules/auth/auth.service'
 // import { Permission } from 'modules/auth/models'
 // import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
+
+// eslint-disable-next-line import/order
+import { CreateClassworkAssignmentsInput } from './classwork.type'
 // import { ANY, Nullable } from 'types'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -47,28 +50,43 @@ export class ClassworkService {
    */
 
   async createClassworkAssignments(
-    // creatorId: string,
+    creatorId: string,
     courseId: string,
-    // orgId: string,
-    createClassworkAssignmentsInput,
-  ): Promise<DocumentType<ClassworkAssignments>> {
+    orgId: string,
+    classworkAssignmentInput: CreateClassworkAssignmentsInput,
+  ): Promise<DocumentType<ClassworkAssignment>> {
     const {
       title,
       type,
       description,
       attachments,
       dueDate,
-    } = createClassworkAssignmentsInput
+    } = classworkAssignmentInput
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
 
     // Can create ClassworkAssignments
-    // const canCreateClassworkAssignments = await this.authService.accountHasPermission(
-    //   {
-    //     accountId: creatorId,
-    //     permission: Permission.Classwork_CreateClassworkAssignments,
-    //   },
-    // )
+    const canCreateClassworkAssignment = await this.authService.canAccountManageCourse(
+      creatorId,
+      courseId,
+    )
 
-    const classworkAssignments = this.classworkAssignmentsModel.create({
+    if (!canCreateClassworkAssignment) {
+      throw new Error(`CAN_CREATE_CLASSWORK_ASSIGNMENT`)
+    }
+
+    const currentDate = new Date()
+    const startDateInput = new Date(dueDate)
+
+    if (
+      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error(`START_DATE_INVALID`)
+    }
+
+    const classworkAssignment = this.classworkAssignmentsModel.create({
       courseId,
       title,
       type,
@@ -78,7 +96,7 @@ export class ClassworkService {
       dueDate,
     })
 
-    return classworkAssignments
+    return classworkAssignment
   }
   // TODO: Delete this line and start the code here
 

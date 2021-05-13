@@ -66,7 +66,7 @@ describe('auth.service', () => {
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
-        'Classwork_CreateClassworkAssignments',
+        'Classwork_CreateClassworkAssignment',
       ]
 
       jest
@@ -231,7 +231,7 @@ describe('auth.service', () => {
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
-                "Classwork_CreateClassworkAssignments",
+                "Classwork_CreateClassworkAssignment",
               ]
             `)
     })
