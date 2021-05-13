@@ -16,7 +16,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // import { ANY, Nullable } from 'types'
 
-import { ClassworkAssignments } from './models/ClassworkAssignments'
+import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Service()
@@ -24,9 +24,9 @@ export class ClassworkService {
   private readonly logger = new Logger(ClassworkService.name)
 
   constructor(
-    @InjectModel(ClassworkAssignments)
+    @InjectModel(ClassworkAssignment)
     private readonly classworkAssignmentsModel: ReturnModelType<
-      typeof ClassworkAssignments
+      typeof ClassworkAssignment
     >,
 
     @InjectModel(ClassworkMaterial)

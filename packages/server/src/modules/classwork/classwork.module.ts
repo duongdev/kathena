@@ -7,18 +7,14 @@ import { AuthModule } from 'modules/auth/auth.module'
 import { ClassworkService } from './classwork.service'
 import { ClassworkAssignmentsResolver } from './classworkAssignments.resolver'
 import { ClassworkMaterialResolver } from './classworkMaterial.resolver'
-import { ClassworkAssignments } from './models/ClassworkAssignments'
+import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Global()
 @Module({
   imports: [
     AuthModule,
-    TypegooseModule.forFeature([
-      ClassworkAssignments,
-      ClassworkMaterial,
-      Course,
-    ]),
+    TypegooseModule.forFeature([ClassworkAssignment, ClassworkMaterial]),
   ],
   providers: [
     ClassworkService,

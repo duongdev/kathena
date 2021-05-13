@@ -23,9 +23,9 @@ import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { ClassworkAssignments } from './models/ClassworkAssignments'
+import { ClassworkAssignment } from './models/ClassworkAssignment'
 
-@Resolver((_of) => ClassworkAssignments)
+@Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
   private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
 
