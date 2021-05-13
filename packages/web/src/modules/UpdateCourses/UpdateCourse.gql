@@ -1,0 +1,38 @@
+mutation AddLecturesToCourse($lecturerIds: [ID!]!, $courseId: ID!) {
+  addLecturesToCourse(courseId: $courseId, lecturerIds: $lecturerIds) {
+    id
+    name
+    lecturerIds
+  }
+}
+mutation AddStudentToCourse($studentIds: [ID!]!, $courseId: ID!) {
+  addStudentsToCourse(courseId: $courseId, studentIds: $studentIds) {
+    id
+    name
+    studentIds
+  }
+}
+
+query FindCourseById($id: ID!) {
+  findCourseById(id: $id) {
+    id
+    code
+    name
+    lecturerIds
+    studentIds
+  }
+}
+mutation RemoveLecturersFromCourse($lecturerIds: [ID!]!, $id: ID!) {
+  removeLecturersFromCourse(lecturerIds: $lecturerIds, id: $id) {
+    id
+    code
+    name
+  }
+}
+mutation RemoveStudentsFromCourse($studentIds: [ID!]!, $id: ID!) {
+  removeStudentsFromCourse(studentIds: $studentIds, id: $id) {
+    id
+    code
+    name
+  }
+}
