@@ -20,6 +20,7 @@ import {
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
+  Link,
 } from '@kathena/ui'
 import {
   useCourseDetailQuery,
@@ -27,7 +28,9 @@ import {
   useRemoveStudentsFromCourseMutation,
   FindCourseByIdDocument,
 } from 'graphql/generated'
+import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
+import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
 import AddStudent from './AddStudent'
 
@@ -43,6 +46,7 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
+
   // Thêm giảng viên start----------------------------
   const handleOpenCreateLecturer = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -168,11 +172,9 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
           title="Thông tin giảng viên"
           action={
             <>
-              <Button
-                startIcon={<UserPlus />}
-                size="small"
-                onClick={handleOpenCreateLecturer}
-              />
+              <Button endIcon={<UserPlus />} onClick={handleOpenCreateLecturer}>
+                Thêm giảng viên
+              </Button>
               <Popover
                 style={{ width: '89%' }}
                 id={idOpenLecturer}
@@ -194,30 +196,53 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
           }
         >
           <CardContent>
-            {course.lecturerIds.map((lecturerId) => (
-              <Grid
-                container
-                spacing={2}
-                className={classes.displayName}
-                key={lecturerId}
-              >
-                <Grid item md={1}>
-                  <AccountAvatar accountId={lecturerId} />
-                </Grid>
-                <Grid item md={10}>
-                  <AccountDisplayName accountId={lecturerId} />
-                </Grid>
-                <Grid item md={1}>
-                  <IconButton
-                    onClick={() => {
-                      handelDeleteLecturer(lecturerId, course.id)
-                    }}
+            {course.lecturerIds.length === 0 ? (
+              <>Không có giảng viên</>
+            ) : (
+              <>
+                {course.lecturerIds.map((lecturerId) => (
+                  <Grid
+                    container
+                    spacing={2}
+                    className={classes.displayName}
+                    key={lecturerId}
                   >
-                    <Trash />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            ))}
+                    <Grid item md={1}>
+                      <AccountAvatar accountId={lecturerId} />
+                    </Grid>
+                    <Grid item md={10}>
+                      <Link
+                        to={buildPath(USER_PROFILE, {
+                          username: `${(
+                            <AccountUserName accountId={lecturerId} />
+                          )}`,
+                        })}
+                      >
+                        <AccountDisplayName
+                          className={classes.pointer}
+                          accountId={lecturerId}
+                          variant="body1"
+                        />
+                      </Link>
+                      <AccountUserName
+                        variant="body2"
+                        color="textSecondary"
+                        accountId={lecturerId}
+                      />
+                    </Grid>
+                    <Grid item md={1}>
+                      <IconButton
+                        onClick={() => {
+                          handelDeleteLecturer(lecturerId, course.id)
+                        }}
+                      >
+                        <Trash />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            )}
           </CardContent>
         </SectionCard>
       </Grid>
@@ -232,10 +257,11 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
             action={
               <>
                 <Button
-                  startIcon={<UserPlus />}
-                  size="small"
+                  endIcon={<UserPlus />}
                   onClick={handleOpenCreateStudent}
-                />
+                >
+                  Thêm học sinh
+                </Button>
                 <Popover
                   style={{ width: '89%' }}
                   id={idOpenStudent}
@@ -257,30 +283,53 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
             }
           >
             <CardContent>
-              {course.studentIds.map((studentId) => (
-                <Grid
-                  container
-                  spacing={2}
-                  className={classes.displayName}
-                  key={studentId}
-                >
-                  <Grid item md={1}>
-                    <AccountAvatar accountId={studentId} />
-                  </Grid>
-                  <Grid item md={10}>
-                    <AccountDisplayName accountId={studentId} />
-                  </Grid>
-                  <Grid item md={1}>
-                    <IconButton
-                      onClick={() => {
-                        handelDeleteStudent(studentId, course.id)
-                      }}
+              {course.studentIds.length === 0 ? (
+                <>Không có học viên</>
+              ) : (
+                <>
+                  {course.studentIds.map((studentId) => (
+                    <Grid
+                      container
+                      spacing={2}
+                      className={classes.displayName}
+                      key={studentId}
                     >
-                      <Trash />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              ))}
+                      <Grid item md={1}>
+                        <AccountAvatar accountId={studentId} />
+                      </Grid>
+                      <Grid item md={10}>
+                        <Link
+                          to={buildPath(USER_PROFILE, {
+                            username: `${(
+                              <AccountUserName accountId={studentId} />
+                            )}`,
+                          })}
+                        >
+                          <AccountDisplayName
+                            className={classes.pointer}
+                            accountId={studentId}
+                            variant="body1"
+                          />
+                        </Link>
+                        <AccountUserName
+                          variant="body2"
+                          color="textSecondary"
+                          accountId={studentId}
+                        />
+                      </Grid>
+                      <Grid item md={1}>
+                        <IconButton
+                          onClick={() => {
+                            handelDeleteStudent(studentId, course.id)
+                          }}
+                        >
+                          <Trash />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </>
+              )}
             </CardContent>
           </SectionCard>
         </Grid>
@@ -291,7 +340,10 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
 }
 const useStyles = makeStyles({
   displayName: {
-    alignItems: 'center',
+    alignItems: 'center !important',
+  },
+  pointer: {
+    cursor: 'pointer',
   },
 })
 
