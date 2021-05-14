@@ -57,11 +57,12 @@ export class ClassworkService {
   ): Promise<DocumentType<ClassworkAssignment>> {
     const {
       title,
-      type,
       description,
       attachments,
       dueDate,
     } = classworkAssignmentInput
+
+    this.logger.log(orgId)
 
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
@@ -89,7 +90,6 @@ export class ClassworkService {
     const classworkAssignment = this.classworkAssignmentsModel.create({
       courseId,
       title,
-      type,
       description,
       attachments,
       publicationState: Publication.Draft,

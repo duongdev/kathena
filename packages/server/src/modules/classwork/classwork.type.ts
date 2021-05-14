@@ -32,22 +32,14 @@ export const ResultClassworkUnion = createUnionType({
 @InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
-  @IsNotEmpty({ message: 'CourseId cannot be empty' })
-  courseId: string
-
-  @Field()
   @IsNotEmpty({ message: 'Title cannot be empty' })
   title: string
 
   @Field()
-  @IsNotEmpty({ message: 'Type cannot be empty' })
-  type: string
-
-  @Field()
-  description: string
+  description?: string
 
   @Field((_type) => [String], { defaultValue: [] })
-  attachments: string
+  attachments?: string
 
   @Field()
   @IsNotEmpty({ message: 'Duedate cannot be empty' })

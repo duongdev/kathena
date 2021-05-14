@@ -152,6 +152,33 @@ type OrgAccountsPayload {
   count: Int!
 }
 
+type Classwork implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  courseId: String!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
+type ClassworkAssignment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  courseId: String!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+  dueDate: DateTime!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -218,6 +245,8 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  abc: ClassworkAssignment!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
 
 input CreateAccountInput {
@@ -276,4 +305,11 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkAssignmentInput {
+  title: String!
+  description: String!
+  attachments: [String!] = []
+  dueDate: String!
 }
