@@ -17,7 +17,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
 // eslint-disable-next-line import/order
-import { CreateClassworkAssignmentsInput } from './classwork.type'
+import { CreateClassworkAssignmentInput } from './classwork.type'
 // import { ANY, Nullable } from 'types'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -49,11 +49,11 @@ export class ClassworkService {
    * START CLASSWORK MATERIAL
    */
 
-  async createClassworkAssignments(
+  async createClassworkAssignment(
     creatorId: string,
     courseId: string,
     orgId: string,
-    classworkAssignmentInput: CreateClassworkAssignmentsInput,
+    classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const {
       title,

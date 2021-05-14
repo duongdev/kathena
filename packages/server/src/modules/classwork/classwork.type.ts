@@ -30,7 +30,7 @@ export const ResultClassworkUnion = createUnionType({
   },
 })
 @InputType()
-export class CreateClassworkAssignmentsInput {
+export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'CourseId cannot be empty' })
   courseId: string
