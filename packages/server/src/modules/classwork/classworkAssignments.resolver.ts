@@ -23,11 +23,6 @@ export class ClassworkAssignmentsResolver {
    *START ASSIGNMENTS RESOLVER
    */
 
-  @Mutation((_returns) => ClassworkAssignment)
-  async abc(): Promise<ClassworkAssignment[]> {
-    return []
-  }
-
   @Mutation((_returns) => Classwork)
   @UseAuthGuard(P.Classwork_CreateClassworkAssignment)
   @UsePipes(ValidationPipe)
