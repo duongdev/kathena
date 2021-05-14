@@ -133,7 +133,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionStudyingCourseList = () => (
-  <WithAuth permission={Permission.Studing_Course_Access}>
+  <WithAuth permission={Permission.Studying_Course_Access}>
     <StudyingCourseList />
   </WithAuth>
 )

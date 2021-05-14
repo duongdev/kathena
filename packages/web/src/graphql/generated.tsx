@@ -317,7 +317,7 @@ export enum Permission {
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Teaching_Course_Access = 'Teaching_Course_Access',
-  Studing_Course_Access = 'Studing_Course_Access',
+  Studying_Course_Access = 'Studying_Course_Access',
   NoPermission = 'NoPermission',
 }
 
