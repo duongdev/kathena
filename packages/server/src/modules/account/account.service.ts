@@ -252,12 +252,11 @@ export class AccountService {
     this.logger.log(`[updateOrgMemberAccount] start updating`)
     this.logger.verbose({ updaterId, query, update })
 
-    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
-      {
+    const accountHasPermissionToUpdate =
+      await this.authService.accountHasPermission({
         accountId: updaterId,
         permission: Permission.Hr_UpdateOrgAccount,
-      },
-    )
+      })
 
     this.logger.verbose({ accountHasPermissionToUpdate })
 
@@ -335,12 +334,11 @@ export class AccountService {
     query: { id: string; orgId: string },
     status: AccountStatus,
   ): Promise<DocumentType<Account>> {
-    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
-      {
+    const accountHasPermissionToUpdate =
+      await this.authService.accountHasPermission({
         accountId: updaterId,
         permission: Permission.Hr_UpdateOrgAccountStatus,
-      },
-    )
+      })
 
     if (updaterId === query.id) {
       throw new Error(`Can't change activate/deactivate status by yourself`)
