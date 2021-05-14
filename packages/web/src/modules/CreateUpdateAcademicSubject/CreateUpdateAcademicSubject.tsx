@@ -13,7 +13,7 @@ import {
   FileItem,
   PageContainer,
   renderApolloError,
-  Spinner,
+  PageContainerSkeleton,
 } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import {
@@ -258,7 +258,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     [createMode, handleCreateAcademicSubject, handleUpdateAcademicSubject],
   )
 
-  if (loading) return <Spinner />
+  if (loading) return <PageContainerSkeleton maxWidth="md" />
 
   return (
     <Formik
@@ -283,7 +283,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
                   >
-                    Tạo môn học
+                    Tạo môn họcsss
                   </Button>,
                 ]
               : [
