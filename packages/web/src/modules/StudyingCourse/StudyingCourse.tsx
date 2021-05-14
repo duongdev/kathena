@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) =>
 )
 
 const WithPermissionStudyingCourse = () => (
-  <WithAuth permission={Permission.Studing_Course_Access}>
+  <WithAuth permission={Permission.Studying_Course_Access}>
     <StudyingCourse />
   </WithAuth>
 )
