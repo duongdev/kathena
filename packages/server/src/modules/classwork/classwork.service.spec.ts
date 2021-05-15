@@ -145,6 +145,54 @@ describe('classwork.service', () => {
       ).rejects.toThrow('CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT')
     })
 
+    it(`throws error "START_DATE_INVALID" if the entered date less than the current date`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        name: 'kmin',
+        namespace: 'kmin-edu',
+      })
+
+      const creatorAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'lecturer@gmail.com',
+        password: '123456',
+        username: 'lecturer',
+        roles: ['lecturer'],
+        displayName: 'Lecturer',
+      })
+
+      const createCourse: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: creatorAccount.id,
+      }
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const date = new Date()
+
+      await expect(
+        classworkService.createClassworkAssignment(
+          creatorAccount.id,
+          createCourse.id,
+          org.id,
+          {
+            ...classworkAssignmentInput,
+            dueDate: date.setDate(date.getDate() - 1),
+          },
+        ),
+      ).rejects.toThrow('START_DATE_INVALID')
+    })
+
     it(`returns the Classwork Assignment`, async () => {
       expect.assertions(1)
 
