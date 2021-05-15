@@ -7,7 +7,6 @@ import { OrgService } from 'modules/org/org.service'
 
 // eslint-disable-next-line import/order
 import { CreateClassworkAssignmentInput } from './classwork.type'
-
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -37,7 +36,6 @@ export class ClassworkService {
    * START CLASSWORK MATERIAL
    */
   // TODO: Delete this line and start the code here
-
   /**
    * END CLASSWORK MATERIAL
    */

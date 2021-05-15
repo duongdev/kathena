@@ -62,7 +62,6 @@ describe('classwork.service', () => {
   /**
    * START CLASSWORK ASSIGNMENTS
    */
-
   describe('createClassworkAssignment', () => {
     const classworkAssignmentInput: ANY = {
       createdByAccountId: objectId(),
