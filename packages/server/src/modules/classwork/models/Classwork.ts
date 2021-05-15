@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
 import { Types } from 'mongoose'
 
@@ -17,6 +17,10 @@ registerEnumType(ClassworkType, {
 @ObjectType({ implements: [BaseModel] })
 export class Classwork extends BaseModel {
   @Field()
+  @prop({ required: true, type: Types.ObjectId })
+  creatorId: string
+
+  @Field((_type) => ID)
   @prop({ required: true })
   courseId: string
 
