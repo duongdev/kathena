@@ -18,7 +18,7 @@ registerEnumType(ClassworkType, {
 export class Classwork extends BaseModel {
   @Field()
   @prop({ required: true, type: Types.ObjectId })
-  creatorId: string
+  createdByAccountId: string
 
   @Field((_type) => ID)
   @prop({ required: true })
