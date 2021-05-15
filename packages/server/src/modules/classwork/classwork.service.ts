@@ -1,24 +1,12 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
-// import * as bcrypt from 'bcrypt'
-// import { uniq } from 'lodash'
-// import { ForbiddenError } from 'type-graphql'
-
 import { Service, InjectModel, Logger, Publication } from 'core'
-// import { isObjectId } from 'core/utils/db'
-// import {
-//   removeExtraSpaces,
-//   stringWithoutSpecialCharacters,
-// } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
-// import { Permission } from 'modules/auth/models'
-// import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 
 // eslint-disable-next-line import/order
 import { CreateClassworkAssignmentInput } from './classwork.type'
-// import { ANY, Nullable } from 'types'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
