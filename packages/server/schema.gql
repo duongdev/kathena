@@ -95,13 +95,16 @@ enum Permission {
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   Hr_UpdateOrgAccountStatus
+  Academic_AcademicSubject_Access
   Academic_CreateAcademicSubject
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   Academic_UpdateAcademicSubject
+  OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
   Academic_ListCourses
@@ -109,6 +112,8 @@ enum Permission {
   Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
+  Teaching_Course_Access
+  Studying_Course_Access
   NoPermission
 }
 
