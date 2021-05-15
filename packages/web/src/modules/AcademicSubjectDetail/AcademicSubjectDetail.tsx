@@ -14,7 +14,8 @@ import {
   Typography,
   useDialogState,
 } from '@kathena/ui'
-import { useAcademicSubjectDetailQuery } from 'graphql/generated'
+import { WithAuth } from 'common/auth'
+import { Permission, useAcademicSubjectDetailQuery } from 'graphql/generated'
 import {
   buildPath,
   CREATE_ACADEMIC_COURSE,
@@ -124,4 +125,10 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default AcademicSubjectDetail
+const WithPermissionAcademicSubjectDetail = () => (
+  <WithAuth permission={Permission.Academic_AcademicSubject_Access}>
+    <AcademicSubjectDetail />
+  </WithAuth>
+)
+
+export default WithPermissionAcademicSubjectDetail

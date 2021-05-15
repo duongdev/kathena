@@ -3,6 +3,8 @@ import { FC, Suspense, lazy } from 'react'
 import { Route, Switch, useParams } from 'react-router-dom'
 
 import { PageContainer, Spinner } from '@kathena/ui'
+import { WithAuth } from 'common/auth'
+import { Permission } from 'graphql/generated'
 import {
   buildPath,
   TEACHING_COURSE,
@@ -66,4 +68,10 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
   )
 }
 
-export default TeachingCourse
+const WithPermissionTeachingCourse = () => (
+  <WithAuth permission={Permission.Teaching_Course_Access}>
+    <TeachingCourse />
+  </WithAuth>
+)
+
+export default WithPermissionTeachingCourse
