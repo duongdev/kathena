@@ -4,12 +4,12 @@ import { Connection } from 'mongoose'
 
 // import { objectId } from 'core/utils/db'
 import { objectId } from 'core/utils/db'
+// eslint-disable-next-line import/order
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 // import { Role } from 'modules/auth/models'
 // import { ANY } from 'types'
 
 import { AcademicService } from 'modules/academic/academic.service'
-import { CreateCourseInput } from 'modules/academic/academic.type'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
@@ -89,108 +89,134 @@ describe('classwork.service', () => {
       ).rejects.toThrowError('Org ID is invalid')
     })
 
-    // it(`throws error "CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT" if Account or Course is not found`, async () => {
-    //   expect.assertions(1)
+    it(`throws error "CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT" if Account or Course is not found`, async () => {
+      expect.assertions(2)
 
-    //   const org = await orgService.createOrg({
-    //     name: 'kmin',
-    //     namespace: 'kmin-edu',
-    //   })
+      const org = await orgService.createOrg({
+        name: 'kmin',
+        namespace: 'kmin-edu',
+      })
 
-    //   const creatorAccount = await accountService.createAccount({
-    //     orgId: org.id,
-    //     email: 'lecturer@gmail.com',
-    //     password: '123456',
-    //     username: 'lecturer',
-    //     roles: ['lecturer'],
-    //     displayName: 'Lecturer',
-    //   })
+      const creatorAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'lecturer@gmail.com',
+        password: '123456',
+        username: 'lecturer',
+        roles: ['lecturer'],
+        displayName: 'Lecturer',
+      })
 
-    //   jest
-    //     .spyOn(orgService, 'validateOrgId')
-    //     .mockRejectedValueOnce(true as never)
+      const createCourse: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: creatorAccount.id,
+      }
 
-    //   await expect(
-    //     classworkService.createClassworkAssignment(
-    //       creatorAccount.id,
-    //       objectId(),
-    //       org.id,
-    //       {
-    //         ...classworkAssignmentInput,
-    //         dueDate: '1618765200000',
-    //       },
-    //     ),
-    //   ).rejects.toThrowError('CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT')
-    // })
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
 
-    // it(`returns the new Classwork Assignment`, async () => {
-    //   expect.assertions(1)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(false as never)
+        .mockResolvedValueOnce(false as never)
 
-    //   const createCourseInput: ANY = {
-    //     academicSubjectId: objectId(),
-    //     code: 'NodeJS-12',
-    //     name: 'Node Js Thang 12',
-    //     tuitionFee: 5000000,
-    //     lecturerIds: [],
-    //   }
+      await expect(
+        classworkService.createClassworkAssignment(
+          objectId(),
+          createCourse.id,
+          org.id,
+          {
+            ...classworkAssignmentInput,
+            dueDate: '1618765200000',
+          },
+        ),
+      ).rejects.toThrow('CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT')
 
-    //   const org = await orgService.createOrg({
-    //     namespace: 'kmin-edu',
-    //     name: 'Kmin Academy',
-    //   })
+      await expect(
+        classworkService.createClassworkAssignment(
+          creatorAccount.id,
+          objectId(),
+          org.id,
+          {
+            ...classworkAssignmentInput,
+            dueDate: '2021-05-20',
+          },
+        ),
+      ).rejects.toThrow('CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT')
+    })
 
-    //   const accountLecturer = await accountService.createAccount({
-    //     orgId: org.id,
-    //     email: 'vanhai0911@gmail.com',
-    //     password: '123456',
-    //     username: 'haidev',
-    //     roles: ['lecturer'],
-    //     displayName: 'Nguyen Van Hai',
-    //   })
+    it(`returns the Classwork Assignment`, async () => {
+      expect.assertions(1)
 
-    //   jest
-    //     .spyOn(orgService, 'validateOrgId')
-    //     .mockResolvedValueOnce(true as never)
-    //   jest
-    //     .spyOn(authService, 'accountHasPermission')
-    //     .mockResolvedValueOnce(true as never)
-    //   jest
-    //     .spyOn(academicService, 'findAcademicSubjectById')
-    //     .mockResolvedValueOnce(true as never)
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
 
-    //   const courseTest = await academicService.createCourse(
-    //     objectId(),
-    //     accountLecturer.orgId,
-    //     {
-    //       ...createCourseInput,
-    //       startDate: Date.now(),
-    //       lecturerIds: [accountLecturer.id],
-    //     },
-    //   )
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
 
-    //   jest
-    //     .spyOn(academicService['courseModel'], 'findOne')
-    //     .mockResolvedValueOnce(courseTest)
-    //   jest
-    //     .spyOn(authService, 'canAccountManageCourse')
-    //     .mockRejectedValueOnce(true as never)
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
 
-    //   await expect(
-    //     classworkService.createClassworkAssignment(
-    //       accountLecturer.id,
-    //       courseTest.id,
-    //       org.id,
-    //       {
-    //         createdByAccountId: accountLecturer.id,
-    //         title: 'Bai Tap Nay Moi Nhat',
-    //         dueDate: '2021-07-21',
-    //         description: '',
-    //       },
-    //     ),
-    //   ).resolves.toMatchObject({
-    //     title: 'Bai Tap Nay Moi Nhat',
-    //   })
-    // })
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            createdByAccountId: accountLecturer.id,
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        ),
+      ).resolves.toMatchObject({
+        title: 'Bai Tap Nay Moi Nhat',
+      })
+    })
   })
 
   /**
