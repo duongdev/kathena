@@ -1,5 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
-import { /** DocumentType */ ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 // import * as bcrypt from 'bcrypt'
 // import { uniq } from 'lodash'
 // import { ForbiddenError } from 'type-graphql'
@@ -15,6 +15,9 @@ import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // import { ANY, Nullable } from 'types'
 
+import { PageOptionsInput } from 'types'
+
+import { ClassworkFilterInput } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -54,7 +57,31 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
-  // TODO: Delete this line and start the code here
+  async findAndPaginateClassworkAssignments(
+    pageOptions: PageOptionsInput,
+    filter: ClassworkFilterInput,
+  ): Promise<{
+    classworkAssignments: DocumentType<ClassworkAssignment>[]
+    count: number
+  }> {
+    const { limit, skip } = pageOptions
+    const { orgId, courseId } = filter
+
+    const classworkAssignmentModel = this.classworkAssignmentsModel.find({
+      orgId,
+    })
+
+    if (courseId) {
+      classworkAssignmentModel.find({
+        courseId,
+      })
+    }
+
+    classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const classworkAssignments = await classworkAssignmentModel
+    const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
+    return { classworkAssignments, count }
+  }
 
   /**
    * END CLASSWORK ASSIGNMENT
