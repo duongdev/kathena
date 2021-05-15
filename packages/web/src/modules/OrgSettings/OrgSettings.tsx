@@ -4,6 +4,8 @@ import { Grid, makeStyles } from '@material-ui/core'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { PageContainer } from '@kathena/ui'
+import { WithAuth } from 'common/auth'
+import { Permission } from 'graphql/generated'
 
 import OrgOfficeListCard from './components/OrgOffices/OrgOfficeListCard'
 
@@ -29,4 +31,10 @@ const useStyles = makeStyles(() => ({
   root: {},
 }))
 
-export default OrgSettings
+const WithPermissionOrgSettings = () => (
+  <WithAuth permission={Permission.OrgOffice_Access}>
+    <OrgSettings />
+  </WithAuth>
+)
+
+export default WithPermissionOrgSettings

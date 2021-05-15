@@ -22,7 +22,8 @@ import {
   SectionCard,
   Typography,
 } from '@kathena/ui'
-import { useCourseDetailQuery } from 'graphql/generated'
+import { WithAuth } from 'common/auth'
+import { Permission, useCourseDetailQuery } from 'graphql/generated'
 
 import AccountInfoRow from './AccountInfoRow'
 
@@ -162,4 +163,10 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-export default TeachingCourse
+const WithPermissionTeachingCourse = () => (
+  <WithAuth permission={Permission.Teaching_Course_Access}>
+    <TeachingCourse />
+  </WithAuth>
+)
+
+export default WithPermissionTeachingCourse
