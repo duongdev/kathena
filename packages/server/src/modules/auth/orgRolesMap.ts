@@ -23,19 +23,26 @@ export const staff: Role = {
     P.OrgOffice_ListOrgOffices,
     P.OrgOffice_CreateOrgOffice,
     P.OrgOffice_UpdateOrgOffice,
+    P.Classwork_ListClassworkAssignment,
   ],
 }
 
 export const student: Role = {
   name: 'student',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects],
+  permissions: [
+    P.Academic_ListAcademicSubjects,
+    P.Classwork_ListClassworkAssignment,
+  ],
 }
 
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects],
+  permissions: [
+    P.Academic_ListAcademicSubjects,
+    P.Classwork_ListClassworkAssignment,
+  ],
 }
 
 export const admin: Role = {
@@ -45,6 +52,7 @@ export const admin: Role = {
     ...staff.permissions,
     P.OrgOffice_CreateOrgOffice,
     P.OrgOffice_UpdateOrgOffice,
+    P.Classwork_ListClassworkAssignment,
   ],
 }
 

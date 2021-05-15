@@ -17,10 +17,9 @@ import {
 // import { differenceInMinutes } from 'date-fns'
 // import { ForbiddenError } from 'type-graphql'
 
-import {
-  /* CurrentAccount, */ CurrentOrg /* , UseAuthGuard */,
-} from 'core/auth'
+import { /* CurrentAccount, */ CurrentOrg, UseAuthGuard } from 'core/auth'
 import { AuthService } from 'modules/auth/auth.service'
+import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
@@ -43,12 +42,13 @@ export class ClassworkAssignmentsResolver {
    */
 
   @Mutation((_returns) => [ClassworkAssignment])
+  @UseAuthGuard(P.Classwork_ListClassworkAssignment)
   @UsePipes(ValidationPipe)
   async findClassworkAssignments(
-    @Args('courseId', { type: () => ID, nullable: true }) courseId: string,
-    @Args('searchText', { type: () => String, nullable: true })
-    searchText: string,
     @CurrentOrg() org: Org,
+    @Args('courseId', { type: () => ID, nullable: true }) courseId?: string,
+    @Args('searchText', { type: () => String, nullable: true })
+    searchText?: string,
   ): Promise<ClassworkAssignment[]> {
     return this.classworkService.findClassworkAssignments(
       org.id,

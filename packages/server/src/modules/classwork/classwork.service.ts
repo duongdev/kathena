@@ -71,15 +71,25 @@ export class ClassworkService {
         if (!course) {
           throw new Error('Course not found')
         }
+
+        // returns the classwork assignments list by searchText, orgId and courseId
+        const listClassworkAssignments = await classworkAssignmentsModel.find({
+          $text: {
+            $search: searchText,
+          },
+          orgId,
+          courseId,
+        })
+        return listClassworkAssignments
       }
-      // returns the classwork assignments list by searchText
+      // returns the classwork assignments list by searchText and orgId
       const listClassworkAssignments = await classworkAssignmentsModel.find({
         $text: {
           $search: searchText,
         },
         orgId,
-        courseId,
       })
+
       return listClassworkAssignments
     }
 
@@ -87,6 +97,8 @@ export class ClassworkService {
     const listClassworkAssignments = await classworkAssignmentsModel.find({
       orgId,
     })
+
+    this.logger.log(listClassworkAssignments)
     return listClassworkAssignments
   }
 
