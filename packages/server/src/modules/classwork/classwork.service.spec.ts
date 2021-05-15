@@ -6,10 +6,11 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 
 import { AcademicService } from 'modules/academic/academic.service'
-import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
+
+import { AccountService } from '../../../dist/modules/account/account.service'
 
 import { ClassworkService } from './classwork.service'
 
