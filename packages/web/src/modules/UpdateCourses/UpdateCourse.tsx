@@ -20,7 +20,6 @@ import {
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
-  Link,
 } from '@kathena/ui'
 import {
   useCourseDetailQuery,
@@ -28,7 +27,6 @@ import {
   useRemoveStudentsFromCourseMutation,
   FindCourseByIdDocument,
 } from 'graphql/generated'
-import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
 import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
@@ -211,19 +209,10 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                       <AccountAvatar accountId={lecturerId} />
                     </Grid>
                     <Grid item md={10}>
-                      <Link
-                        to={buildPath(USER_PROFILE, {
-                          username: `${(
-                            <AccountUserName accountId={lecturerId} />
-                          )}`,
-                        })}
-                      >
-                        <AccountDisplayName
-                          className={classes.pointer}
-                          accountId={lecturerId}
-                          variant="body1"
-                        />
-                      </Link>
+                      <AccountDisplayName
+                        accountId={lecturerId}
+                        variant="body1"
+                      />
                       <AccountUserName
                         variant="body2"
                         color="textSecondary"
@@ -298,19 +287,10 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                         <AccountAvatar accountId={studentId} />
                       </Grid>
                       <Grid item md={10}>
-                        <Link
-                          to={buildPath(USER_PROFILE, {
-                            username: `${(
-                              <AccountUserName accountId={studentId} />
-                            )}`,
-                          })}
-                        >
-                          <AccountDisplayName
-                            className={classes.pointer}
-                            accountId={studentId}
-                            variant="body1"
-                          />
-                        </Link>
+                        <AccountDisplayName
+                          accountId={studentId}
+                          variant="body1"
+                        />
                         <AccountUserName
                           variant="body2"
                           color="textSecondary"
