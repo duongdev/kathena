@@ -48,9 +48,18 @@ export class ClassworkService {
   /**
    * START CLASSWORK MATERIAL
    */
+  // TODO: Delete this line and start the code here
+
+  /**
+   * END CLASSWORK MATERIAL
+   */
+
+  /**
+   * START CLASSWORK ASSIGNMENT
+   */
 
   async createClassworkAssignment(
-    creatorId: string,
+    createdByAccountId: string,
     courseId: string,
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
@@ -62,20 +71,18 @@ export class ClassworkService {
       dueDate,
     } = classworkAssignmentInput
 
-    this.logger.log(orgId)
-
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
     }
 
     // Can create ClassworkAssignments
     const canCreateClassworkAssignment = await this.authService.canAccountManageCourse(
-      creatorId,
+      createdByAccountId,
       courseId,
     )
 
     if (!canCreateClassworkAssignment) {
-      throw new Error(`CAN_CREATE_CLASSWORK_ASSIGNMENT`)
+      throw new Error(`CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT`)
     }
 
     const currentDate = new Date()
@@ -88,6 +95,7 @@ export class ClassworkService {
     }
 
     const classworkAssignment = this.classworkAssignmentsModel.create({
+      createdByAccountId,
       courseId,
       title,
       description,
@@ -98,17 +106,6 @@ export class ClassworkService {
 
     return classworkAssignment
   }
-  // TODO: Delete this line and start the code here
-
-  /**
-   * END CLASSWORK MATERIAL
-   */
-
-  /**
-   * START CLASSWORK ASSIGNMENT
-   */
-
-  // TODO: Delete this line and start the code here
 
   /**
    * END CLASSWORK ASSIGNMENT

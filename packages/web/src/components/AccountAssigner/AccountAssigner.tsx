@@ -104,6 +104,8 @@ const AccountAssigner: FC<AccountAssignerProps> = (props) => {
           </li>
         )
       }}
+      disableCloseOnSelect
+      filterSelectedOptions
       {...autocompleteProps}
     />
   )

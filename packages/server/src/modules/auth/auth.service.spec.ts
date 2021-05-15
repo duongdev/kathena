@@ -45,7 +45,7 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(11)
+      expect.assertions(14)
 
       const resultPermissions: ANY = [
         'Hr_Access',
@@ -64,6 +64,9 @@ describe('auth.service', () => {
         'Academic_RemoveStudentsFromCourse',
         'Academic_RemoveLecturersFromCourse',
         'OrgOffice_ListOrgOffices',
+        'Academic_AcademicSubject_Access',
+        'Academic_Course_Access',
+        'OrgOffice_Access',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
         'Classwork_CreateClassworkAssignment',
@@ -71,6 +74,8 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -160,6 +165,27 @@ describe('auth.service', () => {
           permission: 'OrgOffice_UpdateOrgOffice',
         }),
       ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_AcademicSubject_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_Course_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'OrgOffice_Access',
+        }),
+      ).resolves.toBe(true)
     })
 
     it(`returns false if account doesn't have permission`, async () => {
@@ -232,6 +258,9 @@ describe('auth.service', () => {
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
                 "Classwork_CreateClassworkAssignment",
+                "Academic_AcademicSubject_Access",
+                "Academic_Course_Access",
+                "OrgOffice_Access",
               ]
             `)
     })
@@ -597,9 +626,6 @@ describe('auth.service', () => {
   describe('canAccountManageCourse', () => {
     it('throw error if account is not found', async () => {
       expect.assertions(1)
-      // console.log(
-      //   await authService.canAccountManageCourse(objectId(), objectId()),
-      // )
 
       await expect(
         authService.canAccountManageCourse(objectId(), objectId()),
