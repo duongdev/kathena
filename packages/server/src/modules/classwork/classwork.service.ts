@@ -40,18 +40,33 @@ export class ClassworkService {
     courseId: string,
     createClassworkMaterialInput: CreateClassworkMaterialInput,
   ): Promise<DocumentType<ClassworkMaterial>> {
-    if (!(await this.orgService.existsOrgById(orgId)))
-      throw new Error('ORG_ID_NOT_FOUND')
+    this.logger.log(
+      `[${this.createClassworkMaterial.name}] Creating new classworkMaterial`,
+    )
+    this.logger.verbose({
+      creatorId,
+      orgId,
+      courseId,
+      createClassworkMaterialInput,
+    })
+
+    if (!(await this.orgService.validateOrgId(orgId)))
+      throw new Error('ORG_ID_INVALID')
 
     if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
     const classworkMaterial = await this.classworkMaterialModel.create({
       ...createClassworkMaterialInput,
+      createdByAccountId: creatorId,
+      orgId,
+      courseId,
     })
 
-    if (!classworkMaterial) throw new Error(`CAN'T_CREATE_CLASSWORK`)
-
+    this.logger.log(
+      `[${this.createClassworkMaterial.name}] Created classworkMaterial successfully`,
+    )
+    this.logger.verbose(classworkMaterial.toObject())
     return classworkMaterial
   }
   // TODO: Delete this line and start the code here

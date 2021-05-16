@@ -114,6 +114,7 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Teaching_Course_Access
   Studying_Course_Access
+  Academic_CreateClassworkMaterial
   NoPermission
 }
 
@@ -154,6 +155,20 @@ type CoursesPayload {
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
+}
+
+type ClassworkMaterial implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
 }
 
 type OrgOffice implements BaseModel {
@@ -222,6 +237,7 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
 }
 
 input CreateAccountInput {
@@ -280,4 +296,12 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkMaterialInput {
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: [Publication!]!
 }

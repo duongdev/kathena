@@ -2,7 +2,7 @@ import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { ID } from 'type-graphql'
 
-import { CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
@@ -31,9 +31,10 @@ export class ClassworkMaterialResolver {
     @Args('CreateClassworkMaterialInput')
     createClassworkMaterialInput: CreateClassworkMaterialInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<ClassworkMaterial> {
     return this.classworkService.createClassworkMaterial(
-      org.id,
+      account.id,
       org.id,
       courseId,
       createClassworkMaterialInput,
