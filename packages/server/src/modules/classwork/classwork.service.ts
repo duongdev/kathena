@@ -72,7 +72,7 @@ export class ClassworkService {
     }
 
     const currentDate = new Date()
-    const startDateInput = new Date(dueDate)
+    const dueDateInput = new Date(dueDate)
 
     if (
       dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
