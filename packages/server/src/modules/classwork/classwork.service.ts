@@ -14,6 +14,7 @@ import { AuthService } from 'modules/auth/auth.service'
 // import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
 
+// eslint-disable-next-line import/order
 import { CreateClassworkAssignmentInput } from './classwork.type'
 // import { ANY, Nullable } from 'types'
 
