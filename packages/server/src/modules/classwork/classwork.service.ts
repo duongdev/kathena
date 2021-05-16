@@ -53,19 +53,22 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { title, description, attachments, dueDate } =
-      classworkAssignmentInput
+    const {
+      title,
+      description,
+      attachments,
+      dueDate,
+    } = classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
     }
 
     // Can create ClassworkAssignments
-    const canCreateClassworkAssignment =
-      await this.authService.canAccountManageCourse(
-        createdByAccountId,
-        courseId,
-      )
+    const canCreateClassworkAssignment = await this.authService.canAccountManageCourse(
+      createdByAccountId,
+      courseId,
+    )
 
     if (!canCreateClassworkAssignment) {
       throw new Error(`CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT`)
@@ -74,9 +77,7 @@ export class ClassworkService {
     const currentDate = new Date()
     const dueDateInput = new Date(dueDate)
 
-    if (
-      dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
-    ) {
+    if (dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)) {
       throw new Error(`DUE_DATE_INVALID`)
     }
 
