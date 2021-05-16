@@ -87,7 +87,7 @@ export class ClassworkService {
       description,
       attachments,
       publicationState: Publication.Draft,
-      dueDate,
+      dueDate: dueDateInput,
     })
 
     return classworkAssignment
