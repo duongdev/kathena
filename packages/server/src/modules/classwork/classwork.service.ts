@@ -1,20 +1,11 @@
 import { forwardRef, Inject } from '@nestjs/common'
-import { /** DocumentType */ ReturnModelType } from '@typegoose/typegoose'
-// import * as bcrypt from 'bcrypt'
-// import { uniq } from 'lodash'
-// import { ForbiddenError } from 'type-graphql'
+import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
 
 import { Service, InjectModel, Logger } from 'core'
-// import { isObjectId } from 'core/utils/db'
-// import {
-//   removeExtraSpaces,
-//   stringWithoutSpecialCharacters,
-// } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
-// import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
-// import { ANY, Nullable } from 'types'
 
+import { CreateClassworkMaterialInput } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -43,7 +34,26 @@ export class ClassworkService {
   /**
    * START CLASSWORK MATERIAL
    */
+  async createClassworkMaterial(
+    creatorId: string,
+    orgId: string,
+    courseId: string,
+    createClassworkMaterialInput: CreateClassworkMaterialInput,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    if (!(await this.orgService.existsOrgById(orgId)))
+      throw new Error('ORG_ID_NOT_FOUND')
 
+    if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+
+    const classworkMaterial = await this.classworkMaterialModel.create({
+      ...createClassworkMaterialInput,
+    })
+
+    if (!classworkMaterial) throw new Error(`CAN'T_CREATE_CLASSWORK`)
+
+    return classworkMaterial
+  }
   // TODO: Delete this line and start the code here
 
   /**

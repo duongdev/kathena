@@ -82,6 +82,7 @@ Array [
     "name": "lecturer",
     "permissions": Array [
       "Academic_ListAcademicSubjects",
+      "Academic_CreateClassworkMaterial",
     ],
     "priority": 4,
   },

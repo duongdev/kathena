@@ -1,6 +1,10 @@
 import {
-  createUnionType /* , Field, ID, InputType, Int, ObjectType */,
+  createUnionType /* , Field, ID, InputType, Int */,
+  Field,
+  InputType,
 } from '@nestjs/graphql'
+
+import { Publication } from 'core'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -26,3 +30,21 @@ export const ResultClassworkUnion = createUnionType({
     return [ClassworkMaterial, ClassworkAssignment]
   },
 })
+
+@InputType()
+export class CreateClassworkMaterialInput {
+  @Field()
+  title: string
+
+  @Field()
+  type: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field((_type) => [String])
+  attachments?: string[]
+
+  @Field((_type) => [Publication])
+  publicationState: string
+}
