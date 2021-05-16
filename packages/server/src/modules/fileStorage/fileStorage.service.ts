@@ -140,12 +140,8 @@ export class FileStorageService {
     orgId: string
     uploadedByAccountId: string
   }): Promise<DocumentType<File>> {
-    const {
-      stats,
-      buffer,
-      extension,
-      mimeType,
-    } = await this.convertReadStreamToFileData(originalFileName, readStream)
+    const { stats, buffer, extension, mimeType } =
+      await this.convertReadStreamToFileData(originalFileName, readStream)
 
     const fileName = originalFileName.includes(extension)
       ? originalFileName
@@ -192,12 +188,8 @@ export class FileStorageService {
       }
     })
 
-    const {
-      stats,
-      buffer,
-      extension,
-      mimeType,
-    } = await this.convertReadStreamToFileData(originalFileName, readStream)
+    const { stats, buffer, extension, mimeType } =
+      await this.convertReadStreamToFileData(originalFileName, readStream)
 
     const fileName = originalFileName.includes(extension)
       ? originalFileName
