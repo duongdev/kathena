@@ -195,7 +195,7 @@ describe('classwork.service', () => {
             dueDate: date.setDate(date.getDate() - 1),
           },
         ),
-      ).rejects.toThrow('START_DATE_INVALID')
+      ).rejects.toThrow('DUE_DATE_INVALID')
     })
 
     it(`returns the Classwork Assignment`, async () => {
