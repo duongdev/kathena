@@ -10,15 +10,18 @@ export enum Permission {
   Hr_UpdateOrgAccount = 'Hr_UpdateOrgAccount',
   Hr_UpdateOrgAccountStatus = 'Hr_UpdateOrgAccountStatus',
 
+  Academic_AcademicSubject_Access = 'Academic_AcademicSubject_Access',
   Academic_CreateAcademicSubject = 'Academic_CreateAcademicSubject',
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
 
+  OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
 
+  Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
   Academic_ListCourses = 'Academic_ListCourses',
@@ -26,6 +29,8 @@ export enum Permission {
   Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
+  Teaching_Course_Access = 'Teaching_Course_Access',
+  Studying_Course_Access = 'Studying_Course_Access',
 
   Academic_CreateClassworkMaterial = 'Academic_CreateClassworkMaterial',
   /** For testing purpose */
