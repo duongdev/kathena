@@ -32,20 +32,6 @@ export class ClassworkService {
     private readonly orgService: OrgService,
   ) {}
 
-  /**
-   * START CLASSWORK MATERIAL
-   */
-
-  // TODO: Delete this line and start the code here
-
-  /**
-   * END CLASSWORK MATERIAL
-   */
-
-  /**
-   * START CLASSWORK ASSIGNMENT
-   */
-
   async createClassworkAssignment(
     createdByAccountId: string,
     courseId: string,
@@ -94,8 +80,4 @@ export class ClassworkService {
 
     return classworkAssignment
   }
-
-  /**
-   * END CLASSWORK ASSIGNMENT
-   */
 }
