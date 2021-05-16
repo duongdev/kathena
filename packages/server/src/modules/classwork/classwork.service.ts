@@ -53,22 +53,19 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const {
-      title,
-      description,
-      attachments,
-      dueDate,
-    } = classworkAssignmentInput
+    const { title, description, attachments, dueDate } =
+      classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
     }
 
     // Can create ClassworkAssignments
-    const canCreateClassworkAssignment = await this.authService.canAccountManageCourse(
-      createdByAccountId,
-      courseId,
-    )
+    const canCreateClassworkAssignment =
+      await this.authService.canAccountManageCourse(
+        createdByAccountId,
+        courseId,
+      )
 
     if (!canCreateClassworkAssignment) {
       throw new Error(`CAN_NOT_CREATE_CLASSWORK_ASSIGNMENT`)

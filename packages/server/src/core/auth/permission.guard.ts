@@ -23,9 +23,8 @@ export class PermissionGuard implements CanActivate {
 
     if (!requiredPermission) return true
 
-    const { account }: { account: Account } = GqlExecutionContext.create(
-      context,
-    ).getContext()
+    const { account }: { account: Account } =
+      GqlExecutionContext.create(context).getContext()
 
     const hasPermission = await this.authService.accountHasPermission({
       accountId: account.id,
