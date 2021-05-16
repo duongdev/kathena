@@ -5,7 +5,6 @@ import { Service, InjectModel, Logger, Publication } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
-// eslint-disable-next-line import/order
 import { CreateClassworkAssignmentInput } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -49,7 +48,6 @@ export class ClassworkService {
       throw new Error(`Org ID is invalid`)
     }
 
-    // Can create ClassworkAssignments
     const canCreateClassworkAssignment = await this.authService.canAccountManageCourse(
       createdByAccountId,
       courseId,
