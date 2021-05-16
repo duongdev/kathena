@@ -74,9 +74,7 @@ export class ClassworkService {
     const currentDate = new Date()
     const dueDateInput = new Date(dueDate)
 
-    if (
-      dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
-    ) {
+    if (dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)) {
       throw new Error(`DUE_DATE_INVALID`)
     }
 
