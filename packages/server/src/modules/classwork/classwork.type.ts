@@ -1,8 +1,5 @@
-import {
-  createUnionType /* , Field, ID, InputType, Int */,
-  Field,
-  InputType,
-} from '@nestjs/graphql'
+import { createUnionType, Field, InputType } from '@nestjs/graphql'
+import { IsNotEmpty } from 'class-validator'
 
 import { Publication } from 'core'
 
@@ -47,4 +44,23 @@ export class CreateClassworkMaterialInput {
 
   @Field((_type) => [Publication])
   publicationState: string
+}
+export class CreateClassworkAssignmentInput {
+  @Field()
+  @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
+  createdByAccountId: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Title cannot be empty' })
+  title: string
+
+  @Field()
+  description?: string
+
+  @Field((_type) => [String], { defaultValue: [] })
+  attachments?: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Duedate cannot be empty' })
+  dueDate: string
 }

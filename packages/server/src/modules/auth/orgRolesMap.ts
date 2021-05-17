@@ -22,6 +22,7 @@ export const staff: Role = {
     P.Academic_RemoveLecturersFromCourse,
     P.Academic_AcademicSubject_Access,
     P.Academic_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 
@@ -38,6 +39,7 @@ export const lecturer: Role = {
     P.Academic_ListAcademicSubjects,
     P.Academic_CreateClassworkMaterial,
     P.Teaching_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 

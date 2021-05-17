@@ -31,6 +31,7 @@ export enum Permission {
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
+  Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
 
   Academic_CreateClassworkMaterial = 'Academic_CreateClassworkMaterial',
   /** For testing purpose */
