@@ -1,15 +1,11 @@
-import { createUnionType, Field } from '@nestjs/graphql'
+import { createUnionType, Field, InputType } from '@nestjs/graphql'
+import { IsNotEmpty } from 'class-validator'
 
 import { Publication } from 'core'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-// import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
-
-// import { OrgRoleName } from 'modules/auth/models'
-
-// import { Classwork } from './models/Classwork'
 
 export const ResultClassworkUnion = createUnionType({
   name: 'ResultClassworkUnion',
@@ -27,6 +23,7 @@ export const ResultClassworkUnion = createUnionType({
   },
 })
 
+@InputType()
 export class UpdateClassworkMaterialInput {
   @Field()
   title?: string
@@ -36,4 +33,24 @@ export class UpdateClassworkMaterialInput {
 
   @Field((_type) => [Publication])
   publicationState?: string
+}
+@InputType()
+export class CreateClassworkAssignmentInput {
+  @Field()
+  @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
+  createdByAccountId: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Title cannot be empty' })
+  title: string
+
+  @Field()
+  description?: string
+
+  @Field((_type) => [String], { defaultValue: [] })
+  attachments?: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Duedate cannot be empty' })
+  dueDate: string
 }
