@@ -1,11 +1,9 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
-import { objectId } from 'core'
+import { objectId, Publication } from 'core'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { ANY } from 'types'
-
-import { Publication } from '../../../dist/core'
 
 import { ClassworkService } from './classwork.service'
 import { CreateClassworkMaterialInput } from './classwork.type'
