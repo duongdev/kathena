@@ -33,7 +33,7 @@ export enum Permission {
   Studying_Course_Access = 'Studying_Course_Access',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
 
-  Academic_CreateClassworkMaterial = 'Academic_CreateClassworkMaterial',
+  Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

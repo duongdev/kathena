@@ -45,6 +45,8 @@ export class CreateClassworkMaterialInput {
   @Field((_type) => [Publication])
   publicationState: string
 }
+
+@InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })

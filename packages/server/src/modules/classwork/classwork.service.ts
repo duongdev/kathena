@@ -76,6 +76,13 @@ export class ClassworkService {
   }
   // TODO: Delete this line and start the code here
 
+  // TODO: classworkService.findClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterialPublication
+
+  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
   /**
    * END CLASSWORK MATERIAL
    */

@@ -70,9 +70,7 @@ type Account implements BaseModel {
   availability: AccountAvailability!
 }
 
-"""
-Status of an account.
-"""
+"""Status of an account."""
 enum AccountStatus {
   Pending
   Active
@@ -116,8 +114,8 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Teaching_Course_Access
   Studying_Course_Access
-  Academic_CreateClassworkMaterial
   Classwork_CreateClassworkAssignment
+  Classwork_CreateClassworkMaterial
   NoPermission
 }
 
@@ -160,7 +158,7 @@ type OrgAccountsPayload {
   count: Int!
 }
 
-type ClassworkMaterial implements BaseModel {
+type Classwork implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -174,7 +172,7 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
 }
 
-type Classwork implements BaseModel {
+type ClassworkMaterial implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -201,21 +199,12 @@ type OrgOffice implements BaseModel {
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
-  orgAccounts(
-    filter: AccountsFilterInput!
-    pageOptions: PageOptionsInput!
-  ): OrgAccountsPayload!
+  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(
-    filter: AcademicSubjectsFilterInput!
-    pageOptions: PageOptionsInput!
-  ): AcademicSubjectsPayload!
+  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
-  courses(
-    filter: CoursesFilterInput!
-    pageOptions: PageOptionsInput!
-  ): CoursesPayload!
+  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
@@ -251,21 +240,13 @@ type Mutation {
   signIn(
     password: String!
 
-    """
-    Could be username or email
-    """
+    """Could be username or email"""
     identity: String!
     orgNamespace: String!
   ): SignInPayload!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
-  updateAcademicSubjectPublication(
-    publication: String!
-    id: ID!
-  ): AcademicSubject!
-  updateAcademicSubject(
-    updateInput: UpdateAcademicSubjectInput!
-    id: ID!
-  ): AcademicSubject!
+  updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
+  updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
@@ -276,10 +257,8 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  createClassworkAssignment(
-    courseId: ID!
-    input: CreateClassworkAssignmentInput!
-  ): Classwork!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
 
 input CreateAccountInput {
@@ -304,9 +283,7 @@ input CreateAcademicSubjectInput {
   image: Upload!
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input UpdateAcademicSubjectInput {

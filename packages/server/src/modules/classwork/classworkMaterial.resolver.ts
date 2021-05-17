@@ -24,7 +24,7 @@ export class ClassworkMaterialResolver {
    *START MATERIAL RESOLVER
    */
   @Mutation((_return) => ClassworkMaterial)
-  @UseAuthGuard(P.Academic_CreateClassworkMaterial)
+  @UseAuthGuard(P.Classwork_CreateClassworkMaterial)
   @UsePipes(ValidationPipe)
   async createClassworkMaterial(
     @Args('courseId', { type: () => ID }) courseId: string,
@@ -42,6 +42,13 @@ export class ClassworkMaterialResolver {
   }
   // TODO: Delete this line and start the code here
 
+  // TODO: classworkService.findClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterialPublication
+
+  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
   /**
    * END MATERIAL RESOLVER
    */
