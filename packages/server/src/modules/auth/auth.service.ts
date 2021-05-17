@@ -187,16 +187,13 @@ export class AuthService {
     courseId: string,
   ): Promise<boolean> {
     const account = await this.accountService.findAccountById(accountId)
-    if (account === null) {
-      throw new Error('Account is not found')
-    }
+    if (account === null) return false
+
     const course = await this.academicService.findCourseById(
       courseId,
       account.orgId,
     )
-    if (course === null) {
-      throw new Error('Course is not found')
-    }
+    if (course === null) return false
 
     return course.lecturerIds.includes(account.id)
   }
