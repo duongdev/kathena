@@ -104,6 +104,7 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Classwork_ListClassworkAssignment
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -156,6 +157,21 @@ type OrgAccountsPayload {
   count: Int!
 }
 
+type ClassworkAssignment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+  dueDate: DateTime!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -178,6 +194,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  findClassworkAssignmentsById(orgId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
 }
 
 input AccountsFilterInput {

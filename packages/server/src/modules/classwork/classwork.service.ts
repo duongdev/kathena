@@ -1,5 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
-import { /** DocumentType */ ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 // import * as bcrypt from 'bcrypt'
 // import { uniq } from 'lodash'
 // import { ForbiddenError } from 'type-graphql'
@@ -13,7 +13,7 @@ import { Service, InjectModel, Logger } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 // import { OrgRoleName, Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
-// import { ANY, Nullable } from 'types'
+import { Nullable } from 'types'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -54,7 +54,11 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
-  // TODO: Delete this line and start the code here
+  async findClassworkAssignmentsById(
+    classworkAssignmentId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkAssignmentsModel.findById(classworkAssignmentId)
+  }
 
   /**
    * END CLASSWORK ASSIGNMENT
