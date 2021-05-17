@@ -1,13 +1,8 @@
 import { TestingModule } from '@nestjs/testing'
-// import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
 
-// import { objectId } from 'core/utils/db'
 import { objectId } from 'core'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-// import { Role } from 'modules/auth/models'
-// import { ANY } from 'types'
-
 import { ANY } from 'types'
 
 import { Publication } from '../../../dist/core'
