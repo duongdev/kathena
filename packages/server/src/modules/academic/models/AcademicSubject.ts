@@ -7,6 +7,7 @@ import { BaseModel, Publication } from 'core'
 @index({ code: 1, orgId: 1 }, { unique: true })
 @index({ name: 1, orgId: 1 })
 @index({ publication: 1, orgId: 1 })
+@index({ name: 'text', code: 'text', description: 'text' })
 @ObjectType({ implements: [BaseModel] })
 export class AcademicSubject extends BaseModel {
   @Field()
