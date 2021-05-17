@@ -12,7 +12,6 @@ import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
-// eslint-disable-next-line import/order
 import {
   CreateClassworkAssignmentInput,
   UpdateClassworkMaterialInput,

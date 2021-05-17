@@ -39,6 +39,7 @@ export const lecturer: Role = {
     P.Academic_ListAcademicSubjects,
     P.Teaching_Course_Access,
     P.Classwork_CreateClassworkAssignment,
+    P.Classwork_UpdateClassworkMaterial,
   ],
 }
 
