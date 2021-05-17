@@ -12,6 +12,7 @@ import { Nullable, PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
+  AcademicSubjectsFilterInput,
   AcademicSubjectsPayload,
   CreateAcademicSubjectInput,
   UpdateAcademicSubjectInput,
@@ -60,16 +61,16 @@ export class AcademicSubjectResolver {
   @Query((_return) => AcademicSubjectsPayload)
   @UseAuthGuard(P.Academic_ListAcademicSubjects)
   async academicSubjects(
-    @Args('orgId', { type: () => ID }) orgId: string,
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
+    @Args('filter') filter: AcademicSubjectsFilterInput,
   ): Promise<AcademicSubjectsPayload> {
-    if (org.id !== orgId) {
+    if (org.id !== filter.orgId) {
       throw new ForbiddenError()
     }
     return this.academicService.findAndPaginateAcademicSubjects(
-      { orgId },
       pageOptions,
+      filter,
     )
   }
 

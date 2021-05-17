@@ -37,6 +37,11 @@ export type AcademicSubject = BaseModel & {
   imageFileId: Scalars['String']
 }
 
+export type AcademicSubjectsFilterInput = {
+  orgId: Scalars['ID']
+  searchText?: Maybe<Scalars['String']>
+}
+
 export type AcademicSubjectsPayload = {
   academicSubjects: Array<AcademicSubject>
   count: Scalars['Int']
@@ -354,8 +359,8 @@ export type QueryOrgAccountsArgs = {
 }
 
 export type QueryAcademicSubjectsArgs = {
+  filter: AcademicSubjectsFilterInput
   pageOptions: PageOptionsInput
-  orgId: Scalars['ID']
 }
 
 export type QueryAcademicSubjectArgs = {
@@ -1989,10 +1994,19 @@ export const AcademicSubjectListDocument: DocumentNode = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'orgId' },
+                name: { kind: 'Name', value: 'filter' },
                 value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'orgId' },
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'orgId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                  ],
                 },
               },
             ],
