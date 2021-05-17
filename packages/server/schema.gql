@@ -186,7 +186,7 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
@@ -204,6 +204,11 @@ input AccountsFilterInput {
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input AcademicSubjectsFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 input CoursesFilterInput {
