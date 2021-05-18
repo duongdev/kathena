@@ -113,28 +113,35 @@ export class AcademicService {
   }
 
   async findAndPaginateAcademicSubjects(
-    query: {
-      orgId: string
-    },
     pageOptions: {
       limit: number
       skip: number
+    },
+    filter: {
+      orgId: string
+      searchText?: string
     },
   ): Promise<{
     academicSubjects: DocumentType<AcademicSubject>[]
     count: number
   }> {
-    const { orgId } = query
     const { limit, skip } = pageOptions
+    const { orgId, searchText } = filter
 
-    const academicSubjects = await this.academicSubjectModel
-      .find({ orgId })
-      .sort({ _id: -1 })
-      .skip(skip)
-      .limit(limit)
-
+    const academicSubjectModel = this.academicSubjectModel.find({
+      orgId,
+    })
+    if (searchText) {
+      const search = removeExtraSpaces(searchText)
+      if (search !== undefined && search !== '') {
+        academicSubjectModel.find({
+          $text: { $search: search },
+        })
+      }
+    }
+    academicSubjectModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const academicSubjects = await academicSubjectModel
     const count = await this.academicSubjectModel.countDocuments({ orgId })
-
     return { academicSubjects, count }
   }
 

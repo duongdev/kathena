@@ -118,6 +118,7 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Teaching_Course_Access
   Studying_Course_Access
+  Classwork_CreateClassworkAssignment
   NoPermission
 }
 
@@ -160,6 +161,20 @@ type OrgAccountsPayload {
   count: Int!
 }
 
+type Classwork implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
 type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -173,6 +188,20 @@ type ClassworkAssignment implements BaseModel {
   attachments: [String!]!
   publicationState: String!
   dueDate: DateTime!
+}
+
+type ClassworkMaterial implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
 }
 
 type OrgOffice implements BaseModel {
@@ -190,7 +219,7 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
@@ -208,6 +237,11 @@ input AccountsFilterInput {
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input AcademicSubjectsFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 input CoursesFilterInput {
@@ -241,8 +275,11 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  addAttachmentsToClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
+  removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
   addAttachmentsToClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
 
 input CreateAccountInput {
@@ -301,4 +338,12 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkAssignmentInput {
+  createdByAccountId: String!
+  title: String!
+  description: String!
+  attachments: [String!] = []
+  dueDate: String!
 }
