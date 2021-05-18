@@ -496,6 +496,7 @@ export type AcademicSubjectListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
 }>
 
 export type AcademicSubjectListQuery = {
@@ -1957,6 +1958,14 @@ export const AcademicSubjectListDocument: DocumentNode = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -2002,6 +2011,14 @@ export const AcademicSubjectListDocument: DocumentNode = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -2093,6 +2110,7 @@ export function withAcademicSubjectList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */
