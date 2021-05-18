@@ -1,12 +1,23 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { truncateSync } from 'node:fs'
 
-import { Service, InjectModel, Logger, Publication } from 'core'
+import {
+  Service,
+  InjectModel,
+  Logger,
+  Publication,
+  removeExtraSpaces,
+} from 'core'
+import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
 // eslint-disable-next-line import/order
-import { CreateClassworkAssignmentInput } from './classwork.type'
+import {
+  CreateClassworkAssignmentInput,
+  UpdateClassworkMaterialInput,
+} from './classwork.type'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -31,6 +42,9 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => AccountService))
+    private readonly accountService: AccountService,
   ) {}
 
   /**
@@ -38,7 +52,96 @@ export class ClassworkService {
    */
 
   // TODO: Delete this line and start the code here
+  async updateClassworkMaterial(
+    orgId: string,
+    accountId: string,
+    courseId: string,
+    classworkMaterialId: string,
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Creating new classworkMaterial`,
+    )
 
+    this.logger.verbose({
+      orgId,
+      accountId,
+      courseId,
+      updateClassworkMaterialInput,
+    })
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error('ORG_ID_INVALID')
+    }
+
+    if (
+      !(await this.accountService.findOneAccount({
+        id: accountId,
+        orgId,
+      }))
+    ) {
+      throw new Error('ACCOUNT_ID_INVALID')
+    }
+
+    const input = { ...updateClassworkMaterialInput }
+
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const classworkMaterial = await this.classworkMaterialModel.exists({
+      _id: classworkMaterialId,
+      orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_ID_INVALID`)
+    }
+
+    if (updateClassworkMaterialInput.title) {
+      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
+      if (title) {
+        input.title = title
+      }
+    }
+
+    if (updateClassworkMaterialInput.description) {
+      input.description = removeExtraSpaces(
+        updateClassworkMaterialInput.description,
+      )
+    }
+
+    if (updateClassworkMaterialInput.publicationState) {
+      input.publicationState = updateClassworkMaterialInput.publicationState
+    }
+
+    const classworkMaterialUpdated =
+      await this.classworkMaterialModel.findOneAndUpdate(
+        {
+          _id: classworkMaterialId,
+          orgId,
+        },
+        input,
+        { new: true },
+      )
+
+    if (!classworkMaterialUpdated) {
+      throw new Error(`CAN'T_TO_UPDATE_CLASSWORKMATERIAL`)
+    }
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Created classworkMaterial successfully`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      courseId,
+      updateClassworkMaterialInput,
+    })
+
+    return classworkMaterialUpdated
+  }
   /**
    * END CLASSWORK MATERIAL
    */

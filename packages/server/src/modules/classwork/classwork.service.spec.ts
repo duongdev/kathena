@@ -3,7 +3,7 @@ import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
 // import { objectId } from 'core/utils/db'
-import { objectId } from 'core'
+import { objectId, Publication } from 'core'
 // eslint-disable-next-line import/order
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 // import { Role } from 'modules/auth/models'
@@ -16,6 +16,7 @@ import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { ClassworkService } from './classwork.service'
+import { UpdateClassworkMaterialInput } from './classwork.type'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -59,7 +60,181 @@ describe('classwork.service', () => {
    */
 
   // TODO: Delete this line and start the code here
+  describe('ClassWorkMaterial', () => {
+    // TODO: Delete this line and start the code here
+    describe('updateClassworkMaterial', () => {
+      const updateClassworkMaterialInput: UpdateClassworkMaterialInput = {
+        title: 'title',
+        description: 'description',
+        publicationState: Publication.Draft,
+      }
 
+      it(`throws error if orgId invalid`, async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ORG_ID_INVALID`)
+      })
+
+      it(`throws error if accountId invalid`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_ID_INVALID`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce({ id: objectId() } as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as never)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`throws error if classworkMaterialId invalid`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce({ id: objectId() } as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`CLASSWORKMATERIAL_ID_INVALID`)
+      })
+
+      it(`returns a updated classworkMaterial`, async () => {
+        expect.assertions(3)
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['accountService'], 'findOneAccount')
+          .mockResolvedValueOnce({ id: objectId() } as never)
+          .mockResolvedValueOnce({ id: objectId() } as never)
+          .mockResolvedValueOnce({ id: objectId() } as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'exists')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOneAndUpdate')
+          .mockResolvedValueOnce(updateClassworkMaterialInput as ANY)
+          .mockResolvedValueOnce({
+            ...updateClassworkMaterialInput,
+            title: '123',
+            description: 'asdawd',
+          } as ANY)
+          .mockResolvedValueOnce({
+            ...updateClassworkMaterialInput,
+            publicationState: Publication.Published,
+          } as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).resolves.toMatchObject({
+          ...updateClassworkMaterialInput,
+        })
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: '123',
+              description: 'asdawd',
+            },
+          ),
+        ).resolves.toMatchObject({
+          title: '123',
+          description: 'asdawd',
+        })
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              ...updateClassworkMaterialInput,
+              publicationState: Publication.Published,
+            },
+          ),
+        ).resolves.toMatchObject({
+          ...updateClassworkMaterialInput,
+          publicationState: Publication.Published,
+        })
+      })
+    })
+  })
   /**
    * END CLASSWORK MATERIAL
    */

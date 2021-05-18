@@ -88,6 +88,7 @@ Array [
       "Academic_ListAcademicSubjects",
       "Teaching_Course_Access",
       "Classwork_CreateClassworkAssignment",
+      "Classwork_UpdateClassworkMaterial",
     ],
     "priority": 4,
   },
