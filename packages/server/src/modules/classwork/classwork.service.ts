@@ -1,6 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
-import { truncateSync } from 'node:fs'
 
 import {
   Service,
