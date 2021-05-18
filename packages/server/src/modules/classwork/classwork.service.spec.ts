@@ -120,17 +120,15 @@ describe('classwork.service', () => {
       })
 
       it(`returns the created classworkMaterial`, async () => {
-        expect.assertions(3)
+        expect.assertions(2)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
-          .mockResolvedValueOnce(true as ANY)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
 
