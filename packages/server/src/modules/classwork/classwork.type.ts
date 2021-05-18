@@ -33,17 +33,11 @@ export class CreateClassworkMaterialInput {
   @Field()
   title: string
 
-  @Field()
-  type: string
-
   @Field({ nullable: true })
   description?: string
 
-  @Field((_type) => [String])
-  attachments?: string[]
-
-  @Field((_type) => [Publication])
-  publicationState: string
+  @Field((_type) => Publication)
+  publicationState?: string
 }
 
 @InputType()

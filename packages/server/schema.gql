@@ -321,10 +321,8 @@ input UpdateOrgOfficeInput {
 
 input CreateClassworkMaterialInput {
   title: String!
-  type: String!
   description: String
-  attachments: [String!]!
-  publicationState: [Publication!]!
+  publicationState: Publication!
 }
 
 input CreateClassworkAssignmentInput {

@@ -1,7 +1,13 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
-import { Service, InjectModel, Logger, Publication } from 'core'
+import {
+  Service,
+  InjectModel,
+  Logger,
+  Publication,
+  removeExtraSpaces,
+} from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
@@ -61,8 +67,12 @@ export class ClassworkService {
     if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
+    this.logger.log(createClassworkMaterialInput)
+
     const classworkMaterial = await this.classworkMaterialModel.create({
-      ...createClassworkMaterialInput,
+      description: removeExtraSpaces(createClassworkMaterialInput.description),
+      title: removeExtraSpaces(createClassworkMaterialInput.title),
+      publicationState: createClassworkMaterialInput.publicationState,
       createdByAccountId: creatorId,
       orgId,
       courseId,
@@ -71,7 +81,9 @@ export class ClassworkService {
     this.logger.log(
       `[${this.createClassworkMaterial.name}] Created classworkMaterial successfully`,
     )
+
     this.logger.verbose(classworkMaterial.toObject())
+
     return classworkMaterial
   }
   // TODO: Delete this line and start the code here

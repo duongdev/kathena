@@ -56,8 +56,8 @@ describe('classwork.service', () => {
     describe('Create ClassworkMaterial', () => {
       const createClassworkMaterialInput: CreateClassworkMaterialInput = {
         title: 'NodeJs tutorial',
+        description: 'string',
         publicationState: Publication.Draft,
-        type: 'type',
       }
 
       it('throws error if OrgId invalid', async () => {
@@ -120,15 +120,17 @@ describe('classwork.service', () => {
       })
 
       it(`returns the created classworkMaterial`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
 
@@ -147,13 +149,11 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             {
-              ...createClassworkMaterialInput,
-              title: 'test',
+              title: 'test    123',
             },
           ),
         ).resolves.toMatchObject({
-          ...createClassworkMaterialInput,
-          title: 'test',
+          title: 'test 123',
         })
       })
     })
