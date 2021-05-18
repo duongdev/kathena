@@ -84,6 +84,10 @@ Array [
     "permissions": Array [
       "Academic_ListAcademicSubjects",
       "Teaching_Course_Access",
+      "Classwork_AddAttachmentsToClassworkAssignment",
+      "Classwork_AddAttachmentsToClassworkMaterial",
+      "Classwork_RemoveAttachmentsFromClassworkAssignment",
+      "Classwork_RemoveAttachmentsFromClassworkMaterial",
     ],
     "priority": 4,
   },

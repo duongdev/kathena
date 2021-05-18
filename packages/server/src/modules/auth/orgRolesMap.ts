@@ -34,7 +34,14 @@ export const student: Role = {
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects, P.Teaching_Course_Access],
+  permissions: [
+    P.Academic_ListAcademicSubjects,
+    P.Teaching_Course_Access,
+    P.Classwork_AddAttachmentsToClassworkAssignment,
+    P.Classwork_AddAttachmentsToClassworkMaterial,
+    P.Classwork_RemoveAttachmentsFromClassworkAssignment,
+    P.Classwork_RemoveAttachmentsFromClassworkMaterial,
+  ],
 }
 
 export const admin: Role = {

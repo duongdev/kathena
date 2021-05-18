@@ -104,6 +104,10 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Classwork_AddAttachmentsToClassworkAssignment
+  Classwork_AddAttachmentsToClassworkMaterial
+  Classwork_RemoveAttachmentsFromClassworkAssignment
+  Classwork_RemoveAttachmentsFromClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -154,6 +158,21 @@ type CoursesPayload {
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
+}
+
+type ClassworkAssignment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+  dueDate: DateTime!
 }
 
 type OrgOffice implements BaseModel {
@@ -222,6 +241,8 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  addAttachmentsToClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
