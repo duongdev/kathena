@@ -67,6 +67,7 @@ describe('auth.service', () => {
         'Academic_AcademicSubject_Access',
         'Academic_Course_Access',
         'Classwork_CreateClassworkAssignment',
+        'Classwork_UpdateClassworkAssignment',
         'OrgOffice_Access',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
@@ -74,6 +75,7 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -258,6 +260,7 @@ describe('auth.service', () => {
                 "Academic_AcademicSubject_Access",
                 "Academic_Course_Access",
                 "Classwork_CreateClassworkAssignment",
+                "Classwork_UpdateClassworkAssignment",
                 "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",

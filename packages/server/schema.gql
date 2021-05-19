@@ -115,6 +115,7 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_UpdateClassworkAssignment
   NoPermission
 }
 
@@ -157,7 +158,7 @@ type OrgAccountsPayload {
   count: Int!
 }
 
-type Classwork implements BaseModel {
+type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -169,6 +170,7 @@ type Classwork implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  dueDate: DateTime!
 }
 
 type OrgOffice implements BaseModel {
@@ -242,7 +244,8 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
+  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
@@ -309,4 +312,10 @@ input CreateClassworkAssignmentInput {
   description: String!
   attachments: [String!] = []
   dueDate: String!
+}
+
+input UpdateClassworkAssignmentInput {
+  title: String
+  description: String
+  dueDate: String
 }

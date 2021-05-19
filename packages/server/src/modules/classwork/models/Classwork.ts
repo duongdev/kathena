@@ -33,6 +33,7 @@ export class Classwork extends BaseModel {
   type: string
 
   @Field({ nullable: true })
+  @prop()
   description?: string
 
   @Field((_type) => [String])

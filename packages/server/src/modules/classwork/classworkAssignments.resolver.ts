@@ -24,12 +24,16 @@ import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
+
 // import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkAssignmentInput } from './classwork.type'
-import { Classwork } from './models/Classwork'
+import {
+  CreateClassworkAssignmentInput,
+  UpdateClassworkAssignmentInput,
+} from './classwork.type'
+// import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
@@ -44,7 +48,7 @@ export class ClassworkAssignmentsResolver {
    *START ASSIGNMENTS RESOLVER
    */
 
-  @Mutation((_returns) => Classwork)
+  @Mutation((_returns) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_CreateClassworkAssignment)
   @UsePipes(ValidationPipe)
   async createClassworkAssignment(
@@ -59,6 +63,25 @@ export class ClassworkAssignmentsResolver {
       courseId,
       org.id,
       createClassworkAssignmentInput,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_UpdateClassworkAssignment)
+  @UsePipes(ValidationPipe)
+  async updateClassworkAssignment(
+    @Args('id', { type: () => ID }) classworkAssignmentId: string,
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('updateInput') updateInput: UpdateClassworkAssignmentInput,
+    @CurrentOrg() currentOrg: Org,
+  ): Promise<ClassworkAssignment> {
+    return this.classworkService.updateClassworkAssignment(
+      {
+        id: classworkAssignmentId,
+        orgId: currentOrg.id,
+        courseId,
+      },
+      updateInput,
     )
   }
 

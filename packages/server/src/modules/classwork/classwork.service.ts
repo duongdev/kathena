@@ -81,6 +81,7 @@ export class ClassworkService {
     const classworkAssignment = this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
+      orgId,
       title,
       description,
       attachments,
@@ -91,6 +92,46 @@ export class ClassworkService {
     return classworkAssignment
   }
 
+  async updateClassworkAssignment(
+    query: {
+      id: string
+      orgId: string
+      courseId: string
+    },
+    update: { title?: string; description?: string; dueDate?: string },
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const { id, orgId, courseId } = query
+
+    const classworkAssignmentUpdate =
+      await this.classworkAssignmentsModel.findOne({
+        _id: id,
+        courseId,
+        orgId,
+      })
+
+    if (!classworkAssignmentUpdate) {
+      throw new Error(`Could not find classworkAssignment to update`)
+    }
+
+    if (update.title) {
+      classworkAssignmentUpdate.title = update.title
+    }
+
+    if (update.description) {
+      classworkAssignmentUpdate.description = update.description
+    }
+
+    if (update.dueDate) {
+      const dueDateInput = new Date(
+        new Date(update.dueDate).setHours(7, 0, 0, 0),
+      )
+      classworkAssignmentUpdate.dueDate = dueDateInput
+    }
+
+    const updated = await classworkAssignmentUpdate.save()
+
+    return updated
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

@@ -3,7 +3,7 @@ import {
   Field /* , Field, ID, InputType, Int, ObjectType */,
   InputType,
 } from '@nestjs/graphql'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -49,4 +49,19 @@ export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'Duedate cannot be empty' })
   dueDate: string
+}
+
+@InputType()
+export class UpdateClassworkAssignmentInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  title?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  description?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  dueDate?: string
 }
