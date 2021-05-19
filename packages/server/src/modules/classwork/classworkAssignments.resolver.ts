@@ -21,7 +21,6 @@ import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
-// import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 
 import { PageOptionsInput } from 'types'
