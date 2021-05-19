@@ -8,6 +8,8 @@ import {
 } from '@nestjs/graphql'
 import { IsNotEmpty } from 'class-validator'
 
+import { Publication } from 'core'
+
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -51,6 +53,18 @@ export class ClassworkFilterInput {
   courseId?: string
 }
 @InputType()
+export class CreateClassworkMaterialInput {
+  @Field()
+  title: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field((_type) => Publication)
+  publicationState?: string
+}
+
+@InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
@@ -67,6 +81,6 @@ export class CreateClassworkAssignmentInput {
   attachments?: string[]
 
   @Field()
-  @IsNotEmpty({ message: 'Duedate cannot be empty' })
+  @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
 }
