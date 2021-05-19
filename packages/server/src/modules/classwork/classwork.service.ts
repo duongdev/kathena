@@ -129,8 +129,6 @@ export class ClassworkService {
       throw new Error('ACCOUNT_ID_INVALID')
     }
 
-    const input = { ...updateClassworkMaterialInput }
-
     if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
@@ -143,6 +141,8 @@ export class ClassworkService {
     if (!classworkMaterial) {
       throw new Error(`CLASSWORKMATERIAL_ID_INVALID`)
     }
+
+    const input = { ...updateClassworkMaterialInput }
 
     if (updateClassworkMaterialInput.title) {
       const title = removeExtraSpaces(updateClassworkMaterialInput.title)

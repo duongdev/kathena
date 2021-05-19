@@ -252,7 +252,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns a updated classworkMaterial`, async () => {
-        expect.assertions(1)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -277,51 +277,64 @@ describe('classwork.service', () => {
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as never)
-        // .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['accountService'], 'findOneAccount')
-          .mockResolvedValueOnce({ id: objectId() } as never)
-        // .mockResolvedValueOnce({ id: objectId() } as never)
+          .mockResolvedValueOnce({ name: 'Not null' } as never)
+          .mockResolvedValueOnce({ name: 'Not null' } as never)
+          .mockResolvedValueOnce({ name: 'Not null' } as never)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as never)
-        // .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['classworkMaterialModel'], 'exists')
           .mockResolvedValueOnce(true as never)
-
-        // .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         await expect(
           classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
             objectId(),
             objectId(),
+            classworkMaterial.id,
+            updateClassworkMaterialInput,
+          ),
+        ).resolves.toMatchObject(updateClassworkMaterialInput)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
             objectId(),
             objectId(),
-            { ...updateClassworkMaterialInput },
+            classworkMaterial.id,
+            {
+              title: 'Đặng  Hiếu Liêm',
+            },
           ),
         ).resolves.toMatchObject({
-          ...updateClassworkMaterialInput,
+          title: 'Đặng Hiếu Liêm',
         })
 
-        // await expect(
-        //   classworkService.updateClassworkMaterial(
-        //     objectId(),
-        //     objectId(),
-        //     objectId(),
-        //     objectId(),
-        //     {
-        //       title: '123',
-        //       description: 'asdawd',
-        //     },
-        //   ),
-        // ).resolves.toMatchObject({
-        //   title: '123',
-        //   description: 'asdawd',
-        // })
+        await expect(
+          classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
+            objectId(),
+            objectId(),
+            classworkMaterial.id,
+            {
+              description: 'Đặng  Hiếu Liêm',
+            },
+          ),
+        ).resolves.toMatchObject({
+          description: 'Đặng Hiếu Liêm',
+        })
       })
     })
 
