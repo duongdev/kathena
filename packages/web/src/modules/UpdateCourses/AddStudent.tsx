@@ -102,6 +102,7 @@ const AddStudent: FC<AddStudentProps> = (props) => {
           <CardContent>
             <AccountAssignerFormField
               filterSelectedOptions
+              disableCloseOnSelect
               className={classes.root}
               name="studentIds"
               label={labels.studentIds}
