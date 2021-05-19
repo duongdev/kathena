@@ -110,6 +110,7 @@ export class ClassworkService {
     const classworkAssignment = this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
+      orgId,
       title,
       description,
       attachments,

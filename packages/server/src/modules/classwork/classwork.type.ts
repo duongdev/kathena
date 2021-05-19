@@ -64,7 +64,7 @@ export class CreateClassworkAssignmentInput {
   description?: string
 
   @Field((_type) => [String], { defaultValue: [] })
-  attachments?: string
+  attachments?: string[]
 
   @Field()
   @IsNotEmpty({ message: 'Duedate cannot be empty' })
