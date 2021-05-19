@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useCallback } from 'react'
 
 import { makeStyles } from '@material-ui/core'
@@ -39,8 +41,7 @@ const CreateAttachmentDialog: FC<CreateAttachmentDialogProps> = (props) => {
       onSubmit={handleCreateAttachment}
       width={1000}
     >
-      {/* <FormContent error={error} /> */}
-      hoanghung1
+      <FormContent />
     </FormDialog>
   )
 }
