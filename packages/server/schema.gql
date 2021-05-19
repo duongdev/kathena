@@ -95,13 +95,16 @@ enum Permission {
   Hr_ListOrgAccounts
   Hr_UpdateOrgAccount
   Hr_UpdateOrgAccountStatus
+  Academic_AcademicSubject_Access
   Academic_CreateAcademicSubject
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   Academic_UpdateAcademicSubject
+  OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
   Academic_ListCourses
@@ -109,6 +112,9 @@ enum Permission {
   Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
+  Teaching_Course_Access
+  Studying_Course_Access
+  Classwork_CreateClassworkAssignment
   NoPermission
 }
 
@@ -151,6 +157,20 @@ type OrgAccountsPayload {
   count: Int!
 }
 
+type Classwork implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -166,7 +186,7 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
@@ -184,6 +204,11 @@ input AccountsFilterInput {
 input PageOptionsInput {
   skip: Int!
   limit: Int!
+}
+
+input AcademicSubjectsFilterInput {
+  orgId: ID!
+  searchText: String
 }
 
 input CoursesFilterInput {
@@ -217,6 +242,7 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
 
 input CreateAccountInput {
@@ -275,4 +301,12 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkAssignmentInput {
+  createdByAccountId: String!
+  title: String!
+  description: String!
+  attachments: [String!] = []
+  dueDate: String!
 }

@@ -20,22 +20,26 @@ export const staff: Role = {
     P.Academic_AddLecturersToCourse,
     P.Academic_RemoveStudentsFromCourse,
     P.Academic_RemoveLecturersFromCourse,
-    P.OrgOffice_ListOrgOffices,
-    P.OrgOffice_CreateOrgOffice,
-    P.OrgOffice_UpdateOrgOffice,
+    P.Academic_AcademicSubject_Access,
+    P.Academic_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 
 export const student: Role = {
   name: 'student',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects],
+  permissions: [P.Academic_ListAcademicSubjects, P.Studying_Course_Access],
 }
 
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects],
+  permissions: [
+    P.Academic_ListAcademicSubjects,
+    P.Teaching_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
+  ],
 }
 
 export const admin: Role = {
@@ -43,6 +47,8 @@ export const admin: Role = {
   priority: 2,
   permissions: [
     ...staff.permissions,
+    P.OrgOffice_Access,
+    P.OrgOffice_ListOrgOffices,
     P.OrgOffice_CreateOrgOffice,
     P.OrgOffice_UpdateOrgOffice,
   ],

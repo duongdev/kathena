@@ -15,7 +15,7 @@ import {
   renderApolloError,
   PageContainerSkeleton,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
+import { useAuth, WithAuth } from 'common/auth'
 import {
   useCreateAcademicSubjectMutation,
   AcademicSubjectListDocument,
@@ -24,6 +24,7 @@ import {
   useUpdateAcademicSubjectMutation,
   useUpdateAcademicSubjectPublicationMutation,
   FindAcademicSubjectByIdDocument,
+  Permission,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -331,4 +332,10 @@ const useStyles = makeStyles(() => ({
 
 export const academicSubjectLabels = labels
 
-export default CreateUpdateAcademicSubject
+const WithPermissionCreateUpdateAcademicSubject = () => (
+  <WithAuth permission={Permission.Academic_CreateAcademicSubject}>
+    <CreateUpdateAcademicSubject />
+  </WithAuth>
+)
+
+export default WithPermissionCreateUpdateAcademicSubject

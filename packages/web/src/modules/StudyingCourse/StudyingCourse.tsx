@@ -22,7 +22,8 @@ import {
   SectionCard,
   Typography,
 } from '@kathena/ui'
-import { useCourseDetailQuery } from 'graphql/generated'
+import { WithAuth } from 'common/auth'
+import { Permission, useCourseDetailQuery } from 'graphql/generated'
 
 export type StudyingCourseProps = {}
 
@@ -124,4 +125,10 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-export default StudyingCourse
+const WithPermissionStudyingCourse = () => (
+  <WithAuth permission={Permission.Studying_Course_Access}>
+    <StudyingCourse />
+  </WithAuth>
+)
+
+export default WithPermissionStudyingCourse

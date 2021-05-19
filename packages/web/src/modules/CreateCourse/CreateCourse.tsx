@@ -15,11 +15,12 @@ import {
   renderApolloError,
   SectionCard,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
+import { useAuth, WithAuth } from 'common/auth'
 import {
   useFindAcademicSubjectByIdQuery,
   useCreateCourseMutation,
   CoursesDocument,
+  Permission,
 } from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
 
@@ -181,4 +182,10 @@ const useStyles = makeStyles(() => ({
 
 export const courseLabels = labels
 
-export default CreateCourse
+const WithPermissionCreateCourse = () => (
+  <WithAuth permission={Permission.Academic_CreateCourse}>
+    <CreateCourse />
+  </WithAuth>
+)
+
+export default WithPermissionCreateCourse
