@@ -1,7 +1,7 @@
-* @duongdev @kodiakhq
+**/* @duongdev @kodiakhq
 
 package.json
 yarn.lock
 
-packages/web/* @nhatminh0509 @duongdev @kodiakhq
-packages/server/* @HuynhThanhCanh @duongdev @kodiakhq
+packages/web @nhatminh0509 @duongdev @kodiakhq
+packages/server @HuynhThanhCanh @duongdev @kodiakhq
