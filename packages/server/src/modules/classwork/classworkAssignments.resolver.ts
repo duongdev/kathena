@@ -79,7 +79,6 @@ export class ClassworkAssignmentsResolver {
       {
         id: classworkAssignmentId,
         orgId: currentOrg.id,
-        courseId,
       },
       updateInput,
     )

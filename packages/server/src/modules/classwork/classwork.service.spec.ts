@@ -386,7 +386,6 @@ describe('classwork.service', () => {
           {
             id: objectId(),
             orgId: objectId(),
-            courseId: objectId(),
           },
           {
             title: 'Con meo ngu ngoc ne anh',
@@ -469,7 +468,6 @@ describe('classwork.service', () => {
           {
             id: accountLecturer.id,
             orgId: org.id,
-            courseId: courseTest.id,
           },
           {
             title: 'Bai Tap Nay Co Ten Moi',
@@ -554,7 +552,6 @@ describe('classwork.service', () => {
           {
             id: accountLecturer.id,
             orgId: org.id,
-            courseId: courseTest.id,
           },
           {
             description: 'Bai Tap Nay Co Description Moi',
@@ -639,7 +636,6 @@ describe('classwork.service', () => {
         {
           id: accountLecturer.id,
           orgId: org.id,
-          courseId: courseTest.id,
         },
         {
           dueDate: '2021-08-01',

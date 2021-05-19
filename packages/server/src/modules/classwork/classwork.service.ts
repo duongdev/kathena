@@ -152,16 +152,14 @@ export class ClassworkService {
     query: {
       id: string
       orgId: string
-      courseId: string
     },
     update: { title?: string; description?: string; dueDate?: string },
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { id, orgId, courseId } = query
+    const { id, orgId } = query
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
         _id: id,
-        courseId,
         orgId,
       })
 
