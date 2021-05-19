@@ -23,7 +23,17 @@ export const getDisplayName = (
 
   return displayName || ''
 }
+export const getUserName = (
+  account: Partial<Account>,
+  opts?: {
+    noAtSign?: boolean
+  },
+) => {
+  const username =
+    account?.username || `${opts?.noAtSign ? '' : '@'}${account.username}`
+  return username || ''
+}
 
-const useAccountUtils = () => ({ getDisplayName })
+const useAccountUtils = () => ({ getDisplayName, getUserName })
 
 export default useAccountUtils
