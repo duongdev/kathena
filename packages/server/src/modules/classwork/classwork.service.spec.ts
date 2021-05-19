@@ -693,7 +693,7 @@ describe('classwork.service', () => {
     })
   })
 
-  describe('findClassworkAssignmentsById', () => {
+  describe('findClassworkAssignmentById', () => {
     it('returns null if the classworkAssignment is not found', async () => {
       expect.assertions(1)
 

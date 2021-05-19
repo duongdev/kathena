@@ -103,7 +103,7 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
-  async findClassworkAssignmentsById(
+  async findClassworkAssignmentById(
     classworkAssignmentId: string,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
     return this.classworkAssignmentsModel.findById(classworkAssignmentId)

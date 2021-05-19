@@ -46,7 +46,7 @@ export class ClassworkAssignmentsResolver {
 
   @Query((_return) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
-  async findClassworkAssignmentsById(
+  async findClassworkAssignmentById(
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
     @Args('orgId', { type: () => ID }) orgId: string,
