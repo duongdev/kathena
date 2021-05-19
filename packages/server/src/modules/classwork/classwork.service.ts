@@ -4,7 +4,6 @@ import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { Service, InjectModel, Logger, Publication } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
-
 // eslint-disable-next-line import/order
 import { PageOptionsInput } from 'types'
 import {

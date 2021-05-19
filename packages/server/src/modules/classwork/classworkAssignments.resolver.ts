@@ -18,7 +18,6 @@ import { ForbiddenError } from 'type-graphql'
 
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
-
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
@@ -33,7 +32,6 @@ import {
   ClassworkFilterInput,
   CreateClassworkAssignmentInput,
 } from './classwork.type'
-import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)

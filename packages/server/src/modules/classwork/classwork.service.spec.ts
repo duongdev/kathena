@@ -17,8 +17,6 @@ import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkAssignmentInput } from './classwork.type'
-import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -405,17 +403,6 @@ describe('classwork.service', () => {
         ),
       )
 
-      const a = await classworkService.findAndPaginateClassworkAssignments(
-        {
-          limit: 2,
-          skip: 0,
-        },
-        {
-          orgId: org.id,
-          courseId: course.id,
-        },
-      )
-
       await expect(
         classworkService.findAndPaginateClassworkAssignments(
           {
@@ -572,17 +559,6 @@ describe('classwork.service', () => {
             dueDate: date.toString(),
           },
         ),
-      )
-
-      const a = await classworkService.findAndPaginateClassworkAssignments(
-        {
-          limit: 2,
-          skip: 0,
-        },
-        {
-          orgId: org.id,
-          courseId: course.id,
-        },
       )
 
       await expect(
