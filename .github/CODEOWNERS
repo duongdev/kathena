@@ -4,4 +4,4 @@ yarn.lock
 
 packages/server/* @HuynhThanhCanh @duongdev @kodiakhq
 
-packages/web/* @nhatminh0509 @duongdev @kodiakhq
+packages/web/* @nhatminh0509
