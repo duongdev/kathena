@@ -53,7 +53,7 @@ describe('classwork.service', () => {
    * START CLASSWORK MATERIAL
    */
   describe('ClassWorkMaterial', () => {
-    describe('Create ClassworkMaterial', () => {
+    describe('CreateClassworkMaterial', () => {
       const createClassworkMaterialInput: CreateClassworkMaterialInput = {
         title: 'NodeJs tutorial',
         description: 'string',
