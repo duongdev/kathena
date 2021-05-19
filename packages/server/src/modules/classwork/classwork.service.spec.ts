@@ -693,6 +693,90 @@ describe('classwork.service', () => {
     })
   })
 
+  describe('findClassworkAssignmentsById', () => {
+    it('returns null if the classworkAssignment is not found', async () => {
+      expect.assertions(1)
+
+      await expect(
+        classworkService.findClassworkAssignmentsById(objectId()),
+      ).resolves.toBeNull()
+    })
+
+    it('returns a classworkAssignment', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh',
+        roles: ['lecturer'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const accountStaff = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh1.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh1',
+        roles: ['staff'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'NODEJS',
+        name: 'NodeJS',
+        description: 'This is NodeJs',
+        createdByAccountId: accountStaff.id,
+        imageFileId: objectId(),
+      })
+
+      const createCourseInput: ANY = {
+        academicSubjectId: academicSubject.id,
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [accountLecturer.id],
+      }
+
+      const courseTest = await academicService.createCourse(
+        accountStaff.id,
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      const classworkAssignment =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            createdByAccountId: accountLecturer.id,
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: 'Day la bai tap moi nhat',
+          },
+        )
+
+      await expect(
+        classworkService.findClassworkAssignmentsById(classworkAssignment.id),
+      ).resolves.toMatchObject({
+        title: 'Bai Tap Nay Moi Nhat',
+        description: 'Day la bai tap moi nhat',
+      })
+    })
+  })
+
   /**
    * END CLASSWORK ASSIGNMENTS
    */
