@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
