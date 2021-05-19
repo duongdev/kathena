@@ -21,6 +21,16 @@ export class CreateAcademicSubjectInput {
   @Field((_type) => GraphQLUpload)
   image: Promise<FileUpload>
 }
+
+@InputType()
+export class AcademicSubjectsFilterInput {
+  @Field((_type) => ID)
+  orgId: string
+
+  @Field({ nullable: true })
+  searchText: string
+}
+
 @ObjectType()
 export class AcademicSubjectsPayload {
   @Field((_type) => [AcademicSubject])
