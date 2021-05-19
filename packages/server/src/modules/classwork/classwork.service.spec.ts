@@ -338,7 +338,6 @@ describe('classwork.service', () => {
         })
       })
     })
-
     // TODO: classworkService.updateClassworkMaterialPublication
 
     // TODO: classworkService.removeAttachmentsFromClassworkMaterial
