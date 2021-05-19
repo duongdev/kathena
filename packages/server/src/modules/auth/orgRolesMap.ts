@@ -22,6 +22,7 @@ export const staff: Role = {
     P.Academic_RemoveLecturersFromCourse,
     P.Academic_AcademicSubject_Access,
     P.Academic_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 
@@ -34,7 +35,12 @@ export const student: Role = {
 export const lecturer: Role = {
   name: 'lecturer',
   priority: 4,
-  permissions: [P.Academic_ListAcademicSubjects, P.Teaching_Course_Access],
+  permissions: [
+    P.Academic_ListAcademicSubjects,
+    P.Classwork_CreateClassworkMaterial,
+    P.Teaching_Course_Access,
+    P.Classwork_CreateClassworkAssignment,
+  ],
 }
 
 export const admin: Role = {

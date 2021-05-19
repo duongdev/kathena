@@ -66,6 +66,7 @@ describe('auth.service', () => {
         'OrgOffice_ListOrgOffices',
         'Academic_AcademicSubject_Access',
         'Academic_Course_Access',
+        'Classwork_CreateClassworkAssignment',
         'OrgOffice_Access',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
@@ -73,6 +74,7 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -255,6 +257,7 @@ describe('auth.service', () => {
                 "Academic_RemoveLecturersFromCourse",
                 "Academic_AcademicSubject_Access",
                 "Academic_Course_Access",
+                "Classwork_CreateClassworkAssignment",
                 "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
@@ -622,18 +625,15 @@ describe('auth.service', () => {
     })
   })
   describe('canAccountManageCourse', () => {
-    it('throw error if account is not found', async () => {
+    it('returns false if account is not found', async () => {
       expect.assertions(1)
-      // console.log(
-      //   await authService.canAccountManageCourse(objectId(), objectId()),
-      // )
 
       await expect(
         authService.canAccountManageCourse(objectId(), objectId()),
-      ).rejects.toThrowError(`Account is not found`)
+      ).resolves.toBeFalsy()
     })
 
-    it('throws error if course is not found', async () => {
+    it('returns false if course is not found', async () => {
       expect.assertions(1)
 
       const account: ANY = {
@@ -646,7 +646,7 @@ describe('auth.service', () => {
 
       await expect(
         authService.canAccountManageCourse(objectId(), account.orgId),
-      ).rejects.toThrowError(`Course is not found`)
+      ).resolves.toBeFalsy()
     })
 
     it('returns true if account can manage course', async () => {
