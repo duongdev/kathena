@@ -116,6 +116,7 @@ enum Permission {
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
   Classwork_UpdateClassworkAssignment
+  Classwork_CreateClassworkMaterial
   NoPermission
 }
 
@@ -173,6 +174,20 @@ type ClassworkAssignment implements BaseModel {
   dueDate: DateTime!
 }
 
+type ClassworkMaterial implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -188,6 +203,7 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+  canAccountManageRoles(roles: [String!]!): Boolean!
   academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
@@ -246,6 +262,7 @@ type Mutation {
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
 }
 
 input CreateAccountInput {
@@ -304,6 +321,12 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkMaterialInput {
+  title: String!
+  description: String
+  publicationState: Publication!
 }
 
 input CreateClassworkAssignmentInput {

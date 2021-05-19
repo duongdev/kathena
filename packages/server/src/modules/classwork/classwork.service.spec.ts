@@ -1,14 +1,8 @@
 import { TestingModule } from '@nestjs/testing'
-// import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
 
-// import { objectId } from 'core/utils/db'
-import { objectId } from 'core'
-// eslint-disable-next-line import/order
+import { objectId, Publication } from 'core'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-// import { Role } from 'modules/auth/models'
-// import { ANY } from 'types'
-
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
@@ -16,6 +10,7 @@ import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { ClassworkService } from './classwork.service'
+import { CreateClassworkMaterialInput } from './classwork.type'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -57,9 +52,119 @@ describe('classwork.service', () => {
   /**
    * START CLASSWORK MATERIAL
    */
+  describe('ClassWorkMaterial', () => {
+    describe('CreateClassworkMaterial', () => {
+      const createClassworkMaterialInput: CreateClassworkMaterialInput = {
+        title: 'NodeJs tutorial',
+        description: 'string',
+        publicationState: Publication.Draft,
+      }
 
+      it('throws error if OrgId invalid', async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(false as ANY)
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            createClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            'objectId()',
+            objectId(),
+            objectId(),
+            createClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as ANY)
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            createClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            objectId(),
+            'objectId()',
+            objectId(),
+            createClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`returns the created classworkMaterial`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            createClassworkMaterialInput,
+          ),
+        ).resolves.toMatchObject({ ...createClassworkMaterialInput })
+
+        await expect(
+          classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: 'test    123',
+            },
+          ),
+        ).resolves.toMatchObject({
+          title: 'test 123',
+        })
+      })
+    })
+  })
   // TODO: Delete this line and start the code here
 
+  // TODO: classworkService.findClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterialPublication
+
+  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
   /**
    * END CLASSWORK MATERIAL
    */

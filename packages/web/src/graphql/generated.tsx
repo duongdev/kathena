@@ -92,6 +92,20 @@ export type BaseModel = {
   updatedAt: Scalars['DateTime']
 }
 
+export type Classwork = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  courseId: Scalars['ID']
+  title: Scalars['String']
+  type: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  attachments: Array<Scalars['String']>
+  publicationState: Scalars['String']
+}
+
 export type Course = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -133,6 +147,14 @@ export type CreateAccountInput = {
   email: Scalars['String']
   displayName?: Maybe<Scalars['String']>
   roles: Array<Scalars['String']>
+}
+
+export type CreateClassworkAssignmentInput = {
+  createdByAccountId: Scalars['String']
+  title: Scalars['String']
+  description: Scalars['String']
+  attachments?: Maybe<Array<Scalars['String']>>
+  dueDate: Scalars['String']
 }
 
 export type CreateCourseInput = {
@@ -185,6 +207,7 @@ export type Mutation = {
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
+  createClassworkAssignment: Classwork
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -269,6 +292,11 @@ export type MutationFindOrgOfficesArgs = {
   orgId?: Maybe<Scalars['ID']>
 }
 
+export type MutationCreateClassworkAssignmentArgs = {
+  courseId: Scalars['ID']
+  input: CreateClassworkAssignmentInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -323,6 +351,7 @@ export enum Permission {
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
+  Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   NoPermission = 'NoPermission',
 }
 
@@ -336,6 +365,7 @@ export type Query = {
   accountByUserName?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
+  canAccountManageRoles: Scalars['Boolean']
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
   findCourseById: Course
@@ -356,6 +386,10 @@ export type QueryAccountByUserNameArgs = {
 export type QueryOrgAccountsArgs = {
   filter: AccountsFilterInput
   pageOptions: PageOptionsInput
+}
+
+export type QueryCanAccountManageRolesArgs = {
+  roles: Array<Scalars['String']>
 }
 
 export type QueryAcademicSubjectsArgs = {
@@ -446,6 +480,12 @@ export type AuthenticateQuery = {
   }
 }
 
+export type CanAccountManageRolesQueryVariables = Exact<{
+  roles: Array<Scalars['String']> | Scalars['String']
+}>
+
+export type CanAccountManageRolesQuery = Pick<Query, 'canAccountManageRoles'>
+
 export type AccountAvatarQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -496,6 +536,7 @@ export type AcademicSubjectListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
 }>
 
 export type AcademicSubjectListQuery = {
@@ -544,6 +585,15 @@ export type UpdateAccountStatusMutation = {
     Account,
     'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
   >
+}
+
+export type UpdateAccountMutationVariables = Exact<{
+  accountId: Scalars['ID']
+  update: UpdateAccountInput
+}>
+
+export type UpdateAccountMutation = {
+  updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
 }
 
 export type UpdateSelfAccountMutationVariables = Exact<{
@@ -1014,20 +1064,18 @@ export type SignInMutationFn = Apollo.MutationFunction<
   SignInMutation,
   SignInMutationVariables
 >
-export type SignInProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate'
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    SignInMutation,
-    SignInMutationVariables
-  >
-} &
-  TChildProps
+export type SignInProps<TChildProps = {}, TDataName extends string = 'mutate'> =
+  {
+    [key in TDataName]: Apollo.MutationFunction<
+      SignInMutation,
+      SignInMutationVariables
+    >
+  } &
+    TChildProps
 export function withSignIn<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1172,7 +1220,7 @@ export const AuthenticateDocument: DocumentNode = {
 }
 export type AuthenticateProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AuthenticateQuery,
@@ -1183,7 +1231,7 @@ export type AuthenticateProps<
 export function withAuthenticate<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1252,6 +1300,140 @@ export type AuthenticateQueryResult = Apollo.QueryResult<
   AuthenticateQuery,
   AuthenticateQueryVariables
 >
+export const CanAccountManageRolesDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'CanAccountManageRoles' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'roles' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'canAccountManageRoles' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'roles' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'roles' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CanAccountManageRolesProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >
+} &
+  TChildProps
+export function withCanAccountManageRoles<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables,
+    CanAccountManageRolesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables,
+    CanAccountManageRolesProps<TChildProps, TDataName>
+  >(CanAccountManageRolesDocument, {
+    alias: 'canAccountManageRoles',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCanAccountManageRolesQuery__
+ *
+ * To run a query within a React component, call `useCanAccountManageRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCanAccountManageRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCanAccountManageRolesQuery({
+ *   variables: {
+ *      roles: // value for 'roles'
+ *   },
+ * });
+ */
+export function useCanAccountManageRolesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >(CanAccountManageRolesDocument, options)
+}
+export function useCanAccountManageRolesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >(CanAccountManageRolesDocument, options)
+}
+export type CanAccountManageRolesQueryHookResult = ReturnType<
+  typeof useCanAccountManageRolesQuery
+>
+export type CanAccountManageRolesLazyQueryHookResult = ReturnType<
+  typeof useCanAccountManageRolesLazyQuery
+>
+export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
+  CanAccountManageRolesQuery,
+  CanAccountManageRolesQueryVariables
+>
 export const AccountAvatarDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -1306,7 +1488,7 @@ export const AccountAvatarDocument: DocumentNode = {
 }
 export type AccountAvatarProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AccountAvatarQuery,
@@ -1317,7 +1499,7 @@ export type AccountAvatarProps<
 export function withAccountAvatar<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1436,7 +1618,7 @@ export const AccountDisplayNameDocument: DocumentNode = {
 }
 export type AccountDisplayNameProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AccountDisplayNameQuery,
@@ -1447,7 +1629,7 @@ export type AccountDisplayNameProps<
 export function withAccountDisplayName<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1569,7 +1751,7 @@ export const ImageFileDocument: DocumentNode = {
 }
 export type ImageFileProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     ImageFileQuery,
@@ -1580,7 +1762,7 @@ export type ImageFileProps<
 export function withImageFile<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1697,7 +1879,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
 }
 export type AcademicSubjectDetailProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AcademicSubjectDetailQuery,
@@ -1708,7 +1890,7 @@ export type AcademicSubjectDetailProps<
 export function withAcademicSubjectDetail<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1852,7 +2034,7 @@ export type UpdateFileMutationFn = Apollo.MutationFunction<
 >
 export type UpdateFileProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateFileMutation,
@@ -1863,7 +2045,7 @@ export type UpdateFileProps<
 export function withUpdateFile<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -1959,6 +2141,14 @@ export const AcademicSubjectListDocument: DocumentNode = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -2006,6 +2196,14 @@ export const AcademicSubjectListDocument: DocumentNode = {
                         name: { kind: 'Name', value: 'orgId' },
                       },
                     },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
+                      },
+                    },
                   ],
                 },
               },
@@ -2049,7 +2247,7 @@ export const AcademicSubjectListDocument: DocumentNode = {
 }
 export type AcademicSubjectListProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AcademicSubjectListQuery,
@@ -2060,7 +2258,7 @@ export type AcademicSubjectListProps<
 export function withAcademicSubjectList<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2095,6 +2293,7 @@ export function withAcademicSubjectList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */
@@ -2194,7 +2393,7 @@ export const AccountProfileDocument: DocumentNode = {
 }
 export type AccountProfileProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     AccountProfileQuery,
@@ -2205,7 +2404,7 @@ export type AccountProfileProps<
 export function withAccountProfile<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2353,7 +2552,7 @@ export type UpdateAccountStatusMutationFn = Apollo.MutationFunction<
 >
 export type UpdateAccountStatusProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateAccountStatusMutation,
@@ -2364,7 +2563,7 @@ export type UpdateAccountStatusProps<
 export function withUpdateAccountStatus<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2417,10 +2616,160 @@ export function useUpdateAccountStatusMutation(
 export type UpdateAccountStatusMutationHookResult = ReturnType<
   typeof useUpdateAccountStatusMutation
 >
-export type UpdateAccountStatusMutationResult = Apollo.MutationResult<UpdateAccountStatusMutation>
+export type UpdateAccountStatusMutationResult =
+  Apollo.MutationResult<UpdateAccountStatusMutation>
 export type UpdateAccountStatusMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
+>
+export const UpdateAccountDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateAccount' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'accountId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'update' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateAccountInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateAccount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'update' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'accountId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateAccountMutationFn = Apollo.MutationFunction<
+  UpdateAccountMutation,
+  UpdateAccountMutationVariables
+>
+export type UpdateAccountProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateAccount<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables,
+    UpdateAccountProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables,
+    UpdateAccountProps<TChildProps, TDataName>
+  >(UpdateAccountDocument, {
+    alias: 'updateAccount',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateAccountMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountMutation, { data, loading, error }] = useUpdateAccountMutation({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *      update: // value for 'update'
+ *   },
+ * });
+ */
+export function useUpdateAccountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >(UpdateAccountDocument, options)
+}
+export type UpdateAccountMutationHookResult = ReturnType<
+  typeof useUpdateAccountMutation
+>
+export type UpdateAccountMutationResult =
+  Apollo.MutationResult<UpdateAccountMutation>
+export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAccountMutation,
+  UpdateAccountMutationVariables
 >
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
@@ -2501,7 +2850,7 @@ export type UpdateSelfAccountMutationFn = Apollo.MutationFunction<
 >
 export type UpdateSelfAccountProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateSelfAccountMutation,
@@ -2512,7 +2861,7 @@ export type UpdateSelfAccountProps<
 export function withUpdateSelfAccount<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2565,7 +2914,8 @@ export function useUpdateSelfAccountMutation(
 export type UpdateSelfAccountMutationHookResult = ReturnType<
   typeof useUpdateSelfAccountMutation
 >
-export type UpdateSelfAccountMutationResult = Apollo.MutationResult<UpdateSelfAccountMutation>
+export type UpdateSelfAccountMutationResult =
+  Apollo.MutationResult<UpdateSelfAccountMutation>
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
@@ -2704,20 +3054,18 @@ export const CoursesDocument: DocumentNode = {
     },
   ],
 }
-export type CoursesProps<
-  TChildProps = {},
-  TDataName extends string = 'data'
-> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    CoursesQuery,
-    CoursesQueryVariables
-  >
-} &
-  TChildProps
+export type CoursesProps<TChildProps = {}, TDataName extends string = 'data'> =
+  {
+    [key in TDataName]: ApolloReactHoc.DataValue<
+      CoursesQuery,
+      CoursesQueryVariables
+    >
+  } &
+    TChildProps
 export function withCourses<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2841,7 +3189,7 @@ export type CreateCourseMutationFn = Apollo.MutationFunction<
 >
 export type CreateCourseProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     CreateCourseMutation,
@@ -2852,7 +3200,7 @@ export type CreateCourseProps<
 export function withCreateCourse<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -2904,7 +3252,8 @@ export function useCreateCourseMutation(
 export type CreateCourseMutationHookResult = ReturnType<
   typeof useCreateCourseMutation
 >
-export type CreateCourseMutationResult = Apollo.MutationResult<CreateCourseMutation>
+export type CreateCourseMutationResult =
+  Apollo.MutationResult<CreateCourseMutation>
 export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
@@ -2968,7 +3317,7 @@ export type CreateAcademicSubjectMutationFn = Apollo.MutationFunction<
 >
 export type CreateAcademicSubjectProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     CreateAcademicSubjectMutation,
@@ -2979,7 +3328,7 @@ export type CreateAcademicSubjectProps<
 export function withCreateAcademicSubject<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3031,7 +3380,8 @@ export function useCreateAcademicSubjectMutation(
 export type CreateAcademicSubjectMutationHookResult = ReturnType<
   typeof useCreateAcademicSubjectMutation
 >
-export type CreateAcademicSubjectMutationResult = Apollo.MutationResult<CreateAcademicSubjectMutation>
+export type CreateAcademicSubjectMutationResult =
+  Apollo.MutationResult<CreateAcademicSubjectMutation>
 export type CreateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   CreateAcademicSubjectMutation,
   CreateAcademicSubjectMutationVariables
@@ -3088,7 +3438,7 @@ export const FindAcademicSubjectByIdDocument: DocumentNode = {
 }
 export type FindAcademicSubjectByIdProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     FindAcademicSubjectByIdQuery,
@@ -3099,7 +3449,7 @@ export type FindAcademicSubjectByIdProps<
 export function withFindAcademicSubjectById<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3244,7 +3594,7 @@ export type UpdateAcademicSubjectMutationFn = Apollo.MutationFunction<
 >
 export type UpdateAcademicSubjectProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateAcademicSubjectMutation,
@@ -3255,7 +3605,7 @@ export type UpdateAcademicSubjectProps<
 export function withUpdateAcademicSubject<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3308,7 +3658,8 @@ export function useUpdateAcademicSubjectMutation(
 export type UpdateAcademicSubjectMutationHookResult = ReturnType<
   typeof useUpdateAcademicSubjectMutation
 >
-export type UpdateAcademicSubjectMutationResult = Apollo.MutationResult<UpdateAcademicSubjectMutation>
+export type UpdateAcademicSubjectMutationResult =
+  Apollo.MutationResult<UpdateAcademicSubjectMutation>
 export type UpdateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
@@ -3382,13 +3733,14 @@ export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
     },
   ],
 }
-export type UpdateAcademicSubjectPublicationMutationFn = Apollo.MutationFunction<
-  UpdateAcademicSubjectPublicationMutation,
-  UpdateAcademicSubjectPublicationMutationVariables
->
+export type UpdateAcademicSubjectPublicationMutationFn =
+  Apollo.MutationFunction<
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables
+  >
 export type UpdateAcademicSubjectPublicationProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateAcademicSubjectPublicationMutation,
@@ -3399,7 +3751,7 @@ export type UpdateAcademicSubjectPublicationProps<
 export function withUpdateAcademicSubjectPublication<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3452,11 +3804,13 @@ export function useUpdateAcademicSubjectPublicationMutation(
 export type UpdateAcademicSubjectPublicationMutationHookResult = ReturnType<
   typeof useUpdateAcademicSubjectPublicationMutation
 >
-export type UpdateAcademicSubjectPublicationMutationResult = Apollo.MutationResult<UpdateAcademicSubjectPublicationMutation>
-export type UpdateAcademicSubjectPublicationMutationOptions = Apollo.BaseMutationOptions<
-  UpdateAcademicSubjectPublicationMutation,
-  UpdateAcademicSubjectPublicationMutationVariables
->
+export type UpdateAcademicSubjectPublicationMutationResult =
+  Apollo.MutationResult<UpdateAcademicSubjectPublicationMutation>
+export type UpdateAcademicSubjectPublicationMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateAcademicSubjectPublicationMutation,
+    UpdateAcademicSubjectPublicationMutationVariables
+  >
 export const CreateAccountDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -3517,7 +3871,7 @@ export type CreateAccountMutationFn = Apollo.MutationFunction<
 >
 export type CreateAccountProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     CreateAccountMutation,
@@ -3528,7 +3882,7 @@ export type CreateAccountProps<
 export function withCreateAccount<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3580,7 +3934,8 @@ export function useCreateAccountMutation(
 export type CreateAccountMutationHookResult = ReturnType<
   typeof useCreateAccountMutation
 >
-export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>
+export type CreateAccountMutationResult =
+  Apollo.MutationResult<CreateAccountMutation>
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
   CreateAccountMutation,
   CreateAccountMutationVariables
@@ -3757,7 +4112,7 @@ export const OrgAccountListDocument: DocumentNode = {
 }
 export type OrgAccountListProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     OrgAccountListQuery,
@@ -3768,7 +4123,7 @@ export type OrgAccountListProps<
 export function withOrgAccountList<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -3872,7 +4227,7 @@ export const ListOrgOfficesDocument: DocumentNode = {
 }
 export type ListOrgOfficesProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     ListOrgOfficesQuery,
@@ -3883,7 +4238,7 @@ export type ListOrgOfficesProps<
 export function withListOrgOffices<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4010,7 +4365,7 @@ export type CreateOrgOfficeMutationFn = Apollo.MutationFunction<
 >
 export type CreateOrgOfficeProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     CreateOrgOfficeMutation,
@@ -4021,7 +4376,7 @@ export type CreateOrgOfficeProps<
 export function withCreateOrgOffice<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4073,7 +4428,8 @@ export function useCreateOrgOfficeMutation(
 export type CreateOrgOfficeMutationHookResult = ReturnType<
   typeof useCreateOrgOfficeMutation
 >
-export type CreateOrgOfficeMutationResult = Apollo.MutationResult<CreateOrgOfficeMutation>
+export type CreateOrgOfficeMutationResult =
+  Apollo.MutationResult<CreateOrgOfficeMutation>
 export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
@@ -4152,7 +4508,7 @@ export type UpdateOrgOfficeMutationFn = Apollo.MutationFunction<
 >
 export type UpdateOrgOfficeProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     UpdateOrgOfficeMutation,
@@ -4163,7 +4519,7 @@ export type UpdateOrgOfficeProps<
 export function withUpdateOrgOffice<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4216,7 +4572,8 @@ export function useUpdateOrgOfficeMutation(
 export type UpdateOrgOfficeMutationHookResult = ReturnType<
   typeof useUpdateOrgOfficeMutation
 >
-export type UpdateOrgOfficeMutationResult = Apollo.MutationResult<UpdateOrgOfficeMutation>
+export type UpdateOrgOfficeMutationResult =
+  Apollo.MutationResult<UpdateOrgOfficeMutation>
 export type UpdateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   UpdateOrgOfficeMutation,
   UpdateOrgOfficeMutationVariables
@@ -4271,7 +4628,7 @@ export const OrgOfficeDocument: DocumentNode = {
 }
 export type OrgOfficeProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     OrgOfficeQuery,
@@ -4282,7 +4639,7 @@ export type OrgOfficeProps<
 export function withOrgOffice<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4505,7 +4862,7 @@ export const StudyingCourseListDocument: DocumentNode = {
 }
 export type StudyingCourseListProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     StudyingCourseListQuery,
@@ -4516,7 +4873,7 @@ export type StudyingCourseListProps<
 export function withStudyingCourseList<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4647,7 +5004,7 @@ export const CourseDetailDocument: DocumentNode = {
 }
 export type CourseDetailProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     CourseDetailQuery,
@@ -4658,7 +5015,7 @@ export type CourseDetailProps<
 export function withCourseDetail<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -4882,7 +5239,7 @@ export const TeachingCourseListDocument: DocumentNode = {
 }
 export type TeachingCourseListProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     TeachingCourseListQuery,
@@ -4893,7 +5250,7 @@ export type TeachingCourseListProps<
 export function withTeachingCourseList<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5050,7 +5407,7 @@ export type AddLecturesToCourseMutationFn = Apollo.MutationFunction<
 >
 export type AddLecturesToCourseProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     AddLecturesToCourseMutation,
@@ -5061,7 +5418,7 @@ export type AddLecturesToCourseProps<
 export function withAddLecturesToCourse<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5114,7 +5471,8 @@ export function useAddLecturesToCourseMutation(
 export type AddLecturesToCourseMutationHookResult = ReturnType<
   typeof useAddLecturesToCourseMutation
 >
-export type AddLecturesToCourseMutationResult = Apollo.MutationResult<AddLecturesToCourseMutation>
+export type AddLecturesToCourseMutationResult =
+  Apollo.MutationResult<AddLecturesToCourseMutation>
 export type AddLecturesToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddLecturesToCourseMutation,
   AddLecturesToCourseMutationVariables
@@ -5203,7 +5561,7 @@ export type AddStudentToCourseMutationFn = Apollo.MutationFunction<
 >
 export type AddStudentToCourseProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     AddStudentToCourseMutation,
@@ -5214,7 +5572,7 @@ export type AddStudentToCourseProps<
 export function withAddStudentToCourse<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5267,7 +5625,8 @@ export function useAddStudentToCourseMutation(
 export type AddStudentToCourseMutationHookResult = ReturnType<
   typeof useAddStudentToCourseMutation
 >
-export type AddStudentToCourseMutationResult = Apollo.MutationResult<AddStudentToCourseMutation>
+export type AddStudentToCourseMutationResult =
+  Apollo.MutationResult<AddStudentToCourseMutation>
 export type AddStudentToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddStudentToCourseMutation,
   AddStudentToCourseMutationVariables
@@ -5323,7 +5682,7 @@ export const FindCourseByIdDocument: DocumentNode = {
 }
 export type FindCourseByIdProps<
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
     FindCourseByIdQuery,
@@ -5334,7 +5693,7 @@ export type FindCourseByIdProps<
 export function withFindCourseById<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'data'
+  TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5485,7 +5844,7 @@ export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
 >
 export type RemoveLecturersFromCourseProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     RemoveLecturersFromCourseMutation,
@@ -5496,7 +5855,7 @@ export type RemoveLecturersFromCourseProps<
 export function withRemoveLecturersFromCourse<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5549,11 +5908,13 @@ export function useRemoveLecturersFromCourseMutation(
 export type RemoveLecturersFromCourseMutationHookResult = ReturnType<
   typeof useRemoveLecturersFromCourseMutation
 >
-export type RemoveLecturersFromCourseMutationResult = Apollo.MutationResult<RemoveLecturersFromCourseMutation>
-export type RemoveLecturersFromCourseMutationOptions = Apollo.BaseMutationOptions<
-  RemoveLecturersFromCourseMutation,
-  RemoveLecturersFromCourseMutationVariables
->
+export type RemoveLecturersFromCourseMutationResult =
+  Apollo.MutationResult<RemoveLecturersFromCourseMutation>
+export type RemoveLecturersFromCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >
 export const RemoveStudentsFromCourseDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -5635,7 +5996,7 @@ export type RemoveStudentsFromCourseMutationFn = Apollo.MutationFunction<
 >
 export type RemoveStudentsFromCourseProps<
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
     RemoveStudentsFromCourseMutation,
@@ -5646,7 +6007,7 @@ export type RemoveStudentsFromCourseProps<
 export function withRemoveStudentsFromCourse<
   TProps,
   TChildProps = {},
-  TDataName extends string = 'mutate'
+  TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
@@ -5699,8 +6060,10 @@ export function useRemoveStudentsFromCourseMutation(
 export type RemoveStudentsFromCourseMutationHookResult = ReturnType<
   typeof useRemoveStudentsFromCourseMutation
 >
-export type RemoveStudentsFromCourseMutationResult = Apollo.MutationResult<RemoveStudentsFromCourseMutation>
-export type RemoveStudentsFromCourseMutationOptions = Apollo.BaseMutationOptions<
-  RemoveStudentsFromCourseMutation,
-  RemoveStudentsFromCourseMutationVariables
->
+export type RemoveStudentsFromCourseMutationResult =
+  Apollo.MutationResult<RemoveStudentsFromCourseMutation>
+export type RemoveStudentsFromCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables
+  >

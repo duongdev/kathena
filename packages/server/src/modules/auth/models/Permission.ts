@@ -34,6 +34,7 @@ export enum Permission {
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
 
+  Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

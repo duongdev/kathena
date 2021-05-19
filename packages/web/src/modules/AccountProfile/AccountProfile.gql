@@ -19,3 +19,12 @@ mutation UpdateAccountStatus($id: ID!,$status: String!) {
     status
   }
 }
+mutation UpdateAccount($accountId: ID!, $update: UpdateAccountInput!) {
+  updateAccount(updateInput: $update, id: $accountId) {
+    id
+    displayName
+    email
+    roles
+  }
+}
+
