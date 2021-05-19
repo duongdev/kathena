@@ -115,6 +115,8 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Teaching_Course_Access
   Studying_Course_Access
+  Classwork_CreateClassworkAssignment
+  Classwork_CreateClassworkMaterial
   NoPermission
 }
 
@@ -172,6 +174,25 @@ type ClassworkAssignment implements BaseModel {
   dueDate: DateTime!
 }
 
+type ClassworkMaterial implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -187,7 +208,8 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
-  academicSubjects(pageOptions: PageOptionsInput!, orgId: ID!): AcademicSubjectsPayload!
+  canAccountManageRoles(roles: [String!]!): Boolean!
+  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
@@ -195,6 +217,7 @@ type Query {
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   findClassworkAssignmentsById(orgId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
+  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -208,11 +231,21 @@ input PageOptionsInput {
   limit: Int!
 }
 
+input AcademicSubjectsFilterInput {
+  orgId: ID!
+  searchText: String
+}
+
 input CoursesFilterInput {
   orgId: ID!
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input ClassworkFilterInput {
+  orgId: ID!
+  courseId: ID
 }
 
 type Mutation {
@@ -239,6 +272,8 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
@@ -297,4 +332,18 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkMaterialInput {
+  title: String!
+  description: String
+  publicationState: Publication!
+}
+
+input CreateClassworkAssignmentInput {
+  createdByAccountId: String!
+  title: String!
+  description: String!
+  attachments: [String!] = []
+  dueDate: String!
 }

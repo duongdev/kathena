@@ -6,7 +6,7 @@ import { Org } from 'modules/org/models/Org'
 
 import { AuthService } from './auth.service'
 import { AuthenticatePayload, SignInPayload } from './auth.type'
-import { Permission } from './models'
+import { OrgRoleName, Permission } from './models'
 
 @Resolver()
 export class AuthResolver {
@@ -39,5 +39,19 @@ export class AuthResolver {
       usernameOrEmail: identity,
       password,
     })
+  }
+
+  @Query((_returns) => Boolean)
+  @UseAuthGuard()
+  async canAccountManageRoles(
+    @Args('roles', { type: () => [String] }) roles: OrgRoleName[],
+    @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
+  ): Promise<boolean> {
+    const orgRoles = await this.authService.mapOrgRolesFromNames({
+      orgId: org.id,
+      roleNames: roles,
+    })
+    return this.authService.canAccountManageRoles(account.id, orgRoles)
   }
 }

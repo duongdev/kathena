@@ -23,6 +23,7 @@ export const staff: Role = {
     P.Academic_AcademicSubject_Access,
     P.Academic_Course_Access,
     P.Classwork_ListClassworkAssignment,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 
@@ -41,8 +42,10 @@ export const lecturer: Role = {
   priority: 4,
   permissions: [
     P.Academic_ListAcademicSubjects,
+    P.Classwork_CreateClassworkMaterial,
     P.Teaching_Course_Access,
     P.Classwork_ListClassworkAssignment,
+    P.Classwork_CreateClassworkAssignment,
   ],
 }
 

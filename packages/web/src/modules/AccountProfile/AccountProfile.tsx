@@ -7,12 +7,16 @@ import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
+import { ANY } from '@kathena/types'
 import {
+  Button,
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
+  useDialogState,
 } from '@kathena/ui'
+import { RequiredManageRoles } from 'common/auth'
 import {
   useAccountProfileQuery,
   useUpdateAccountStatusMutation,
@@ -21,13 +25,20 @@ import {
 } from 'graphql/generated'
 import { getDisplayName } from 'utils/useAccountUtils'
 
+import { UpdateAccountDialog } from './UpdateAccountDialog'
+
 export type AccountProfileProps = {}
 
 const AccountProfile: FC<AccountProfileProps> = () => {
   const { enqueueSnackbar } = useSnackbar()
   const params: { username: string } = useParams()
   const username = useMemo(() => params.username, [params])
-  const { data, loading } = useAccountProfileQuery({
+  const [
+    updateAccountDialogOpen,
+    openUpdateAccountDialog,
+    closeUpdateAccountDialog,
+  ] = useDialogState()
+  const { data, loading, refetch } = useAccountProfileQuery({
     variables: { username },
   })
   const [updateAccountStatus] = useUpdateAccountStatusMutation({
@@ -102,7 +113,18 @@ const AccountProfile: FC<AccountProfileProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin tài khoản"
+          action={
+            <RequiredManageRoles roles={account.roles}>
+              <Button onClick={openUpdateAccountDialog}>Sửa người dùng</Button>
+            </RequiredManageRoles>
+          }
         >
+          <UpdateAccountDialog
+            account={account as ANY}
+            open={updateAccountDialogOpen}
+            onClose={closeUpdateAccountDialog}
+            onSuccess={refetch}
+          />
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
