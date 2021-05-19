@@ -11,14 +11,14 @@ import {
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
-
 // eslint-disable-next-line import/order
+import { PageOptionsInput } from 'types'
 import {
-  CreateClassworkAssignmentInput,
   UpdateClassworkMaterialInput,
+  CreateClassworkAssignmentInput,
+  ClassworkFilterInput,
   CreateClassworkMaterialInput,
 } from './classwork.type'
-
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -91,7 +91,6 @@ export class ClassworkService {
 
     return classworkMaterial
   }
-
   // TODO: Delete this line and start the code here
 
   // TODO: classworkService.findClassworkMaterial
@@ -196,6 +195,32 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
+  async findAndPaginateClassworkAssignments(
+    pageOptions: PageOptionsInput,
+    filter: ClassworkFilterInput,
+  ): Promise<{
+    classworkAssignments: DocumentType<ClassworkAssignment>[]
+    count: number
+  }> {
+    const { limit, skip } = pageOptions
+    const { orgId, courseId } = filter
+
+    const classworkAssignmentModel = this.classworkAssignmentsModel.find({
+      orgId,
+    })
+
+    if (courseId) {
+      classworkAssignmentModel.find({
+        courseId,
+      })
+    }
+
+    classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const classworkAssignments = await classworkAssignmentModel
+    const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
+    return { classworkAssignments, count }
+  }
+
   async createClassworkAssignment(
     createdByAccountId: string,
     courseId: string,
@@ -230,6 +255,7 @@ export class ClassworkService {
     const classworkAssignment = this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
+      orgId,
       title,
       description,
       attachments,

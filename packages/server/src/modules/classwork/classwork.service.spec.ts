@@ -4,6 +4,7 @@ import { Connection } from 'mongoose'
 import { objectId, Publication } from 'core'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
+import { CreateCourseInput } from 'modules/academic/academic.type'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
@@ -547,6 +548,325 @@ describe('classwork.service', () => {
         ),
       ).resolves.toMatchObject({
         title: 'Bai Tap Nay Moi Nhat',
+      })
+    })
+  })
+
+  describe('findAndPaginateClassworkAssignments', () => {
+    it('rreturns array classworkAssignment and count find and pagination classworkAssignment', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        name: 'kmin',
+        namespace: 'kmin-edu',
+      })
+
+      const creatorAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'admin@gmail.com',
+        password: '123456',
+        username: 'admin',
+        roles: ['admin'],
+        displayName: 'Admin',
+      })
+
+      const lecturerAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'lecturer@gmail.com',
+        password: '123456',
+        username: 'lecturer',
+        roles: ['lecturer'],
+        displayName: 'Lecturer',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        code: 'HTML',
+        createdByAccountId: creatorAccount.id,
+        description: 'HTML',
+        imageFileId: objectId(),
+        name: 'HTMl',
+        orgId: org.id,
+      })
+
+      const listCreateClassworkAssignment: ANY[] = []
+      const date = new Date()
+      const createdByAccountId = lecturerAccount.id
+
+      const createCourse: CreateCourseInput = {
+        academicSubjectId: academicSubject.id,
+        code: 'FEBCT1',
+        name: 'Frontend cơ bản tháng 1',
+        startDate: date.toString(),
+        tuitionFee: 5000000,
+        lecturerIds: [lecturerAccount.id],
+      }
+
+      const course = await academicService.createCourse(
+        creatorAccount.id,
+        org.id,
+        {
+          ...createCourse,
+          code: 'FEBCT2',
+          name: 'Lập trình Frontend cơ bản tháng 2',
+        },
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 1',
+            description: 'Bai tap 1',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 2',
+            description: 'Bai tap 2',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 3',
+            description: 'Bai tap 3',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 4',
+            description: 'Bai tap 4',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 5',
+            description: 'Bai tap 5',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      await expect(
+        classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 2,
+            skip: 0,
+          },
+          {
+            orgId: org.id,
+          },
+        ),
+      ).resolves.toMatchObject({
+        classworkAssignments: [
+          {
+            title: 'Bai tap 5',
+            description: 'Bai tap 5',
+          },
+          {
+            title: 'Bai tap 4',
+            description: 'Bai tap 4',
+          },
+        ],
+        count: listCreateClassworkAssignment.length,
+      })
+    })
+
+    it('returns array classworkAssignment and count find and pagination classworkAssignment with filter', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        name: 'kmin',
+        namespace: 'kmin-edu',
+      })
+
+      const creatorAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'admin@gmail.com',
+        password: '123456',
+        username: 'admin',
+        roles: ['admin'],
+        displayName: 'Admin',
+      })
+
+      const lecturerAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'lecturer@gmail.com',
+        password: '123456',
+        username: 'lecturer',
+        roles: ['lecturer'],
+        displayName: 'Lecturer',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        code: 'HTML',
+        createdByAccountId: creatorAccount.id,
+        description: 'HTML',
+        imageFileId: objectId(),
+        name: 'HTMl',
+        orgId: org.id,
+      })
+
+      const listCreateClassworkAssignment: ANY[] = []
+      const date = new Date()
+      const createdByAccountId = lecturerAccount.id
+
+      const createCourse: CreateCourseInput = {
+        academicSubjectId: academicSubject.id,
+        code: 'FEBCT1',
+        name: 'Frontend cơ bản tháng 1',
+        startDate: date.toString(),
+        tuitionFee: 5000000,
+        lecturerIds: [lecturerAccount.id],
+      }
+
+      const course = await academicService.createCourse(
+        creatorAccount.id,
+        org.id,
+        {
+          ...createCourse,
+          code: 'FEBCT2',
+          name: 'Lập trình Frontend cơ bản tháng 2',
+        },
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 1',
+            description: 'Bai tap 1',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 2',
+            description: 'Bai tap 2',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 3',
+            description: 'Bai tap 3',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 4',
+            description: 'Bai tap 4',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      listCreateClassworkAssignment.push(
+        await classworkService.createClassworkAssignment(
+          createdByAccountId,
+          course.id,
+          org.id,
+          {
+            createdByAccountId,
+            title: 'Bai tap 5',
+            description: 'Bai tap 5',
+            attachments: [],
+            dueDate: date.toString(),
+          },
+        ),
+      )
+
+      await expect(
+        classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 2,
+            skip: 0,
+          },
+          {
+            orgId: org.id,
+            courseId: course.id,
+          },
+        ),
+      ).resolves.toMatchObject({
+        classworkAssignments: [
+          {
+            title: 'Bai tap 5',
+            description: 'Bai tap 5',
+          },
+          {
+            title: 'Bai tap 4',
+            description: 'Bai tap 4',
+          },
+        ],
+        count: listCreateClassworkAssignment.length,
       })
     })
   })
