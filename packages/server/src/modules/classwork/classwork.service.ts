@@ -157,10 +157,6 @@ export class ClassworkService {
       )
     }
 
-    if (updateClassworkMaterialInput.publicationState) {
-      input.publicationState = updateClassworkMaterialInput.publicationState
-    }
-
     const classworkMaterialUpdated =
       await this.classworkMaterialModel.findOneAndUpdate(
         {

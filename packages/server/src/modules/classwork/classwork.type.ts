@@ -34,9 +34,6 @@ export class UpdateClassworkMaterialInput {
 
   @Field({ nullable: true })
   description?: string
-
-  @Field((_type) => Publication, { nullable: true })
-  publicationState?: string
 }
 @InputType()
 export class CreateClassworkMaterialInput {

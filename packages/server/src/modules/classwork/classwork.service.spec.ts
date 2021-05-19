@@ -168,7 +168,6 @@ describe('classwork.service', () => {
       const updateClassworkMaterialInput: UpdateClassworkMaterialInput = {
         title: 'title',
         description: 'description',
-        publicationState: Publication.Draft,
       }
 
       it(`throws error if orgId invalid`, async () => {
@@ -253,44 +252,48 @@ describe('classwork.service', () => {
       })
 
       it(`returns a updated classworkMaterial`, async () => {
-        expect.assertions(3)
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkMaterial =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              description: 'description',
+              title: 'title',
+              publicationState: Publication.Draft,
+            },
+          )
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
+        // .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['accountService'], 'findOneAccount')
           .mockResolvedValueOnce({ id: objectId() } as never)
-          .mockResolvedValueOnce({ id: objectId() } as never)
-          .mockResolvedValueOnce({ id: objectId() } as never)
+        // .mockResolvedValueOnce({ id: objectId() } as never)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
+        // .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['classworkMaterialModel'], 'exists')
           .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
 
-        jest
-          .spyOn(classworkService['classworkMaterialModel'], 'findOneAndUpdate')
-          .mockResolvedValueOnce(updateClassworkMaterialInput as ANY)
-          .mockResolvedValueOnce({
-            ...updateClassworkMaterialInput,
-            title: '123',
-            description: 'asdawd',
-          } as ANY)
-          .mockResolvedValueOnce({
-            ...updateClassworkMaterialInput,
-            publicationState: Publication.Published,
-          } as ANY)
+        // .mockResolvedValueOnce(true as never)
 
         await expect(
           classworkService.updateClassworkMaterial(
@@ -298,43 +301,27 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             objectId(),
-            updateClassworkMaterialInput,
+            { ...updateClassworkMaterialInput },
           ),
         ).resolves.toMatchObject({
           ...updateClassworkMaterialInput,
         })
 
-        await expect(
-          classworkService.updateClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-            {
-              title: '123',
-              description: 'asdawd',
-            },
-          ),
-        ).resolves.toMatchObject({
-          title: '123',
-          description: 'asdawd',
-        })
-
-        await expect(
-          classworkService.updateClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-            {
-              ...updateClassworkMaterialInput,
-              publicationState: Publication.Published,
-            },
-          ),
-        ).resolves.toMatchObject({
-          ...updateClassworkMaterialInput,
-          publicationState: Publication.Published,
-        })
+        // await expect(
+        //   classworkService.updateClassworkMaterial(
+        //     objectId(),
+        //     objectId(),
+        //     objectId(),
+        //     objectId(),
+        //     {
+        //       title: '123',
+        //       description: 'asdawd',
+        //     },
+        //   ),
+        // ).resolves.toMatchObject({
+        //   title: '123',
+        //   description: 'asdawd',
+        // })
       })
     })
 
