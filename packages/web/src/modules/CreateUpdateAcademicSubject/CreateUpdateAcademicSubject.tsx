@@ -15,7 +15,7 @@ import {
   renderApolloError,
   Spinner,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
+import { useAuth, WithAuth } from 'common/auth'
 import {
   useCreateAcademicSubjectMutation,
   AcademicSubjectListDocument,
@@ -24,6 +24,7 @@ import {
   useUpdateAcademicSubjectMutation,
   useUpdateAcademicSubjectPublicationMutation,
   FindAcademicSubjectByIdDocument,
+  Permission,
 } from 'graphql/generated'
 import { ACADEMIC_SUBJECT_LIST } from 'utils/path-builder'
 import { ACADEMIC_SUBJECT_NAME_REGEX } from 'utils/validators'
@@ -59,8 +60,8 @@ const validationSchema: SchemaOf<AcademicSubjectFormInput> = yup.object({
   code: yup.string().label(labels.code).trim().uppercase().required(),
   image: yup.mixed().label(labels.image).required() as ANY,
 })
-const validationWithoutImageSchema: SchemaOf<AcademicSubjectFormInput> = yup.object(
-  {
+const validationWithoutImageSchema: SchemaOf<AcademicSubjectFormInput> =
+  yup.object({
     name: yup
       .string()
       .label(labels.name)
@@ -72,8 +73,7 @@ const validationWithoutImageSchema: SchemaOf<AcademicSubjectFormInput> = yup.obj
     description: yup.string().label(labels.description).required(),
     code: yup.string().label(labels.code).trim().uppercase().required(),
     image: yup.mixed().label(labels.image) as ANY,
-  },
-)
+  })
 
 const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
   props,
@@ -105,20 +105,19 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
       },
     ],
   })
-  const [
-    updateAcademicSubjectPublication,
-  ] = useUpdateAcademicSubjectPublicationMutation({
-    refetchQueries: [
-      {
-        query: AcademicSubjectListDocument,
-        variables: { orgId: org.id, skip: 0, limit: 10 },
-      },
-      {
-        query: FindAcademicSubjectByIdDocument,
-        variables: { Id: id },
-      },
-    ],
-  })
+  const [updateAcademicSubjectPublication] =
+    useUpdateAcademicSubjectPublicationMutation({
+      refetchQueries: [
+        {
+          query: AcademicSubjectListDocument,
+          variables: { orgId: org.id, skip: 0, limit: 10 },
+        },
+        {
+          query: FindAcademicSubjectByIdDocument,
+          variables: { Id: id },
+        },
+      ],
+    })
   const { data, loading } = useFindAcademicSubjectByIdQuery({
     variables: {
       Id: id,
@@ -331,4 +330,10 @@ const useStyles = makeStyles(() => ({
 
 export const academicSubjectLabels = labels
 
-export default CreateUpdateAcademicSubject
+const WithPermissionCreateUpdateAcademicSubject = () => (
+  <WithAuth permission={Permission.Academic_CreateAcademicSubject}>
+    <CreateUpdateAcademicSubject />
+  </WithAuth>
+)
+
+export default WithPermissionCreateUpdateAcademicSubject

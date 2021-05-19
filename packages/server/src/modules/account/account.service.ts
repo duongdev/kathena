@@ -210,6 +210,7 @@ export class AccountService {
       email?: string
       username?: string
       password?: string
+      roles?: OrgRoleName[]
     },
   ): Promise<DocumentType<Account>> {
     const account = await this.accountModel.findOne({
@@ -233,6 +234,9 @@ export class AccountService {
     if (update.password) {
       account.password = bcrypt.hashSync(update.password, 10)
     }
+    if (update.roles) {
+      account.roles = update.roles
+    }
     const updatedAccount = await account.save()
 
     return updatedAccount
@@ -246,36 +250,20 @@ export class AccountService {
       email?: string
       username?: string
       password?: string
-      roles?: string[]
+      roles?: OrgRoleName[]
     },
   ): Promise<DocumentType<Account>> {
     this.logger.log(`[updateOrgMemberAccount] start updating`)
     this.logger.verbose({ updaterId, query, update })
 
-    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
-      {
-        accountId: updaterId,
-        permission: Permission.Hr_UpdateOrgAccount,
-      },
-    )
-
-    this.logger.verbose({ accountHasPermissionToUpdate })
-
     // Handle self-update
-    if (updaterId === query.id && !accountHasPermissionToUpdate) {
+    if (updaterId === query.id) {
       this.logger.verbose('Performing self-update')
 
       return this.updateAccount(query, {
         displayName: update.displayName,
         password: update.password,
       })
-    }
-
-    if (!accountHasPermissionToUpdate) {
-      this.logger.error(
-        `Not a self-update but doesn't have permission to update other accounts`,
-      )
-      throw new ForbiddenError()
     }
 
     const targetAccount = await this.accountModel.findOne({
@@ -314,7 +302,7 @@ export class AccountService {
 
     if (
       update.roles?.length &&
-      (await this.authService.canAccountManageRoles(
+      !(await this.authService.canAccountManageRoles(
         updaterId,
         await this.authService.mapOrgRolesFromNames({
           orgId: targetAccount.orgId,
@@ -335,12 +323,11 @@ export class AccountService {
     query: { id: string; orgId: string },
     status: AccountStatus,
   ): Promise<DocumentType<Account>> {
-    const accountHasPermissionToUpdate = await this.authService.accountHasPermission(
-      {
+    const accountHasPermissionToUpdate =
+      await this.authService.accountHasPermission({
         accountId: updaterId,
         permission: Permission.Hr_UpdateOrgAccountStatus,
-      },
-    )
+      })
 
     if (updaterId === query.id) {
       throw new Error(`Can't change activate/deactivate status by yourself`)

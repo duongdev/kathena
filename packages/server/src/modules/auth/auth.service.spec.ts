@@ -45,7 +45,7 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(12)
+      expect.assertions(15)
 
       const resultPermissions: ANY = [
         'Hr_Access',
@@ -63,6 +63,11 @@ describe('auth.service', () => {
         'Academic_AddLecturersToCourse',
         'Academic_RemoveStudentsFromCourse',
         'Academic_RemoveLecturersFromCourse',
+        'Academic_AcademicSubject_Access',
+        'Academic_Course_Access',
+        'Classwork_ListClassworkAssignment',
+        'Classwork_CreateClassworkAssignment',
+        'OrgOffice_Access',
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
@@ -71,6 +76,9 @@ describe('auth.service', () => {
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -164,6 +172,27 @@ describe('auth.service', () => {
       await expect(
         authService.accountHasPermission({
           accountId: objectId().toString(),
+          permission: 'Academic_AcademicSubject_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Academic_Course_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'OrgOffice_Access',
+        }),
+      ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
           permission: 'Classwork_ListClassworkAssignment',
         }),
       ).resolves.toBe(true)
@@ -238,7 +267,11 @@ describe('auth.service', () => {
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
+                "Academic_AcademicSubject_Access",
+                "Academic_Course_Access",
                 "Classwork_ListClassworkAssignment",
+                "Classwork_CreateClassworkAssignment",
+                "OrgOffice_Access",
               ]
             `)
     })
@@ -602,18 +635,15 @@ describe('auth.service', () => {
     })
   })
   describe('canAccountManageCourse', () => {
-    it('throw error if account is not found', async () => {
+    it('returns false if account is not found', async () => {
       expect.assertions(1)
-      // console.log(
-      //   await authService.canAccountManageCourse(objectId(), objectId()),
-      // )
 
       await expect(
         authService.canAccountManageCourse(objectId(), objectId()),
-      ).rejects.toThrowError(`Account is not found`)
+      ).resolves.toBeFalsy()
     })
 
-    it('throws error if course is not found', async () => {
+    it('returns false if course is not found', async () => {
       expect.assertions(1)
 
       const account: ANY = {
@@ -626,7 +656,7 @@ describe('auth.service', () => {
 
       await expect(
         authService.canAccountManageCourse(objectId(), account.orgId),
-      ).rejects.toThrowError(`Course is not found`)
+      ).resolves.toBeFalsy()
     })
 
     it('returns true if account can manage course', async () => {

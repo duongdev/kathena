@@ -378,11 +378,11 @@ describe('academic.service', () => {
         await expect(
           academicService.findAndPaginateAcademicSubjects(
             {
-              orgId,
-            },
-            {
               limit: 2,
               skip: 1,
+            },
+            {
+              orgId,
             },
           ),
         ).resolves.toMatchObject({
@@ -400,11 +400,11 @@ describe('academic.service', () => {
         await expect(
           academicService.findAndPaginateAcademicSubjects(
             {
-              orgId,
-            },
-            {
               limit: 3,
               skip: 2,
+            },
+            {
+              orgId,
             },
           ),
         ).resolves.toMatchObject({

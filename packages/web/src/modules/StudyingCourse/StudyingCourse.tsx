@@ -22,7 +22,8 @@ import {
   SectionCard,
   Typography,
 } from '@kathena/ui'
-import { useCourseDetailQuery } from 'graphql/generated'
+import { WithAuth } from 'common/auth'
+import { Permission, useCourseDetailQuery } from 'graphql/generated'
 
 export type StudyingCourseProps = {}
 
@@ -37,12 +38,10 @@ const StudyingCourse: FC<StudyingCourseProps> = () => {
 
   const [expanded, setExpanded] = useState<string | false>(false)
 
-  const handleChange = (panel: string) => (
-    event: React.ChangeEvent<{}>,
-    isExpanded: boolean,
-  ) => {
-    setExpanded(isExpanded ? panel : false)
-  }
+  const handleChange =
+    (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false)
+    }
 
   if (loading) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -124,4 +123,10 @@ const useStyles = makeStyles((theme) =>
   }),
 )
 
-export default StudyingCourse
+const WithPermissionStudyingCourse = () => (
+  <WithAuth permission={Permission.Studying_Course_Access}>
+    <StudyingCourse />
+  </WithAuth>
+)
+
+export default WithPermissionStudyingCourse

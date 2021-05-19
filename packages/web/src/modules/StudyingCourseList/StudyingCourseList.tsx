@@ -30,13 +30,15 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
     },
   })
 
-  const courses = useMemo(() => data?.courses.courses ?? [], [
-    data?.courses.courses,
-  ])
+  const courses = useMemo(
+    () => data?.courses.courses ?? [],
+    [data?.courses.courses],
+  )
 
-  const totalCount = useMemo(() => data?.courses.count ?? 0, [
-    data?.courses.count,
-  ])
+  const totalCount = useMemo(
+    () => data?.courses.count ?? 0,
+    [data?.courses.count],
+  )
 
   return (
     <PageContainer className={classes.root} title="Danh sách khóa học đang học">
@@ -133,7 +135,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionStudyingCourseList = () => (
-  <WithAuth permission={Permission.Academic_ListAcademicSubjects}>
+  <WithAuth permission={Permission.Studying_Course_Access}>
     <StudyingCourseList />
   </WithAuth>
 )

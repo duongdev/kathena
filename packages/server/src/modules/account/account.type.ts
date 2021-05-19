@@ -40,7 +40,7 @@ export class UpdateAccountInput {
   @Field((_type) => [String], { nullable: true })
   @ArrayNotEmpty()
   @IsOptional()
-  roles?: string[]
+  roles?: OrgRoleName[]
 
   @Field({ nullable: true })
   @MinLength(6)
