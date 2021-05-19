@@ -104,6 +104,7 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Classwork_ListClassworkAssignment
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -188,6 +189,11 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
 }
 
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -211,6 +217,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -234,6 +241,11 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input ClassworkFilterInput {
+  orgId: ID!
+  courseId: ID
 }
 
 type Mutation {

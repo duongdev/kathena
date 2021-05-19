@@ -45,7 +45,7 @@ describe('auth.service', () => {
 
   describe('accountHasPermission', () => {
     it('returns true if account has permission', async () => {
-      expect.assertions(14)
+      expect.assertions(15)
 
       const resultPermissions: ANY = [
         'Hr_Access',
@@ -63,12 +63,13 @@ describe('auth.service', () => {
         'Academic_AddLecturersToCourse',
         'Academic_RemoveStudentsFromCourse',
         'Academic_RemoveLecturersFromCourse',
-        'OrgOffice_ListOrgOffices',
         'Academic_AcademicSubject_Access',
         'Academic_Course_Access',
+        'Classwork_ListClassworkAssignment',
         'Classwork_CreateClassworkAssignment',
         'Classwork_UpdateClassworkAssignment',
         'OrgOffice_Access',
+        'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
       ]
@@ -189,6 +190,13 @@ describe('auth.service', () => {
           permission: 'OrgOffice_Access',
         }),
       ).resolves.toBe(true)
+
+      await expect(
+        authService.accountHasPermission({
+          accountId: objectId().toString(),
+          permission: 'Classwork_ListClassworkAssignment',
+        }),
+      ).resolves.toBe(true)
     })
 
     it(`returns false if account doesn't have permission`, async () => {
@@ -259,6 +267,7 @@ describe('auth.service', () => {
                 "Academic_RemoveLecturersFromCourse",
                 "Academic_AcademicSubject_Access",
                 "Academic_Course_Access",
+                "Classwork_ListClassworkAssignment",
                 "Classwork_CreateClassworkAssignment",
                 "Classwork_UpdateClassworkAssignment",
                 "OrgOffice_Access",
