@@ -115,6 +115,7 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_CreateClassworkMaterial
   NoPermission
 }
 
@@ -158,6 +159,20 @@ type OrgAccountsPayload {
 }
 
 type Classwork implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
+type ClassworkMaterial implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -242,6 +257,7 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
 
@@ -301,6 +317,12 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkMaterialInput {
+  title: String!
+  description: String
+  publicationState: Publication!
 }
 
 input CreateClassworkAssignmentInput {
