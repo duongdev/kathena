@@ -16,6 +16,7 @@ export type MenuItemProps = {
   label: string
   link?: LinkProps | string
   active?: boolean
+  hidden?: boolean
 }
 
 export type MenuEntity = {
@@ -23,6 +24,7 @@ export type MenuEntity = {
   title: string
   icon: Icon
   items: MenuItemProps[]
+  hidden?: boolean
 }
 
 export type SidebarMenuProps = {
@@ -38,40 +40,51 @@ const SidebarMenu: FC<SidebarMenuProps> = (props) => {
   return (
     <div className={classes.root}>
       <Grid container spacing={menuSpacing} direction="column" wrap="nowrap">
-        {menus.map((menu) => (
-          <Grid item key={menu.key}>
-            <div>
-              <div className={classes.menuTitle}>
-                <menu.icon
-                  size={ICON_SIZE}
-                  fill="duotone"
-                  className={classes.menuTitleIcon}
-                />
-                <Typography
-                  variant="button"
-                  fontWeight="bold"
-                  className={classes.menuTitleText}
-                >
-                  {menu.title}
-                </Typography>
+        {menus.map((menu) => {
+          if (typeof menu.hidden !== 'undefined' && menu.hidden === true)
+            return null
+          return (
+            <Grid item key={menu.key}>
+              <div>
+                <div className={classes.menuTitle}>
+                  <menu.icon
+                    size={ICON_SIZE}
+                    fill="duotone"
+                    className={classes.menuTitleIcon}
+                  />
+                  <Typography
+                    variant="button"
+                    fontWeight="bold"
+                    className={classes.menuTitleText}
+                  >
+                    {menu.title}
+                  </Typography>
+                </div>
+                <div className={classes.menuItems}>
+                  <Grid
+                    container
+                    spacing={menuItemSpacing}
+                    direction="column"
+                    wrap="nowrap"
+                  >
+                    {menu.items.map((item) => {
+                      if (
+                        typeof item.hidden !== 'undefined' &&
+                        item.hidden === true
+                      )
+                        return null
+                      return (
+                        <Grid item key={item.key}>
+                          <MenuItem {...item} />
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+                </div>
               </div>
-              <div className={classes.menuItems}>
-                <Grid
-                  container
-                  spacing={menuItemSpacing}
-                  direction="column"
-                  wrap="nowrap"
-                >
-                  {menu.items.map((item) => (
-                    <Grid item key={item.key}>
-                      <MenuItem {...item} />
-                    </Grid>
-                  ))}
-                </Grid>
-              </div>
-            </div>
-          </Grid>
-        ))}
+            </Grid>
+          )
+        })}
       </Grid>
     </div>
   )

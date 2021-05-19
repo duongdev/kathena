@@ -2,14 +2,17 @@ import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
+import Search from 'components/Search'
 import { PlusCircle } from 'phosphor-react'
 
+import { ANY } from '@kathena/types'
 import {
   Button,
   DataTable,
   Link,
   PageContainer,
   Typography,
+  useLocationQuery,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
@@ -26,24 +29,31 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
+  const { query } = useLocationQuery()
   const { data, loading } = useAcademicSubjectListQuery({
-    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
+    variables: {
+      orgId: org.id,
+      limit: perPage,
+      skip: page * perPage,
+      searchText: query.searchText as ANY,
+    },
   })
-
   const academicSubjectList = useMemo(
     () => data?.academicSubjects.academicSubjects ?? [],
     [data?.academicSubjects.academicSubjects],
   )
 
-  const totalCount = useMemo(() => data?.academicSubjects.count ?? 0, [
-    data?.academicSubjects.count,
-  ])
+  const totalCount = useMemo(
+    () => data?.academicSubjects.count ?? 0,
+    [data?.academicSubjects.count],
+  )
 
   return (
     <PageContainer
       className={classes.root}
       title="Danh sách môn học"
       actions={[
+        <Search />,
         <Button
           variant="contained"
           color="primary"

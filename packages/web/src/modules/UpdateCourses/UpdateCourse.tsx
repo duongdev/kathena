@@ -21,20 +21,20 @@ import {
   PageContainerSkeleton,
   SectionCard,
 } from '@kathena/ui'
+import { WithAuth } from 'common/auth'
 import {
   useCourseDetailQuery,
   useRemoveLecturersFromCourseMutation,
   useRemoveStudentsFromCourseMutation,
   FindCourseByIdDocument,
+  Permission,
 } from 'graphql/generated'
 
 import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
 import AddStudent from './AddStudent'
 
-export type UpdateCourseProps = {
-  idLecturer: string
-}
+export type UpdateCourseProps = {}
 
 const UpdateCourse: FC<UpdateCourseProps> = () => {
   const classes = useStyles()
@@ -327,4 +327,10 @@ const useStyles = makeStyles({
   },
 })
 
-export default UpdateCourse
+const WithPermissionUpdateCourse = () => (
+  <WithAuth permission={Permission.Academic_UpdateCourse}>
+    <UpdateCourse />
+  </WithAuth>
+)
+
+export default WithPermissionUpdateCourse
