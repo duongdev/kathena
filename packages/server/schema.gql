@@ -275,10 +275,6 @@ type Mutation {
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
-<<<<<<< HEAD
-=======
-  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
->>>>>>> 6d719ddd05d042b58fd9a069196424192a76ea05
 }
 
 input CreateAccountInput {
