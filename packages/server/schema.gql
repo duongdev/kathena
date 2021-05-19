@@ -104,6 +104,7 @@ enum Permission {
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
+  Classwork_ListClassworkAssignment
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -158,7 +159,7 @@ type OrgAccountsPayload {
   count: Int!
 }
 
-type Classwork implements BaseModel {
+type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
@@ -170,6 +171,7 @@ type Classwork implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  dueDate: DateTime!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -184,6 +186,11 @@ type ClassworkMaterial implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+}
+
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
 }
 
 type OrgOffice implements BaseModel {
@@ -209,6 +216,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -232,6 +240,11 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input ClassworkFilterInput {
+  orgId: ID!
+  courseId: ID
 }
 
 type Mutation {
@@ -259,7 +272,7 @@ type Mutation {
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
-  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
+  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
