@@ -1,14 +1,8 @@
 import { TestingModule } from '@nestjs/testing'
-// import { compareSync } from 'bcrypt'
 import { Connection } from 'mongoose'
 
-// import { objectId } from 'core/utils/db'
 import { objectId, Publication } from 'core'
-// eslint-disable-next-line import/order
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-// import { Role } from 'modules/auth/models'
-// import { ANY } from 'types'
-
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
@@ -35,7 +29,6 @@ describe('classwork.service', () => {
 
     classworkService = module.get<ClassworkService>(ClassworkService)
     academicService = module.get<AcademicService>(AcademicService)
-    classworkService = module.get<ClassworkService>(ClassworkService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
     accountService = module.get<AccountService>(AccountService)
@@ -152,6 +145,7 @@ describe('classwork.service', () => {
 
       it(`returns a updated classworkMaterial`, async () => {
         expect.assertions(3)
+
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as never)
