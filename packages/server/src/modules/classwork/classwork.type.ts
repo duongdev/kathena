@@ -4,6 +4,7 @@ import {
   InputType,
 } from '@nestjs/graphql'
 import { IsNotEmpty } from 'class-validator'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -49,4 +50,10 @@ export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'Duedate cannot be empty' })
   dueDate: string
+}
+
+@InputType()
+export class AddAttachmentsToClassworkInput {
+  @Field((_type) => [GraphQLUpload])
+  attachments?: Promise<FileUpload>[]
 }

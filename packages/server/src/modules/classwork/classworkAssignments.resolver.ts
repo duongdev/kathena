@@ -22,11 +22,15 @@ import { DocumentType } from '@typegoose/typegoose'
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { Nullable /* , PageOptionsInput */ } from 'types'
+import { ANY, Nullable /* , PageOptionsInput */ } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkAssignmentInput } from './classwork.type'
+import {
+  AddAttachmentsToClassworkInput,
+  CreateClassworkAssignmentInput,
+} from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
@@ -36,6 +40,7 @@ export class ClassworkAssignmentsResolver {
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   /**
@@ -46,36 +51,37 @@ export class ClassworkAssignmentsResolver {
   @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkAssignment)
   async addAttachmentsToClassworkAssignments(
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
-    @Args('attachments', { type: () => [String] }) attachments?: [],
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    // const image = await academicSubjectInput.image
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: ANY[] = []
+    if (promiseFileUpload) {
+      promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
 
-    // const { createReadStream, filename, encoding } = image
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
 
-    // // eslint-disable-next-line no-console
-    // console.log('encoding', encoding)
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId: org.id,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId: account.id,
+          },
+        )
 
-    // const imageFile = await this.fileStorageService.uploadFromReadStream({
-    //   orgId: org.id,
-    //   originalFileName: filename,
-    //   readStream: createReadStream(),
-    //   uploadedByAccountId: account.id,
-    // })
-
-    // const academicSubject = await this.academicService.createAcademicSubject({
-    //   ...academicSubjectInput,
-    //   orgId: org.id,
-    //   createdByAccountId: account.id,
-    //   imageFileId: imageFile.id,
-    // })
-
+        listFileId.push(documentFile.id)
+      })
+    }
     //
     return this.classworkService.addAttachmentsToClassworkAssignments(
       org.id,
       classworkAssignmentId,
-      attachments,
+      listFileId,
     )
   }
 

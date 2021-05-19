@@ -277,7 +277,6 @@ type Mutation {
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   addAttachmentsToClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
-  addAttachmentsToClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }

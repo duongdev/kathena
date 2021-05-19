@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { AuthModule } from 'modules/auth/auth.module'
+import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 
 import { ClassworkService } from './classwork.service'
 import { ClassworkAssignmentsResolver } from './classworkAssignments.resolver'
@@ -14,6 +15,7 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
   imports: [
     AuthModule,
     TypegooseModule.forFeature([ClassworkAssignment, ClassworkMaterial]),
+    FileStorageModule,
   ],
   providers: [
     ClassworkService,
