@@ -7,90 +7,55 @@ import {
   FileText,
   TextBolder,
   TextItalic,
+  Calendar,
+  LinkSimple,
   TextUnderline,
   XCircle,
   ListBullets,
 } from 'phosphor-react'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
-import { ApolloErrorList, TextFormField } from '@kathena/ui'
-import { ORG_OFFICE_NAME_REGEX, PHONE_REGEX } from 'utils/validators'
+import { ANY } from '@kathena/types'
+import { ApolloErrorList, TextFormField, FileItem, Button } from '@kathena/ui'
 
 export type AttachmentEditorInput = {
-  name: string
-  address: string
-  phone: string
+  createdByAccountId: string
+  title: string
+  description: string
+  dueDate: string
+  attachments: FileItem | null
 }
 
 export const labels: Record<keyof AttachmentEditorInput, string> = {
-  name: 'Tiêu đề',
-  address: 'Mô tả(Không bắt buộc)',
-  phone: 'Số điện thoại',
+  createdByAccountId: 'Tiêu đề',
+  title: 'Tiêu đề',
+  description: 'Mô tả',
+  dueDate: 'Ngày tạo',
+  attachments: 'Tệp tài liệu',
 }
 
 export const validationSchema: SchemaOf<AttachmentEditorInput> = yup.object({
-  name: yup
-    .string()
-    .label(labels.name)
-    .trim()
-    .matches(ORG_OFFICE_NAME_REGEX, {
-      message: `${labels.name} chứa các ký tự không phù hợp`,
-    })
-    .required(),
-  address: yup.string().label(labels.address).trim().required(),
-  phone: yup
-    .string()
-    .label(labels.phone)
-    .trim()
-    .matches(PHONE_REGEX, {
-      message: `${labels.phone} không đúng định dạng`,
-    })
-    .required(),
-})
+  title: yup.string().label(labels.title).trim().required(),
 
-export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
-  const classes = useStyles()
-  return (
-    <CardContent>
-      <Stack spacing={2}>
-        <Grid container className={classes.root}>
-          <Grid item md={1}>
-            <FileText size={30} />
-          </Grid>
-          <Grid item md={11}>
-            <TextFormField required autoFocus label={labels.name} name="name" />
-          </Grid>
-        </Grid>
-        <Grid container className={classes.root}>
-          <Grid item md={1}>
-            <TextAlignLeft size={30} />
-          </Grid>
-          <Grid item md={11}>
-            <TextFormField
-              label={labels.address}
-              multiline
-              name="address"
-              minRows={3}
-              maxRows={6}
-            />
-            <Grid container alignItems="center" className={classes.edit}>
-              <TextBolder size={20} />
-              <TextItalic size={20} />
-              <TextUnderline size={20} />
-              <ListBullets size={20} />
-              <XCircle size={20} />
-            </Grid>
-          </Grid>
-        </Grid>
-        {error && <ApolloErrorList error={error} />}
-      </Stack>
-    </CardContent>
-  )
-}
+  createdByAccountId: yup
+    .string()
+    .label(labels.createdByAccountId)
+    .trim()
+    .required(),
+
+  description: yup.string().label(labels.description).trim().required(),
+
+  dueDate: yup.string().label(labels.dueDate).trim().default(''),
+
+  attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
+})
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     margin: 'auto',
+  },
+  icon: {
+    textAlign: 'center',
   },
   edit: {
     width: 'fit-content',
@@ -106,3 +71,76 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
+
+export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
+  const classes = useStyles()
+  return (
+    <CardContent>
+      <Stack spacing={2}>
+        <Grid container className={classes.root}>
+          <Grid item md={1} className={classes.icon}>
+            <FileText size={30} />
+          </Grid>
+          <Grid item md={11}>
+            <TextFormField
+              required
+              autoFocus
+              label={labels.title}
+              name="title"
+            />
+          </Grid>
+        </Grid>
+        <Grid container className={classes.root}>
+          <Grid item md={1} className={classes.icon}>
+            <TextAlignLeft size={30} />
+          </Grid>
+          <Grid item md={11}>
+            <TextFormField
+              label={labels.description}
+              multiline
+              name="description"
+              minRows={3}
+              maxRows={6}
+            />
+            <Grid container alignItems="center" className={classes.edit}>
+              <Button>
+                <TextBolder size={20} />
+              </Button>
+              <Button>
+                <TextItalic size={20} />
+              </Button>
+              <Button>
+                <TextUnderline size={20} />
+              </Button>
+              <Button>
+                <ListBullets size={20} />
+              </Button>
+              <Button>
+                <XCircle size={20} />
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.root}>
+          <Grid item md={1} className={classes.icon}>
+            <Calendar size={30} />
+          </Grid>
+          <Grid item md={4}>
+            <TextFormField label={labels.dueDate} type="date" name="dueDate" />
+          </Grid>
+          <Grid item md={1} className={classes.icon}>
+            <LinkSimple size={30} />
+          </Grid>
+          <Grid item md={5}>
+            <TextFormField
+              label={labels.attachments}
+              type="file"
+              name="attachments"
+            />
+          </Grid>
+        </Grid>
+        {error && <ApolloErrorList error={error} />}
+      </Stack>
+    </CardContent>
+  )
+}

@@ -1,8 +1,6 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useCallback } from 'react'
 
-import { makeStyles } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 
 import { FormDialog } from '@kathena/ui'
 
@@ -17,19 +15,33 @@ export type CreateAttachmentDialogProps = {
   onClose: () => void
 }
 const initialValues: AttachmentEditorInput = {
-  name: '',
-  address: '',
-  phone: '',
+  createdByAccountId: '',
+  title: '',
+  description: '',
+  dueDate: '',
+  attachments: null,
 }
 
 const CreateAttachmentDialog: FC<CreateAttachmentDialogProps> = (props) => {
-  const classes = useStyles(props)
   const { open, onClose } = props
+  const { enqueueSnackbar } = useSnackbar()
+
   const handleCreateAttachment = useCallback(
     async (input: AttachmentEditorInput) => {
-      console.log(input)
+      onClose()
+      try {
+        enqueueSnackbar(`Đã tạo văn phòng`, {
+          variant: 'error',
+        })
+        onClose()
+      } catch (err) {
+        enqueueSnackbar(`Đã tạo văn phòng `, {
+          variant: 'success',
+        })
+        onClose()
+      }
     },
-    [],
+    [onClose, enqueueSnackbar],
   )
   return (
     <FormDialog
@@ -37,17 +49,12 @@ const CreateAttachmentDialog: FC<CreateAttachmentDialogProps> = (props) => {
       onClose={onClose}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      submitButtonLabel="Thêm tài liệu"
       onSubmit={handleCreateAttachment}
-      width={1000}
+      submitButtonLabel="Thêm tài liệu"
+      width={800}
     >
       <FormContent />
     </FormDialog>
   )
 }
-
-const useStyles = makeStyles(() => ({
-  root: {},
-}))
-
 export default CreateAttachmentDialog
