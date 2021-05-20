@@ -9765,10 +9765,10 @@ fastify-plugin@^3.0.0:
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-3.0.0.tgz#cf1b8c8098e3b5a7c8c30e6aeb06903370c054ca"
   integrity sha512-ZdCvKEEd92DNLps5n0v231Bha8bkz1DjnPP/aEz37rz/q42Z5JVLmgnqR4DYuNn3NXAO3IDCPyRvgvxtJ4Ym4w==
 
-fastify-static@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/fastify-static/-/fastify-static-4.2.0.tgz#5c9dff495e5b7efe5fdf21d05ba483f1496958fa"
-  integrity sha512-Fjc01GeHdCT3LFaROy3QCKJii8K4K8IuGOSivXV53kWpu2xBLVwn8TDWnFSdCF6JaeMC6ZPHpD2OiC3KFyNlIg==
+fastify-static@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/fastify-static/-/fastify-static-4.2.1.tgz#c59e057da4f3c32fcebdd309850e4d0aac2918e8"
+  integrity sha512-cxukKJVenzDFnoFGZg2i2qbbqCJgJvq7dypvY/XrfrU7+9Ke1k2QqM3gfBp86RZW0oOW0QIU80aCCfNFTzixJQ==
   dependencies:
     content-disposition "^0.5.3"
     encoding-negotiator "^2.0.1"
@@ -19041,10 +19041,10 @@ ts-jest@26.5.6:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-loader@9.2.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.2.0.tgz#0d9feeef60081729ab999af7c322651158de2a0c"
-  integrity sha512-9MlaeNNEk5juw5YL3Xfkvz2gGTsRcXMqfTEAW2mLFWNVsuQEa4jZc4lFB1UZjmA5cyPriCRmOFx+XKV47p5OZg==
+ts-loader@9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.2.1.tgz#5699af8d10aa3a763aadfced1d4b275a432b76eb"
+  integrity sha512-BLfLa4paMQyf819haKxxbZqA1aLDqsk8XEZLmd7E1eBa0NsEHYFcTWlUlPmYMGhvD/IMi0NcIW3A/G7vzr3oiA==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
