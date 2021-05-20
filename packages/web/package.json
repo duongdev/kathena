@@ -31,7 +31,7 @@
     "autosuggest-highlight": "3.1.1",
     "clsx": "1.1.1",
     "date-fns": "2.21.3",
-    "formik": "2.2.6",
+    "formik": "2.2.7",
     "graphql": "15.5.0",
     "gravatar": "1.8.1",
     "lodash": "4.17.21",
