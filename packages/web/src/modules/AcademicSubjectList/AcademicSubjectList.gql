@@ -1,5 +1,5 @@
-query AcademicSubjectList($orgId: ID!, $skip: Int!, $limit: Int!) {
-  academicSubjects(pageOptions: { skip: $skip, limit: $limit },filter: { orgId: $orgId }) {
+query AcademicSubjectList($orgId: ID!, $skip: Int!, $limit: Int!, $searchText: String) {
+  academicSubjects(pageOptions: { skip: $skip, limit: $limit },filter: { orgId: $orgId, searchText: $searchText }) {
     academicSubjects {
       id
       orgId

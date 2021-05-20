@@ -44,3 +44,7 @@ query Authenticate {
     permissions
   }
 }
+
+query CanAccountManageRoles($roles: [String!]!) {
+  canAccountManageRoles(roles: $roles)
+}

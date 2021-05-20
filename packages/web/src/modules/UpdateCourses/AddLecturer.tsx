@@ -38,9 +38,10 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const { data } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  const courseLecturer = useMemo(() => data?.findCourseById, [
-    data?.findCourseById,
-  ])
+  const courseLecturer = useMemo(
+    () => data?.findCourseById,
+    [data?.findCourseById],
+  )
   const [addLecturesToCourse] = useAddLecturesToCourseMutation()
   const handelAddAndClose = useCallback(
     async (input: LecturerFormInput) => {
@@ -78,15 +79,14 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   )
   return (
     <Formik
+      className={classes.root}
       validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handelAddAndClose}
     >
       {(formik) => (
         <SectionCard
-          gridItem={{ xs: 12 }}
-          fullHeight={false}
-          maxContentHeight={false}
+          fullHeight
           title="Danh sách giảng viên"
           action={
             <Button
@@ -102,12 +102,12 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
         >
           <CardContent>
             <AccountAssignerFormField
+              multiple
               filterSelectedOptions
-              className={classes.root}
+              disableCloseOnSelect
               name="lecturerIds"
               label={labels.lecturerIds}
               roles={['lecturer']}
-              multiple
             />
           </CardContent>
         </SectionCard>
