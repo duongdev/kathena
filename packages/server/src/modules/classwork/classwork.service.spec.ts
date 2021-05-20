@@ -818,9 +818,6 @@ describe('classwork.service', () => {
       })
 
       jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-      jest
         .spyOn(authService, 'accountHasPermission')
         .mockResolvedValueOnce(true as never)
       jest
