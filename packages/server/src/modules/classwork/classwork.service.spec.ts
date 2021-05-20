@@ -698,7 +698,7 @@ describe('classwork.service', () => {
       expect.assertions(1)
 
       await expect(
-        classworkService.findClassworkAssignmentsById(objectId()),
+        classworkService.findClassworkAssignmentById(objectId()),
       ).resolves.toBeNull()
     })
 
@@ -769,7 +769,7 @@ describe('classwork.service', () => {
         )
 
       await expect(
-        classworkService.findClassworkAssignmentsById(classworkAssignment.id),
+        classworkService.findClassworkAssignmentById(classworkAssignment.id),
       ).resolves.toMatchObject({
         title: 'Bai Tap Nay Moi Nhat',
         description: 'Day la bai tap moi nhat',

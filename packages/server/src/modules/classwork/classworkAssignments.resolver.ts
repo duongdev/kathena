@@ -55,7 +55,7 @@ export class ClassworkAssignmentsResolver {
     if (orgId !== org.id) {
       throw new ForbiddenError()
     }
-    return this.classworkService.findClassworkAssignmentsById(
+    return this.classworkService.findClassworkAssignmentById(
       classworkAssignmentId,
     )
   }
