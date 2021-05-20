@@ -182,7 +182,7 @@ export class ClassworkService {
     },
     update: { title?: string; description?: string; dueDate?: string },
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { id, orgId } = query
+    const { id, orgId, accountId } = query
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
@@ -196,7 +196,7 @@ export class ClassworkService {
 
     if (
       !(await this.authService.canAccountManageCourse(
-        query.accountId,
+        accountId,
         classworkAssignmentUpdate.courseId,
       ))
     ) {
@@ -214,13 +214,11 @@ export class ClassworkService {
     if (update.dueDate) {
       const currentDate = new Date()
       const dueDateInput = new Date(update.dueDate)
-
       if (
         dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
       ) {
         throw new Error('START_DATE_INVALID')
       }
-
       classworkAssignmentUpdate.dueDate = dueDateInput
     }
 

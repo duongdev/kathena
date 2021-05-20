@@ -517,7 +517,7 @@ describe('classwork.service', () => {
           org.id,
           {
             createdByAccountId: accountLecturer.id,
-            title: 'Bai Tap Nay Moi Nhat Ne',
+            title: 'Bai Tap 01',
             dueDate: '2021-07-21',
             description: '',
           },
@@ -535,11 +535,11 @@ describe('classwork.service', () => {
             orgId: org.id,
           },
           {
-            title: 'Bai Tap Nay Co Ten Moi',
+            title: 'Day La Bai Tap Moi',
           },
         ),
       ).resolves.toMatchObject({
-        title: 'Bai Tap Nay Co Ten Moi',
+        title: 'Day La Bai Tap Moi',
       })
     })
 
@@ -599,7 +599,7 @@ describe('classwork.service', () => {
           org.id,
           {
             createdByAccountId: accountLecturer.id,
-            title: 'Bai Tap Nay Moi Nhat',
+            title: 'Bai Tap Nay Moi',
             dueDate: '2021-07-21',
             description: '',
           },
@@ -617,12 +617,12 @@ describe('classwork.service', () => {
             orgId: org.id,
           },
           {
-            description: 'Bai Tap Nay Co Description Moi Ne',
+            description: 'Bai Tap Nay Moi Them Description',
           },
         ),
       ).resolves.toMatchObject({
-        title: 'Bai Tap Nay Moi Nhat',
-        description: 'Bai Tap Nay Co Description Moi Ne',
+        title: 'Bai Tap Nay Moi',
+        description: 'Bai Tap Nay Moi Them Description',
       })
     })
 
