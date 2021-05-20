@@ -220,6 +220,7 @@ export class ClassworkService {
       ) {
         throw new Error('START_DATE_INVALID')
       }
+
       classworkAssignmentUpdate.dueDate = dueDateInput
     }
 
