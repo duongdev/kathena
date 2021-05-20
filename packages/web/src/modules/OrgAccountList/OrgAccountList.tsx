@@ -6,8 +6,10 @@ import AccountAvatar, {
 } from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import AccountStatusChip from 'components/AccountStatusChip'
+import Search from 'components/Search'
 import { UserPlus } from 'phosphor-react'
 
+import { ANY } from '@kathena/types'
 import {
   Button,
   DataTable,
@@ -15,6 +17,7 @@ import {
   PageContainer,
   Typography,
   useDialogState,
+  useLocationQuery,
   usePagination,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
@@ -28,8 +31,14 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
+  const { query } = useLocationQuery()
   const { data, loading, refetch } = useOrgAccountListQuery({
-    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
+    variables: {
+      orgId: org.id,
+      limit: perPage,
+      skip: page * perPage,
+      searchText: query.searchText as ANY,
+    },
   })
   const [
     createAccountDialogOpen,
@@ -49,6 +58,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
       className={classes.root}
       title="Danh sách người dùng"
       actions={[
+        <Search />,
         <Button
           variant="contained"
           color="primary"
