@@ -171,46 +171,8 @@ describe('classwork.service', () => {
         description: 'description',
       }
 
-      it(`throws error if orgId invalid`, async () => {
-        expect.assertions(1)
-
-        await expect(
-          classworkService.updateClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-            updateClassworkMaterialInput,
-          ),
-        ).rejects.toThrowError(`ORG_ID_INVALID`)
-      })
-
-      it(`throws error if accountId invalid`, async () => {
-        expect.assertions(1)
-        jest
-          .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-
-        await expect(
-          classworkService.updateClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-            updateClassworkMaterialInput,
-          ),
-        ).rejects.toThrowError(`ACCOUNT_ID_INVALID`)
-      })
-
       it(`throws error if account can't manage course`, async () => {
         expect.assertions(1)
-        jest
-          .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService['accountService'], 'findOneAccount')
-          .mockResolvedValueOnce({ id: objectId() } as never)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
@@ -225,31 +187,6 @@ describe('classwork.service', () => {
             updateClassworkMaterialInput,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-      })
-
-      it(`throws error if classworkMaterialId invalid`, async () => {
-        expect.assertions(1)
-        jest
-          .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService['accountService'], 'findOneAccount')
-          .mockResolvedValueOnce({ id: objectId() } as never)
-
-        jest
-          .spyOn(classworkService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as never)
-
-        await expect(
-          classworkService.updateClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-            updateClassworkMaterialInput,
-          ),
-        ).rejects.toThrowError(`CLASSWORKMATERIAL_ID_INVALID`)
       })
 
       it(`returns a updated classworkMaterial`, async () => {
@@ -276,25 +213,7 @@ describe('classwork.service', () => {
           )
 
         jest
-          .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService['accountService'], 'findOneAccount')
-          .mockResolvedValueOnce({ name: 'Not null' } as never)
-          .mockResolvedValueOnce({ name: 'Not null' } as never)
-          .mockResolvedValueOnce({ name: 'Not null' } as never)
-
-        jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService['classworkMaterialModel'], 'exists')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)

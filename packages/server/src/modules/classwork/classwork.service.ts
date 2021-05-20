@@ -115,30 +115,8 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
-    if (!(await this.orgService.validateOrgId(orgId))) {
-      throw new Error('ORG_ID_INVALID')
-    }
-
-    if (
-      !(await this.accountService.findOneAccount({
-        id: accountId,
-        orgId,
-      }))
-    ) {
-      throw new Error('ACCOUNT_ID_INVALID')
-    }
-
     if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-    }
-
-    const classworkMaterial = await this.classworkMaterialModel.exists({
-      _id: classworkMaterialId,
-      orgId,
-    })
-
-    if (!classworkMaterial) {
-      throw new Error(`CLASSWORKMATERIAL_ID_INVALID`)
     }
 
     const input = { ...updateClassworkMaterialInput }

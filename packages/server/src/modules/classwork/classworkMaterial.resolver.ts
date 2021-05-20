@@ -54,11 +54,11 @@ export class ClassworkMaterialResolver {
   @UsePipes(ValidationPipe)
   async updateClassworkMaterial(
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
     @Args('courseId', { type: () => ID })
     courseId: string,
     @Args('classworkMaterialId', { type: () => ID })
     classworkMaterialId: string,
-    @CurrentAccount() account: Account,
     @Args('updateClassworkMaterialInput')
     updateClassworkMaterialInput: UpdateClassworkMaterialInput,
   ): Promise<ClassworkMaterial | null> {
