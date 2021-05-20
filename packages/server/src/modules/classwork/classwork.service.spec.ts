@@ -517,7 +517,7 @@ describe('classwork.service', () => {
           org.id,
           {
             createdByAccountId: accountLecturer.id,
-            title: 'Bai Tap Nay Moi Nhat',
+            title: 'Bai Tap Nay Moi Nhat Ne',
             dueDate: '2021-07-21',
             description: '',
           },
@@ -535,11 +535,11 @@ describe('classwork.service', () => {
             orgId: org.id,
           },
           {
-            title: 'Bai Tap Nay Co Ten Moi',
+            title: 'Bai Tap Nay Co Ten Moi Ne',
           },
         ),
       ).resolves.toMatchObject({
-        title: 'Bai Tap Nay Co Ten Moi',
+        title: 'Bai Tap Nay Co Ten Moi Ne',
       })
     })
 
