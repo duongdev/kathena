@@ -386,6 +386,7 @@ describe('classwork.service', () => {
         classworkService.updateClassworkAssignment(
           {
             id: objectId(),
+            accountId: objectId(),
             orgId: objectId(),
           },
           {
@@ -393,6 +394,71 @@ describe('classwork.service', () => {
           },
         ),
       ).rejects.toThrowError(`Could not find classworkAssignment to update`)
+    })
+
+    it(`throws error if account can't manage course`, async () => {
+      expect.assertions(1)
+
+      const classworkAssignmentId = objectId()
+      const orgIdTest = objectId()
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(false as never)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentId,
+            accountId: objectId(),
+            orgId: orgIdTest,
+          },
+          {
+            title: 'Con meo ngu ngoc ne anh',
+          },
+        ),
+      ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    })
+
+    it(`throw error if start date invalid`, async () => {
+      expect.assertions(1)
+
+      const classworkAssignmentId = objectId()
+      const orgIdTest = objectId()
+      const accountIdTest = objectId()
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentId,
+            accountId: accountIdTest,
+            orgId: orgIdTest,
+          },
+          {
+            dueDate: '2020-07-21',
+          },
+        ),
+      ).rejects.toThrowError('START_DATE_INVALID')
     })
 
     it(`returns the classworkAssignment with a new title`, async () => {
@@ -420,9 +486,6 @@ describe('classwork.service', () => {
         displayName: 'Nguyen Van Hai',
       })
 
-      jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
       jest
         .spyOn(authService, 'accountHasPermission')
         .mockResolvedValueOnce(true as never)
@@ -467,7 +530,8 @@ describe('classwork.service', () => {
       await expect(
         classworkService.updateClassworkAssignment(
           {
-            id: accountLecturer.id,
+            id: classworkAssignmentUpdate.id,
+            accountId: accountLecturer.id,
             orgId: org.id,
           },
           {
@@ -505,9 +569,6 @@ describe('classwork.service', () => {
       })
 
       jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-      jest
         .spyOn(authService, 'accountHasPermission')
         .mockResolvedValueOnce(true as never)
       jest
@@ -551,7 +612,8 @@ describe('classwork.service', () => {
       await expect(
         classworkService.updateClassworkAssignment(
           {
-            id: accountLecturer.id,
+            id: classworkAssignmentUpdate.id,
+            accountId: accountLecturer.id,
             orgId: org.id,
           },
           {
@@ -589,9 +651,6 @@ describe('classwork.service', () => {
         displayName: 'Nguyen Van Hai',
       })
 
-      jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
       jest
         .spyOn(authService, 'accountHasPermission')
         .mockResolvedValueOnce(true as never)
@@ -635,7 +694,8 @@ describe('classwork.service', () => {
 
       const updateDate = await classworkService.updateClassworkAssignment(
         {
-          id: accountLecturer.id,
+          id: classworkAssignmentUpdate.id,
+          accountId: accountLecturer.id,
           orgId: org.id,
         },
         {

@@ -91,10 +91,12 @@ export class ClassworkAssignmentsResolver {
     @Args('courseId', { type: () => ID }) courseId: string,
     @Args('updateInput') updateInput: UpdateClassworkAssignmentInput,
     @CurrentOrg() currentOrg: Org,
+    @CurrentAccount() currentAccount: Account,
   ): Promise<ClassworkAssignment> {
     return this.classworkService.updateClassworkAssignment(
       {
         id: classworkAssignmentId,
+        accountId: currentAccount.id,
         orgId: currentOrg.id,
       },
       updateInput,

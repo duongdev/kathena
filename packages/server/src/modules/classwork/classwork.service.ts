@@ -177,6 +177,7 @@ export class ClassworkService {
   async updateClassworkAssignment(
     query: {
       id: string
+      accountId: string
       orgId: string
     },
     update: { title?: string; description?: string; dueDate?: string },
@@ -193,6 +194,15 @@ export class ClassworkService {
       throw new Error(`Could not find classworkAssignment to update`)
     }
 
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkAssignmentUpdate.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
     if (update.title) {
       classworkAssignmentUpdate.title = update.title
     }
@@ -202,9 +212,14 @@ export class ClassworkService {
     }
 
     if (update.dueDate) {
-      const dueDateInput = new Date(
-        new Date(update.dueDate).setHours(7, 0, 0, 0),
-      )
+      const currentDate = new Date()
+      const dueDateInput = new Date(update.dueDate)
+
+      if (
+        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      ) {
+        throw new Error('START_DATE_INVALID')
+      }
       classworkAssignmentUpdate.dueDate = dueDateInput
     }
 
