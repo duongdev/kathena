@@ -97,7 +97,8 @@ const StudyingCourse: FC<StudyingCourseProps> = () => {
               onChange={handleChange('classworks')}
             >
               <AccordionSummary expandIcon={<CaretDown size={24} />}>
-                <Typography className={classes.heading}>Bài tập</Typography>
+                {/* <Typography className={classes.heading}>Bài tập</Typography> */}
+                <Typography>Bài tập</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>Bài tập sẽ render tại đây</Typography>
