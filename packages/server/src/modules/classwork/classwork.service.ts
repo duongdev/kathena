@@ -161,7 +161,7 @@ export class ClassworkService {
     }
 
     this.logger.log(
-      `[${this.updateClassworkMaterial.name}] Created classworkMaterial successfully`,
+      `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
     )
 
     this.logger.verbose({
