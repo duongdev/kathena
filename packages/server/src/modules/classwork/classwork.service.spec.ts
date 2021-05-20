@@ -171,8 +171,29 @@ describe('classwork.service', () => {
         description: 'description',
       }
 
+      it(`throws error if classworkMaterial not found`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`CLASSWORKMATERIAL_NOT_FOUND`)
+      })
+
       it(`throws error if account can't manage course`, async () => {
         expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
@@ -180,7 +201,6 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterial(
-            objectId(),
             objectId(),
             objectId(),
             objectId(),
@@ -222,7 +242,6 @@ describe('classwork.service', () => {
           classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
             objectId(),
-            objectId(),
             classworkMaterial.id,
             updateClassworkMaterialInput,
           ),
@@ -231,7 +250,6 @@ describe('classwork.service', () => {
         await expect(
           classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
-            objectId(),
             objectId(),
             classworkMaterial.id,
             {
@@ -245,7 +263,6 @@ describe('classwork.service', () => {
         await expect(
           classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
-            objectId(),
             objectId(),
             classworkMaterial.id,
             {

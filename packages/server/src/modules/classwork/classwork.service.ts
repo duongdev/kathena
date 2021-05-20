@@ -100,7 +100,6 @@ export class ClassworkService {
   async updateClassworkMaterial(
     orgId: string,
     accountId: string,
-    courseId: string,
     classworkMaterialId: string,
     updateClassworkMaterialInput: UpdateClassworkMaterialInput,
   ): Promise<DocumentType<ClassworkMaterial>> {
@@ -111,11 +110,24 @@ export class ClassworkService {
     this.logger.verbose({
       orgId,
       accountId,
-      courseId,
       updateClassworkMaterialInput,
     })
 
-    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      _id: classworkMaterialId,
+      orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkMaterial.courseId,
+      ))
+    ) {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
@@ -155,7 +167,6 @@ export class ClassworkService {
     this.logger.verbose({
       orgId,
       accountId,
-      courseId,
       updateClassworkMaterialInput,
     })
 

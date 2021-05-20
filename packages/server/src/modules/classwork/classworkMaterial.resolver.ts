@@ -56,7 +56,6 @@ export class ClassworkMaterialResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
     @Args('courseId', { type: () => ID })
-    courseId: string,
     @Args('classworkMaterialId', { type: () => ID })
     classworkMaterialId: string,
     @Args('updateClassworkMaterialInput')
@@ -65,7 +64,6 @@ export class ClassworkMaterialResolver {
     return this.classworkService.updateClassworkMaterial(
       org.id,
       account.id,
-      courseId,
       classworkMaterialId,
       updateClassworkMaterialInput,
     )
