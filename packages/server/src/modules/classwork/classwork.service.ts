@@ -174,6 +174,40 @@ export class ClassworkService {
     return classworkAssignment
   }
 
+  async updateClassworkAssignmentPublication(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    publicationState: Publication,
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findById(
+      query.id,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(
+        `Couldn't find classworkAssignment to update publicationState`,
+      )
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    classworkAssignment.publicationState = publicationState
+
+    const updateClassworkAssignmentPublication =
+      await classworkAssignment.save()
+
+    return updateClassworkAssignmentPublication
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

@@ -17,7 +17,7 @@ import {
 import { ForbiddenError } from 'type-graphql'
 
 // eslint-disable-next-line import/order
-import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
@@ -78,6 +78,24 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Mutation((_return) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_SetClassworkAssignmentPublication)
+  @UsePipes(ValidationPipe)
+  async updateClassworkAssignmentPublication(
+    @Args('id', { type: () => ID }) classworkAssignmentId: string,
+    @Args('publication', { type: () => String }) publication: Publication,
+    @CurrentOrg() currentOrg: Org,
+    @CurrentAccount() currentAccount: Account,
+  ): Promise<ClassworkAssignment> {
+    return this.classworkService.updateClassworkAssignmentPublication(
+      {
+        id: classworkAssignmentId,
+        accountId: currentAccount.id,
+        orgId: currentOrg.id,
+      },
+      publication,
+    )
+  }
   /**
    * END ASSIGNMENTS RESOLVER
    */
