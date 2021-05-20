@@ -184,6 +184,7 @@ export class ClassworkService {
   ): Promise<DocumentType<ClassworkAssignment>> {
     const classworkAssignment = await this.classworkAssignmentsModel.findById(
       query.id,
+      query.orgId,
     )
 
     if (!classworkAssignment) {
