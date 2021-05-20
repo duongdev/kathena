@@ -224,7 +224,6 @@ export class ClassworkService {
     }
 
     const updated = await classworkAssignmentUpdate.save()
-
     return updated
   }
   /**

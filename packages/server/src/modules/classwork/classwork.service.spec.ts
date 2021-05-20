@@ -699,13 +699,13 @@ describe('classwork.service', () => {
           orgId: org.id,
         },
         {
-          dueDate: '2021-08-01',
+          dueDate: '2021-08-03',
         },
       )
 
       const dateUpdated = new Date(updateDate.dueDate).toString()
       const expectDate = new Date(
-        new Date('2021-08-01').setHours(7, 0, 0, 0),
+        new Date('2021-08-03').setHours(7, 0, 0, 0),
       ).toString()
       expect(dateUpdated).toBe(expectDate)
     })
