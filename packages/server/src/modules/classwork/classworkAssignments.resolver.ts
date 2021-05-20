@@ -88,7 +88,6 @@ export class ClassworkAssignmentsResolver {
   @UsePipes(ValidationPipe)
   async updateClassworkAssignment(
     @Args('id', { type: () => ID }) classworkAssignmentId: string,
-    @Args('courseId', { type: () => ID }) courseId: string,
     @Args('updateInput') updateInput: UpdateClassworkAssignmentInput,
     @CurrentOrg() currentOrg: Org,
     @CurrentAccount() currentAccount: Account,
