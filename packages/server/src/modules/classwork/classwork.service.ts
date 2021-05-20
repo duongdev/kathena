@@ -105,7 +105,7 @@ export class ClassworkService {
     updateClassworkMaterialInput: UpdateClassworkMaterialInput,
   ): Promise<DocumentType<ClassworkMaterial>> {
     this.logger.log(
-      `[${this.updateClassworkMaterial.name}] Creating new classworkMaterial`,
+      `[${this.updateClassworkMaterial.name}] Updating classworkMaterial`,
     )
 
     this.logger.verbose({
