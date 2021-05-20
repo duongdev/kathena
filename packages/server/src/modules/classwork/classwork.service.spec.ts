@@ -693,6 +693,191 @@ describe('classwork.service', () => {
     })
   })
 
+  describe('findClassworkAssignments', () => {
+    it('throws error if the course is not found', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      await expect(
+        classworkService.findClassworkAssignments({
+          orgId: org.id,
+          courseId: objectId(),
+        }),
+      ).rejects.toThrowError('Course not found')
+    })
+
+    it('returns an array classworkAssignment', async () => {
+      expect.assertions(3)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh',
+        roles: ['lecturer'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const accountStaff = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh1.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh1',
+        roles: ['staff'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'NODEJS',
+        name: 'NodeJS',
+        description: 'This is NodeJs',
+        createdByAccountId: accountStaff.id,
+        imageFileId: objectId(),
+      })
+
+      const createCourseInput: ANY = {
+        academicSubjectId: academicSubject.id,
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [accountLecturer.id],
+      }
+
+      const courseTest1 = await academicService.createCourse(
+        accountStaff.id,
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      const courseTest2 = await academicService.createCourse(
+        accountStaff.id,
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accountLecturer.id,
+        courseTest1.id,
+        org.id,
+        {
+          createdByAccountId: accountLecturer.id,
+          title: 'Bai Tap 1',
+          dueDate: '2021-07-21',
+          description: 'Day la bai tap 1',
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accountLecturer.id,
+        courseTest1.id,
+        org.id,
+        {
+          createdByAccountId: accountLecturer.id,
+          title: 'Bai Tap 2',
+          dueDate: '2021-07-21',
+          description: 'Day la bai tap 2',
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accountLecturer.id,
+        courseTest1.id,
+        org.id,
+        {
+          createdByAccountId: accountLecturer.id,
+          title: 'Kiem Tra',
+          dueDate: '2021-07-21',
+          description: 'Day la bai kiem tra',
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accountLecturer.id,
+        courseTest2.id,
+        org.id,
+        {
+          createdByAccountId: accountLecturer.id,
+          title: 'Kiem Tra Course 2',
+          dueDate: '2021-07-21',
+          description: 'Day la bai kiem tra',
+        },
+      )
+
+      await expect(
+        classworkService.findClassworkAssignments({
+          orgId: org.id,
+        }),
+      ).resolves.toMatchObject([
+        {
+          title: 'Bai Tap 1',
+          description: 'Day la bai tap 1',
+        },
+        {
+          title: 'Bai Tap 2',
+          description: 'Day la bai tap 2',
+        },
+        {
+          title: 'Kiem Tra',
+          description: 'Day la bai kiem tra',
+        },
+        {
+          title: 'Kiem Tra Course 2',
+          description: 'Day la bai kiem tra',
+        },
+      ])
+
+      await expect(
+        classworkService.findClassworkAssignments({
+          orgId: org.id,
+          courseId: courseTest1.id,
+        }),
+      ).resolves.toMatchObject([
+        {
+          title: 'Bai Tap 1',
+          description: 'Day la bai tap 1',
+        },
+        {
+          title: 'Bai Tap 2',
+          description: 'Day la bai tap 2',
+        },
+        {
+          title: 'Kiem Tra',
+          description: 'Day la bai kiem tra',
+        },
+      ])
+
+      await expect(
+        classworkService.findClassworkAssignments({
+          orgId: org.id,
+          courseId: courseTest2.id,
+        }),
+      ).resolves.toMatchObject([
+        {
+          title: 'Kiem Tra Course 2',
+          description: 'Day la bai kiem tra',
+        },
+      ])
+    })
+  })
+
   /**
    * END CLASSWORK ASSIGNMENTS
    */

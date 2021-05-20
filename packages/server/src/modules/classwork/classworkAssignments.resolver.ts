@@ -57,11 +57,11 @@ export class ClassworkAssignmentsResolver {
     @Args('searchText', { type: () => String, nullable: true })
     searchText?: string,
   ): Promise<ClassworkAssignment[]> {
-    return this.classworkService.findClassworkAssignments(
-      org.id,
+    return this.classworkService.findClassworkAssignments({
+      orgId: org.id,
       courseId,
       searchText,
-    )
+    })
   }
 
   @Query((_return) => ClassworkAssignmentPayload)

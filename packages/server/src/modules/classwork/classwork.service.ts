@@ -107,47 +107,39 @@ export class ClassworkService {
    * START CLASSWORK ASSIGNMENT
    */
 
-  async findClassworkAssignments(
-    orgId: string,
-    courseId?: string,
-    searchText?: string,
-  ): Promise<ClassworkAssignment[]> {
-    const { classworkAssignmentsModel, courseModel } = this
+  async findClassworkAssignments(filter: {
+    orgId: string
+    courseId?: string
+    searchText?: string
+  }): Promise<ClassworkAssignment[]> {
+    const { courseModel } = this
+    const { orgId, courseId, searchText } = filter
 
-    if (searchText) {
-      if (courseId) {
-        const course = courseModel.findById(courseId)
-        if (!course) {
-          throw new Error('Course not found')
-        }
-
-        // returns the classwork assignments list by searchText, orgId and courseId
-        const listClassworkAssignments = await classworkAssignmentsModel.find({
-          $text: {
-            $search: searchText,
-          },
-          orgId,
-          courseId,
-        })
-        return listClassworkAssignments
-      }
-      // returns the classwork assignments list by searchText and orgId
-      const listClassworkAssignments = await classworkAssignmentsModel.find({
-        $text: {
-          $search: searchText,
-        },
-        orgId,
-      })
-
-      return listClassworkAssignments
-    }
-
-    // return all classwork assignments in Classwork
-    const listClassworkAssignments = await classworkAssignmentsModel.find({
+    const classworkAssignmentsModel = this.classworkAssignmentsModel.find({
       orgId,
     })
 
-    this.logger.log(listClassworkAssignments)
+    if (searchText) {
+      classworkAssignmentsModel.find({
+        $text: {
+          $search: searchText,
+        },
+      })
+    }
+
+    if (courseId) {
+      const course = await courseModel.findById(courseId)
+      if (!course) {
+        throw new Error('Course not found')
+      }
+      classworkAssignmentsModel.find({
+        courseId,
+      })
+    }
+
+    // return all classwork assignments in Classwork
+    const listClassworkAssignments = await classworkAssignmentsModel
+
     return listClassworkAssignments
   }
 
