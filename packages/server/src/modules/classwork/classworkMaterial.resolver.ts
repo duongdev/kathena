@@ -54,6 +54,7 @@ export class ClassworkMaterialResolver {
 
   @Mutation((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
+  @UsePipes(ValidationPipe)
   async findClassworkMaterialById(
     @Args('classworkMaterial', { type: () => ID })
     classworkMaterial: string,
