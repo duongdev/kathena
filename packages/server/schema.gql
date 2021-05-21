@@ -119,6 +119,7 @@ enum Permission {
   Classwork_CreateClassworkAssignment
   Classwork_UpdateClassworkAssignment
   Classwork_CreateClassworkMaterial
+  Classwork_SetClassworkAssignmentPublication
   NoPermission
 }
 
@@ -277,7 +278,7 @@ type Mutation {
   findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
-  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
