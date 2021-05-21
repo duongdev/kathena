@@ -55,7 +55,6 @@ export class ClassworkMaterialResolver {
   async updateClassworkMaterial(
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
-    @Args('courseId', { type: () => ID })
     @Args('classworkMaterialId', { type: () => ID })
     classworkMaterialId: string,
     @Args('updateClassworkMaterialInput')
