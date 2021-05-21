@@ -53,6 +53,7 @@ export const lecturer: Role = {
     P.Classwork_CreateClassworkAssignment,
     P.Classwork_SetClassworkAssignmentPublication,
     P.Classwork_UpdateClassworkAssignment,
+    P.Classwork_UpdateClassworkMaterial,
   ],
 }
 

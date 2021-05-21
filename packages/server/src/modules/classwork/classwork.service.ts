@@ -8,11 +8,13 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
+import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { Nullable, PageOptionsInput } from 'types'
 import {
+  UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
   ClassworkFilterInput,
   CreateClassworkMaterialInput,
@@ -40,6 +42,9 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => AccountService))
+    private readonly accountService: AccountService,
   ) {}
 
   /**
@@ -91,6 +96,82 @@ export class ClassworkService {
   // TODO: classworkService.findClassworkMaterial
 
   // TODO: classworkService.updateClassworkMaterial
+
+  async updateClassworkMaterial(
+    orgId: string,
+    accountId: string,
+    classworkMaterialId: string,
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updating classworkMaterial`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      updateClassworkMaterialInput,
+    })
+
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      _id: classworkMaterialId,
+      orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkMaterial.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const input = { ...updateClassworkMaterialInput }
+
+    if (updateClassworkMaterialInput.title) {
+      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
+      if (title) {
+        input.title = title
+      }
+    }
+
+    if (updateClassworkMaterialInput.description) {
+      input.description = removeExtraSpaces(
+        updateClassworkMaterialInput.description,
+      )
+    }
+
+    const classworkMaterialUpdated =
+      await this.classworkMaterialModel.findOneAndUpdate(
+        {
+          _id: classworkMaterialId,
+          orgId,
+        },
+        input,
+        { new: true },
+      )
+
+    if (!classworkMaterialUpdated) {
+      throw new Error(`CAN'T_TO_UPDATE_CLASSWORKMATERIAL`)
+    }
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      updateClassworkMaterialInput,
+    })
+
+    return classworkMaterialUpdated
+  }
 
   // TODO: classworkService.updateClassworkMaterialPublication
 

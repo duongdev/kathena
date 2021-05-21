@@ -11,7 +11,10 @@ import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkMaterialInput } from './classwork.type'
+import {
+  UpdateClassworkMaterialInput,
+  CreateClassworkMaterialInput,
+} from './classwork.type'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -30,7 +33,6 @@ describe('classwork.service', () => {
 
     classworkService = module.get<ClassworkService>(ClassworkService)
     academicService = module.get<AcademicService>(AcademicService)
-    classworkService = module.get<ClassworkService>(ClassworkService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
     accountService = module.get<AccountService>(AccountService)
@@ -156,51 +158,163 @@ describe('classwork.service', () => {
         })
       })
     })
-  })
-  // TODO: Delete this line and start the code here
 
-  // TODO: classworkService.findClassworkMaterial
+    // TODO: Delete this line and start the code here
 
-  // TODO: classworkService.updateClassworkMaterial
+    // TODO: classworkService.findClassworkMaterial
 
-  // TODO: classworkService.updateClassworkMaterialPublication
+    // TODO: classworkService.updateClassworkMaterial
 
-  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+    describe('updateClassworkMaterial', () => {
+      const updateClassworkMaterialInput: UpdateClassworkMaterialInput = {
+        title: 'title',
+        description: 'description',
+      }
 
-  describe('findClassworkMaterialById', () => {
-    it('returns null if the findClassworkMaterialById is not found', async () => {
-      expect.assertions(1)
+      it(`throws error if classworkMaterial not found`, async () => {
+        expect.assertions(1)
 
-      await expect(
-        classworkService.findClassworkMaterialById(objectId()),
-      ).resolves.toBeNull()
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`CLASSWORKMATERIAL_NOT_FOUND`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as never)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            updateClassworkMaterialInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`returns an updated classworkMaterial`, async () => {
+        expect.assertions(3)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkMaterial =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              description: 'description',
+              title: 'title',
+              publicationState: Publication.Draft,
+            },
+          )
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            updateClassworkMaterialInput,
+          ),
+        ).resolves.toMatchObject(updateClassworkMaterialInput)
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            {
+              title: 'Đặng  Hiếu Liêm',
+            },
+          ),
+        ).resolves.toMatchObject({
+          title: 'Đặng Hiếu Liêm',
+        })
+
+        await expect(
+          classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            {
+              description: 'Đặng  Hiếu Liêm',
+            },
+          ),
+        ).resolves.toMatchObject({
+          description: 'Đặng Hiếu Liêm',
+        })
+      })
     })
+    // TODO: classworkService.updateClassworkMaterialPublication
 
-    it('returns a classworkMateria', async () => {
-      expect.assertions(1)
+    // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
-      jest
-        .spyOn(classworkService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as ANY)
+    // TODO: classworkService.findClassworkMaterialById
 
-      jest
-        .spyOn(classworkService['authService'], 'canAccountManageCourse')
-        .mockResolvedValueOnce(true as ANY)
+    describe('findClassworkMaterialById', () => {
+      it('returns null if the findClassworkMaterialById is not found', async () => {
+        expect.assertions(1)
 
-      const classworkMateriaTest =
-        await classworkService.createClassworkMaterial(
-          objectId(),
-          objectId(),
-          objectId(),
-          {
-            title: 'Day la ClassworkMaterial Test',
-          },
-        )
+        await expect(
+          classworkService.findClassworkMaterialById(objectId()),
+        ).resolves.toBeNull()
+      })
 
-      await expect(
-        classworkService.findClassworkMaterialById(classworkMateriaTest.id),
-      ).resolves.toMatchObject({
-        title: 'Day la ClassworkMaterial Test',
+      it('returns a classworkMateria', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkMateriaTest =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: 'Day la ClassworkMaterial Test',
+            },
+          )
+
+        await expect(
+          classworkService.findClassworkMaterialById(classworkMateriaTest.id),
+        ).resolves.toMatchObject({
+          title: 'Day la ClassworkMaterial Test',
+        })
       })
     })
   })

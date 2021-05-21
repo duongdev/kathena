@@ -34,9 +34,11 @@ export enum Permission {
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
+
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
 
+  Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   /** For testing purpose */

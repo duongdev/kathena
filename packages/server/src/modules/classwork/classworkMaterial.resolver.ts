@@ -1,7 +1,7 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError, ID } from 'type-graphql'
+import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
@@ -10,7 +10,10 @@ import { Org } from 'modules/org/models/Org'
 import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkMaterialInput } from './classwork.type'
+import {
+  UpdateClassworkMaterialInput,
+  CreateClassworkMaterialInput,
+} from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -42,11 +45,31 @@ export class ClassworkMaterialResolver {
       createClassworkMaterialInput,
     )
   }
+
   // TODO: Delete this line and start the code here
 
   // TODO: classworkService.findClassworkMaterial
 
   // TODO: classworkService.updateClassworkMaterial
+
+  @Mutation((_return) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_UpdateClassworkMaterial)
+  @UsePipes(ValidationPipe)
+  async updateClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkMaterialId: string,
+    @Args('updateClassworkMaterialInput')
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput,
+  ): Promise<ClassworkMaterial | null> {
+    return this.classworkService.updateClassworkMaterial(
+      org.id,
+      account.id,
+      classworkMaterialId,
+      updateClassworkMaterialInput,
+    )
+  }
 
   // TODO: classworkService.updateClassworkMaterialPublication
 
