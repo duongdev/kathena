@@ -274,7 +274,127 @@ describe('classwork.service', () => {
         })
       })
     })
+
     // TODO: classworkService.updateClassworkMaterialPublication
+
+    describe('updateClassworkMaterialPublication', () => {
+      it(`throws error if classworkMaterial not found`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            objectId(),
+            objectId(),
+            objectId(),
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`CLASSWORKMATERIAL_NOT_FOUND`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as never)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            objectId(),
+            objectId(),
+            objectId(),
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`throws error if can't update classworkMaterial`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(
+            classworkService['classworkMaterialModel'],
+            'findByIdAndUpdate',
+          )
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            objectId(),
+            objectId(),
+            objectId(),
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`CAN'T_UPDATE_CLASSMATERIAL_PUBLICATION`)
+      })
+
+      it(`returns an updated classworkMaterial`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkMaterial =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              description: 'description',
+              title: 'title',
+              publicationState: Publication.Draft,
+            },
+          )
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            Publication.Draft,
+          ),
+        ).resolves.toMatchObject({
+          publicationState: Publication.Draft,
+        })
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            Publication.Published,
+          ),
+        ).resolves.toMatchObject({
+          publicationState: Publication.Published,
+        })
+      })
+    })
 
     // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 

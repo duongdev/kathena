@@ -175,6 +175,66 @@ export class ClassworkService {
 
   // TODO: classworkService.updateClassworkMaterialPublication
 
+  async updateClassworkMaterialPublication(
+    orgId: string,
+    accountId: string,
+    classworkMaterialId: string,
+    publicationState: string,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updating classworkMaterialPublication`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      classworkMaterialId,
+      publicationState,
+    })
+
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      _id: classworkMaterialId,
+      orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkMaterial.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const UpdatedClassworkMaterial =
+      await this.classworkMaterialModel.findByIdAndUpdate(
+        { _id: classworkMaterial.id, orgId: classworkMaterial.orgId },
+        { publicationState },
+        { new: true },
+      )
+
+    if (!UpdatedClassworkMaterial) {
+      throw new Error(`CAN'T_UPDATE_CLASSMATERIAL_PUBLICATION`)
+    }
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updated classworkMaterialPublication successfully`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      classworkMaterialId,
+      publicationState,
+    })
+
+    return UpdatedClassworkMaterial
+  }
+
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
   async findClassworkMaterialById(

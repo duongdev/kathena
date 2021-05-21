@@ -3,7 +3,7 @@ import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
-import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
@@ -72,6 +72,25 @@ export class ClassworkMaterialResolver {
   }
 
   // TODO: classworkService.updateClassworkMaterialPublication
+
+  @Mutation((_return) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_SetClassworkMaterialPublication)
+  @UsePipes(ValidationPipe)
+  async updateClassworkMaterialPublication(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkMaterialId', { type: () => ID, nullable: false })
+    classworkMaterialId: string,
+    @Args('publicationState', { type: () => Publication, nullable: false })
+    publicationState: string,
+  ): Promise<ClassworkMaterial> {
+    return this.classworkService.updateClassworkMaterialPublication(
+      org.id,
+      account.id,
+      classworkMaterialId,
+      publicationState,
+    )
+  }
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
