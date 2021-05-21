@@ -35,6 +35,7 @@ export enum Permission {
   Studying_Course_Access = 'Studying_Course_Access',
 
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
+  Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
 
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
