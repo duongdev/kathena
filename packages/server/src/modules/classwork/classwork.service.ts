@@ -12,7 +12,7 @@ import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
@@ -176,6 +176,12 @@ export class ClassworkService {
   // TODO: classworkService.updateClassworkMaterialPublication
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+
+  async findClassworkMaterialById(
+    classworkMaterial: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkMaterialModel.findById(classworkMaterial)
+  }
   /**
    * END CLASSWORK MATERIAL
    */
