@@ -284,7 +284,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
                   >
-                    Tạo môn họcsss
+                    Tạo môn học
                   </Button>,
                 ]
               : [
