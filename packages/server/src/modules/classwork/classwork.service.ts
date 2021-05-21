@@ -182,6 +182,15 @@ export class ClassworkService {
     },
     publicationState: Publication,
   ): Promise<DocumentType<ClassworkAssignment>> {
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
     const classworkAssignment = await this.classworkAssignmentsModel.findById(
       query.id,
       query.orgId,
@@ -191,15 +200,6 @@ export class ClassworkService {
       throw new Error(
         `Couldn't find classworkAssignment to update publicationState`,
       )
-    }
-
-    if (
-      !(await this.authService.canAccountManageCourse(
-        query.accountId,
-        classworkAssignment.courseId,
-      ))
-    ) {
-      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
     classworkAssignment.publicationState = publicationState
