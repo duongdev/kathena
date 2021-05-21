@@ -108,6 +108,7 @@ enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Classwork_ListClassworkAssignment
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -119,6 +120,7 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_CreateClassworkMaterial
   NoPermission
 }
 
@@ -204,6 +206,11 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
 }
 
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -219,6 +226,7 @@ type Query {
   accountByUserName(username: String!): Account
   orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
+  canAccountManageRoles(roles: [String!]!): Boolean!
   academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
@@ -226,6 +234,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -249,6 +258,11 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input ClassworkFilterInput {
+  orgId: ID!
+  courseId: ID
 }
 
 type Mutation {
@@ -277,6 +291,8 @@ type Mutation {
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   addAttachmentsToClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  addAttachmentsToClassworkAssignments(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
 }
@@ -337,6 +353,16 @@ input UpdateOrgOfficeInput {
   name: String
   address: String
   phone: String
+}
+
+input CreateClassworkMaterialInput {
+  title: String!
+  description: String
+  publicationState: Publication!
+}
+
+input AddAttachmentsToClassworkInput {
+  attachments: [Upload!]!
 }
 
 input CreateClassworkAssignmentInput {

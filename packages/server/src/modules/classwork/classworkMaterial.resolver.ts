@@ -1,28 +1,16 @@
-import {
-  forwardRef,
-  Inject /** , UsePipes, ValidationPipe */,
-} from '@nestjs/common'
-import {
-  Args,
-  ID,
-  Mutation,
-  /* Parent,
-  Query,
-  ResolveField, */
-  Resolver,
-} from '@nestjs/graphql'
-// import { differenceInMinutes } from 'date-fns'
-// import { ForbiddenError } from 'type-graphql'
-
+import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
+import { ID } from 'type-graphql'
 
-import { CurrentOrg, UseAuthGuard } from 'core/auth'
+import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable /* , PageOptionsInput */ } from 'types'
 
 import { ClassworkService } from './classwork.service'
+import { CreateClassworkMaterialInput } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -68,6 +56,32 @@ export class ClassworkMaterialResolver {
     )
   }
 
+  @Mutation((_return) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_CreateClassworkMaterial)
+  @UsePipes(ValidationPipe)
+  async createClassworkMaterial(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('CreateClassworkMaterialInput')
+    createClassworkMaterialInput: CreateClassworkMaterialInput,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<ClassworkMaterial> {
+    return this.classworkService.createClassworkMaterial(
+      account.id,
+      org.id,
+      courseId,
+      createClassworkMaterialInput,
+    )
+  }
+  // TODO: Delete this line and start the code here
+
+  // TODO: classworkService.findClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterial
+
+  // TODO: classworkService.updateClassworkMaterialPublication
+
+  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
   /**
    * END MATERIAL RESOLVER
    */

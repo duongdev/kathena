@@ -1,10 +1,15 @@
 import {
   createUnionType,
-  Field /* , Field, ID, InputType, Int, ObjectType */,
+  Field,
+  ID,
   InputType,
+  Int,
+  ObjectType,
 } from '@nestjs/graphql'
 import { IsNotEmpty } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
+
+import { Publication } from 'core'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -31,6 +36,35 @@ export const ResultClassworkUnion = createUnionType({
   },
 })
 
+@ObjectType()
+export class ClassworkAssignmentPayload {
+  @Field((_type) => [ClassworkAssignment])
+  classworkAssignments: ClassworkAssignment[]
+
+  @Field((_type) => Int)
+  count: number
+}
+
+@InputType()
+export class ClassworkFilterInput {
+  @Field((_type) => ID)
+  orgId: string
+
+  @Field((_type) => ID, { nullable: true })
+  courseId?: string
+}
+@InputType()
+export class CreateClassworkMaterialInput {
+  @Field()
+  title: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field((_type) => Publication)
+  publicationState?: string
+}
+
 @InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
@@ -45,10 +79,10 @@ export class CreateClassworkAssignmentInput {
   description?: string
 
   @Field((_type) => [String], { defaultValue: [] })
-  attachments?: string
+  attachments?: string[]
 
   @Field()
-  @IsNotEmpty({ message: 'Duedate cannot be empty' })
+  @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
 }
 

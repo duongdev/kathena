@@ -8,15 +8,11 @@ import {
   Args,
   ID,
   Mutation,
-  /** Args,
-  ID,
-  Mutation,
-  /* Parent,
   Query,
-  ResolveField, */
+  /* ResolveField, */
   Resolver,
 } from '@nestjs/graphql'
-
+import { ForbiddenError } from 'type-graphql'
 // eslint-disable-next-line import/order
 import { DocumentType } from '@typegoose/typegoose'
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
@@ -24,12 +20,14 @@ import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { ANY, Nullable /* , PageOptionsInput */ } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
-  AddAttachmentsToClassworkInput,
+  ClassworkAssignmentPayload,
+  ClassworkFilterInput,
   CreateClassworkAssignmentInput,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -82,6 +80,22 @@ export class ClassworkAssignmentsResolver {
       org.id,
       classworkAssignmentId,
       listFileId,
+    )
+  }
+
+  @Query((_return) => ClassworkAssignmentPayload)
+  @UseAuthGuard(P.Classwork_ListClassworkAssignment)
+  async findAndPaginateClassworkAssignments(
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @CurrentOrg() org: Org,
+    @Args('filter') filter: ClassworkFilterInput,
+  ): Promise<ClassworkAssignmentPayload> {
+    if (org.id !== filter.orgId) {
+      throw new ForbiddenError()
+    }
+    return this.classworkService.findAndPaginateClassworkAssignments(
+      pageOptions,
+      filter,
     )
   }
 

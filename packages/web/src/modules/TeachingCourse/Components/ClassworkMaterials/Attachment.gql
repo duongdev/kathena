@@ -1,0 +1,14 @@
+mutation CreateClassworkAssignment(
+  $courseId: ID!
+  $input: CreateClassworkAssignmentInput!
+) {
+  createClassworkAssignment(courseId: $courseId, input: $input) {
+    id
+    orgId
+    createdAt
+    courseId
+    title
+    type
+    description
+  }
+}

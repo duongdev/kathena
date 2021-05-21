@@ -25,6 +25,7 @@ export enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
 
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
@@ -38,6 +39,7 @@ export enum Permission {
   Studying_Course_Access = 'Studying_Course_Access',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
 
+  Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

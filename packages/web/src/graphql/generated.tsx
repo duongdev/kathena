@@ -92,6 +92,45 @@ export type BaseModel = {
   updatedAt: Scalars['DateTime']
 }
 
+export type ClassworkAssignment = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  courseId: Scalars['ID']
+  title: Scalars['String']
+  type: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  attachments: Array<Scalars['String']>
+  publicationState: Scalars['String']
+  dueDate: Scalars['DateTime']
+}
+
+export type ClassworkAssignmentPayload = {
+  classworkAssignments: Array<ClassworkAssignment>
+  count: Scalars['Int']
+}
+
+export type ClassworkFilterInput = {
+  orgId: Scalars['ID']
+  courseId?: Maybe<Scalars['ID']>
+}
+
+export type ClassworkMaterial = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  courseId: Scalars['ID']
+  title: Scalars['String']
+  type: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  attachments: Array<Scalars['String']>
+  publicationState: Scalars['String']
+}
+
 export type Course = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -133,6 +172,20 @@ export type CreateAccountInput = {
   email: Scalars['String']
   displayName?: Maybe<Scalars['String']>
   roles: Array<Scalars['String']>
+}
+
+export type CreateClassworkAssignmentInput = {
+  createdByAccountId: Scalars['String']
+  title: Scalars['String']
+  description: Scalars['String']
+  attachments?: Maybe<Array<Scalars['String']>>
+  dueDate: Scalars['String']
+}
+
+export type CreateClassworkMaterialInput = {
+  title: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  publicationState: Publication
 }
 
 export type CreateCourseInput = {
@@ -185,6 +238,8 @@ export type Mutation = {
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
+  createClassworkMaterial: ClassworkMaterial
+  createClassworkAssignment: ClassworkAssignment
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -269,6 +324,16 @@ export type MutationFindOrgOfficesArgs = {
   orgId?: Maybe<Scalars['ID']>
 }
 
+export type MutationCreateClassworkMaterialArgs = {
+  CreateClassworkMaterialInput: CreateClassworkMaterialInput
+  courseId: Scalars['ID']
+}
+
+export type MutationCreateClassworkAssignmentArgs = {
+  courseId: Scalars['ID']
+  input: CreateClassworkAssignmentInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -313,6 +378,7 @@ export enum Permission {
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
@@ -323,6 +389,8 @@ export enum Permission {
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
+  Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
+  Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   NoPermission = 'NoPermission',
 }
 
@@ -336,6 +404,7 @@ export type Query = {
   accountByUserName?: Maybe<Account>
   orgAccounts: OrgAccountsPayload
   authenticate: AuthenticatePayload
+  canAccountManageRoles: Scalars['Boolean']
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
   findCourseById: Course
@@ -343,6 +412,7 @@ export type Query = {
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
+  findAndPaginateClassworkAssignments: ClassworkAssignmentPayload
 }
 
 export type QueryAccountArgs = {
@@ -356,6 +426,10 @@ export type QueryAccountByUserNameArgs = {
 export type QueryOrgAccountsArgs = {
   filter: AccountsFilterInput
   pageOptions: PageOptionsInput
+}
+
+export type QueryCanAccountManageRolesArgs = {
+  roles: Array<Scalars['String']>
 }
 
 export type QueryAcademicSubjectsArgs = {
@@ -382,6 +456,11 @@ export type QueryFileArgs = {
 
 export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
+}
+
+export type QueryFindAndPaginateClassworkAssignmentsArgs = {
+  filter: ClassworkFilterInput
+  pageOptions: PageOptionsInput
 }
 
 export type SignInPayload = {
@@ -445,6 +524,12 @@ export type AuthenticateQuery = {
     org: AuthOrgFragment
   }
 }
+
+export type CanAccountManageRolesQueryVariables = Exact<{
+  roles: Array<Scalars['String']> | Scalars['String']
+}>
+
+export type CanAccountManageRolesQuery = Pick<Query, 'canAccountManageRoles'>
 
 export type AccountAvatarQueryVariables = Exact<{
   id: Scalars['ID']
@@ -545,6 +630,15 @@ export type UpdateAccountStatusMutation = {
     Account,
     'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
   >
+}
+
+export type UpdateAccountMutationVariables = Exact<{
+  accountId: Scalars['ID']
+  update: UpdateAccountInput
+}>
+
+export type UpdateAccountMutation = {
+  updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
 }
 
 export type UpdateSelfAccountMutationVariables = Exact<{
@@ -717,6 +811,18 @@ export type StudyingCourseListQuery = {
       >
     >
   }
+}
+
+export type CreateClassworkAssignmentMutationVariables = Exact<{
+  courseId: Scalars['ID']
+  input: CreateClassworkAssignmentInput
+}>
+
+export type CreateClassworkAssignmentMutation = {
+  createClassworkAssignment: Pick<
+    ClassworkAssignment,
+    'id' | 'orgId' | 'createdAt' | 'courseId' | 'title' | 'type' | 'description'
+  >
 }
 
 export type CourseDetailQueryVariables = Exact<{
@@ -1250,6 +1356,140 @@ export type AuthenticateLazyQueryHookResult = ReturnType<
 export type AuthenticateQueryResult = Apollo.QueryResult<
   AuthenticateQuery,
   AuthenticateQueryVariables
+>
+export const CanAccountManageRolesDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'CanAccountManageRoles' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'roles' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'canAccountManageRoles' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'roles' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'roles' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CanAccountManageRolesProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >
+} &
+  TChildProps
+export function withCanAccountManageRoles<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables,
+    CanAccountManageRolesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables,
+    CanAccountManageRolesProps<TChildProps, TDataName>
+  >(CanAccountManageRolesDocument, {
+    alias: 'canAccountManageRoles',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCanAccountManageRolesQuery__
+ *
+ * To run a query within a React component, call `useCanAccountManageRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCanAccountManageRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCanAccountManageRolesQuery({
+ *   variables: {
+ *      roles: // value for 'roles'
+ *   },
+ * });
+ */
+export function useCanAccountManageRolesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >(CanAccountManageRolesDocument, options)
+}
+export function useCanAccountManageRolesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    CanAccountManageRolesQuery,
+    CanAccountManageRolesQueryVariables
+  >(CanAccountManageRolesDocument, options)
+}
+export type CanAccountManageRolesQueryHookResult = ReturnType<
+  typeof useCanAccountManageRolesQuery
+>
+export type CanAccountManageRolesLazyQueryHookResult = ReturnType<
+  typeof useCanAccountManageRolesLazyQuery
+>
+export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
+  CanAccountManageRolesQuery,
+  CanAccountManageRolesQueryVariables
 >
 export const AccountAvatarDocument: DocumentNode = {
   kind: 'Document',
@@ -2438,6 +2678,155 @@ export type UpdateAccountStatusMutationResult =
 export type UpdateAccountStatusMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
+>
+export const UpdateAccountDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateAccount' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'accountId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'update' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateAccountInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateAccount' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'update' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'accountId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roles' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateAccountMutationFn = Apollo.MutationFunction<
+  UpdateAccountMutation,
+  UpdateAccountMutationVariables
+>
+export type UpdateAccountProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateAccount<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables,
+    UpdateAccountProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables,
+    UpdateAccountProps<TChildProps, TDataName>
+  >(UpdateAccountDocument, {
+    alias: 'updateAccount',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateAccountMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountMutation, { data, loading, error }] = useUpdateAccountMutation({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *      update: // value for 'update'
+ *   },
+ * });
+ */
+export function useUpdateAccountMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateAccountMutation,
+    UpdateAccountMutationVariables
+  >(UpdateAccountDocument, options)
+}
+export type UpdateAccountMutationHookResult = ReturnType<
+  typeof useUpdateAccountMutation
+>
+export type UpdateAccountMutationResult =
+  Apollo.MutationResult<UpdateAccountMutation>
+export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<
+  UpdateAccountMutation,
+  UpdateAccountMutationVariables
 >
 export const UpdateSelfAccountDocument: DocumentNode = {
   kind: 'Document',
@@ -4614,6 +5003,159 @@ export type StudyingCourseListQueryResult = Apollo.QueryResult<
   StudyingCourseListQuery,
   StudyingCourseListQueryVariables
 >
+export const CreateClassworkAssignmentDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateClassworkAssignmentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  CreateClassworkAssignmentMutation,
+  CreateClassworkAssignmentMutationVariables
+>
+export type CreateClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables,
+    CreateClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables,
+    CreateClassworkAssignmentProps<TChildProps, TDataName>
+  >(CreateClassworkAssignmentDocument, {
+    alias: 'createClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useCreateClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClassworkAssignmentMutation, { data, loading, error }] = useCreateClassworkAssignmentMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >(CreateClassworkAssignmentDocument, options)
+}
+export type CreateClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useCreateClassworkAssignmentMutation
+>
+export type CreateClassworkAssignmentMutationResult =
+  Apollo.MutationResult<CreateClassworkAssignmentMutation>
+export type CreateClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
