@@ -20,16 +20,21 @@ import { ForbiddenError } from 'type-graphql'
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
+// eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
+
+// import { Org } from 'modules/org/models/Org'
 // import { Nullable, PageOptionsInput } from 'types'
 import { PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  CreateClassworkAssignmentInput,
+  UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   ClassworkFilterInput,
-  CreateClassworkAssignmentInput,
 } from './classwork.type'
+// import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
@@ -78,6 +83,25 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_UpdateClassworkAssignment)
+  @UsePipes(ValidationPipe)
+  async updateClassworkAssignment(
+    @Args('id', { type: () => ID }) classworkAssignmentId: string,
+    @Args('updateInput') updateInput: UpdateClassworkAssignmentInput,
+    @CurrentOrg() currentOrg: Org,
+    @CurrentAccount() currentAccount: Account,
+  ): Promise<ClassworkAssignment> {
+    return this.classworkService.updateClassworkAssignment(
+      {
+        id: classworkAssignmentId,
+        accountId: currentAccount.id,
+        orgId: currentOrg.id,
+      },
+      updateInput,
+    )
+  }
+
   @Mutation((_return) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_SetClassworkAssignmentPublication)
   @UsePipes(ValidationPipe)
@@ -96,6 +120,7 @@ export class ClassworkAssignmentsResolver {
       publication,
     )
   }
+
   /**
    * END ASSIGNMENTS RESOLVER
    */

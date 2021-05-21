@@ -116,6 +116,7 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_UpdateClassworkAssignment
   Classwork_CreateClassworkMaterial
   Classwork_SetClassworkAssignmentPublication
   NoPermission
@@ -272,9 +273,13 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
+<<<<<<< HEAD
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
+=======
+  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+>>>>>>> 27892259e25addecae0d428b149848404832a3e3
 }
 
 input CreateAccountInput {
@@ -346,4 +351,10 @@ input CreateClassworkAssignmentInput {
   description: String!
   attachments: [String!] = []
   dueDate: String!
+}
+
+input UpdateClassworkAssignmentInput {
+  title: String
+  description: String
+  dueDate: String
 }
