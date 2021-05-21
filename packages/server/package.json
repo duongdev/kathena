@@ -37,7 +37,7 @@
     "class-validator": "0.13.1",
     "cross-env": "7.0.3",
     "date-fns": "2.21.3",
-    "dotenv": "9.0.2",
+    "dotenv": "10.0.0",
     "fastify-static": "4.2.2",
     "file-type": "16.4.0",
     "graphql": "15.5.0",
