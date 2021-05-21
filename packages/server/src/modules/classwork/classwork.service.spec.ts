@@ -362,7 +362,6 @@ describe('classwork.service', () => {
           courseTest.id,
           org.id,
           {
-            createdByAccountId: accountLecturer.id,
             title: 'Bai Tap Nay Moi Nhat',
             dueDate: '2021-07-21',
             description: '',
@@ -439,7 +438,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
@@ -454,7 +452,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
@@ -469,7 +466,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
@@ -484,7 +480,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
@@ -499,7 +494,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
@@ -597,7 +591,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
@@ -612,7 +605,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
@@ -627,7 +619,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
@@ -642,7 +633,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
@@ -657,7 +647,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
