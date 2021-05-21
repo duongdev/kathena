@@ -126,8 +126,6 @@ export class ClassworkService {
       orgId,
     })
 
-    console.log(course)
-
     if (!course) {
       throw new Error('Course not found')
     }
