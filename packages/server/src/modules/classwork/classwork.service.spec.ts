@@ -166,6 +166,44 @@ describe('classwork.service', () => {
   // TODO: classworkService.updateClassworkMaterialPublication
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+
+  describe('findClassworkMaterialById', () => {
+    it('returns null if the findClassworkMaterialById is not found', async () => {
+      expect.assertions(1)
+
+      await expect(
+        classworkService.findClassworkMaterialById(objectId()),
+      ).resolves.toBeNull()
+    })
+
+    it('returns a classworkMateria', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as ANY)
+
+      jest
+        .spyOn(classworkService['authService'], 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as ANY)
+
+      const classworkMateriaTest =
+        await classworkService.createClassworkMaterial(
+          objectId(),
+          objectId(),
+          objectId(),
+          {
+            title: 'Day la ClassworkMaterial Test',
+          },
+        )
+
+      await expect(
+        classworkService.findClassworkMaterialById(classworkMateriaTest.id),
+      ).resolves.toMatchObject({
+        title: 'Day la ClassworkMaterial Test',
+      })
+    })
+  })
   /**
    * END CLASSWORK MATERIAL
    */

@@ -22,6 +22,7 @@ export enum Permission {
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
 
   Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
+  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
 
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',

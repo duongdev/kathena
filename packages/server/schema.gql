@@ -105,6 +105,7 @@ enum Permission {
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
   Classwork_ListClassworkAssignment
+  Classwork_ListClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -274,8 +275,9 @@ type Mutation {
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
-  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
+  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
 }
 
