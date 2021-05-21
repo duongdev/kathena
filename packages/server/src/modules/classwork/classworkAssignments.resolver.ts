@@ -46,7 +46,7 @@ export class ClassworkAssignmentsResolver {
 
   @Query((_return) => ClassworkAssignmentPayload)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
-  async findAndPaginateClassworkAssignments(
+  async classworkAssignments(
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
     @Args('filter') filter: ClassworkFilterInput,
