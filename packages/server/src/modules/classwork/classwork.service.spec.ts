@@ -209,7 +209,7 @@ describe('classwork.service', () => {
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
       })
 
-      it(`returns a updated classworkMaterial`, async () => {
+      it(`returns an updated classworkMaterial`, async () => {
         expect.assertions(3)
 
         jest
