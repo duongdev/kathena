@@ -109,14 +109,26 @@ export class ClassworkService {
 
   async findClassworkAssignments(filter: {
     orgId: string
-    courseId?: string
+    courseId: string
     searchText?: string
   }): Promise<ClassworkAssignment[]> {
     const { courseModel } = this
     const { orgId, courseId, searchText } = filter
 
+    const course = await courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    console.log(course)
+
+    if (!course) {
+      throw new Error('Course not found')
+    }
+
     const classworkAssignmentsModel = this.classworkAssignmentsModel.find({
       orgId,
+      courseId,
     })
 
     if (searchText) {
@@ -124,16 +136,6 @@ export class ClassworkService {
         $text: {
           $search: searchText,
         },
-      })
-    }
-
-    if (courseId) {
-      const course = await courseModel.findById(courseId)
-      if (!course) {
-        throw new Error('Course not found')
-      }
-      classworkAssignmentsModel.find({
-        courseId,
       })
     }
 

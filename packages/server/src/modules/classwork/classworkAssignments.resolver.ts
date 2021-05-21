@@ -53,7 +53,7 @@ export class ClassworkAssignmentsResolver {
   @UsePipes(ValidationPipe)
   async findClassworkAssignments(
     @CurrentOrg() org: Org,
-    @Args('courseId', { type: () => ID, nullable: true }) courseId?: string,
+    @Args('courseId', { type: () => ID }) courseId: string,
     @Args('searchText', { type: () => String, nullable: true })
     searchText?: string,
   ): Promise<ClassworkAssignment[]> {

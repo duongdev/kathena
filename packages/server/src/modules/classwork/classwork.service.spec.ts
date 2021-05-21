@@ -711,7 +711,7 @@ describe('classwork.service', () => {
     })
 
     it('returns an array classworkAssignment', async () => {
-      expect.assertions(3)
+      expect.assertions(2)
 
       const org = await orgService.createOrg({
         namespace: 'kmin-edu',
@@ -820,29 +820,6 @@ describe('classwork.service', () => {
           description: 'Day la bai kiem tra',
         },
       )
-
-      await expect(
-        classworkService.findClassworkAssignments({
-          orgId: org.id,
-        }),
-      ).resolves.toMatchObject([
-        {
-          title: 'Bai Tap 1',
-          description: 'Day la bai tap 1',
-        },
-        {
-          title: 'Bai Tap 2',
-          description: 'Day la bai tap 2',
-        },
-        {
-          title: 'Kiem Tra',
-          description: 'Day la bai kiem tra',
-        },
-        {
-          title: 'Kiem Tra Course 2',
-          description: 'Day la bai kiem tra',
-        },
-      ])
 
       await expect(
         classworkService.findClassworkAssignments({
