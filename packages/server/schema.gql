@@ -216,7 +216,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
-  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -340,7 +340,6 @@ input CreateClassworkMaterialInput {
 }
 
 input CreateClassworkAssignmentInput {
-  createdByAccountId: String!
   title: String!
   description: String!
   attachments: [String!] = []
