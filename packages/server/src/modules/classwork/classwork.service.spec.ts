@@ -758,7 +758,6 @@ describe('classwork.service', () => {
           courseTest.id,
           org.id,
           {
-            createdByAccountId: accountLecturer.id,
             title: 'Bai Tap Nay Moi Nhat',
             dueDate: '2021-07-21',
             description: '',
@@ -836,7 +835,6 @@ describe('classwork.service', () => {
           courseTest.id,
           org.id,
           {
-            createdByAccountId: accountLecturer.id,
             title: 'Bai Tap Nay Moi Nhat',
             dueDate: '2021-07-21',
             description: '',
