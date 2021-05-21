@@ -1,23 +1,18 @@
 import {
   createUnionType,
-  Field,
-  ID,
+  Field /* , Field, ID, InputType, Int, ObjectType */,
   InputType,
+  ID,
   Int,
   ObjectType,
 } from '@nestjs/graphql'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 import { Publication } from 'core'
 
 import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-// import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
-
-// import { OrgRoleName } from 'modules/auth/models'
-
-// import { Classwork } from './models/Classwork'
 
 export const ResultClassworkUnion = createUnionType({
   name: 'ResultClassworkUnion',
@@ -34,6 +29,27 @@ export const ResultClassworkUnion = createUnionType({
     return [ClassworkMaterial, ClassworkAssignment]
   },
 })
+
+@InputType()
+export class UpdateClassworkMaterialInput {
+  @Field({ nullable: true })
+  title?: string
+
+  @Field({ nullable: true })
+  description?: string
+}
+
+@InputType()
+export class CreateClassworkMaterialInput {
+  @Field()
+  title: string
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field((_type) => Publication)
+  publicationState?: string
+}
 
 @ObjectType()
 export class ClassworkAssignmentPayload {
@@ -52,24 +68,9 @@ export class ClassworkFilterInput {
   @Field((_type) => ID, { nullable: true })
   courseId?: string
 }
-@InputType()
-export class CreateClassworkMaterialInput {
-  @Field()
-  title: string
-
-  @Field({ nullable: true })
-  description?: string
-
-  @Field((_type) => Publication)
-  publicationState?: string
-}
 
 @InputType()
 export class CreateClassworkAssignmentInput {
-  @Field()
-  @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
-  createdByAccountId: string
-
   @Field()
   @IsNotEmpty({ message: 'Title cannot be empty' })
   title: string
@@ -83,4 +84,19 @@ export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
+}
+
+@InputType()
+export class UpdateClassworkAssignmentInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  title?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  description?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  dueDate?: string
 }
