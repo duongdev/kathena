@@ -3,6 +3,10 @@ import { FC, useCallback } from 'react'
 import { useSnackbar } from 'notistack'
 
 import { FormDialog } from '@kathena/ui'
+import {
+  ListOrgOfficesDocument,
+  useCreateAccountMutation,
+} from 'graphql/generated'
 
 import {
   FormContent,
@@ -15,7 +19,7 @@ export type CreateAttachmentDialogProps = {
   onClose: () => void
 }
 const initialValues: AttachmentEditorInput = {
-  createdByAccountId: '',
+  // createdByAccountId: '',
   title: '',
   description: '',
   dueDate: '',
@@ -28,17 +32,15 @@ const CreateAttachmentDialog: FC<CreateAttachmentDialogProps> = (props) => {
 
   const handleCreateAttachment = useCallback(
     async (input: AttachmentEditorInput) => {
-      onClose()
       try {
-        enqueueSnackbar(`Đã tạo văn phòng`, {
-          variant: 'error',
-        })
-        onClose()
-      } catch (err) {
-        enqueueSnackbar(`Đã tạo văn phòng `, {
+        enqueueSnackbar(`Đã tạo tài liệu`, {
           variant: 'success',
         })
+        console.log(input)
+
         onClose()
+      } catch (err) {
+        console.error(err)
       }
     },
     [onClose, enqueueSnackbar],

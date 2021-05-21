@@ -19,7 +19,7 @@ import { ANY } from '@kathena/types'
 import { ApolloErrorList, TextFormField, FileItem, Button } from '@kathena/ui'
 
 export type AttachmentEditorInput = {
-  createdByAccountId: string
+  // createdByAccountId: string
   title: string
   description: string
   dueDate: string
@@ -27,7 +27,7 @@ export type AttachmentEditorInput = {
 }
 
 export const labels: Record<keyof AttachmentEditorInput, string> = {
-  createdByAccountId: 'Tiêu đề',
+  // createdByAccountId: 'Tiêu đề',
   title: 'Tiêu đề',
   description: 'Mô tả',
   dueDate: 'Ngày tạo',
@@ -37,11 +37,11 @@ export const labels: Record<keyof AttachmentEditorInput, string> = {
 export const validationSchema: SchemaOf<AttachmentEditorInput> = yup.object({
   title: yup.string().label(labels.title).trim().required(),
 
-  createdByAccountId: yup
-    .string()
-    .label(labels.createdByAccountId)
-    .trim()
-    .required(),
+  // createdByAccountId: yup
+  //   .string()
+  //   .label(labels.createdByAccountId)
+  //   .trim()
+  //   .required(),
 
   description: yup.string().label(labels.description).trim().required(),
 
