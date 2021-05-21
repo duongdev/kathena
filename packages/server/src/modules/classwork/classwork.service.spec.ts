@@ -166,6 +166,44 @@ describe('classwork.service', () => {
   // TODO: classworkService.updateClassworkMaterialPublication
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+
+  describe('findClassworkMaterialById', () => {
+    it('returns null if the findClassworkMaterialById is not found', async () => {
+      expect.assertions(1)
+
+      await expect(
+        classworkService.findClassworkMaterialById(objectId()),
+      ).resolves.toBeNull()
+    })
+
+    it('returns a classworkMateria', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as ANY)
+
+      jest
+        .spyOn(classworkService['authService'], 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as ANY)
+
+      const classworkMateriaTest =
+        await classworkService.createClassworkMaterial(
+          objectId(),
+          objectId(),
+          objectId(),
+          {
+            title: 'Day la ClassworkMaterial Test',
+          },
+        )
+
+      await expect(
+        classworkService.findClassworkMaterialById(classworkMateriaTest.id),
+      ).resolves.toMatchObject({
+        title: 'Day la ClassworkMaterial Test',
+      })
+    })
+  })
   /**
    * END CLASSWORK MATERIAL
    */
@@ -362,7 +400,6 @@ describe('classwork.service', () => {
           courseTest.id,
           org.id,
           {
-            createdByAccountId: accountLecturer.id,
             title: 'Bai Tap Nay Moi Nhat',
             dueDate: '2021-07-21',
             description: '',
@@ -374,8 +411,342 @@ describe('classwork.service', () => {
     })
   })
 
+  describe('updateClassworkAssignment', () => {
+    it(`throws error if couldn't find classworkAssignment to update`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(null)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: objectId(),
+            accountId: objectId(),
+            orgId: objectId(),
+          },
+          {
+            title: 'Con meo ngu ngoc ne anh',
+          },
+        ),
+      ).rejects.toThrowError(`Could not find classworkAssignment to update`)
+    })
+
+    it(`throws error if account can't manage course`, async () => {
+      expect.assertions(1)
+
+      const classworkAssignmentId = objectId()
+      const orgIdTest = objectId()
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(false as never)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentId,
+            accountId: objectId(),
+            orgId: orgIdTest,
+          },
+          {
+            title: 'Con meo ngu ngoc ne anh',
+          },
+        ),
+      ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    })
+
+    it(`throw error if start date invalid`, async () => {
+      expect.assertions(1)
+
+      const classworkAssignmentId = objectId()
+      const orgIdTest = objectId()
+      const accountIdTest = objectId()
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentId,
+            accountId: accountIdTest,
+            orgId: orgIdTest,
+          },
+          {
+            dueDate: '2020-07-21',
+          },
+        ),
+      ).rejects.toThrowError('START_DATE_INVALID')
+    })
+
+    it(`returns the classworkAssignment with a new title`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentUpdate =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap 01',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(classworkAssignmentUpdate)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentUpdate.id,
+            accountId: accountLecturer.id,
+            orgId: org.id,
+          },
+          {
+            title: 'Day La Bai Tap Moi',
+          },
+        ),
+      ).resolves.toMatchObject({
+        title: 'Day La Bai Tap Moi',
+      })
+    })
+
+    it(`returns the classworkAssignment with a new description`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentUpdate =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(classworkAssignmentUpdate)
+
+      await expect(
+        classworkService.updateClassworkAssignment(
+          {
+            id: classworkAssignmentUpdate.id,
+            accountId: accountLecturer.id,
+            orgId: org.id,
+          },
+          {
+            description: 'Bai Tap Nay Moi Them Description',
+          },
+        ),
+      ).resolves.toMatchObject({
+        title: 'Bai Tap Nay Moi',
+        description: 'Bai Tap Nay Moi Them Description',
+      })
+    })
+
+    it(`returns the classworkAssignment with a new dueDate`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentUpdate =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(classworkAssignmentUpdate)
+
+      const updateDate = await classworkService.updateClassworkAssignment(
+        {
+          id: classworkAssignmentUpdate.id,
+          accountId: accountLecturer.id,
+          orgId: org.id,
+        },
+        {
+          dueDate: '2021-08-01',
+        },
+      )
+
+      const dateUpdated = new Date(updateDate.dueDate).toString()
+      const expectDate = new Date(
+        new Date('2021-08-01').setHours(7, 0, 0, 0),
+      ).toString()
+      expect(dateUpdated).toBe(expectDate)
+    })
+  })
+
   describe('findAndPaginateClassworkAssignments', () => {
-    it('rreturns array classworkAssignment and count find and pagination classworkAssignment', async () => {
+    it('returns array classworkAssignment and count find and pagination classworkAssignment', async () => {
       expect.assertions(1)
 
       const org = await orgService.createOrg({
@@ -439,7 +810,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
@@ -454,7 +824,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
@@ -469,7 +838,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
@@ -484,7 +852,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
@@ -499,7 +866,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
@@ -597,7 +963,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
@@ -612,7 +977,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
@@ -627,7 +991,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
@@ -642,7 +1005,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
@@ -657,7 +1019,6 @@ describe('classwork.service', () => {
           course.id,
           org.id,
           {
-            createdByAccountId,
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
@@ -689,6 +1050,185 @@ describe('classwork.service', () => {
           },
         ],
         count: listCreateClassworkAssignment.length,
+      })
+    })
+  })
+
+  describe('updateClassworkAssignmentPublication', () => {
+    it(`throws error if couldn't find classworkAssignment to update publicationState`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        classworkService.updateClassworkAssignmentPublication(
+          {
+            id: objectId(),
+            accountId: objectId(),
+            orgId: objectId(),
+          },
+          Publication.Draft,
+        ),
+      ).rejects.toThrow(
+        `Couldn't find classworkAssignment to update publicationState`,
+      )
+    })
+
+    it(`throws error if account can't manage course`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentTest =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
+        .mockResolvedValueOnce(classworkAssignmentTest)
+
+      await expect(
+        classworkService.updateClassworkAssignmentPublication(
+          {
+            id: classworkAssignmentTest.id,
+            accountId: objectId(),
+            orgId: org.id,
+          },
+          Publication.Published,
+        ),
+      ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    })
+
+    it(`returns the classworkAssignment with new publication`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentTest =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
+        .mockResolvedValueOnce(classworkAssignmentTest)
+
+      await expect(
+        classworkService.updateClassworkAssignmentPublication(
+          {
+            id: classworkAssignmentTest.id,
+            accountId: accountLecturer.id,
+            orgId: org.id,
+          },
+          Publication.Published,
+        ),
+      ).resolves.toMatchObject({
+        title: 'Bai Tap Nay Moi Nhat',
+        publicationState: Publication.Published,
       })
     })
   })
@@ -778,7 +1318,6 @@ describe('classwork.service', () => {
         courseTest1.id,
         org.id,
         {
-          createdByAccountId: accountLecturer.id,
           title: 'Bai Tap 1',
           dueDate: '2021-07-21',
           description: 'Day la bai tap 1',
@@ -790,7 +1329,6 @@ describe('classwork.service', () => {
         courseTest1.id,
         org.id,
         {
-          createdByAccountId: accountLecturer.id,
           title: 'Bai Tap 2',
           dueDate: '2021-07-21',
           description: 'Day la bai tap 2',
@@ -802,7 +1340,6 @@ describe('classwork.service', () => {
         courseTest1.id,
         org.id,
         {
-          createdByAccountId: accountLecturer.id,
           title: 'Kiem Tra',
           dueDate: '2021-07-21',
           description: 'Day la bai kiem tra',
@@ -814,7 +1351,6 @@ describe('classwork.service', () => {
         courseTest2.id,
         org.id,
         {
-          createdByAccountId: accountLecturer.id,
           title: 'Kiem Tra Course 2',
           dueDate: '2021-07-21',
           description: 'Day la bai kiem tra',
@@ -854,7 +1390,6 @@ describe('classwork.service', () => {
       ])
     })
   })
-
   /**
    * END CLASSWORK ASSIGNMENTS
    */

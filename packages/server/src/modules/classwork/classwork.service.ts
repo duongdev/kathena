@@ -12,7 +12,7 @@ import { Course } from 'modules/academic/models/Course'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 import {
   CreateClassworkAssignmentInput,
   ClassworkFilterInput,
@@ -99,6 +99,12 @@ export class ClassworkService {
   // TODO: classworkService.updateClassworkMaterialPublication
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+
+  async findClassworkMaterialById(
+    classworkMaterial: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkMaterialModel.findById(classworkMaterial)
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -216,6 +222,92 @@ export class ClassworkService {
     return classworkAssignment
   }
 
+  async updateClassworkAssignment(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    update: { title?: string; description?: string; dueDate?: string },
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const { id, orgId, accountId } = query
+
+    const classworkAssignmentUpdate =
+      await this.classworkAssignmentsModel.findOne({
+        _id: id,
+        orgId,
+      })
+
+    if (!classworkAssignmentUpdate) {
+      throw new Error(`Could not find classworkAssignment to update`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkAssignmentUpdate.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    if (update.title) {
+      classworkAssignmentUpdate.title = update.title
+    }
+
+    if (update.description) {
+      classworkAssignmentUpdate.description = update.description
+    }
+
+    if (update.dueDate) {
+      const currentDate = new Date()
+      const dueDateInput = new Date(update.dueDate)
+      if (
+        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      ) {
+        throw new Error('START_DATE_INVALID')
+      }
+      classworkAssignmentUpdate.dueDate = dueDateInput
+    }
+
+    const updated = await classworkAssignmentUpdate.save()
+    return updated
+  }
+
+  async updateClassworkAssignmentPublication(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    publicationState: Publication,
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findById(
+      query.id,
+      query.orgId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(
+        `Couldn't find classworkAssignment to update publicationState`,
+      )
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+    classworkAssignment.publicationState = publicationState
+
+    const updateClassworkAssignmentPublication =
+      await classworkAssignment.save()
+
+    return updateClassworkAssignmentPublication
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

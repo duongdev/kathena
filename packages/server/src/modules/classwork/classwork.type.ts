@@ -1,12 +1,12 @@
 import {
   createUnionType,
-  Field,
-  ID,
+  Field /* , Field, ID, InputType, Int, ObjectType */,
   InputType,
+  ID,
   Int,
   ObjectType,
 } from '@nestjs/graphql'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 import { Publication } from 'core'
 
@@ -67,10 +67,6 @@ export class CreateClassworkMaterialInput {
 @InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
-  @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
-  createdByAccountId: string
-
-  @Field()
   @IsNotEmpty({ message: 'Title cannot be empty' })
   title: string
 
@@ -83,4 +79,19 @@ export class CreateClassworkAssignmentInput {
   @Field()
   @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
+}
+
+@InputType()
+export class UpdateClassworkAssignmentInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  title?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  description?: string
+
+  @Field({ nullable: true })
+  @IsOptional()
+  dueDate?: string
 }
