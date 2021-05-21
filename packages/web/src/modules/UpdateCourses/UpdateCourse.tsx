@@ -210,7 +210,6 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                     </Grid>
                     <Grid item md={10}>
                       <AccountDisplayName
-                        className={classes.pointer}
                         accountId={lecturerId}
                         variant="body1"
                       />
@@ -289,11 +288,9 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                       </Grid>
                       <Grid item md={10}>
                         <AccountDisplayName
-                          className={classes.pointer}
                           accountId={studentId}
                           variant="body1"
                         />
-
                         <AccountUserName
                           variant="body2"
                           color="textSecondary"
