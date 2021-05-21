@@ -67,10 +67,6 @@ export class CreateClassworkMaterialInput {
 @InputType()
 export class CreateClassworkAssignmentInput {
   @Field()
-  @IsNotEmpty({ message: 'CreatedByAccountId cannot be empty' })
-  createdByAccountId: string
-
-  @Field()
   @IsNotEmpty({ message: 'Title cannot be empty' })
   title: string
 
