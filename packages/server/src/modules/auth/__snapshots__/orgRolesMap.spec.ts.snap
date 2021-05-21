@@ -86,6 +86,7 @@ Array [
     "name": "lecturer",
     "permissions": Array [
       "Academic_ListAcademicSubjects",
+      "Classwork_CreateClassworkMaterial",
       "Teaching_Course_Access",
       "Classwork_CreateClassworkAssignment",
     ],
