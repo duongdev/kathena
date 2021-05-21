@@ -25,6 +25,7 @@ export const staff: Role = {
     P.Classwork_ListClassworkAssignment,
     P.Classwork_ListClassworkMaterial,
     P.Classwork_CreateClassworkAssignment,
+    P.Classwork_UpdateClassworkAssignment,
   ],
 }
 
@@ -49,6 +50,7 @@ export const lecturer: Role = {
     P.Classwork_ListClassworkAssignment,
     P.Classwork_ListClassworkMaterial,
     P.Classwork_CreateClassworkAssignment,
+    P.Classwork_UpdateClassworkAssignment,
   ],
 }
 

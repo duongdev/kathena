@@ -180,6 +180,57 @@ export class ClassworkService {
     return classworkAssignment
   }
 
+  async updateClassworkAssignment(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    update: { title?: string; description?: string; dueDate?: string },
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const { id, orgId, accountId } = query
+
+    const classworkAssignmentUpdate =
+      await this.classworkAssignmentsModel.findOne({
+        _id: id,
+        orgId,
+      })
+
+    if (!classworkAssignmentUpdate) {
+      throw new Error(`Could not find classworkAssignment to update`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkAssignmentUpdate.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    if (update.title) {
+      classworkAssignmentUpdate.title = update.title
+    }
+
+    if (update.description) {
+      classworkAssignmentUpdate.description = update.description
+    }
+
+    if (update.dueDate) {
+      const currentDate = new Date()
+      const dueDateInput = new Date(update.dueDate)
+      if (
+        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      ) {
+        throw new Error('START_DATE_INVALID')
+      }
+      classworkAssignmentUpdate.dueDate = dueDateInput
+    }
+
+    const updated = await classworkAssignmentUpdate.save()
+    return updated
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

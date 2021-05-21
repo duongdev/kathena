@@ -117,6 +117,7 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_UpdateClassworkAssignment
   Classwork_CreateClassworkMaterial
   NoPermission
 }
@@ -275,6 +276,8 @@ type Mutation {
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
+  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, courseId: ID!, id: ID!): ClassworkAssignment!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
 }
 
 input CreateAccountInput {
@@ -346,4 +349,10 @@ input CreateClassworkAssignmentInput {
   description: String!
   attachments: [String!] = []
   dueDate: String!
+}
+
+input UpdateClassworkAssignmentInput {
+  title: String
+  description: String
+  dueDate: String
 }
