@@ -31,14 +31,14 @@ const AccountUserName: FC<AccountUserNameProps> = (props) => {
     skip: !!accountProp,
   })
 
-  const account = useMemo(
-    () => accountProp || data?.account,
-    [accountProp, data?.account],
-  )
-  const username = useMemo(
-    () => (account ? getUserName(account) : ''),
-    [account, getUserName],
-  )
+  const account = useMemo(() => accountProp || data?.account, [
+    accountProp,
+    data?.account,
+  ])
+  const username = useMemo(() => (account ? getUserName(account) : ''), [
+    account,
+    getUserName,
+  ])
 
   if (loading) return <Skeleton variant="text" className={classes.skeleton} />
 
