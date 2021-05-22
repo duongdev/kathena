@@ -105,6 +105,7 @@ enum Permission {
   OrgOffice_ListOrgOffices
   OrgOffice_UpdateOrgOffice
   Classwork_ListClassworkAssignment
+  Classwork_ListClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -116,7 +117,10 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_UpdateClassworkAssignment
+  Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
+  Classwork_SetClassworkAssignmentPublication
   NoPermission
 }
 
@@ -216,7 +220,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
-  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -272,7 +276,11 @@ type Mutation {
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
+  findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
+  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
+  updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
 }
 
 input CreateAccountInput {
@@ -339,10 +347,20 @@ input CreateClassworkMaterialInput {
   publicationState: Publication!
 }
 
+input UpdateClassworkMaterialInput {
+  title: String
+  description: String
+}
+
 input CreateClassworkAssignmentInput {
-  createdByAccountId: String!
   title: String!
   description: String!
   attachments: [String!] = []
   dueDate: String!
+}
+
+input UpdateClassworkAssignmentInput {
+  title: String
+  description: String
+  dueDate: String
 }
