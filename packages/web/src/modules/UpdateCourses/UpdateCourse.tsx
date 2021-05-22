@@ -131,21 +131,20 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
   }, [])
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
-  const [openLecturer, setOpenLecturer] =
-    useState<HTMLButtonElement | null>(null)
+  const [openLecturer, setOpenLecturer] = useState<HTMLButtonElement | null>(
+    null,
+  )
   const [openStudent, setOpenStudent] = useState<HTMLButtonElement | null>(null)
   // Mở chi tiết Lecturer :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
   const openLec = useMemo(() => Boolean(openLecturer), [openLecturer])
-  const idOpenLecturer = useMemo(
-    () => (open ? 'simple-popover' : undefined),
-    [open],
-  )
+  const idOpenLecturer = useMemo(() => (open ? 'simple-popover' : undefined), [
+    open,
+  ])
   const openStu = useMemo(() => Boolean(openStudent), [openStudent])
-  const idOpenStudent = useMemo(
-    () => (open ? 'simple-popover' : undefined),
-    [open],
-  )
+  const idOpenStudent = useMemo(() => (open ? 'simple-popover' : undefined), [
+    open,
+  ])
   const course = useMemo(() => data?.findCourseById, [data])
 
   if (loading) {
@@ -292,6 +291,7 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                           accountId={studentId}
                           variant="body1"
                         />
+
                         <AccountUserName
                           variant="body2"
                           color="textSecondary"
