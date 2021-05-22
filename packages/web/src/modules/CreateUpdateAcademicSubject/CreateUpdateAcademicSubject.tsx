@@ -13,7 +13,7 @@ import {
   FileItem,
   PageContainer,
   renderApolloError,
-  Spinner,
+  PageContainerSkeleton,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import {
@@ -259,7 +259,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
     [createMode, handleCreateAcademicSubject, handleUpdateAcademicSubject],
   )
 
-  if (loading) return <Spinner />
+  if (loading) return <PageContainerSkeleton maxWidth="md" />
 
   return (
     <Formik
