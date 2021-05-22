@@ -8,6 +8,7 @@ import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
 import { OrgService } from 'modules/org/org.service'
+import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 
 import { ANY, Nullable } from '../../types'
 
@@ -36,6 +37,9 @@ export class AcademicService {
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
+
+    @Inject(forwardRef(() => OrgOfficeService))
+    private readonly orgOfficeService: OrgOfficeService,
   ) {}
 
   async findAcademicSubjectByCode(
@@ -206,6 +210,7 @@ export class AcademicService {
   ): Promise<DocumentType<Course>> {
     const {
       academicSubjectId,
+      orgOfficeId,
       name,
       code,
       startDate,
@@ -232,12 +237,21 @@ export class AcademicService {
         createCourseInput.academicSubjectId,
       )) !== null
 
+    const orgOfficeIsExist =
+      (await this.orgOfficeService.findOrgOfficeById(
+        createCourseInput.orgOfficeId,
+      )) !== null
+
     if (!canCreateCourse) {
       throw new Error('ACCOUNT_HAS_NOT_PERMISSION')
     }
 
     if (!academicSubjectIsExist) {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
+    }
+
+    if (!orgOfficeIsExist) {
+      throw new Error('ORG_OFFICE_NOT_FOUND')
     }
 
     // Must be an array lecturer
@@ -278,6 +292,7 @@ export class AcademicService {
       code,
       lecturerIds,
       academicSubjectId,
+      orgOfficeId,
       startDate: startDateInput,
       tuitionFee,
       publication: Publication.Draft,

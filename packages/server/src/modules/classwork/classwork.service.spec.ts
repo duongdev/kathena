@@ -8,6 +8,7 @@ import { CreateCourseInput } from 'modules/academic/academic.type'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
+import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
 import { ClassworkService } from './classwork.service'
@@ -21,6 +22,7 @@ describe('classwork.service', () => {
   let classworkService: ClassworkService
   let mongooseConnection: Connection
   let orgService: OrgService
+  let orgOfficeService: OrgOfficeService
   let authService: AuthService
   let accountService: AccountService
   let academicService: AcademicService
@@ -34,6 +36,7 @@ describe('classwork.service', () => {
     classworkService = module.get<ClassworkService>(ClassworkService)
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
+    orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     authService = module.get<AuthService>(AuthService)
     accountService = module.get<AccountService>(AccountService)
   })
@@ -367,6 +370,7 @@ describe('classwork.service', () => {
 
       const createCourse: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -427,6 +431,7 @@ describe('classwork.service', () => {
 
       const createCourse: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -461,6 +466,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -489,6 +495,9 @@ describe('classwork.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const courseTest = await academicService.createCourse(
@@ -617,6 +626,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -642,6 +652,9 @@ describe('classwork.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const courseTest = await academicService.createCourse(
@@ -698,6 +711,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -723,6 +737,9 @@ describe('classwork.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const courseTest = await academicService.createCourse(
@@ -780,6 +797,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -805,6 +823,9 @@ describe('classwork.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const courseTest = await academicService.createCourse(
@@ -895,12 +916,21 @@ describe('classwork.service', () => {
         orgId: org.id,
       })
 
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        address: '25A Mai Thị Lưu',
+        createdByAccountId: creatorAccount.id,
+        name: 'Kmin Quận 1',
+        orgId: org.id,
+        phone: '0704917152',
+      })
+
       const listCreateClassworkAssignment: ANY[] = []
       const date = new Date()
       const createdByAccountId = lecturerAccount.id
 
       const createCourse: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
+        orgOfficeId: orgOffice.id,
         code: 'FEBCT1',
         name: 'Frontend cơ bản tháng 1',
         startDate: date.toString(),
@@ -1048,12 +1078,21 @@ describe('classwork.service', () => {
         orgId: org.id,
       })
 
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        address: '25A Mai Thị Lưu',
+        createdByAccountId: creatorAccount.id,
+        name: 'Kmin Quận 1',
+        orgId: org.id,
+        phone: '0704917152',
+      })
+
       const listCreateClassworkAssignment: ANY[] = []
       const date = new Date()
       const createdByAccountId = lecturerAccount.id
 
       const createCourse: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
+        orgOfficeId: orgOffice.id,
         code: 'FEBCT1',
         name: 'Frontend cơ bản tháng 1',
         startDate: date.toString(),
@@ -1191,6 +1230,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -1219,6 +1259,9 @@ describe('classwork.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const courseTest = await academicService.createCourse(
@@ -1271,6 +1314,7 @@ describe('classwork.service', () => {
 
       const createCourseInput: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -1297,7 +1341,9 @@ describe('classwork.service', () => {
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
         .mockResolvedValueOnce(true as never)
-
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
       const courseTest = await academicService.createCourse(
         objectId(),
         accountLecturer.orgId,

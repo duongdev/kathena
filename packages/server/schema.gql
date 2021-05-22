@@ -46,6 +46,7 @@ type Course implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   academicSubjectId: ID!
+  orgOfficeId: ID!
   code: String!
   name: String!
   startDate: DateTime!
@@ -55,6 +56,16 @@ type Course implements BaseModel {
   lecturerIds: [String!]!
   studentIds: [String!]!
   createdByAccountId: ID!
+}
+
+type OrgOffice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  phone: String!
 }
 
 type Account implements BaseModel {
@@ -197,16 +208,6 @@ type ClassworkAssignmentPayload {
   count: Int!
 }
 
-type OrgOffice implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  address: String!
-  phone: String!
-}
-
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
@@ -217,9 +218,9 @@ type Query {
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
-  file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  file(id: ID!): File
   classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
@@ -271,10 +272,10 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
-  updateFile(newFile: Upload!, id: ID!): File!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  updateFile(newFile: Upload!, id: ID!): File!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
   findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
@@ -315,6 +316,7 @@ input UpdateAcademicSubjectInput {
 
 input CreateCourseInput {
   academicSubjectId: String!
+  orgOfficeId: String!
   code: String!
   name: String!
   startDate: String!
