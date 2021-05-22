@@ -2,6 +2,7 @@ import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import AccountDisplayName from 'components/AccountDisplayName'
+import OrgOfficeName from 'components/OrgOfficeName'
 import { format } from 'date-fns'
 
 import {
@@ -25,13 +26,15 @@ const CourseList: FC<CourseListProps> = (props) => {
     variables: { orgId: org.id, limit: perPage, skip: page * perPage },
   })
 
-  const courseList = useMemo(() => data?.courses.courses ?? [], [
-    data?.courses.courses,
-  ])
+  const courseList = useMemo(
+    () => data?.courses.courses ?? [],
+    [data?.courses.courses],
+  )
 
-  const totalCount = useMemo(() => data?.courses.count ?? 0, [
-    data?.courses.count,
-  ])
+  const totalCount = useMemo(
+    () => data?.courses.count ?? 0,
+    [data?.courses.count],
+  )
 
   return (
     <>
@@ -81,6 +84,13 @@ const CourseList: FC<CourseListProps> = (props) => {
                   <Typography>
                     {format(new Date(startDate), 'MM/dd/yyyy')}
                   </Typography>
+                ),
+              },
+              {
+                label: 'Chi nhánh',
+                skeleton: <Skeleton />,
+                render: ({ orgOfficeId }) => (
+                  <OrgOfficeName orgOfficeId={orgOfficeId} />
                 ),
               },
               {
