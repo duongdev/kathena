@@ -85,9 +85,11 @@ export class ClassworkMaterialResolver {
     publicationState: string,
   ): Promise<ClassworkMaterial> {
     return this.classworkService.updateClassworkMaterialPublication(
-      org.id,
-      account.id,
-      classworkMaterialId,
+      {
+        orgId: org.id,
+        accountId: account.id,
+        classworkMaterialId,
+      },
       publicationState,
     )
   }

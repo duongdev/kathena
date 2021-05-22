@@ -176,9 +176,11 @@ export class ClassworkService {
   // TODO: classworkService.updateClassworkMaterialPublication
 
   async updateClassworkMaterialPublication(
-    orgId: string,
-    accountId: string,
-    classworkMaterialId: string,
+    query: {
+      orgId: string
+      accountId: string
+      classworkMaterialId: string
+    },
     publicationState: string,
   ): Promise<DocumentType<ClassworkMaterial>> {
     this.logger.log(
@@ -186,15 +188,13 @@ export class ClassworkService {
     )
 
     this.logger.verbose({
-      orgId,
-      accountId,
-      classworkMaterialId,
+      query,
       publicationState,
     })
 
     const classworkMaterial = await this.classworkMaterialModel.findOne({
-      _id: classworkMaterialId,
-      orgId,
+      _id: query.classworkMaterialId,
+      orgId: query.orgId,
     })
 
     if (!classworkMaterial) {
@@ -203,7 +203,7 @@ export class ClassworkService {
 
     if (
       !(await this.authService.canAccountManageCourse(
-        accountId,
+        query.accountId,
         classworkMaterial.courseId,
       ))
     ) {
@@ -226,9 +226,7 @@ export class ClassworkService {
     )
 
     this.logger.verbose({
-      orgId,
-      accountId,
-      classworkMaterialId,
+      query,
       publicationState,
     })
 

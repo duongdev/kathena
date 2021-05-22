@@ -287,9 +287,11 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterialPublication(
-            objectId(),
-            objectId(),
-            objectId(),
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
             Publication.Draft,
           ),
         ).rejects.toThrowError(`CLASSWORKMATERIAL_NOT_FOUND`)
@@ -308,9 +310,11 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterialPublication(
-            objectId(),
-            objectId(),
-            objectId(),
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
             Publication.Draft,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
@@ -336,9 +340,11 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterialPublication(
-            objectId(),
-            objectId(),
-            objectId(),
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
             Publication.Draft,
           ),
         ).rejects.toThrowError(`CAN'T_UPDATE_CLASSMATERIAL_PUBLICATION`)
@@ -374,9 +380,11 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterialPublication(
-            classworkMaterial.orgId,
-            objectId(),
-            classworkMaterial.id,
+            {
+              orgId: classworkMaterial.orgId,
+              accountId: objectId(),
+              classworkMaterialId: classworkMaterial.id,
+            },
             Publication.Draft,
           ),
         ).resolves.toMatchObject({
@@ -385,9 +393,11 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.updateClassworkMaterialPublication(
-            classworkMaterial.orgId,
-            objectId(),
-            classworkMaterial.id,
+            {
+              orgId: classworkMaterial.orgId,
+              accountId: objectId(),
+              classworkMaterialId: classworkMaterial.id,
+            },
             Publication.Published,
           ),
         ).resolves.toMatchObject({
