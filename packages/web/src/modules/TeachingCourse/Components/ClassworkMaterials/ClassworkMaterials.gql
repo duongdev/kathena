@@ -1,0 +1,24 @@
+query ClassworkAssignmentList(
+  $orgId: ID!
+  $skip: Int!
+  $limit: Int!
+  $courseId: ID!
+) {
+  classworkAssignments(
+    pageOptions: { skip: $skip, limit: $limit }
+    filter: { orgId: $orgId, courseId: $courseId }
+  ) {
+    classworkAssignments {
+      id
+      orgId
+      courseId
+      title
+      type
+      description
+      publicationState
+      attachments
+      dueDate
+    }
+    count
+  }
+}
