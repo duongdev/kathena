@@ -1,5 +1,5 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
@@ -7,12 +7,13 @@ import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
-import { Nullable } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
+  ClassworkMaterialPayload,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -28,6 +29,30 @@ export class ClassworkMaterialResolver {
   /**
    *START MATERIAL RESOLVER
    */
+
+  @Query((_return) => ClassworkMaterialPayload)
+  @UseAuthGuard(P.Classwork_ListClassworkMaterial)
+  async classworkMaterials(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @Args('courseId') courseId: string,
+    @Args('searchText', { nullable: true }) searchText?: string,
+  ): Promise<{
+    classworkMaterials: DocumentType<ClassworkMaterial>[]
+    count: number
+  }> {
+    return this.classworkService.findAndPaginateClassworkMaterials(
+      pageOptions,
+      {
+        orgId: org.id,
+        accountId: account.id,
+        courseId,
+        searchText,
+      },
+    )
+  }
+
   @Mutation((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_CreateClassworkMaterial)
   @UsePipes(ValidationPipe)
@@ -90,6 +115,7 @@ export class ClassworkMaterialResolver {
 
     return this.classworkService.findClassworkMaterialById(classworkMaterial)
   }
+
   /**
    * END MATERIAL RESOLVER
    */

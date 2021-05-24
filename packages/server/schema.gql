@@ -197,6 +197,11 @@ type ClassworkAssignmentPayload {
   count: Int!
 }
 
+type ClassworkMaterialPayload {
+  classworkMaterials: [ClassworkMaterial!]!
+  count: Int!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -220,6 +225,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
   classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
