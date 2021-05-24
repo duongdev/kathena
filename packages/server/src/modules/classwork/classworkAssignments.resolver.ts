@@ -15,7 +15,6 @@ import {
 } from '@nestjs/graphql'
 // import { differenceInMinutes } from 'date-fns'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
@@ -30,7 +29,6 @@ import {
   CreateClassworkAssignmentInput,
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
-  ClassworkFilterInput,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'

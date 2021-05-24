@@ -17,7 +17,6 @@ import { ANY, Nullable, PageOptionsInput } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
-  ClassworkFilterInput,
   CreateClassworkMaterialInput,
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
