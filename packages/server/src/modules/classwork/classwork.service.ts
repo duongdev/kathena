@@ -104,9 +104,19 @@ export class ClassworkService {
    */
 
   async findClassworkAssignmentById(
+    orgId: string,
     classworkAssignmentId: string,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    return this.classworkAssignmentsModel.findById(classworkAssignmentId)
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: classworkAssignmentId,
+      orgId,
+    })
+
+    if (!classworkAssignment) {
+      throw new Error(`This classworkAssignment not found.`)
+    }
+
+    return classworkAssignment
   }
 
   async findAndPaginateClassworkAssignments(

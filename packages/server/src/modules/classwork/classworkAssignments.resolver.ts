@@ -49,13 +49,10 @@ export class ClassworkAssignmentsResolver {
   async findClassworkAssignmentById(
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
-    @Args('orgId', { type: () => ID }) orgId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    if (orgId !== org.id) {
-      throw new ForbiddenError()
-    }
     return this.classworkService.findClassworkAssignmentById(
+      org.id,
       classworkAssignmentId,
     )
   }

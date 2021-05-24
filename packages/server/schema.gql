@@ -216,7 +216,7 @@ type Query {
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
-  findClassworkAssignmentsById(orgId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
+  findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
   findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 

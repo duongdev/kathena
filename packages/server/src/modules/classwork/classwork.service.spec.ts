@@ -694,12 +694,12 @@ describe('classwork.service', () => {
   })
 
   describe('findClassworkAssignmentById', () => {
-    it('returns null if the classworkAssignment is not found', async () => {
+    it('throws error if the classworkAssignment is not found', async () => {
       expect.assertions(1)
 
       await expect(
-        classworkService.findClassworkAssignmentById(objectId()),
-      ).resolves.toBeNull()
+        classworkService.findClassworkAssignmentById(objectId(), objectId()),
+      ).rejects.toThrowError(`This classworkAssignment not found.`)
     })
 
     it('returns a classworkAssignment', async () => {
@@ -769,7 +769,10 @@ describe('classwork.service', () => {
         )
 
       await expect(
-        classworkService.findClassworkAssignmentById(classworkAssignment.id),
+        classworkService.findClassworkAssignmentById(
+          org.id,
+          classworkAssignment.id,
+        ),
       ).resolves.toMatchObject({
         title: 'Bai Tap Nay Moi Nhat',
         description: 'Day la bai tap moi nhat',
