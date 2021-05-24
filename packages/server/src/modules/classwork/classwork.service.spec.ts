@@ -411,16 +411,18 @@ describe('classwork.service', () => {
     // TODO: classworkService.findClassworkMaterialById
 
     describe('findClassworkMaterialById', () => {
-      it('returns null if the findClassworkMaterialById is not found', async () => {
+      it('throws error if the classworkMaterial is not found', async () => {
         expect.assertions(1)
 
         await expect(
-          classworkService.findClassworkMaterialById(objectId()),
-        ).resolves.toBeNull()
+          classworkService.findClassworkMaterialById(objectId(), objectId()),
+        ).rejects.toThrow(`ClassworkMaterial is not found`)
       })
 
-      it('returns a classworkMateria', async () => {
+      it('returns a classworkMaterial', async () => {
         expect.assertions(1)
+
+        const orgId = objectId()
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -430,20 +432,23 @@ describe('classwork.service', () => {
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as ANY)
 
-        const classworkMateriaTest =
+        const classworkMaterial =
           await classworkService.createClassworkMaterial(
             objectId(),
-            objectId(),
+            orgId,
             objectId(),
             {
-              title: 'Day la ClassworkMaterial Test',
+              title: 'Bai Tap Nay Moi Ne',
             },
           )
 
         await expect(
-          classworkService.findClassworkMaterialById(classworkMateriaTest.id),
+          classworkService.findClassworkMaterialById(
+            orgId,
+            classworkMaterial.id,
+          ),
         ).resolves.toMatchObject({
-          title: 'Day la ClassworkMaterial Test',
+          title: 'Bai Tap Nay Moi Ne',
         })
       })
     })
@@ -1483,7 +1488,7 @@ describe('classwork.service', () => {
 
       await expect(
         classworkService.findClassworkAssignmentById(objectId(), objectId()),
-      ).rejects.toThrowError(`This classworkAssignment not found.`)
+      ).rejects.toThrowError(`ClassworkAssignment is not found.`)
     })
 
     it('returns a classworkAssignment', async () => {

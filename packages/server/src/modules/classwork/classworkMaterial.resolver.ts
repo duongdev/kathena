@@ -1,7 +1,6 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
@@ -121,20 +120,17 @@ export class ClassworkMaterialResolver {
 
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
-  @Mutation((_return) => ClassworkMaterial)
+  @Query((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
-  @UsePipes(ValidationPipe)
   async findClassworkMaterialById(
     @Args('classworkMaterial', { type: () => ID })
-    classworkMaterial: string,
-    @Args('orgId', { type: () => ID }) orgId: string,
+    classworkMaterialId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    if (orgId !== org.id) {
-      throw new ForbiddenError()
-    }
-
-    return this.classworkService.findClassworkMaterialById(classworkMaterial)
+    return this.classworkService.findClassworkMaterialById(
+      org.id,
+      classworkMaterialId,
+    )
   }
 
   /**

@@ -240,9 +240,19 @@ export class ClassworkService {
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
   async findClassworkMaterialById(
-    classworkMaterial: string,
+    orgId: string,
+    classworkMaterialId: string,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    return this.classworkMaterialModel.findById(classworkMaterial)
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      orgId,
+      _id: classworkMaterialId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`ClassworkMaterial is not found`)
+    }
+
+    return classworkMaterial
   }
 
   async findAndPaginateClassworkMaterials(
@@ -342,7 +352,7 @@ export class ClassworkService {
     })
 
     if (!classworkAssignment) {
-      throw new Error(`This classworkAssignment not found.`)
+      throw new Error(`ClassworkAssignment is not found.`)
     }
 
     return classworkAssignment
