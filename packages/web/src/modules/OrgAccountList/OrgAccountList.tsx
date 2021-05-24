@@ -46,12 +46,14 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
     closeCreateAccountDialog,
   ] = useDialogState()
 
-  const accounts = useMemo(() => data?.orgAccounts.accounts ?? [], [
-    data?.orgAccounts.accounts,
-  ])
-  const totalCount = useMemo(() => data?.orgAccounts.count ?? 0, [
-    data?.orgAccounts.count,
-  ])
+  const accounts = useMemo(
+    () => data?.orgAccounts.accounts ?? [],
+    [data?.orgAccounts.accounts],
+  )
+  const totalCount = useMemo(
+    () => data?.orgAccounts.count ?? 0,
+    [data?.orgAccounts.count],
+  )
 
   return (
     <PageContainer

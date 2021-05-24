@@ -37,9 +37,10 @@ const AddStudent: FC<AddStudentProps> = (props) => {
   const { data } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  const courseStudent = useMemo(() => data?.findCourseById, [
-    data?.findCourseById,
-  ])
+  const courseStudent = useMemo(
+    () => data?.findCourseById,
+    [data?.findCourseById],
+  )
   const [addStudentsToCourse] = useAddStudentToCourseMutation()
   const handelAddAndClose = useCallback(
     async (input: StudentFormInput) => {

@@ -38,9 +38,10 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   const { data } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  const courseLecturer = useMemo(() => data?.findCourseById, [
-    data?.findCourseById,
-  ])
+  const courseLecturer = useMemo(
+    () => data?.findCourseById,
+    [data?.findCourseById],
+  )
   const [addLecturesToCourse] = useAddLecturesToCourseMutation()
   const handelAddAndClose = useCallback(
     async (input: LecturerFormInput) => {
