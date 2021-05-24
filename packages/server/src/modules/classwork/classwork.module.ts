@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
+import { Course } from 'modules/academic/models/Course'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { OrgModule } from 'modules/org/org.module'
@@ -17,7 +18,11 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
     AuthModule,
     AccountModule,
     OrgModule,
-    TypegooseModule.forFeature([ClassworkAssignment, ClassworkMaterial]),
+    TypegooseModule.forFeature([
+      ClassworkAssignment,
+      ClassworkMaterial,
+      Course,
+    ]),
   ],
   providers: [
     ClassworkService,
