@@ -310,7 +310,10 @@ export class ClassworkService {
         },
       })
     }
-
+    classworkMaterialModels.sort({ _id: -1 }).skip(skip).limit(limit)
+    const listClassworkMaterials = await classworkMaterialModels
+    const count = await this.classworkMaterialModel.countDocuments({ orgId })
+    
     this.logger.log(
       `[${this.updateClassworkMaterial.name}] Find classworkMaterial successfully`,
     )
@@ -319,9 +322,6 @@ export class ClassworkService {
       filter,
     })
 
-    classworkMaterialModels.sort({ _id: -1 }).skip(skip).limit(limit)
-    const listClassworkMaterials = await classworkMaterialModels
-    const count = await this.classworkMaterialModel.countDocuments({ orgId })
 
     return { classworkMaterials: listClassworkMaterials, count }
   }
