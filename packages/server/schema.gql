@@ -118,9 +118,10 @@ enum Permission {
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
   Classwork_UpdateClassworkAssignment
+  Classwork_SetClassworkAssignmentPublication
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
-  Classwork_SetClassworkAssignmentPublication
+  Classwork_SetClassworkMaterialPublication
   NoPermission
 }
 
@@ -284,6 +285,7 @@ type Mutation {
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
+  updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
   findClassworkMaterialById(orgId: ID!, classworkMaterial: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
