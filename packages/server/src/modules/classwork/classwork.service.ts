@@ -258,7 +258,7 @@ export class ClassworkService {
     count: number
   }> {
     this.logger.log(
-      `[${this.findAndPaginateClassworkMaterials.name}] Find classworkMaterial`,
+      `[${this.findAndPaginateClassworkMaterials.name}] Find and paginate classworkMaterials`,
     )
 
     this.logger.verbose({
