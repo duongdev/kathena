@@ -222,13 +222,7 @@ export class ClassworkService {
 
     let findInput: ANY = null
 
-    if (
-      await this.authService.isAccountLecturerFormCourse(
-        accountId,
-        courseId,
-        orgId,
-      )
-    ) {
+    if (await this.authService.canAccountManageCourse(accountId, courseId)) {
       findInput = {
         orgId,
         courseId,

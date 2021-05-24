@@ -199,23 +199,6 @@ export class AuthService {
   }
 
   /** Check if an account has permission to list classWorks */
-  async isAccountLecturerFormCourse(
-    accountId: string,
-    courseId: string,
-    orgId: string,
-  ): Promise<boolean> {
-    const course = await this.academicService.findCourseById(courseId, orgId)
-    if (!course) {
-      return false
-    }
-
-    const account = await this.accountService.findAccountById(accountId)
-    if (!account) {
-      return false
-    }
-
-    return course.lecturerIds.includes(account.id)
-  }
 
   async isAccountStudentFormCourse(
     accountId: string,
