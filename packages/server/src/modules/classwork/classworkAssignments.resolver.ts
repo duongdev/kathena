@@ -63,16 +63,20 @@ export class ClassworkAssignmentsResolver {
   @Query((_return) => ClassworkAssignmentPayload)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
   async classworkAssignments(
-    @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
-    @Args('filter') filter: ClassworkFilterInput,
+    @CurrentAccount() account: Account,
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('searchText', { nullable: true }) searchText?: string,
   ): Promise<ClassworkAssignmentPayload> {
-    if (org.id !== filter.orgId) {
-      throw new ForbiddenError()
-    }
     return this.classworkService.findAndPaginateClassworkAssignments(
       pageOptions,
-      filter,
+      {
+        orgId: org.id,
+        accountId: account.id,
+        courseId,
+        searchText,
+      },
     )
   }
 
