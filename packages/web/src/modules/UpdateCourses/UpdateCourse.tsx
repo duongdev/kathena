@@ -292,6 +292,7 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
                           accountId={studentId}
                           variant="body1"
                         />
+
                         <AccountUserName
                           variant="body2"
                           color="textSecondary"

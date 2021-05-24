@@ -115,6 +115,24 @@ const AccountProfile: FC<AccountProfileProps> = () => {
           title="Thông tin tài khoản"
           action={
             <RequiredManageRoles roles={account.roles}>
+              <Button
+                style={
+                  account.status === AccountStatus.Active
+                    ? { color: 'red' }
+                    : { color: 'green' }
+                }
+                onClick={() =>
+                  handleUpdateAccountStatus(
+                    account.status === AccountStatus.Active
+                      ? AccountStatus.Deactivated
+                      : AccountStatus.Active,
+                  )
+                }
+              >
+                {account.status === AccountStatus.Active
+                  ? 'Hủy kích hoạt'
+                  : 'Kích hoạt'}
+              </Button>
               <Button onClick={openUpdateAccountDialog}>Sửa người dùng</Button>
             </RequiredManageRoles>
           }
