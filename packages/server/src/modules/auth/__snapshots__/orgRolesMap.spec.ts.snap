@@ -106,6 +106,7 @@ Array [
       "Classwork_SetClassworkAssignmentPublication",
       "Classwork_UpdateClassworkAssignment",
       "Classwork_UpdateClassworkMaterial",
+      "Classwork_SetClassworkMaterialPublication",
     ],
     "priority": 4,
   },
