@@ -12,7 +12,7 @@ import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
-import { Nullable, PageOptionsInput } from 'types'
+import { PageOptionsInput, Nullable } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
@@ -247,6 +247,22 @@ export class ClassworkService {
   /**
    * START CLASSWORK ASSIGNMENT
    */
+
+  async findClassworkAssignmentById(
+    orgId: string,
+    classworkAssignmentId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: classworkAssignmentId,
+      orgId,
+    })
+
+    if (!classworkAssignment) {
+      throw new Error(`This classworkAssignment not found.`)
+    }
+
+    return classworkAssignment
+  }
 
   async findAndPaginateClassworkAssignments(
     pageOptions: PageOptionsInput,

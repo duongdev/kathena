@@ -74,6 +74,7 @@ describe('auth.service', () => {
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
+        'Classwork_ListClassworkAssignment',
       ]
 
       jest
