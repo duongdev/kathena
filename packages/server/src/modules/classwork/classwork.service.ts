@@ -8,11 +8,12 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
+import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
-import { PageOptionsInput, Nullable } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
@@ -36,6 +37,9 @@ export class ClassworkService {
     private readonly classworkMaterialModel: ReturnModelType<
       typeof ClassworkMaterial
     >,
+
+    @InjectModel(Course)
+    private readonly courseModel: ReturnModelType<typeof Course>,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
@@ -239,6 +243,86 @@ export class ClassworkService {
     classworkMaterial: string,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
     return this.classworkMaterialModel.findById(classworkMaterial)
+  }
+
+  async findAndPaginateClassworkMaterials(
+    pageOptions: PageOptionsInput,
+    filter: {
+      orgId: string
+      accountId: string
+      courseId: string
+      searchText?: string
+    },
+  ): Promise<{
+    classworkMaterials: DocumentType<ClassworkMaterial>[]
+    count: number
+  }> {
+    this.logger.log(
+      `[${this.findAndPaginateClassworkMaterials.name}] Find and paginate classworkMaterials`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
+    const { limit, skip } = pageOptions
+    const { courseModel } = this
+    const { orgId, courseId, searchText, accountId } = filter
+
+    const course = await courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    if (!course) {
+      throw new Error(`COURSE NOT FOUND`)
+    }
+
+    let findInput: ANY = null
+
+    if (await this.authService.canAccountManageCourse(accountId, courseId)) {
+      findInput = {
+        orgId,
+        courseId,
+      }
+    } else if (
+      await this.authService.isAccountStudentFormCourse(
+        accountId,
+        courseId,
+        orgId,
+      )
+    ) {
+      findInput = {
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+      }
+    } else {
+      throw new Error(`ACCOUNT HAVEN'T PERMISSION`)
+    }
+
+    const classworkMaterialModels = this.classworkMaterialModel.find(findInput)
+
+    if (searchText) {
+      classworkMaterialModels.find({
+        $text: {
+          $search: searchText,
+        },
+      })
+    }
+    classworkMaterialModels.sort({ _id: -1 }).skip(skip).limit(limit)
+    const listClassworkMaterials = await classworkMaterialModels
+    const count = await this.classworkMaterialModel.countDocuments({ orgId })
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Find classworkMaterial successfully`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
+    return { classworkMaterials: listClassworkMaterials, count }
   }
   /**
    * END CLASSWORK MATERIAL
