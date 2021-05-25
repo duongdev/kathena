@@ -415,7 +415,7 @@ export class ClassworkService {
     }
 
     classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
-    const listClassworkAssignments = await classworkAssignmentModel
+    const classworkAssignments = await classworkAssignmentModel
     const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
 
     this.logger.log(
@@ -426,7 +426,7 @@ export class ClassworkService {
       filter,
     })
 
-    return { classworkAssignments: listClassworkAssignments, count }
+    return { classworkAssignments, count }
   }
 
   async createClassworkAssignment(
