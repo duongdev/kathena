@@ -11,7 +11,6 @@ import { ClassworkAssignmentsResolver } from './classworkAssignments.resolver'
 import { ClassworkMaterialResolver } from './classworkMaterial.resolver'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-
 @Global()
 @Module({
   imports: [
