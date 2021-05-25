@@ -411,12 +411,12 @@ describe('classwork.service', () => {
     // TODO: classworkService.findClassworkMaterialById
 
     describe('findClassworkMaterialById', () => {
-      it('throws error if the classworkMaterial is not found', async () => {
+      it('throws error if the classworkMaterial not found', async () => {
         expect.assertions(1)
 
         await expect(
           classworkService.findClassworkMaterialById(objectId(), objectId()),
-        ).rejects.toThrow(`ClassworkMaterial is not found`)
+        ).rejects.toThrow(`ClassworkMaterial not found`)
       })
 
       it('returns a classworkMaterial', async () => {
@@ -1483,12 +1483,12 @@ describe('classwork.service', () => {
   })
 
   describe('findClassworkAssignmentById', () => {
-    it('throws error if the classworkAssignment is not found', async () => {
+    it('throws error if the classworkAssignment not found', async () => {
       expect.assertions(1)
 
       await expect(
         classworkService.findClassworkAssignmentById(objectId(), objectId()),
-      ).rejects.toThrowError(`ClassworkAssignment is not found.`)
+      ).rejects.toThrowError(`ClassworkAssignment not found.`)
     })
 
     it('returns a classworkAssignment', async () => {

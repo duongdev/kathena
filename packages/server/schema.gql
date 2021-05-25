@@ -227,7 +227,7 @@ type Query {
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
-  findClassworkMaterialById(classworkMaterial: ID!): ClassworkMaterial!
+  classworkMaterial(Id: ID!): ClassworkMaterial!
   findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
   classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }

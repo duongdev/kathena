@@ -249,7 +249,7 @@ export class ClassworkService {
     })
 
     if (!classworkMaterial) {
-      throw new Error(`ClassworkMaterial is not found`)
+      throw new Error(`ClassworkMaterial not found`)
     }
 
     return classworkMaterial
@@ -352,7 +352,7 @@ export class ClassworkService {
     })
 
     if (!classworkAssignment) {
-      throw new Error(`ClassworkAssignment is not found.`)
+      throw new Error(`ClassworkAssignment not found.`)
     }
 
     return classworkAssignment
