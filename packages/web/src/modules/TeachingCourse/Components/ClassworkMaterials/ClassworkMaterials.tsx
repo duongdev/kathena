@@ -22,11 +22,7 @@ import {
   useClassworkMaterialsListQuery,
   useCourseDetailQuery,
 } from 'graphql/generated'
-import {
-  buildPath,
-  USER_PROFILE,
-  CREATE_TEACHING_COURSE_CLASSWORK_MATERIALS,
-} from 'utils/path-builder'
+import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
 export type ClassworkMaterialsProps = {}
 
@@ -79,14 +75,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
       <SectionCard
         title="Tài liệu"
         gridItem={{ xs: 12 }}
-        action={
-          <Button
-            endIcon={<FilePlus size={30} />}
-            link={CREATE_TEACHING_COURSE_CLASSWORK_MATERIALS}
-          >
-            Thêm tài liệu
-          </Button>
-        }
+        action={<Button endIcon={<FilePlus size={30} />}>Thêm tài liệu</Button>}
       >
         <CardContent>
           {classworkMaterials.length ? (
