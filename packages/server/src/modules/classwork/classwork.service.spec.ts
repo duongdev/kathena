@@ -411,16 +411,18 @@ describe('classwork.service', () => {
     // TODO: classworkService.findClassworkMaterialById
 
     describe('findClassworkMaterialById', () => {
-      it('returns null if the findClassworkMaterialById is not found', async () => {
+      it('throws error if the classworkMaterial not found', async () => {
         expect.assertions(1)
 
         await expect(
-          classworkService.findClassworkMaterialById(objectId()),
-        ).resolves.toBeNull()
+          classworkService.findClassworkMaterialById(objectId(), objectId()),
+        ).rejects.toThrow(`ClassworkMaterial not found`)
       })
 
-      it('returns a classworkMateria', async () => {
+      it('returns a classworkMaterial', async () => {
         expect.assertions(1)
+
+        const orgId = objectId()
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -430,20 +432,23 @@ describe('classwork.service', () => {
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as ANY)
 
-        const classworkMateriaTest =
+        const classworkMaterial =
           await classworkService.createClassworkMaterial(
             objectId(),
-            objectId(),
+            orgId,
             objectId(),
             {
-              title: 'Day la ClassworkMaterial Test',
+              title: 'Bai Tap Nay Moi Ne',
             },
           )
 
         await expect(
-          classworkService.findClassworkMaterialById(classworkMateriaTest.id),
+          classworkService.findClassworkMaterialById(
+            orgId,
+            classworkMaterial.id,
+          ),
         ).resolves.toMatchObject({
-          title: 'Day la ClassworkMaterial Test',
+          title: 'Bai Tap Nay Moi Ne',
         })
       })
     })
@@ -1543,12 +1548,12 @@ describe('classwork.service', () => {
   })
 
   describe('findClassworkAssignmentById', () => {
-    it('throws error if the classworkAssignment is not found', async () => {
+    it('throws error if the classworkAssignment not found', async () => {
       expect.assertions(1)
 
       await expect(
         classworkService.findClassworkAssignmentById(objectId(), objectId()),
-      ).rejects.toThrowError(`This classworkAssignment not found.`)
+      ).rejects.toThrowError(`ClassworkAssignment not found.`)
     })
 
     it('returns a classworkAssignment', async () => {
