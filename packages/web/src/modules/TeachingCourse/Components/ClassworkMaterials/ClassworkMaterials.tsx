@@ -107,15 +107,15 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Tiêu đề',
                   skeleton: <Skeleton />,
-                  render: (classworkAssignment) => (
+                  render: (classworkMaterial) => (
                     <>
                       <Link
                         to={buildPath(USER_PROFILE, {
-                          username: classworkAssignment.id,
+                          username: classworkMaterial.id,
                         })}
                       >
                         <Typography variant="body1">
-                          {classworkAssignment.title}
+                          {classworkMaterial.title}
                         </Typography>
                       </Link>
                     </>
