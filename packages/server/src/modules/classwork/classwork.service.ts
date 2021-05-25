@@ -20,6 +20,7 @@ import {
   ClassworkFilterInput,
   CreateClassworkMaterialInput,
 } from './classwork.type'
+import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -50,6 +51,84 @@ export class ClassworkService {
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
   ) {}
+
+  /**
+   * START GENERAL FUNCTION
+   */
+
+  async addAttachmentsToClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      attachments.forEach((attachment) => {
+        classwork.attachments.push(attachment)
+      })
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  async removeAttachmentsFromClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      const currentAttachments = classwork.attachments
+
+      attachments.map((attachment) =>
+        currentAttachments.splice(currentAttachments.indexOf(attachment), 1),
+      )
+
+      classwork.attachments = currentAttachments
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  /**
+   * END GENERAL FUNCTION
+   */
 
   /**
    * START CLASSWORK MATERIAL
@@ -334,6 +413,32 @@ export class ClassworkService {
 
     return { classworkMaterials: listClassworkMaterials, count }
   }
+
+  async addAttachmentsToClassworkMaterial(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
+
+  async removeAttachmentsFromClassworkMaterial(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -514,6 +619,32 @@ export class ClassworkService {
       await classworkAssignment.save()
 
     return updateClassworkAssignmentPublication
+  }
+
+  async addAttachmentsToClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async removeAttachmentsFromClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
   /**
    * END CLASSWORK ASSIGNMENT
