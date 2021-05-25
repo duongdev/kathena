@@ -16,3 +16,20 @@ query ClassworkMaterialsList($courseId: String!, $skip: Int!, $limit: Int!) {
     count
   }
 }
+
+mutation CreateClassworkMaterial(
+  $courseId: ID!
+  $CreateClassworkMaterialInput: CreateClassworkMaterialInput!
+) {
+  createClassworkMaterial(
+    courseId: $courseId
+    CreateClassworkMaterialInput: $CreateClassworkMaterialInput
+  ) {
+    id
+    createdAt
+    courseId
+    title
+    description
+    attachments
+  }
+}
