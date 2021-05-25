@@ -21,6 +21,9 @@ export * from './DataTable'
 export { default as Dialog } from './Dialog'
 export * from './Dialog'
 
+export { default as EditorFormField } from './EditorFormField'
+export * from './EditorFormField'
+
 export { default as FormDialog } from './FormDialog'
 export * from './FormDialog'
 
@@ -70,3 +73,6 @@ export * from './TextFormField'
 export { default as Typography } from './Typography'
 // eslint-disable-next-line import/export
 export * from './Typography'
+
+export { default as UploadInput } from './UploadInput'
+export * from './UploadInput'
