@@ -122,7 +122,7 @@ export class ClassworkMaterialResolver {
 
   @Query((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
-  async findClassworkMaterialById(
+  async classworkMaterial(
     @Args('Id', { type: () => ID })
     classworkMaterialId: string,
     @CurrentOrg() org: Org,
