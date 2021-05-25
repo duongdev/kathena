@@ -14,6 +14,7 @@ import {
   Resolver,
 } from '@nestjs/graphql'
 // import { differenceInMinutes } from 'date-fns'
+import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
 // eslint-disable-next-line import/order
@@ -22,10 +23,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 // eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
-
-// import { Org } from 'modules/org/models/Org'
-// import { Nullable, PageOptionsInput } from 'types'
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
@@ -48,6 +46,19 @@ export class ClassworkAssignmentsResolver {
   /**
    *START ASSIGNMENTS RESOLVER
    */
+
+  @Query((_return) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_ListClassworkAssignment)
+  async findClassworkAssignmentById(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkService.findClassworkAssignmentById(
+      org.id,
+      classworkAssignmentId,
+    )
+  }
 
   @Query((_return) => ClassworkAssignmentPayload)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)

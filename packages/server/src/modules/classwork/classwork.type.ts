@@ -60,6 +60,15 @@ export class ClassworkAssignmentPayload {
   count: number
 }
 
+@ObjectType()
+export class ClassworkMaterialPayload {
+  @Field((_type) => [ClassworkMaterial])
+  classworkMaterials: []
+
+  @Field((_type) => Int)
+  count: number
+}
+
 @InputType()
 export class ClassworkFilterInput {
   @Field((_type) => ID)

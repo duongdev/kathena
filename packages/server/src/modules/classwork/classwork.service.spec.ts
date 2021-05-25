@@ -274,7 +274,137 @@ describe('classwork.service', () => {
         })
       })
     })
+
     // TODO: classworkService.updateClassworkMaterialPublication
+
+    describe('updateClassworkMaterialPublication', () => {
+      it(`throws error if classworkMaterial not found`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`CLASSWORKMATERIAL_NOT_FOUND`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as never)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`throws error if can't update classworkMaterial`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkMaterialModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'Not null' } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(
+            classworkService['classworkMaterialModel'],
+            'findByIdAndUpdate',
+          )
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              classworkMaterialId: objectId(),
+            },
+            Publication.Draft,
+          ),
+        ).rejects.toThrowError(`CAN'T_UPDATE_CLASSMATERIAL_PUBLICATION`)
+      })
+
+      it(`returns an updated classworkMaterial`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkMaterial =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              description: 'description',
+              title: 'title',
+              publicationState: Publication.Draft,
+            },
+          )
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            {
+              orgId: classworkMaterial.orgId,
+              accountId: objectId(),
+              classworkMaterialId: classworkMaterial.id,
+            },
+            Publication.Draft,
+          ),
+        ).resolves.toMatchObject({
+          publicationState: Publication.Draft,
+        })
+
+        await expect(
+          classworkService.updateClassworkMaterialPublication(
+            {
+              orgId: classworkMaterial.orgId,
+              accountId: objectId(),
+              classworkMaterialId: classworkMaterial.id,
+            },
+            Publication.Published,
+          ),
+        ).resolves.toMatchObject({
+          publicationState: Publication.Published,
+        })
+      })
+    })
 
     // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
@@ -1343,6 +1473,92 @@ describe('classwork.service', () => {
       ).resolves.toMatchObject({
         title: 'Bai Tap Nay Moi Nhat',
         publicationState: Publication.Published,
+      })
+    })
+  })
+
+  describe('findClassworkAssignmentById', () => {
+    it('throws error if the classworkAssignment is not found', async () => {
+      expect.assertions(1)
+
+      await expect(
+        classworkService.findClassworkAssignmentById(objectId(), objectId()),
+      ).rejects.toThrowError(`This classworkAssignment not found.`)
+    })
+
+    it('returns a classworkAssignment', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh',
+        roles: ['lecturer'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const accountStaff = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh1.top@gmail.com',
+        password: '123456',
+        username: 'thanhcanh1',
+        roles: ['staff'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'NODEJS',
+        name: 'NodeJS',
+        description: 'This is NodeJs',
+        createdByAccountId: accountStaff.id,
+        imageFileId: objectId(),
+      })
+
+      const createCourseInput: ANY = {
+        academicSubjectId: academicSubject.id,
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [accountLecturer.id],
+      }
+
+      const courseTest = await academicService.createCourse(
+        accountStaff.id,
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      const classworkAssignment =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: 'Day la bai tap moi nhat',
+          },
+        )
+
+      await expect(
+        classworkService.findClassworkAssignmentById(
+          org.id,
+          classworkAssignment.id,
+        ),
+      ).resolves.toMatchObject({
+        title: 'Bai Tap Nay Moi Nhat',
+        description: 'Day la bai tap moi nhat',
       })
     })
   })
