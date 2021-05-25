@@ -123,7 +123,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       <Route path={ORG_SETTINGS} exact component={OrgSettings} />
       <Route path={TEACHING_COURSE_LIST} exact component={TeachingCourseList} />
       <Route path={STUDYING_COURSE_LIST} exact component={StudyingCourseList} />
-      <Route path={STUDYING_COURSE} exact component={StudyingCourse} />
+      <Route path={STUDYING_COURSE} component={StudyingCourse} />
       <Route path={TEACHING_COURSE} component={TeachingCourse} />
       <Route path={UPDATE_ACADEMIC_COURSE} exact component={UpdateCourse} />
     </Switch>
