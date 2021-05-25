@@ -192,6 +192,6 @@ export class ClassworkMaterialResolver {
   }
 
   /**
-   * END MATERIAL RESOLVER
+   * END MATERIAL RESOLVER.
    */
 }
