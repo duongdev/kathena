@@ -123,7 +123,7 @@ export class ClassworkMaterialResolver {
   @Query((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
   async findClassworkMaterialById(
-    @Args('classworkMaterial', { type: () => ID })
+    @Args('Id', { type: () => ID })
     classworkMaterialId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
