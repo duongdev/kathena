@@ -416,12 +416,12 @@ export class ClassworkService {
 
   async addAttachmentsToClassworkMaterial(
     orgId: string,
-    classworkAssignmentId: string,
+    classworkMaterialId: string,
     attachments?: string[],
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
     return this.addAttachmentsToClasswork(
       orgId,
-      classworkAssignmentId,
+      classworkMaterialId,
       ClassworkType.Material,
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
@@ -429,12 +429,12 @@ export class ClassworkService {
 
   async removeAttachmentsFromClassworkMaterial(
     orgId: string,
-    classworkAssignmentId: string,
+    classworkMaterialId: string,
     attachments?: string[],
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
     return this.removeAttachmentsFromClasswork(
       orgId,
-      classworkAssignmentId,
+      classworkMaterialId,
       ClassworkType.Material,
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
