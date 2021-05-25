@@ -229,7 +229,7 @@ type Query {
   classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
   classworkMaterial(Id: ID!): ClassworkMaterial!
   findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
-  classworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -253,11 +253,6 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
-}
-
-input ClassworkFilterInput {
-  orgId: ID!
-  courseId: ID
 }
 
 type Mutation {

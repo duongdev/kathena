@@ -17,7 +17,6 @@ import { ANY, Nullable, PageOptionsInput } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
-  ClassworkFilterInput,
   CreateClassworkMaterialInput,
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -360,27 +359,83 @@ export class ClassworkService {
 
   async findAndPaginateClassworkAssignments(
     pageOptions: PageOptionsInput,
-    filter: ClassworkFilterInput,
+    filter: {
+      orgId: string
+      accountId: string
+      courseId: string
+      searchText?: string
+    },
   ): Promise<{
     classworkAssignments: DocumentType<ClassworkAssignment>[]
     count: number
   }> {
-    const { limit, skip } = pageOptions
-    const { orgId, courseId } = filter
+    this.logger.log(
+      `[${this.findAndPaginateClassworkAssignments.name}] Find and paginate classworkAssignments`,
+    )
 
-    const classworkAssignmentModel = this.classworkAssignmentsModel.find({
+    this.logger.verbose({
+      filter,
+    })
+
+    const { limit, skip } = pageOptions
+    const { courseModel } = this
+    const { orgId, courseId, searchText, accountId } = filter
+
+    const course = await courseModel.findOne({
+      _id: courseId,
       orgId,
     })
 
-    if (courseId) {
-      classworkAssignmentModel.find({
+    if (!course) {
+      throw new Error(`COURSE NOT FOUND`)
+    }
+
+    let findInput: ANY = null
+
+    if (await this.authService.canAccountManageCourse(accountId, courseId)) {
+      findInput = {
+        orgId,
         courseId,
+      }
+    } else if (
+      await this.authService.isAccountStudentFormCourse(
+        accountId,
+        courseId,
+        orgId,
+      )
+    ) {
+      findInput = {
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+      }
+    } else {
+      throw new Error(`ACCOUNT HAVEN'T PERMISSION`)
+    }
+
+    const classworkAssignmentModel =
+      this.classworkAssignmentsModel.find(findInput)
+
+    if (searchText) {
+      classworkAssignmentModel.find({
+        $text: {
+          $search: searchText,
+        },
       })
     }
 
     classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const classworkAssignments = await classworkAssignmentModel
     const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
+
+    this.logger.log(
+      `[${this.updateClassworkAssignment.name}] Find classworkAssignment successfully`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
     return { classworkAssignments, count }
   }
 
@@ -390,7 +445,7 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { title, description, attachments, dueDate } =
+    const { title, description, attachments, dueDate, publicationState } =
       classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
@@ -422,7 +477,7 @@ export class ClassworkService {
       title,
       description,
       attachments,
-      publicationState: Publication.Draft,
+      publicationState,
       dueDate: dueDateInput,
     })
 
