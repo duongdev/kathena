@@ -6,14 +6,16 @@ import { ForbiddenError } from 'type-graphql'
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { Nullable, PageOptionsInput } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   ClassworkMaterialPayload,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -24,6 +26,7 @@ export class ClassworkMaterialResolver {
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   /**
@@ -33,14 +36,37 @@ export class ClassworkMaterialResolver {
   @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkMaterial)
   async addAttachmentsToClassworkMaterial(
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
     @Args('classworkMaterialId', { type: () => ID })
     classworkAssignmentId: string,
-    @Args('attachments', { type: () => [String] }) attachments?: [],
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: ANY[] = []
+    if (promiseFileUpload) {
+      promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
+
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
+
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId: org.id,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId: account.id,
+          },
+        )
+
+        listFileId.push(documentFile.id)
+      })
+    }
+    //
     return this.classworkService.addAttachmentsToClassworkMaterial(
       org.id,
       classworkAssignmentId,
-      attachments,
+      listFileId,
     )
   }
 

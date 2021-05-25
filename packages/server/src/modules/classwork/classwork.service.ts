@@ -524,7 +524,7 @@ export class ClassworkService {
     return classworkAssignment
   }
 
-  async addAttachmentsToClassworkAssignments(
+  async addAttachmentsToClassworkAssignment(
     orgId: string,
     classworkAssignmentId: string,
     attachments?: string[],
@@ -537,7 +537,7 @@ export class ClassworkService {
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
 
-  async removeAttachmentsFromClassworkAssignments(
+  async removeAttachmentsFromClassworkAssignment(
     orgId: string,
     classworkAssignmentId: string,
     attachments?: string[],

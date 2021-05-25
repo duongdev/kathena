@@ -78,7 +78,7 @@ export class ClassworkAssignmentsResolver {
       })
     }
     //
-    return this.classworkService.addAttachmentsToClassworkAssignments(
+    return this.classworkService.addAttachmentsToClassworkAssignment(
       org.id,
       classworkAssignmentId,
       listFileId,
@@ -122,7 +122,7 @@ export class ClassworkAssignmentsResolver {
     classworkAssignmentId: string,
     @Args('attachments', { type: () => [String] }) attachments?: [],
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    return this.classworkService.removeAttachmentsFromClassworkAssignments(
+    return this.classworkService.removeAttachmentsFromClassworkAssignment(
       org.id,
       classworkAssignmentId,
       attachments,
