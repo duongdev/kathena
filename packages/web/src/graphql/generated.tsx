@@ -79,6 +79,10 @@ export type AccountsFilterInput = {
   searchText?: Maybe<Scalars['String']>
 }
 
+export type AddAttachmentsToClassworkInput = {
+  attachments: Array<Scalars['Upload']>
+}
+
 export type AuthenticatePayload = {
   account: Account
   org: Org
@@ -90,6 +94,20 @@ export type BaseModel = {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
+}
+
+export type Classwork = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  courseId: Scalars['ID']
+  title: Scalars['String']
+  type: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  attachments: Array<Scalars['String']>
+  publicationState: Scalars['String']
 }
 
 export type ClassworkAssignment = BaseModel & {
@@ -129,6 +147,11 @@ export type ClassworkMaterial = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
+}
+
+export type ClassworkMaterialPayload = {
+  classworkMaterials: Array<ClassworkMaterial>
+  count: Scalars['Int']
 }
 
 export type Course = BaseModel & {
@@ -175,7 +198,6 @@ export type CreateAccountInput = {
 }
 
 export type CreateClassworkAssignmentInput = {
-  createdByAccountId: Scalars['String']
   title: Scalars['String']
   description: Scalars['String']
   attachments?: Maybe<Array<Scalars['String']>>
@@ -238,8 +260,17 @@ export type Mutation = {
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
+  addAttachmentsToClassworkMaterial: ClassworkMaterial
+  removeAttachmentsFromClassworkMaterial: ClassworkMaterial
   createClassworkMaterial: ClassworkMaterial
+  addAttachmentsToClassworkAssignments: ClassworkAssignment
+  removeAttachmentsFromClassworkAssignments: ClassworkAssignment
   createClassworkAssignment: ClassworkAssignment
+  updateClassworkMaterial: ClassworkMaterial
+  updateClassworkMaterialPublication: ClassworkMaterial
+  findClassworkMaterialById: ClassworkMaterial
+  updateClassworkAssignment: ClassworkAssignment
+  updateClassworkAssignmentPublication: ClassworkAssignment
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -324,14 +355,59 @@ export type MutationFindOrgOfficesArgs = {
   orgId?: Maybe<Scalars['ID']>
 }
 
+export type MutationAddAttachmentsToClassworkMaterialArgs = {
+  attachments: Array<Scalars['String']>
+  classworkMaterialId: Scalars['ID']
+}
+
+export type MutationRemoveAttachmentsFromClassworkMaterialArgs = {
+  attachments: Array<Scalars['String']>
+  classworkMaterialId: Scalars['ID']
+}
+
 export type MutationCreateClassworkMaterialArgs = {
   CreateClassworkMaterialInput: CreateClassworkMaterialInput
   courseId: Scalars['ID']
 }
 
+export type MutationAddAttachmentsToClassworkAssignmentsArgs = {
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
+  attachments: Array<Scalars['String']>
+  classworkAssignmentId: Scalars['ID']
+}
+
 export type MutationCreateClassworkAssignmentArgs = {
   courseId: Scalars['ID']
   input: CreateClassworkAssignmentInput
+}
+
+export type MutationUpdateClassworkMaterialArgs = {
+  updateClassworkMaterialInput: UpdateClassworkMaterialInput
+  classworkMaterialId: Scalars['ID']
+}
+
+export type MutationUpdateClassworkMaterialPublicationArgs = {
+  publicationState: Publication
+  classworkMaterialId: Scalars['ID']
+}
+
+export type MutationFindClassworkMaterialByIdArgs = {
+  orgId: Scalars['ID']
+  classworkMaterial: Scalars['ID']
+}
+
+export type MutationUpdateClassworkAssignmentArgs = {
+  updateInput: UpdateClassworkAssignmentInput
+  id: Scalars['ID']
+}
+
+export type MutationUpdateClassworkAssignmentPublicationArgs = {
+  publication: Scalars['String']
+  id: Scalars['ID']
 }
 
 export type Org = BaseModel & {
@@ -378,7 +454,12 @@ export enum Permission {
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
   OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
   OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+  Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
+  Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
+  Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
+  Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
+  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
@@ -390,7 +471,11 @@ export enum Permission {
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
+  Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
+  Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
+  Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
+  Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   NoPermission = 'NoPermission',
 }
 
@@ -412,7 +497,9 @@ export type Query = {
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
-  findAndPaginateClassworkAssignments: ClassworkAssignmentPayload
+  classworkMaterials: ClassworkMaterialPayload
+  findClassworkAssignmentById: ClassworkAssignment
+  classworkAssignments: ClassworkAssignmentPayload
 }
 
 export type QueryAccountArgs = {
@@ -458,7 +545,17 @@ export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
 
-export type QueryFindAndPaginateClassworkAssignmentsArgs = {
+export type QueryClassworkMaterialsArgs = {
+  searchText?: Maybe<Scalars['String']>
+  courseId: Scalars['String']
+  pageOptions: PageOptionsInput
+}
+
+export type QueryFindClassworkAssignmentByIdArgs = {
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type QueryClassworkAssignmentsArgs = {
   filter: ClassworkFilterInput
   pageOptions: PageOptionsInput
 }
@@ -481,6 +578,17 @@ export type UpdateAccountInput = {
   displayName?: Maybe<Scalars['String']>
   roles?: Maybe<Array<Scalars['String']>>
   password?: Maybe<Scalars['String']>
+}
+
+export type UpdateClassworkAssignmentInput = {
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
+  dueDate?: Maybe<Scalars['String']>
+}
+
+export type UpdateClassworkMaterialInput = {
+  title?: Maybe<Scalars['String']>
+  description?: Maybe<Scalars['String']>
 }
 
 export type UpdateCourseInput = {
@@ -808,6 +916,32 @@ export type StudyingCourseListQuery = {
         | 'lecturerIds'
         | 'studentIds'
         | 'publicationState'
+      >
+    >
+  }
+}
+
+export type ClassworkAssignmentListQueryVariables = Exact<{
+  orgId: Scalars['ID']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+  courseId: Scalars['ID']
+}>
+
+export type ClassworkAssignmentListQuery = {
+  classworkAssignments: Pick<ClassworkAssignmentPayload, 'count'> & {
+    classworkAssignments: Array<
+      Pick<
+        ClassworkAssignment,
+        | 'id'
+        | 'orgId'
+        | 'courseId'
+        | 'title'
+        | 'type'
+        | 'description'
+        | 'publicationState'
+        | 'attachments'
+        | 'dueDate'
       >
     >
   }
@@ -5002,6 +5136,245 @@ export type StudyingCourseListLazyQueryHookResult = ReturnType<
 export type StudyingCourseListQueryResult = Apollo.QueryResult<
   StudyingCourseListQuery,
   StudyingCourseListQueryVariables
+>
+export const ClassworkAssignmentListDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ClassworkAssignmentList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orgId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkAssignments' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'orgId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'courseId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'classworkAssignments' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attachments' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dueDate' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ClassworkAssignmentListProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables
+  >
+} &
+  TChildProps
+export function withClassworkAssignmentList<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables,
+    ClassworkAssignmentListProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables,
+    ClassworkAssignmentListProps<TChildProps, TDataName>
+  >(ClassworkAssignmentListDocument, {
+    alias: 'classworkAssignmentList',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useClassworkAssignmentListQuery__
+ *
+ * To run a query within a React component, call `useClassworkAssignmentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClassworkAssignmentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClassworkAssignmentListQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useClassworkAssignmentListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables
+  >(ClassworkAssignmentListDocument, options)
+}
+export function useClassworkAssignmentListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ClassworkAssignmentListQuery,
+    ClassworkAssignmentListQueryVariables
+  >(ClassworkAssignmentListDocument, options)
+}
+export type ClassworkAssignmentListQueryHookResult = ReturnType<
+  typeof useClassworkAssignmentListQuery
+>
+export type ClassworkAssignmentListLazyQueryHookResult = ReturnType<
+  typeof useClassworkAssignmentListLazyQuery
+>
+export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
+  ClassworkAssignmentListQuery,
+  ClassworkAssignmentListQueryVariables
 >
 export const CreateClassworkAssignmentDocument: DocumentNode = {
   kind: 'Document',

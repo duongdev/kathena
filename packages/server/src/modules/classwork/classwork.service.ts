@@ -8,11 +8,14 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
+import { Course } from 'modules/academic/models/Course'
+import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
 import {
+  UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
   ClassworkFilterInput,
   CreateClassworkMaterialInput,
@@ -36,11 +39,17 @@ export class ClassworkService {
       typeof ClassworkMaterial
     >,
 
+    @InjectModel(Course)
+    private readonly courseModel: ReturnModelType<typeof Course>,
+
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => AccountService))
+    private readonly accountService: AccountService,
   ) {}
 
   /**
@@ -197,9 +206,229 @@ export class ClassworkService {
 
   // TODO: classworkService.updateClassworkMaterial
 
+  async updateClassworkMaterial(
+    orgId: string,
+    accountId: string,
+    classworkMaterialId: string,
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updating classworkMaterial`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      updateClassworkMaterialInput,
+    })
+
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      _id: classworkMaterialId,
+      orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkMaterial.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const input = { ...updateClassworkMaterialInput }
+
+    if (updateClassworkMaterialInput.title) {
+      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
+      if (title) {
+        input.title = title
+      }
+    }
+
+    if (updateClassworkMaterialInput.description) {
+      input.description = removeExtraSpaces(
+        updateClassworkMaterialInput.description,
+      )
+    }
+
+    const classworkMaterialUpdated =
+      await this.classworkMaterialModel.findOneAndUpdate(
+        {
+          _id: classworkMaterialId,
+          orgId,
+        },
+        input,
+        { new: true },
+      )
+
+    if (!classworkMaterialUpdated) {
+      throw new Error(`CAN'T_TO_UPDATE_CLASSWORKMATERIAL`)
+    }
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
+    )
+
+    this.logger.verbose({
+      orgId,
+      accountId,
+      updateClassworkMaterialInput,
+    })
+
+    return classworkMaterialUpdated
+  }
+
   // TODO: classworkService.updateClassworkMaterialPublication
 
+  async updateClassworkMaterialPublication(
+    query: {
+      orgId: string
+      accountId: string
+      classworkMaterialId: string
+    },
+    publicationState: string,
+  ): Promise<DocumentType<ClassworkMaterial>> {
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updating classworkMaterialPublication`,
+    )
+
+    this.logger.verbose({
+      query,
+      publicationState,
+    })
+
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      _id: query.classworkMaterialId,
+      orgId: query.orgId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`CLASSWORKMATERIAL_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkMaterial.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const UpdatedClassworkMaterial =
+      await this.classworkMaterialModel.findByIdAndUpdate(
+        { _id: classworkMaterial.id, orgId: classworkMaterial.orgId },
+        { publicationState },
+        { new: true },
+      )
+
+    if (!UpdatedClassworkMaterial) {
+      throw new Error(`CAN'T_UPDATE_CLASSMATERIAL_PUBLICATION`)
+    }
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Updated classworkMaterialPublication successfully`,
+    )
+
+    this.logger.verbose({
+      query,
+      publicationState,
+    })
+
+    return UpdatedClassworkMaterial
+  }
+
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
+
+  async findClassworkMaterialById(
+    classworkMaterial: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkMaterialModel.findById(classworkMaterial)
+  }
+
+  async findAndPaginateClassworkMaterials(
+    pageOptions: PageOptionsInput,
+    filter: {
+      orgId: string
+      accountId: string
+      courseId: string
+      searchText?: string
+    },
+  ): Promise<{
+    classworkMaterials: DocumentType<ClassworkMaterial>[]
+    count: number
+  }> {
+    this.logger.log(
+      `[${this.findAndPaginateClassworkMaterials.name}] Find and paginate classworkMaterials`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
+    const { limit, skip } = pageOptions
+    const { courseModel } = this
+    const { orgId, courseId, searchText, accountId } = filter
+
+    const course = await courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    if (!course) {
+      throw new Error(`COURSE NOT FOUND`)
+    }
+
+    let findInput: ANY = null
+
+    if (await this.authService.canAccountManageCourse(accountId, courseId)) {
+      findInput = {
+        orgId,
+        courseId,
+      }
+    } else if (
+      await this.authService.isAccountStudentFormCourse(
+        accountId,
+        courseId,
+        orgId,
+      )
+    ) {
+      findInput = {
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+      }
+    } else {
+      throw new Error(`ACCOUNT HAVEN'T PERMISSION`)
+    }
+
+    const classworkMaterialModels = this.classworkMaterialModel.find(findInput)
+
+    if (searchText) {
+      classworkMaterialModels.find({
+        $text: {
+          $search: searchText,
+        },
+      })
+    }
+    classworkMaterialModels.sort({ _id: -1 }).skip(skip).limit(limit)
+    const listClassworkMaterials = await classworkMaterialModels
+    const count = await this.classworkMaterialModel.countDocuments({ orgId })
+
+    this.logger.log(
+      `[${this.updateClassworkMaterial.name}] Find classworkMaterial successfully`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
+    return { classworkMaterials: listClassworkMaterials, count }
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -207,6 +436,22 @@ export class ClassworkService {
   /**
    * START CLASSWORK ASSIGNMENT
    */
+
+  async findClassworkAssignmentById(
+    orgId: string,
+    classworkAssignmentId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: classworkAssignmentId,
+      orgId,
+    })
+
+    if (!classworkAssignment) {
+      throw new Error(`This classworkAssignment not found.`)
+    }
+
+    return classworkAssignment
+  }
 
   async findAndPaginateClassworkAssignments(
     pageOptions: PageOptionsInput,
@@ -303,6 +548,93 @@ export class ClassworkService {
       ClassworkType.Assignment,
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async updateClassworkAssignment(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    update: { title?: string; description?: string; dueDate?: string },
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const { id, orgId, accountId } = query
+
+    const classworkAssignmentUpdate =
+      await this.classworkAssignmentsModel.findOne({
+        _id: id,
+        orgId,
+      })
+
+    if (!classworkAssignmentUpdate) {
+      throw new Error(`Could not find classworkAssignment to update`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkAssignmentUpdate.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    if (update.title) {
+      classworkAssignmentUpdate.title = update.title
+    }
+
+    if (update.description) {
+      classworkAssignmentUpdate.description = update.description
+    }
+
+    if (update.dueDate) {
+      const currentDate = new Date()
+      const dueDateInput = new Date(update.dueDate)
+      if (
+        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      ) {
+        throw new Error('START_DATE_INVALID')
+      }
+      classworkAssignmentUpdate.dueDate = dueDateInput
+    }
+
+    const updated = await classworkAssignmentUpdate.save()
+    return updated
+  }
+
+  async updateClassworkAssignmentPublication(
+    query: {
+      id: string
+      accountId: string
+      orgId: string
+    },
+    publicationState: Publication,
+  ): Promise<DocumentType<ClassworkAssignment>> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findById(
+      query.id,
+      query.orgId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(
+        `Couldn't find classworkAssignment to update publicationState`,
+      )
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        query.accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+    classworkAssignment.publicationState = publicationState
+
+    const updateClassworkAssignmentPublication =
+      await classworkAssignment.save()
+
+    return updateClassworkAssignmentPublication
   }
   /**
    * END CLASSWORK ASSIGNMENT

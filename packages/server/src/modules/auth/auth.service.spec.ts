@@ -66,15 +66,20 @@ describe('auth.service', () => {
         'Academic_AcademicSubject_Access',
         'Academic_Course_Access',
         'Classwork_ListClassworkAssignment',
+        'Classwork_ListClassworkMaterial',
         'Classwork_CreateClassworkAssignment',
+        'Classwork_SetClassworkAssignmentPublication',
+        'Classwork_UpdateClassworkAssignment',
         'OrgOffice_Access',
         'OrgOffice_ListOrgOffices',
         'OrgOffice_CreateOrgOffice',
         'OrgOffice_UpdateOrgOffice',
+        'Classwork_ListClassworkAssignment',
       ]
 
       jest
         .spyOn(authService, 'getAccountPermissions')
+        .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
         .mockResolvedValueOnce(resultPermissions)
@@ -266,7 +271,10 @@ describe('auth.service', () => {
                 "Academic_AcademicSubject_Access",
                 "Academic_Course_Access",
                 "Classwork_ListClassworkAssignment",
+                "Classwork_ListClassworkMaterial",
                 "Classwork_CreateClassworkAssignment",
+                "Classwork_SetClassworkAssignmentPublication",
+                "Classwork_UpdateClassworkAssignment",
                 "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",

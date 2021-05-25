@@ -70,7 +70,9 @@ type Account implements BaseModel {
   availability: AccountAvailability!
 }
 
-"""Status of an account."""
+"""
+Status of an account.
+"""
 enum AccountStatus {
   Pending
   Active
@@ -109,6 +111,7 @@ enum Permission {
   Classwork_RemoveAttachmentsFromClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkMaterial
   Classwork_ListClassworkAssignment
+  Classwork_ListClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -120,7 +123,11 @@ enum Permission {
   Teaching_Course_Access
   Studying_Course_Access
   Classwork_CreateClassworkAssignment
+  Classwork_UpdateClassworkAssignment
+  Classwork_SetClassworkAssignmentPublication
+  Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
+  Classwork_SetClassworkMaterialPublication
   NoPermission
 }
 
@@ -211,6 +218,11 @@ type ClassworkAssignmentPayload {
   count: Int!
 }
 
+type ClassworkMaterialPayload {
+  classworkMaterials: [ClassworkMaterial!]!
+  count: Int!
+}
+
 type OrgOffice implements BaseModel {
   id: ID!
   orgId: ID!
@@ -224,17 +236,35 @@ type OrgOffice implements BaseModel {
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
-  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
+  orgAccounts(
+    filter: AccountsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   canAccountManageRoles(roles: [String!]!): Boolean!
-  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
+  academicSubjects(
+    filter: AcademicSubjectsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
-  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
+  courses(
+    filter: CoursesFilterInput!
+    pageOptions: PageOptionsInput!
+  ): CoursesPayload!
   file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
-  findAndPaginateClassworkAssignments(filter: ClassworkFilterInput!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  classworkMaterials(
+    searchText: String
+    courseId: String!
+    pageOptions: PageOptionsInput!
+  ): ClassworkMaterialPayload!
+  findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
+  classworkAssignments(
+    filter: ClassworkFilterInput!
+    pageOptions: PageOptionsInput!
+  ): ClassworkAssignmentPayload!
 }
 
 input AccountsFilterInput {
@@ -272,13 +302,21 @@ type Mutation {
   signIn(
     password: String!
 
-    """Could be username or email"""
+    """
+    Could be username or email
+    """
     identity: String!
     orgNamespace: String!
   ): SignInPayload!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
-  updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
-  updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  updateAcademicSubjectPublication(
+    publication: String!
+    id: ID!
+  ): AcademicSubject!
+  updateAcademicSubject(
+    updateInput: UpdateAcademicSubjectInput!
+    id: ID!
+  ): AcademicSubject!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
@@ -289,12 +327,54 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  addAttachmentsToClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
-  removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
-  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
-  addAttachmentsToClassworkAssignments(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
-  removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
-  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): Classwork!
+  addAttachmentsToClassworkMaterial(
+    attachments: [String!]!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  removeAttachmentsFromClassworkMaterial(
+    attachments: [String!]!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  createClassworkMaterial(
+    CreateClassworkMaterialInput: CreateClassworkMaterialInput!
+    courseId: ID!
+  ): ClassworkMaterial!
+  addAttachmentsToClassworkAssignments(
+    attachmentsInput: AddAttachmentsToClassworkInput!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  removeAttachmentsFromClassworkAssignments(
+    attachments: [String!]!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  createClassworkAssignment(
+    courseId: ID!
+    input: CreateClassworkAssignmentInput!
+  ): Classwork!
+  updateClassworkMaterial(
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  updateClassworkMaterialPublication(
+    publicationState: Publication!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  findClassworkMaterialById(
+    orgId: ID!
+    classworkMaterial: ID!
+  ): ClassworkMaterial!
+  createClassworkAssignment(
+    courseId: ID!
+    input: CreateClassworkAssignmentInput!
+  ): ClassworkAssignment!
+  updateClassworkAssignment(
+    updateInput: UpdateClassworkAssignmentInput!
+    id: ID!
+  ): ClassworkAssignment!
+  updateClassworkAssignmentPublication(
+    publication: String!
+    id: ID!
+  ): ClassworkAssignment!
 }
 
 input CreateAccountInput {
@@ -319,7 +399,9 @@ input CreateAcademicSubjectInput {
   image: Upload!
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""
+The `Upload` scalar type represents a file upload.
+"""
 scalar Upload
 
 input UpdateAcademicSubjectInput {
@@ -365,10 +447,20 @@ input AddAttachmentsToClassworkInput {
   attachments: [Upload!]!
 }
 
+input UpdateClassworkMaterialInput {
+  title: String
+  description: String
+}
+
 input CreateClassworkAssignmentInput {
-  createdByAccountId: String!
   title: String!
   description: String!
   attachments: [String!] = []
   dueDate: String!
+}
+
+input UpdateClassworkAssignmentInput {
+  title: String
+  description: String
+  dueDate: String
 }

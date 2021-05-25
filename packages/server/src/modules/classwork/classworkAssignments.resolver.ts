@@ -12,10 +12,11 @@ import {
   /* ResolveField, */
   Resolver,
 } from '@nestjs/graphql'
+// import { differenceInMinutes } from 'date-fns'
 import { ForbiddenError } from 'type-graphql'
 // eslint-disable-next-line import/order
 import { DocumentType } from '@typegoose/typegoose'
-import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
@@ -24,9 +25,10 @@ import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  CreateClassworkAssignmentInput,
+  UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   ClassworkFilterInput,
-  CreateClassworkAssignmentInput,
   AddAttachmentsToClassworkInput,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
@@ -83,9 +85,22 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Query((_return) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_ListClassworkAssignment)
+  async findClassworkAssignmentById(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkService.findClassworkAssignmentById(
+      org.id,
+      classworkAssignmentId,
+    )
+  }
+
   @Query((_return) => ClassworkAssignmentPayload)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
-  async findAndPaginateClassworkAssignments(
+  async classworkAssignments(
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
     @Args('filter') filter: ClassworkFilterInput,
@@ -129,6 +144,44 @@ export class ClassworkAssignmentsResolver {
       courseId,
       org.id,
       createClassworkAssignmentInput,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_UpdateClassworkAssignment)
+  @UsePipes(ValidationPipe)
+  async updateClassworkAssignment(
+    @Args('id', { type: () => ID }) classworkAssignmentId: string,
+    @Args('updateInput') updateInput: UpdateClassworkAssignmentInput,
+    @CurrentOrg() currentOrg: Org,
+    @CurrentAccount() currentAccount: Account,
+  ): Promise<ClassworkAssignment> {
+    return this.classworkService.updateClassworkAssignment(
+      {
+        id: classworkAssignmentId,
+        accountId: currentAccount.id,
+        orgId: currentOrg.id,
+      },
+      updateInput,
+    )
+  }
+
+  @Mutation((_return) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_SetClassworkAssignmentPublication)
+  @UsePipes(ValidationPipe)
+  async updateClassworkAssignmentPublication(
+    @Args('id', { type: () => ID }) classworkAssignmentId: string,
+    @Args('publication', { type: () => String }) publication: Publication,
+    @CurrentOrg() currentOrg: Org,
+    @CurrentAccount() currentAccount: Account,
+  ): Promise<ClassworkAssignment> {
+    return this.classworkService.updateClassworkAssignmentPublication(
+      {
+        id: classworkAssignmentId,
+        accountId: currentAccount.id,
+        orgId: currentOrg.id,
+      },
+      publication,
     )
   }
 
