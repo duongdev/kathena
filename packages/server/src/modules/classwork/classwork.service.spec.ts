@@ -1549,12 +1549,12 @@ describe('classwork.service', () => {
         displayName: 'Huynh Thanh Canh',
       })
 
-      const accountStaff = await accountService.createAccount({
+      const accountAdmin = await accountService.createAccount({
         orgId: org.id,
         email: 'huynhthanhcanh1.top@gmail.com',
         password: '123456',
         username: 'thanhcanh1',
-        roles: ['staff'],
+        roles: ['admin'],
         displayName: 'Huynh Thanh Canh',
       })
 
@@ -1563,12 +1563,21 @@ describe('classwork.service', () => {
         code: 'NODEJS',
         name: 'NodeJS',
         description: 'This is NodeJs',
-        createdByAccountId: accountStaff.id,
+        createdByAccountId: accountAdmin.id,
         imageFileId: objectId(),
+      })
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        name: 'Kmin Quận 1',
+        address: '25A',
+        createdByAccountId: accountAdmin.id,
+        orgId: org.id,
+        phone: '0704917152',
       })
 
       const createCourseInput: ANY = {
         academicSubjectId: academicSubject.id,
+        orgOfficeId: orgOffice.id,
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -1576,7 +1585,7 @@ describe('classwork.service', () => {
       }
 
       const courseTest = await academicService.createCourse(
-        accountStaff.id,
+        accountAdmin.id,
         accountLecturer.orgId,
         {
           ...createCourseInput,
