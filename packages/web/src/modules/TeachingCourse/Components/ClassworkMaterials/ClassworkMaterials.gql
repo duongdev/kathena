@@ -1,23 +1,17 @@
-query ClassworkAssignmentList(
-  $orgId: ID!
-  $skip: Int!
-  $limit: Int!
-  $courseId: ID!
-) {
-  classworkAssignments(
+query ClassworkMaterialsList($courseId: String!, $skip: Int!, $limit: Int!) {
+  classworkMaterials(
+    courseId: $courseId
     pageOptions: { skip: $skip, limit: $limit }
-    filter: { orgId: $orgId, courseId: $courseId }
   ) {
-    classworkAssignments {
+    classworkMaterials {
       id
       orgId
-      courseId
-      title
-      type
-      description
+      createdAt
+      updatedAt
       publicationState
+      title
+      description
       attachments
-      dueDate
     }
     count
   }

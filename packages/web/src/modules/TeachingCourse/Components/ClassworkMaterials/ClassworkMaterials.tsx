@@ -17,9 +17,9 @@ import {
   usePagination,
   Link,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
+// import { useAuth } from 'common/auth'
 import {
-  useClassworkAssignmentListQuery,
+  useClassworkMaterialsListQuery,
   useCourseDetailQuery,
 } from 'graphql/generated'
 import {
@@ -36,30 +36,29 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  const { $org: org } = useAuth()
+  // const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
 
   const course = useMemo(() => data?.findCourseById, [data])
   const {
     data: dataClasswork,
     loading: loadingClasswork,
-  } = useClassworkAssignmentListQuery({
+  } = useClassworkMaterialsListQuery({
     variables: {
       courseId: course?.id ?? '',
-      orgId: org.id,
       limit: perPage,
       skip: page * perPage,
     },
   })
 
-  const classworkAssignments = useMemo(
-    () => dataClasswork?.classworkAssignments.classworkAssignments ?? [],
-    [dataClasswork?.classworkAssignments.classworkAssignments],
+  const classworkMaterials = useMemo(
+    () => dataClasswork?.classworkMaterials.classworkMaterials ?? [],
+    [dataClasswork?.classworkMaterials.classworkMaterials],
   )
 
   const totalCount = useMemo(
-    () => dataClasswork?.classworkAssignments.count ?? 0,
-    [dataClasswork?.classworkAssignments.count],
+    () => dataClasswork?.classworkMaterials.count ?? 0,
+    [dataClasswork?.classworkMaterials.count],
   )
   if (loading) {
     return (
@@ -90,9 +89,9 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
         }
       >
         <CardContent>
-          {classworkAssignments.length ? (
+          {classworkMaterials.length ? (
             <DataTable
-              data={classworkAssignments}
+              data={classworkMaterials}
               rowKey="id"
               loading={loadingClasswork}
               columns={[
@@ -130,11 +129,11 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Ngày đăng',
                   skeleton: <Skeleton />,
-                  render: ({ dueDate }) => (
+                  render: ({ createdAt }) => (
                     <>
-                      {dueDate && (
+                      {createdAt && (
                         <Typography>
-                          {format(new Date(dueDate), 'dd/MM/yyyy')}
+                          {format(new Date(createdAt), 'dd/MM/yyyy')}
                         </Typography>
                       )}
                     </>
