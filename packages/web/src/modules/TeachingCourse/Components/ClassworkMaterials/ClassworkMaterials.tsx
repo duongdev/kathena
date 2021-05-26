@@ -25,7 +25,7 @@ import {
 import {
   buildPath,
   USER_PROFILE,
-  CREATE_TEACHING_COURSE_CLASSWORK_MATERIALS,
+  TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
 
 export type ClassworkMaterialsProps = {}
@@ -82,7 +82,9 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
         action={
           <Button
             endIcon={<FilePlus size={30} />}
-            link={CREATE_TEACHING_COURSE_CLASSWORK_MATERIALS}
+            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS, {
+              id: course.id,
+            })}
           >
             Thêm tài liệu
           </Button>

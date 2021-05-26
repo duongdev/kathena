@@ -27,28 +27,32 @@ export type CreateClassworkMaterialProps = {}
 export type ClassworkMaterialFormInput = {
   title: string
   description: string
-  createdAt: string
+  publicationState: string
   attachments: File[] | null
 }
 
 const labels: { [k in keyof ClassworkMaterialFormInput]: string } = {
   title: 'Tiêu đề',
   description: 'Mô tả',
-  createdAt: 'Ngày tạo',
   attachments: 'Tập tin đính kèm',
+  publicationState: 'Trạng thái',
 }
 
 const validationSchema: SchemaOf<ClassworkMaterialFormInput> = yup.object({
   title: yup.string().label(labels.title).trim().required(),
   description: yup.string().label(labels.description).required(),
-  createdAt: yup.string().label(labels.createdAt).trim().required(),
+  publicationState: yup
+    .string()
+    .label(labels.publicationState)
+    .trim()
+    .required(),
   attachments: yup.mixed().label(labels.attachments).required() as ANY,
 })
 
 const initialValues = {
   title: '',
   description: '',
-  createdAt: '',
+  publicationState: '',
   attachments: null,
 }
 

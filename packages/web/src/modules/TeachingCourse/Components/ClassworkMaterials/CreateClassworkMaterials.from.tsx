@@ -1,10 +1,16 @@
-import { FC, useCallback } from 'react'
+import { FC } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import { useFormikContext } from 'formik'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { SectionCard, Spinner, TextFormField, Typography } from '@kathena/ui'
+import {
+  SectionCard,
+  Spinner,
+  TextFormField,
+  Typography,
+  SelectFormField,
+} from '@kathena/ui'
 
 import {
   ClassworkMaterialFormInput,
@@ -20,13 +26,13 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
-  const handleAttachmentsSelect = useCallback(
-    (files: File[]) => {
-      formik.setFieldValue('attachments', files ?? null)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+  // const handleAttachmentsSelect = useCallback(
+  //   (files: File[]) => {
+  //     formik.setFieldValue('attachments', files ?? null)
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [],
+  // )
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
@@ -43,11 +49,18 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="title"
               label={labels.title}
             />
-            <TextFormField
-              type="date"
+
+            <SelectFormField
+              gridItem={{ xs: 12 }}
+              fullWidth
               required
-              name="dueDate"
-              label={labels.createdAt}
+              name="publicationState"
+              label={labels.publicationState}
+              placeholder="Chọn trạng thái"
+              options={[
+                { label: 'Published', value: 'Published' },
+                { label: 'Draft', value: 'Draft' },
+              ]}
             />
           </Stack>
         </CardContent>
