@@ -49,6 +49,12 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="title"
               label={labels.title}
             />
+            <TextFormField
+              required
+              autoFocus
+              name="description"
+              label={labels.description}
+            />
 
             <SelectFormField
               gridItem={{ xs: 12 }}
@@ -65,7 +71,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
           </Stack>
         </CardContent>
       </SectionCard>
-      <SectionCard
+      {/* <SectionCard
         maxContentHeight={false}
         gridItem={{ xs: 12, sm: 6 }}
         title={labels.attachments}
@@ -80,7 +86,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
             </Typography>
           )}
         </CardContent>
-      </SectionCard>
+      </SectionCard> */}
     </Grid>
   )
 }

@@ -8,12 +8,13 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, PageContainer, renderApolloError } from '@kathena/ui'
+import { Button, PageContainer } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import {
   useCreateClassworkMaterialMutation,
   Permission,
   ClassworkMaterialsListDocument,
+  Publication,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -46,7 +47,7 @@ const validationSchema: SchemaOf<ClassworkMaterialFormInput> = yup.object({
     .label(labels.publicationState)
     .trim()
     .required(),
-  attachments: yup.mixed().label(labels.attachments).required() as ANY,
+  attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
 })
 
 const initialValues = {
@@ -59,51 +60,34 @@ const initialValues = {
 const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const classes = useStyles(props)
   const params: { id: string } = useParams()
-  const idCourse = useMemo(() => params.id, [params])
+  const idCourse = useMemo(() => params.id, [params.id])
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const { $org: org } = useAuth()
-  const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
-    refetchQueries: [
-      {
-        query: ClassworkMaterialsListDocument,
-        variables: { orgId: org.id, skip: 0, limit: 10, courseId: idCourse },
-      },
-    ],
-    context: { hasFileUpload: true },
-  })
+  const [createClassworkMaterial] = useCreateClassworkMaterialMutation()
 
   const handleCreateAcademicSubject = useCallback(
     async (input: ClassworkMaterialFormInput) => {
       try {
-        if (!idCourse) return
-        const dataCreated = (
-          await createClassworkMaterial({
-            variables: {
-              courseId: idCourse,
-              CreateClassworkMaterialInput: input as ANY,
+        await createClassworkMaterial({
+          variables: {
+            courseId: idCourse,
+            CreateClassworkMaterialInput: {
+              title: input.title,
+              description: input.description,
+              publicationState: Publication.Draft,
             },
-          })
-        ).data
+          },
+        })
 
-        const classworkMaterial = dataCreated?.createClassworkMaterial
-
-        if (!classworkMaterial) {
-          return
-        }
         enqueueSnackbar('Thêm tài liệu thành công', { variant: 'success' })
         history.push(
           buildPath(TEACHING_COURSE_CLASSWORK_MATERIALS, {
             id: idCourse,
           }),
         )
-        // eslint-disable-next-line no-console
-        console.log(classworkMaterial)
-      } catch (error) {
-        const errorMessage = renderApolloError(error)()
-        enqueueSnackbar(errorMessage, { variant: 'error' })
-        // eslint-disable-next-line no-console
-        console.error(error)
+      } catch (err) {
+        enqueueSnackbar('Thêm tài liệu thất bại', { variant: 'error' })
       }
     },
     [createClassworkMaterial, enqueueSnackbar, idCourse, history],
