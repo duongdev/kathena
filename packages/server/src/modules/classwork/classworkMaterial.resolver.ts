@@ -21,12 +21,7 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Resolver((_of) => Classwork)
 export class ClassworkMaterialResolver {
-  constructor(
-    private readonly classworkService: ClassworkService,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-    private readonly fileStorageService: FileStorageService,
-  ) {}
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START MATERIAL RESOLVER

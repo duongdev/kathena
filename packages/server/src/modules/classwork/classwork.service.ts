@@ -424,7 +424,7 @@ export class ClassworkService {
     attachmentsInput: AddAttachmentsToClassworkInput,
     uploadedByAccountId: string,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    const attachments = await this.updateFilesAttachments(
+    const attachments = await this.uploadFilesAttachments(
       orgId,
       attachmentsInput,
       uploadedByAccountId,
@@ -693,7 +693,7 @@ export class ClassworkService {
     attachmentsInput: AddAttachmentsToClassworkInput,
     uploadedByAccountId: string,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    const attachments = await this.updateFilesAttachments(
+    const attachments = await this.uploadFilesAttachments(
       orgId,
       attachmentsInput,
       uploadedByAccountId,
@@ -719,7 +719,7 @@ export class ClassworkService {
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
 
-  async updateFilesAttachments(
+  async uploadFilesAttachments(
     orgId: string,
     attachmentsInput: AddAttachmentsToClassworkInput,
     uploadedByAccountId: string,
