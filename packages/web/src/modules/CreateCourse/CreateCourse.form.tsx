@@ -54,7 +54,12 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
           placeholder="Chọn chi nhánh"
           options={optionOrgOffices}
         />
-        <TextFormField type="date" name="startDate" label={labels.startDate} />
+        <TextFormField
+          type="date"
+          required
+          name="startDate"
+          label={labels.startDate}
+        />
       </Stack>
     </CardContent>
   )
