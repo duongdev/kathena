@@ -737,6 +737,18 @@ export type CoursesQuery = {
   }
 }
 
+export type CreateClassworkAssignmentMutationVariables = Exact<{
+  courseId: Scalars['ID']
+  input: CreateClassworkAssignmentInput
+}>
+
+export type CreateClassworkAssignmentMutation = {
+  createClassworkAssignment: Pick<
+    ClassworkAssignment,
+    'id' | 'title' | 'description'
+  >
+}
+
 export type CreateCourseMutationVariables = Exact<{
   input: CreateCourseInput
 }>
@@ -3288,6 +3300,155 @@ export type CoursesQueryResult = Apollo.QueryResult<
   CoursesQuery,
   CoursesQueryVariables
 >
+export const CreateClassworkAssignmentDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateClassworkAssignmentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  CreateClassworkAssignmentMutation,
+  CreateClassworkAssignmentMutationVariables
+>
+export type CreateClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables,
+    CreateClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables,
+    CreateClassworkAssignmentProps<TChildProps, TDataName>
+  >(CreateClassworkAssignmentDocument, {
+    alias: 'createClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useCreateClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClassworkAssignmentMutation, { data, loading, error }] = useCreateClassworkAssignmentMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >(CreateClassworkAssignmentDocument, options)
+}
+export type CreateClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useCreateClassworkAssignmentMutation
+>
+export type CreateClassworkAssignmentMutationResult =
+  Apollo.MutationResult<CreateClassworkAssignmentMutation>
+export type CreateClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateClassworkAssignmentMutation,
+    CreateClassworkAssignmentMutationVariables
+  >
 export const CreateCourseDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
