@@ -146,7 +146,7 @@ export class ClassworkMaterialResolver {
     const promiseFileUpload = attachmentsInput.attachments
     const listFileId: ANY[] = []
     if (promiseFileUpload) {
-      promiseFileUpload.map(async (document) => {
+      const arrFileId = promiseFileUpload.map(async (document) => {
         const { createReadStream, filename, encoding } = await document
 
         // eslint-disable-next-line no-console
@@ -161,8 +161,18 @@ export class ClassworkMaterialResolver {
           },
         )
 
-        listFileId.push(documentFile.id)
+        return documentFile.id
       })
+
+      await Promise.all(arrFileId)
+        .then((fileIds) => {
+          fileIds.forEach((fileId) => {
+            listFileId.push(fileId)
+          })
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
     }
     //
     return this.classworkService.addAttachmentsToClassworkMaterial(
