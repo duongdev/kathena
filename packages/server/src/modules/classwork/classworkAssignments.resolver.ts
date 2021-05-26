@@ -15,7 +15,6 @@ import {
 } from '@nestjs/graphql'
 // import { differenceInMinutes } from 'date-fns'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
@@ -31,7 +30,6 @@ import {
   CreateClassworkAssignmentInput,
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
-  ClassworkFilterInput,
   AddAttachmentsToClassworkInput,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
@@ -66,16 +64,20 @@ export class ClassworkAssignmentsResolver {
   @Query((_return) => ClassworkAssignmentPayload)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
   async classworkAssignments(
-    @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
-    @Args('filter') filter: ClassworkFilterInput,
+    @CurrentAccount() account: Account,
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('searchText', { nullable: true }) searchText?: string,
   ): Promise<ClassworkAssignmentPayload> {
-    if (org.id !== filter.orgId) {
-      throw new ForbiddenError()
-    }
     return this.classworkService.findAndPaginateClassworkAssignments(
       pageOptions,
-      filter,
+      {
+        orgId: org.id,
+        accountId: account.id,
+        courseId,
+        searchText,
+      },
     )
   }
 
