@@ -21,14 +21,16 @@ import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 // eslint-disable-next-line import/order
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { Nullable, PageOptionsInput } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
   CreateClassworkAssignmentInput,
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -39,6 +41,7 @@ export class ClassworkAssignmentsResolver {
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   /**
@@ -131,6 +134,69 @@ export class ClassworkAssignmentsResolver {
         orgId: currentOrg.id,
       },
       publication,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkAssignment)
+  async addAttachmentsToClassworkAssignments(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: ANY[] = []
+    if (promiseFileUpload) {
+      const arrFileId = promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
+
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
+
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId: org.id,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId: account.id,
+          },
+        )
+
+        return documentFile.id
+      })
+
+      await Promise.all(arrFileId)
+        .then((fileIds) => {
+          fileIds.forEach((fileId) => {
+            listFileId.push(fileId)
+          })
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+    //
+    return this.classworkService.addAttachmentsToClassworkAssignment(
+      org.id,
+      classworkAssignmentId,
+      listFileId,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_RemoveAttachmentsFromClassworkAssignment)
+  async removeAttachmentsFromClassworkAssignments(
+    @CurrentOrg() org: Org,
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachments', { type: () => [String] }) attachments?: [],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkService.removeAttachmentsFromClassworkAssignment(
+      org.id,
+      classworkAssignmentId,
+      attachments,
     )
   }
 
