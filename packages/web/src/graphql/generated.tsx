@@ -131,6 +131,11 @@ export type ClassworkMaterial = BaseModel & {
   publicationState: Scalars['String']
 }
 
+export type ClassworkMaterialPayload = {
+  classworkMaterials: Array<ClassworkMaterial>
+  count: Scalars['Int']
+}
+
 export type Course = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -239,6 +244,7 @@ export type Mutation = {
   findOrgOffices: Array<OrgOffice>
   createClassworkMaterial: ClassworkMaterial
   updateClassworkMaterial: ClassworkMaterial
+  updateClassworkMaterialPublication: ClassworkMaterial
   findClassworkMaterialById: ClassworkMaterial
   createClassworkAssignment: ClassworkAssignment
   updateClassworkAssignment: ClassworkAssignment
@@ -337,6 +343,11 @@ export type MutationUpdateClassworkMaterialArgs = {
   classworkMaterialId: Scalars['ID']
 }
 
+export type MutationUpdateClassworkMaterialPublicationArgs = {
+  publicationState: Publication
+  classworkMaterialId: Scalars['ID']
+}
+
 export type MutationFindClassworkMaterialByIdArgs = {
   orgId: Scalars['ID']
   classworkMaterial: Scalars['ID']
@@ -415,9 +426,10 @@ export enum Permission {
   Studying_Course_Access = 'Studying_Course_Access',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
+  Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
-  Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
+  Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   NoPermission = 'NoPermission',
 }
 
@@ -439,6 +451,8 @@ export type Query = {
   file?: Maybe<File>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
+  classworkMaterials: ClassworkMaterialPayload
+  findClassworkAssignmentById: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
 }
 
@@ -483,6 +497,16 @@ export type QueryFileArgs = {
 
 export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
+}
+
+export type QueryClassworkMaterialsArgs = {
+  searchText?: Maybe<Scalars['String']>
+  courseId: Scalars['String']
+  pageOptions: PageOptionsInput
+}
+
+export type QueryFindClassworkAssignmentByIdArgs = {
+  classworkAssignmentId: Scalars['ID']
 }
 
 export type QueryClassworkAssignmentsArgs = {
@@ -884,6 +908,30 @@ export type ClassworkAssignmentListQuery = {
         | 'publicationState'
         | 'attachments'
         | 'dueDate'
+      >
+    >
+  }
+}
+
+export type ClassworkMaterialsListQueryVariables = Exact<{
+  courseId: Scalars['String']
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type ClassworkMaterialsListQuery = {
+  classworkMaterials: Pick<ClassworkMaterialPayload, 'count'> & {
+    classworkMaterials: Array<
+      Pick<
+        ClassworkMaterial,
+        | 'id'
+        | 'orgId'
+        | 'createdAt'
+        | 'updatedAt'
+        | 'publicationState'
+        | 'title'
+        | 'description'
+        | 'attachments'
       >
     >
   }
@@ -5454,6 +5502,218 @@ export type ClassworkAssignmentListLazyQueryHookResult = ReturnType<
 export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
+>
+export const ClassworkMaterialsListDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ClassworkMaterialsList' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkMaterials' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'classworkMaterials' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attachments' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ClassworkMaterialsListProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables
+  >
+} &
+  TChildProps
+export function withClassworkMaterialsList<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables,
+    ClassworkMaterialsListProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables,
+    ClassworkMaterialsListProps<TChildProps, TDataName>
+  >(ClassworkMaterialsListDocument, {
+    alias: 'classworkMaterialsList',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useClassworkMaterialsListQuery__
+ *
+ * To run a query within a React component, call `useClassworkMaterialsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClassworkMaterialsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClassworkMaterialsListQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useClassworkMaterialsListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables
+  >(ClassworkMaterialsListDocument, options)
+}
+export function useClassworkMaterialsListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ClassworkMaterialsListQuery,
+    ClassworkMaterialsListQueryVariables
+  >(ClassworkMaterialsListDocument, options)
+}
+export type ClassworkMaterialsListQueryHookResult = ReturnType<
+  typeof useClassworkMaterialsListQuery
+>
+export type ClassworkMaterialsListLazyQueryHookResult = ReturnType<
+  typeof useClassworkMaterialsListLazyQuery
+>
+export type ClassworkMaterialsListQueryResult = Apollo.QueryResult<
+  ClassworkMaterialsListQuery,
+  ClassworkMaterialsListQueryVariables
 >
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',

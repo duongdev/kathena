@@ -373,6 +373,7 @@ input CreateClassworkAssignmentInput {
   description: String!
   attachments: [String!] = []
   dueDate: String!
+  publicationState: Publication!
 }
 
 input UpdateClassworkAssignmentInput {

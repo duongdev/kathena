@@ -1,0 +1,18 @@
+query ClassworkMaterialsList($courseId: String!, $skip: Int!, $limit: Int!) {
+  classworkMaterials(
+    courseId: $courseId
+    pageOptions: { skip: $skip, limit: $limit }
+  ) {
+    classworkMaterials {
+      id
+      orgId
+      createdAt
+      updatedAt
+      publicationState
+      title
+      description
+      attachments
+    }
+    count
+  }
+}
