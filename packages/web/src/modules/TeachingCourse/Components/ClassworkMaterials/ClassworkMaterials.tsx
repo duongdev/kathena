@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react'
 import { Grid, Skeleton, CardContent } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
-import { File, FilePlus } from 'phosphor-react'
+import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -36,16 +36,14 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   const { page, perPage, setPage, setPerPage } = usePagination()
 
   const course = useMemo(() => data?.findCourseById, [data])
-  const {
-    data: dataClasswork,
-    loading: loadingClasswork,
-  } = useClassworkMaterialsListQuery({
-    variables: {
-      courseId: course?.id ?? '',
-      limit: perPage,
-      skip: page * perPage,
-    },
-  })
+  const { data: dataClasswork, loading: loadingClasswork } =
+    useClassworkMaterialsListQuery({
+      variables: {
+        courseId: course?.id ?? '',
+        limit: perPage,
+        skip: page * perPage,
+      },
+    })
 
   const classworkMaterials = useMemo(
     () => dataClasswork?.classworkMaterials.classworkMaterials ?? [],
@@ -84,15 +82,6 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               rowKey="id"
               loading={loadingClasswork}
               columns={[
-                {
-                  render: () => (
-                    <>
-                      <File size={30} />
-                    </>
-                  ),
-                  width: '2%',
-                  skeleton: <Skeleton />,
-                },
                 {
                   label: 'Tiêu đề',
                   skeleton: <Skeleton />,
