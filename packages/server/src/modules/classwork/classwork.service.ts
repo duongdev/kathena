@@ -17,9 +17,9 @@ import { ANY, Nullable, PageOptionsInput } from 'types'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
-  ClassworkFilterInput,
   CreateClassworkMaterialInput,
 } from './classwork.type'
+import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -50,6 +50,84 @@ export class ClassworkService {
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
   ) {}
+
+  /**
+   * START GENERAL FUNCTION
+   */
+
+  async addAttachmentsToClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      attachments.forEach((attachment) => {
+        classwork.attachments.push(attachment)
+      })
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  async removeAttachmentsFromClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      const currentAttachments = classwork.attachments
+
+      attachments.map((attachment) =>
+        currentAttachments.splice(currentAttachments.indexOf(attachment), 1),
+      )
+
+      classwork.attachments = currentAttachments
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  /**
+   * END GENERAL FUNCTION
+   */
 
   /**
    * START CLASSWORK MATERIAL
@@ -240,9 +318,19 @@ export class ClassworkService {
   // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
   async findClassworkMaterialById(
-    classworkMaterial: string,
+    orgId: string,
+    classworkMaterialId: string,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    return this.classworkMaterialModel.findById(classworkMaterial)
+    const classworkMaterial = await this.classworkMaterialModel.findOne({
+      orgId,
+      _id: classworkMaterialId,
+    })
+
+    if (!classworkMaterial) {
+      throw new Error(`ClassworkMaterial not found`)
+    }
+
+    return classworkMaterial
   }
 
   async findAndPaginateClassworkMaterials(
@@ -324,6 +412,32 @@ export class ClassworkService {
 
     return { classworkMaterials: listClassworkMaterials, count }
   }
+
+  async addAttachmentsToClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
+
+  async removeAttachmentsFromClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -342,7 +456,7 @@ export class ClassworkService {
     })
 
     if (!classworkAssignment) {
-      throw new Error(`This classworkAssignment not found.`)
+      throw new Error(`ClassworkAssignment not found.`)
     }
 
     return classworkAssignment
@@ -350,27 +464,83 @@ export class ClassworkService {
 
   async findAndPaginateClassworkAssignments(
     pageOptions: PageOptionsInput,
-    filter: ClassworkFilterInput,
+    filter: {
+      orgId: string
+      accountId: string
+      courseId: string
+      searchText?: string
+    },
   ): Promise<{
     classworkAssignments: DocumentType<ClassworkAssignment>[]
     count: number
   }> {
-    const { limit, skip } = pageOptions
-    const { orgId, courseId } = filter
+    this.logger.log(
+      `[${this.findAndPaginateClassworkAssignments.name}] Find and paginate classworkAssignments`,
+    )
 
-    const classworkAssignmentModel = this.classworkAssignmentsModel.find({
+    this.logger.verbose({
+      filter,
+    })
+
+    const { limit, skip } = pageOptions
+    const { courseModel } = this
+    const { orgId, courseId, searchText, accountId } = filter
+
+    const course = await courseModel.findOne({
+      _id: courseId,
       orgId,
     })
 
-    if (courseId) {
-      classworkAssignmentModel.find({
+    if (!course) {
+      throw new Error(`COURSE NOT FOUND`)
+    }
+
+    let findInput: ANY = null
+
+    if (await this.authService.canAccountManageCourse(accountId, courseId)) {
+      findInput = {
+        orgId,
         courseId,
+      }
+    } else if (
+      await this.authService.isAccountStudentFormCourse(
+        accountId,
+        courseId,
+        orgId,
+      )
+    ) {
+      findInput = {
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+      }
+    } else {
+      throw new Error(`ACCOUNT HAVEN'T PERMISSION`)
+    }
+
+    const classworkAssignmentModel =
+      this.classworkAssignmentsModel.find(findInput)
+
+    if (searchText) {
+      classworkAssignmentModel.find({
+        $text: {
+          $search: searchText,
+        },
       })
     }
 
     classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const classworkAssignments = await classworkAssignmentModel
     const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
+
+    this.logger.log(
+      `[${this.updateClassworkAssignment.name}] Find classworkAssignment successfully`,
+    )
+
+    this.logger.verbose({
+      filter,
+    })
+
     return { classworkAssignments, count }
   }
 
@@ -380,7 +550,7 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { title, description, attachments, dueDate } =
+    const { title, description, attachments, dueDate, publicationState } =
       classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
@@ -412,7 +582,7 @@ export class ClassworkService {
       title,
       description,
       attachments,
-      publicationState: Publication.Draft,
+      publicationState,
       dueDate: dueDateInput,
     })
 
@@ -504,6 +674,32 @@ export class ClassworkService {
       await classworkAssignment.save()
 
     return updateClassworkAssignmentPublication
+  }
+
+  async addAttachmentsToClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async removeAttachmentsFromClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
   /**
    * END CLASSWORK ASSIGNMENT

@@ -31,7 +31,12 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
           roles={['lecturer']}
           multiple
         />
-        <TextFormField type="date" name="startDate" label={labels.startDate} />
+        <TextFormField
+          type="date"
+          required
+          name="startDate"
+          label={labels.startDate}
+        />
       </Stack>
     </CardContent>
   )

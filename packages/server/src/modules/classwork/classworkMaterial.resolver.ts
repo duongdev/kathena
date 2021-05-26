@@ -1,19 +1,20 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { Org } from 'modules/org/models/Org'
-import { Nullable, PageOptionsInput } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   ClassworkMaterialPayload,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
@@ -24,6 +25,7 @@ export class ClassworkMaterialResolver {
     private readonly classworkService: ClassworkService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   /**
@@ -119,22 +121,80 @@ export class ClassworkMaterialResolver {
     )
   }
 
-  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
-
-  @Mutation((_return) => ClassworkMaterial)
+  @Query((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
-  @UsePipes(ValidationPipe)
-  async findClassworkMaterialById(
-    @Args('classworkMaterial', { type: () => ID })
-    classworkMaterial: string,
-    @Args('orgId', { type: () => ID }) orgId: string,
+  async classworkMaterial(
+    @Args('Id', { type: () => ID })
+    classworkMaterialId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    if (orgId !== org.id) {
-      throw new ForbiddenError()
-    }
+    return this.classworkService.findClassworkMaterialById(
+      org.id,
+      classworkMaterialId,
+    )
+  }
 
-    return this.classworkService.findClassworkMaterialById(classworkMaterial)
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkMaterial)
+  async addAttachmentsToClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: ANY[] = []
+    if (promiseFileUpload) {
+      const arrFileId = promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
+
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
+
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId: org.id,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId: account.id,
+          },
+        )
+
+        return documentFile.id
+      })
+
+      await Promise.all(arrFileId)
+        .then((fileIds) => {
+          fileIds.forEach((fileId) => {
+            listFileId.push(fileId)
+          })
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+    //
+    return this.classworkService.addAttachmentsToClassworkMaterial(
+      org.id,
+      classworkAssignmentId,
+      listFileId,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_RemoveAttachmentsFromClassworkMaterial)
+  async removeAttachmentsFromClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachments', { type: () => [String] }) attachments?: [],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkService.removeAttachmentsFromClassworkMaterial(
+      org.id,
+      classworkAssignmentId,
+      attachments,
+    )
   }
 
   /**
