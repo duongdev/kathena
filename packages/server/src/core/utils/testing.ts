@@ -41,6 +41,8 @@ export const createTestingModule = async (
   metadata?: ModuleMetadata,
   options: { disableLogger: boolean } = { disableLogger: true },
 ): Promise<TestingModule> => {
+  mongoose.set('useFindAndModify', false)
+
   const module = await Test.createTestingModule({
     imports: [
       ...(metadata?.imports ?? []),
