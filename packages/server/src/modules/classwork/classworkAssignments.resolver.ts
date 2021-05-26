@@ -37,12 +37,7 @@ import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
-  constructor(
-    private readonly classworkService: ClassworkService,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-    private readonly fileStorageService: FileStorageService,
-  ) {}
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START ASSIGNMENTS RESOLVER
@@ -139,49 +134,18 @@ export class ClassworkAssignmentsResolver {
 
   @Mutation((_returns) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkAssignment)
-  async addAttachmentsToClassworkAssignments(
+  async addAttachmentsToClassworkAssignment(
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
     @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
-    const promiseFileUpload = attachmentsInput.attachments
-    const listFileId: ANY[] = []
-    if (promiseFileUpload) {
-      const arrFileId = promiseFileUpload.map(async (document) => {
-        const { createReadStream, filename, encoding } = await document
-
-        // eslint-disable-next-line no-console
-        console.log('encoding', encoding)
-
-        const documentFile = await this.fileStorageService.uploadFromReadStream(
-          {
-            orgId: org.id,
-            originalFileName: filename,
-            readStream: createReadStream(),
-            uploadedByAccountId: account.id,
-          },
-        )
-
-        return documentFile.id
-      })
-
-      await Promise.all(arrFileId)
-        .then((fileIds) => {
-          fileIds.forEach((fileId) => {
-            listFileId.push(fileId)
-          })
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-    //
     return this.classworkService.addAttachmentsToClassworkAssignment(
       org.id,
       classworkAssignmentId,
-      listFileId,
+      attachmentsInput,
+      account.id,
     )
   }
 

@@ -143,42 +143,11 @@ export class ClassworkMaterialResolver {
     classworkAssignmentId: string,
     @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
-    const promiseFileUpload = attachmentsInput.attachments
-    const listFileId: ANY[] = []
-    if (promiseFileUpload) {
-      const arrFileId = promiseFileUpload.map(async (document) => {
-        const { createReadStream, filename, encoding } = await document
-
-        // eslint-disable-next-line no-console
-        console.log('encoding', encoding)
-
-        const documentFile = await this.fileStorageService.uploadFromReadStream(
-          {
-            orgId: org.id,
-            originalFileName: filename,
-            readStream: createReadStream(),
-            uploadedByAccountId: account.id,
-          },
-        )
-
-        return documentFile.id
-      })
-
-      await Promise.all(arrFileId)
-        .then((fileIds) => {
-          fileIds.forEach((fileId) => {
-            listFileId.push(fileId)
-          })
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-    //
     return this.classworkService.addAttachmentsToClassworkMaterial(
       org.id,
       classworkAssignmentId,
-      listFileId,
+      attachmentsInput,
+      account.id,
     )
   }
 
