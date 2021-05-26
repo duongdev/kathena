@@ -575,16 +575,21 @@ export class ClassworkService {
       throw new Error(`DUE_DATE_INVALID`)
     }
 
-    const classworkAssignment = this.classworkAssignmentsModel.create({
+    const classworkAssignment = await this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
       orgId,
       title,
       description,
-      attachments,
       publicationState,
       dueDate: dueDateInput,
     })
+
+    this.addAttachmentsToClassworkAssignment(
+      orgId,
+      classworkAssignment.id,
+      attachments,
+    )
 
     return classworkAssignment
   }
