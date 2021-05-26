@@ -13,7 +13,7 @@ import { useAuth, WithAuth } from 'common/auth'
 import {
   useCreateClassworkMaterialMutation,
   Permission,
-  ClassworkAssignmentListDocument,
+  ClassworkMaterialsListDocument,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -66,7 +66,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
     refetchQueries: [
       {
-        query: ClassworkAssignmentListDocument,
+        query: ClassworkMaterialsListDocument,
         variables: { orgId: org.id, skip: 0, limit: 10, courseId: idCourse },
       },
     ],
