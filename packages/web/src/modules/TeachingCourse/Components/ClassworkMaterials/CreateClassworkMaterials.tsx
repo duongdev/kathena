@@ -14,7 +14,6 @@ import {
   useCreateClassworkMaterialMutation,
   Permission,
   ClassworkMaterialsListDocument,
-  Publication,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -47,7 +46,7 @@ const validationSchema: SchemaOf<ClassworkMaterialFormInput> = yup.object({
     .label(labels.publicationState)
     .trim()
     .required(),
-  attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
+  attachments: yup.mixed().label(labels.attachments).required() as ANY,
 })
 
 const initialValues = {
@@ -64,7 +63,15 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const { $org: org } = useAuth()
-  const [createClassworkMaterial] = useCreateClassworkMaterialMutation()
+  const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
+    refetchQueries: [
+      {
+        query: ClassworkMaterialsListDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10, courseId: idCourse },
+      },
+    ],
+    context: { hasFileUpload: true },
+  })
 
   const handleCreateAcademicSubject = useCallback(
     async (input: ClassworkMaterialFormInput) => {
@@ -75,7 +82,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
             CreateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
-              publicationState: Publication.Draft,
+              publicationState: input.publicationState as ANY,
             },
           },
         })

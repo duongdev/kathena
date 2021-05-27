@@ -1,4 +1,6 @@
-import { FC } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { FC, useCallback } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import { useFormikContext } from 'formik'
@@ -10,6 +12,8 @@ import {
   TextFormField,
   Typography,
   SelectFormField,
+  EditorFormField,
+  UploadInput,
 } from '@kathena/ui'
 
 import {
@@ -26,7 +30,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
-  // const handleAttachmentsSelect = useCallback(
+  // const handleMaterialSelect = useCallback(
   //   (files: File[]) => {
   //     formik.setFieldValue('attachments', files ?? null)
   //   },
@@ -49,13 +53,15 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="title"
               label={labels.title}
             />
-            <TextFormField
+          </Stack>
+          <Stack spacing={2}>
+            <EditorFormField
               required
-              autoFocus
               name="description"
               label={labels.description}
             />
-
+          </Stack>
+          <Stack spacing={2}>
             <SelectFormField
               gridItem={{ xs: 12 }}
               fullWidth
@@ -80,6 +86,10 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
       >
         {formik.isSubmitting && <Spinner container="overlay" />}
         <CardContent className={classes.attachmentsCardContent}>
+          <UploadInput
+            // accept={['image/png', 'image/jpeg']}
+            onChange={handleMaterialSelect}
+          />
           {formik.submitCount > 0 && formik.errors.attachments && (
             <Typography color="error" className={classes.attachmentsError}>
               {formik.errors.attachments}

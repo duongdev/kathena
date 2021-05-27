@@ -77,7 +77,16 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
       <SectionCard
         title="Tài liệu"
         gridItem={{ xs: 12 }}
-        action={<Button endIcon={<FilePlus size={30} />}>Thêm tài liệu</Button>}
+        action={
+          <Button
+            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS, {
+              id: courseId,
+            })}
+            endIcon={<FilePlus size={30} />}
+          >
+            Thêm tài liệu
+          </Button>
+        }
       >
         <CardContent>
           {classworkMaterials.length ? (
