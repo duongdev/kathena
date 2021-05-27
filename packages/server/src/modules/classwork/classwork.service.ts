@@ -11,6 +11,7 @@ import {
 import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
@@ -18,7 +19,9 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
   CreateClassworkMaterialInput,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
+import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -40,6 +43,9 @@ export class ClassworkService {
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
 
+    @Inject(forwardRef(() => FileStorageService))
+    private readonly fileStorageService: FileStorageService,
+
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
@@ -49,6 +55,84 @@ export class ClassworkService {
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
   ) {}
+
+  /**
+   * START GENERAL FUNCTION
+   */
+
+  async addAttachmentsToClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      attachments.forEach((attachment) => {
+        classwork.attachments.push(attachment)
+      })
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  async removeAttachmentsFromClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork && attachments) {
+      const currentAttachments = classwork.attachments
+
+      attachments.map((attachment) =>
+        currentAttachments.splice(currentAttachments.indexOf(attachment), 1),
+      )
+
+      classwork.attachments = currentAttachments
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  /**
+   * END GENERAL FUNCTION
+   */
 
   /**
    * START CLASSWORK MATERIAL
@@ -333,6 +417,38 @@ export class ClassworkService {
 
     return { classworkMaterials: listClassworkMaterials, count }
   }
+
+  async addAttachmentsToClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    attachmentsInput: AddAttachmentsToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    const attachments = await this.uploadFilesAttachments(
+      orgId,
+      attachmentsInput,
+      uploadedByAccountId,
+    )
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
+
+  async removeAttachmentsFromClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -569,6 +685,78 @@ export class ClassworkService {
       await classworkAssignment.save()
 
     return updateClassworkAssignmentPublication
+  }
+
+  async addAttachmentsToClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachmentsInput: AddAttachmentsToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    const attachments = await this.uploadFilesAttachments(
+      orgId,
+      attachmentsInput,
+      uploadedByAccountId,
+    )
+    return this.addAttachmentsToClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async removeAttachmentsFromClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    attachments?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.removeAttachmentsFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      attachments,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async uploadFilesAttachments(
+    orgId: string,
+    attachmentsInput: AddAttachmentsToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<string[]> {
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: string[] = []
+    if (promiseFileUpload) {
+      const arrFileId = promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
+
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
+
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId,
+          },
+        )
+
+        return documentFile.id
+      })
+
+      await Promise.all(arrFileId)
+        .then((fileIds) => {
+          fileIds.forEach((fileId) => {
+            listFileId.push(fileId)
+          })
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+
+    return listFileId
   }
   /**
    * END CLASSWORK ASSIGNMENT
