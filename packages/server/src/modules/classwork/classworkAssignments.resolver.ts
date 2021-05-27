@@ -77,7 +77,6 @@ export class ClassworkAssignmentsResolver {
       courseId,
       org.id,
       createClassworkAssignmentInput,
-      attachmentsInput,
     )
   }
 

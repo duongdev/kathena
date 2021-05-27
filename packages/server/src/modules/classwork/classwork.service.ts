@@ -560,7 +560,6 @@ export class ClassworkService {
     courseId: string,
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
-    attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { title, description, attachments, dueDate, publicationState } =
       classworkAssignmentInput
@@ -601,7 +600,7 @@ export class ClassworkService {
       classworkAssignment = (await this.addAttachmentsToClassworkAssignment(
         orgId,
         classworkAssignment.id,
-        attachmentsInput,
+        { attachments },
         classworkAssignment.createdByAccountId,
       )) as ANY
     }

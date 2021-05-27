@@ -89,7 +89,7 @@ export class CreateClassworkAssignmentInput {
   description?: string
 
   @Field((_type) => [String], { defaultValue: [] })
-  attachments?: string[]
+  attachments?: Promise<FileUpload>[]
 
   @Field()
   @IsNotEmpty({ message: 'Due date cannot be empty' })
