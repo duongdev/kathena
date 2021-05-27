@@ -77,7 +77,6 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
-            {} as ANY,
           ),
         ).rejects.toThrowError('ORG_ID_INVALID')
 
@@ -87,7 +86,6 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
-            {} as ANY,
           ),
         ).rejects.toThrowError('ORG_ID_INVALID')
       })
@@ -111,7 +109,6 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
-            {} as ANY,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
@@ -121,7 +118,6 @@ describe('classwork.service', () => {
             'objectId()',
             objectId(),
             createClassworkMaterialInput,
-            {} as ANY,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
       })
@@ -153,7 +149,6 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
-            {} as ANY,
           ),
         ).resolves.toMatchObject({
           ...createClassworkMaterialInput,
@@ -167,7 +162,6 @@ describe('classwork.service', () => {
             {
               title: 'test    123',
             },
-            {} as ANY,
           ),
         ).resolves.toMatchObject({
           title: 'test 123',
