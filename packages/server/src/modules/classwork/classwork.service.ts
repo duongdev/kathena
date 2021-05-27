@@ -202,14 +202,29 @@ export class ClassworkService {
     if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
-    const classworkMaterial = await this.classworkMaterialModel.create({
-      description: removeExtraSpaces(description),
-      title: removeExtraSpaces(title),
-      publicationState,
-      createdByAccountId: creatorId,
-      orgId,
-      courseId,
-    })
+    let createInput = {}
+
+    if (publicationState) {
+      createInput = {
+        description: removeExtraSpaces(description),
+        title: removeExtraSpaces(title),
+        publicationState,
+        createdByAccountId: creatorId,
+        orgId,
+        courseId,
+      }
+    } else {
+      createInput = {
+        description: removeExtraSpaces(description),
+        title: removeExtraSpaces(title),
+        createdByAccountId: creatorId,
+        orgId,
+        courseId,
+      }
+    }
+    const classworkMaterial = await this.classworkMaterialModel.create(
+      createInput,
+    )
 
     let classworkMaterialWithFile: ANY = null
 
