@@ -46,7 +46,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
         title="Thông tin bài tập"
       >
         <CardContent>
-          <Stack spacing={2}>
+          <Stack >
             <TextFormField
               required
               autoFocus
@@ -54,14 +54,14 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               label={labels.title}
             />
           </Stack>
-          <Stack spacing={2}>
+          <Stack mt={3}>
             <EditorFormField
               required
               name="description"
               label={labels.description}
             />
           </Stack>
-          <Stack spacing={2}>
+          <Stack mt={3}>
             <SelectFormField
               gridItem={{ xs: 12 }}
               fullWidth
