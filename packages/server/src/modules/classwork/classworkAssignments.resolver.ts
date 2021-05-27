@@ -67,6 +67,7 @@ export class ClassworkAssignmentsResolver {
   async createClassworkAssignment(
     @Args('input')
     createClassworkAssignmentInput: CreateClassworkAssignmentInput,
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
     @Args('courseId', { type: () => ID }) courseId: string,
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
@@ -76,6 +77,7 @@ export class ClassworkAssignmentsResolver {
       courseId,
       org.id,
       createClassworkAssignmentInput,
+      attachmentsInput,
     )
   }
 

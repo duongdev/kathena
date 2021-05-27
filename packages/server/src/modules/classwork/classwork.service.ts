@@ -560,6 +560,7 @@ export class ClassworkService {
     courseId: string,
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
+    attachmentsInput: AddAttachmentsToClassworkInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { title, description, attachments, dueDate, publicationState } =
       classworkAssignmentInput
@@ -586,7 +587,7 @@ export class ClassworkService {
       throw new Error(`DUE_DATE_INVALID`)
     }
 
-    const classworkAssignment = await this.classworkAssignmentsModel.create({
+    let classworkAssignment = await this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
       orgId,
@@ -595,6 +596,15 @@ export class ClassworkService {
       publicationState,
       dueDate: dueDateInput,
     })
+
+    if (attachments?.length) {
+      classworkAssignment = (await this.addAttachmentsToClassworkAssignment(
+        orgId,
+        classworkAssignment.id,
+        attachmentsInput,
+        classworkAssignment.createdByAccountId,
+      )) as ANY
+    }
 
     return classworkAssignment
   }

@@ -95,7 +95,7 @@ export class CreateClassworkAssignmentInput {
   @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
 
-  @Field((_type) => Publication)
+  @Field((_type) => Publication, { nullable: true })
   publicationState?: string
 }
 
