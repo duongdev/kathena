@@ -127,13 +127,21 @@ describe('classwork.service', () => {
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as ANY)
-          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as ANY)
-          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService, 'addAttachmentsToClassworkMaterial')
+          .mockResolvedValueOnce(createClassworkMaterialInput as ANY)
+          .mockResolvedValueOnce({
+            ...createClassworkMaterialInput,
+            title: 'test 123',
+          } as ANY)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -142,7 +150,9 @@ describe('classwork.service', () => {
             objectId(),
             createClassworkMaterialInput,
           ),
-        ).resolves.toMatchObject({ ...createClassworkMaterialInput })
+        ).resolves.toMatchObject({
+          ...createClassworkMaterialInput,
+        })
 
         await expect(
           classworkService.createClassworkMaterial(
