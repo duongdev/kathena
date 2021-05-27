@@ -57,12 +57,14 @@ export class ClassworkMaterialResolver {
     createClassworkMaterialInput: CreateClassworkMaterialInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
+    @Args('attachmentsInput') attachmentsInput?: AddAttachmentsToClassworkInput,
   ): Promise<ClassworkMaterial> {
     return this.classworkService.createClassworkMaterial(
       account.id,
       org.id,
       courseId,
       createClassworkMaterialInput,
+      attachmentsInput,
     )
   }
 

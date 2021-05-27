@@ -77,6 +77,7 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
+            {} as ANY,
           ),
         ).rejects.toThrowError('ORG_ID_INVALID')
 
@@ -86,6 +87,7 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
+            {} as ANY,
           ),
         ).rejects.toThrowError('ORG_ID_INVALID')
       })
@@ -109,6 +111,7 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
+            {} as ANY,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
@@ -118,6 +121,7 @@ describe('classwork.service', () => {
             'objectId()',
             objectId(),
             createClassworkMaterialInput,
+            {} as ANY,
           ),
         ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
       })
@@ -127,13 +131,21 @@ describe('classwork.service', () => {
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
-          .mockResolvedValueOnce(true as ANY)
-          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as ANY)
-          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService, 'addAttachmentsToClassworkMaterial')
+          .mockResolvedValueOnce(createClassworkMaterialInput as ANY)
+          .mockResolvedValueOnce({
+            ...createClassworkMaterialInput,
+            title: 'test 123',
+          } as ANY)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -141,8 +153,11 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
             createClassworkMaterialInput,
+            {} as ANY,
           ),
-        ).resolves.toMatchObject({ ...createClassworkMaterialInput })
+        ).resolves.toMatchObject({
+          ...createClassworkMaterialInput,
+        })
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -152,6 +167,7 @@ describe('classwork.service', () => {
             {
               title: 'test    123',
             },
+            {} as ANY,
           ),
         ).resolves.toMatchObject({
           title: 'test 123',
