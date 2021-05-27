@@ -1,0 +1,13 @@
+query ClassworkAssignmentDetail($id: ID!) {
+  classworkAssignment(id: $id) {
+    id
+    orgId
+    courseId
+    title
+    type
+    description
+    publicationState
+    attachments
+    dueDate
+  }
+}

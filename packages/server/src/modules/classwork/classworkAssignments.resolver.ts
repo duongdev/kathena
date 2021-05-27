@@ -30,8 +30,8 @@ export class ClassworkAssignmentsResolver {
 
   @Query((_return) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_ListClassworkAssignment)
-  async findClassworkAssignmentById(
-    @Args('classworkAssignmentId', { type: () => ID })
+  async classworkAssignment(
+    @Args('id', { type: () => ID })
     classworkAssignmentId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
