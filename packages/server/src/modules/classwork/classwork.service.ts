@@ -182,7 +182,6 @@ export class ClassworkService {
     orgId: string,
     courseId: string,
     createClassworkMaterialInput: CreateClassworkMaterialInput,
-    attachmentsInput?: AddAttachmentsToClassworkInput,
   ): Promise<DocumentType<ClassworkMaterial>> {
     this.logger.log(
       `[${this.createClassworkMaterial.name}] Creating new classworkMaterial`,
@@ -194,6 +193,9 @@ export class ClassworkService {
       createClassworkMaterialInput,
     })
 
+    const { title, description, publicationState, attachments } =
+      createClassworkMaterialInput
+
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
 
@@ -201,9 +203,9 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
     const classworkMaterial = await this.classworkMaterialModel.create({
-      description: removeExtraSpaces(createClassworkMaterialInput.description),
-      title: removeExtraSpaces(createClassworkMaterialInput.title),
-      publicationState: createClassworkMaterialInput.publicationState,
+      description: removeExtraSpaces(description),
+      title: removeExtraSpaces(title),
+      publicationState,
       createdByAccountId: creatorId,
       orgId,
       courseId,
@@ -211,11 +213,13 @@ export class ClassworkService {
 
     let classworkMaterialWithFile: ANY = null
 
-    if (attachmentsInput) {
+    if (attachments) {
       classworkMaterialWithFile = await this.addAttachmentsToClassworkMaterial(
         orgId,
         classworkMaterial.id,
-        attachmentsInput,
+        {
+          attachments,
+        },
         creatorId,
       )
       if (!classworkMaterialWithFile) {

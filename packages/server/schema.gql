@@ -283,7 +283,7 @@ type Mutation {
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  createClassworkMaterial(attachmentsInput: AddAttachmentsToClassworkInput!, CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
+  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
   addAttachmentsToClassworkMaterial(attachmentsInput: AddAttachmentsToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
@@ -353,19 +353,20 @@ input UpdateOrgOfficeInput {
   phone: String
 }
 
-input AddAttachmentsToClassworkInput {
-  attachments: [Upload!]!
-}
-
 input CreateClassworkMaterialInput {
   title: String!
   description: String
   publicationState: Publication!
+  attachments: [Upload!]
 }
 
 input UpdateClassworkMaterialInput {
   title: String
   description: String
+}
+
+input AddAttachmentsToClassworkInput {
+  attachments: [Upload!]!
 }
 
 input CreateClassworkAssignmentInput {

@@ -1,6 +1,6 @@
 import {
   createUnionType,
-  Field /* , Field, ID, InputType, Int, ObjectType */,
+  Field,
   InputType,
   ID,
   Int,
@@ -50,6 +50,9 @@ export class CreateClassworkMaterialInput {
 
   @Field((_type) => Publication)
   publicationState?: string
+
+  @Field((_type) => [GraphQLUpload], { nullable: true })
+  attachments?: Promise<FileUpload>[]
 }
 
 @ObjectType()
