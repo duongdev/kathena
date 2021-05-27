@@ -291,7 +291,7 @@ type Mutation {
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
-  addAttachmentsToClassworkAssignments(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
+  addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
 }
 

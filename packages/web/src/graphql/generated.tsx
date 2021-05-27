@@ -426,10 +426,10 @@ export enum Permission {
   Studying_Course_Access = 'Studying_Course_Access',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
-  Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
+  Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
-  Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
+  Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   NoPermission = 'NoPermission',
 }
 
