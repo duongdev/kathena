@@ -17,4 +17,8 @@ export class ClassworkAssignment extends Classwork {
   @Field()
   @prop({ required: true, default: ClassworkType.Assignment })
   type: string
+
+  @Field()
+  @prop({ default: 100 })
+  maxScores: number
 }
