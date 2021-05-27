@@ -91,7 +91,7 @@ export class CreateClassworkAssignmentInput {
   @Field()
   description?: string
 
-  @Field((_type) => [String], { defaultValue: [] })
+  @Field((_type) => [GraphQLUpload], { defaultValue: [] })
   attachments?: Promise<FileUpload>[]
 
   @Field()

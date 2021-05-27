@@ -42,7 +42,7 @@ const validationSchema: SchemaOf<ClassworkAssignmentFormInput> = yup.object({
   title: yup.string().label(labels.title).trim().required(),
   description: yup.string().label(labels.description).required(),
   dueDate: yup.string().label(labels.dueDate).trim().required(),
-  attachments: yup.mixed().label(labels.attachments).required() as ANY,
+  attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
 })
 
 const initialValues = {
