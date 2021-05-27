@@ -995,7 +995,29 @@ describe('classwork.service', () => {
   })
 
   describe('findAndPaginateClassworkAssignments', () => {
-    it('returns array classworkAssignment and count find and pagination classworkAssignment', async () => {
+    it(`throws error if course isn't found`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(null)
+
+      await expect(
+        classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 2,
+            skip: 0,
+          },
+          {
+            orgId: objectId(),
+            accountId: objectId(),
+            courseId: objectId(),
+          },
+        ),
+      ).rejects.toThrowError(`COURSE NOT FOUND`)
+    })
+
+    it('returns array publish and draft classworkAssignment if the account is lecturer', async () => {
       expect.assertions(1)
 
       const org = await orgService.createOrg({
@@ -1048,8 +1070,6 @@ describe('classwork.service', () => {
         org.id,
         {
           ...createCourse,
-          code: 'FEBCT2',
-          name: 'Lập trình Frontend cơ bản tháng 2',
         },
       )
 
@@ -1131,6 +1151,8 @@ describe('classwork.service', () => {
           },
           {
             orgId: org.id,
+            accountId: lecturerAccount.id,
+            courseId: course.id,
           },
         ),
       ).resolves.toMatchObject({
@@ -1148,7 +1170,7 @@ describe('classwork.service', () => {
       })
     })
 
-    it('returns array classworkAssignment and count find and pagination classworkAssignment with filter', async () => {
+    it('returns array publish classworkAssignment if the account is student', async () => {
       expect.assertions(1)
 
       const org = await orgService.createOrg({
@@ -1172,6 +1194,15 @@ describe('classwork.service', () => {
         username: 'lecturer',
         roles: ['lecturer'],
         displayName: 'Lecturer',
+      })
+
+      const studentAccount = await accountService.createAccount({
+        orgId: org.id,
+        email: 'student@gmail.com',
+        password: '123456',
+        username: 'student',
+        roles: ['student'],
+        displayName: 'Student',
       })
 
       const academicSubject = await academicService.createAcademicSubject({
@@ -1201,10 +1232,10 @@ describe('classwork.service', () => {
         org.id,
         {
           ...createCourse,
-          code: 'FEBCT2',
-          name: 'Lập trình Frontend cơ bản tháng 2',
         },
       )
+      course.studentIds = [studentAccount.id]
+      course.save()
 
       listCreateClassworkAssignment.push(
         await classworkService.createClassworkAssignment(
@@ -1216,6 +1247,7 @@ describe('classwork.service', () => {
             description: 'Bai tap 1',
             attachments: [],
             dueDate: date.toString(),
+            publicationState: Publication.Published,
           },
         ),
       )
@@ -1230,6 +1262,7 @@ describe('classwork.service', () => {
             description: 'Bai tap 2',
             attachments: [],
             dueDate: date.toString(),
+            publicationState: Publication.Published,
           },
         ),
       )
@@ -1284,22 +1317,54 @@ describe('classwork.service', () => {
           },
           {
             orgId: org.id,
+            accountId: studentAccount.id,
             courseId: course.id,
           },
         ),
       ).resolves.toMatchObject({
         classworkAssignments: [
           {
-            title: 'Bai tap 5',
-            description: 'Bai tap 5',
+            title: 'Bai tap 2',
+            description: 'Bai tap 2',
           },
           {
-            title: 'Bai tap 4',
-            description: 'Bai tap 4',
+            title: 'Bai tap 1',
+            description: 'Bai tap 1',
           },
         ],
         count: listCreateClassworkAssignment.length,
       })
+    })
+
+    it(`throws error if account haven't permission`, async () => {
+      expect.assertions(1)
+
+      const createCourse: ANY = {
+        academicSubjectId: objectId(),
+        code: 'FEBCT1',
+        name: 'Frontend cơ bản tháng 1',
+        startDate: Date.now().toString(),
+        tuitionFee: 5000000,
+        lecturerIds: [objectId()],
+      }
+
+      jest
+        .spyOn(classworkService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(createCourse as ANY)
+
+      await expect(
+        classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 2,
+            skip: 0,
+          },
+          {
+            orgId: objectId(),
+            accountId: objectId(),
+            courseId: objectId(),
+          },
+        ),
+      ).rejects.toThrowError(`ACCOUNT HAVEN'T PERMISSION`)
     })
   })
 

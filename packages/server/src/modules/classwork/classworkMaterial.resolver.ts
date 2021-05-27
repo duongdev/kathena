@@ -1,9 +1,8 @@
-import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
+import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
-import { AuthService } from 'modules/auth/auth.service'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
@@ -13,17 +12,14 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   ClassworkMaterialPayload,
+  AddAttachmentsToClassworkInput,
 } from './classwork.type'
 import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Resolver((_of) => Classwork)
 export class ClassworkMaterialResolver {
-  constructor(
-    private readonly classworkService: ClassworkService,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START MATERIAL RESOLVER
@@ -118,8 +114,6 @@ export class ClassworkMaterialResolver {
     )
   }
 
-  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
-
   @Query((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_ListClassworkMaterial)
   async classworkMaterial(
@@ -130,6 +124,38 @@ export class ClassworkMaterialResolver {
     return this.classworkService.findClassworkMaterialById(
       org.id,
       classworkMaterialId,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_AddAttachmentsToClassworkMaterial)
+  async addAttachmentsToClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachmentsInput') attachmentsInput: AddAttachmentsToClassworkInput,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkService.addAttachmentsToClassworkMaterial(
+      org.id,
+      classworkAssignmentId,
+      attachmentsInput,
+      account.id,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_RemoveAttachmentsFromClassworkMaterial)
+  async removeAttachmentsFromClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('attachments', { type: () => [String] }) attachments?: [],
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkService.removeAttachmentsFromClassworkMaterial(
+      org.id,
+      classworkAssignmentId,
+      attachments,
     )
   }
 
