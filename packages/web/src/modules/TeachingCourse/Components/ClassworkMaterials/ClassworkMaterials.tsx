@@ -24,8 +24,8 @@ import {
 } from 'graphql/generated'
 import {
   buildPath,
-  USER_PROFILE,
   TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS,
+  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
 
 export type ClassworkMaterialsProps = {}
@@ -101,9 +101,12 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                   render: (classworkMaterial) => (
                     <>
                       <Link
-                        to={buildPath(USER_PROFILE, {
-                          username: classworkMaterial.id,
-                        })}
+                        to={buildPath(
+                          TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                          {
+                            id: classworkMaterial.id,
+                          },
+                        )}
                       >
                         <Typography variant="body1">
                           {classworkMaterial.title}
