@@ -46,7 +46,7 @@ const validationSchema: SchemaOf<ClassworkMaterialFormInput> = yup.object({
     .label(labels.publicationState)
     .trim()
     .required(),
-  attachments: yup.mixed().label(labels.attachments).required() as ANY,
+  attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
 })
 
 const initialValues = {
