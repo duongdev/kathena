@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { Grid, Skeleton } from '@material-ui/core'
+import { CardContent, Grid, Skeleton } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
@@ -14,7 +14,6 @@ import {
   DataTable,
   Typography,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
 import {
   useCourseDetailQuery,
   useClassworkAssignmentListQuery,
@@ -30,13 +29,11 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
   })
   const course = useMemo(() => dataCourse?.findCourseById, [dataCourse])
 
-  const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkAssignmentListQuery({
       variables: {
         courseId: course?.id ?? '',
-        orgId: org.id,
         limit: perPage,
         skip: page * perPage,
       },
@@ -69,68 +66,74 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard title="Bài tập" gridItem={{ xs: 12 }}>
-        <DataTable
-          data={classworkAssignments}
-          rowKey="id"
-          loading={loadingClasswork}
-          columns={[
-            {
-              label: 'Tiêu đề',
-              skeleton: <Skeleton />,
-              field: 'title',
-            },
-            {
-              label: 'Mô tả',
-              skeleton: <Skeleton />,
-              render: ({ description }) => (
-                <div
-                  // eslint-disable-next-line
-                  dangerouslySetInnerHTML={{ __html: description as ANY }}
-                  style={{
-                    display: '-webkit-box',
-                    maxWidth: 250,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: 'vertical',
-                  }}
-                />
-              ),
-            },
-            {
-              label: 'Ngày hết hạn',
-              skeleton: <Skeleton />,
-              render: ({ dueDate }) => (
-                <>
-                  {dueDate && (
-                    <Typography>
-                      {format(new Date(dueDate), 'dd/MM/yyyy')}
-                    </Typography>
-                  )}
-                </>
-              ),
-            },
-            {
-              label: 'Trạng thái',
-              align: 'right',
-              skeleton: <Skeleton />,
-              render: ({ publicationState }) => (
-                <PublicationChip
-                  publication={publicationState as ANY}
-                  variant="outlined"
-                  size="small"
-                />
-              ),
-            },
-          ]}
-          pagination={{
-            count: totalCount,
-            rowsPerPage: perPage,
-            page,
-            onPageChange: (e, nextPage) => setPage(nextPage),
-            onRowsPerPageChange: (event) => setPerPage(+event.target.value),
-          }}
-        />
+        <CardContent>
+          {classworkAssignments.length ? (
+            <DataTable
+              data={classworkAssignments}
+              rowKey="id"
+              loading={loadingClasswork}
+              columns={[
+                {
+                  label: 'Tiêu đề',
+                  skeleton: <Skeleton />,
+                  field: 'title',
+                },
+                {
+                  label: 'Mô tả',
+                  skeleton: <Skeleton />,
+                  render: ({ description }) => (
+                    <div
+                      // eslint-disable-next-line
+                      dangerouslySetInnerHTML={{ __html: description as ANY }}
+                      style={{
+                        display: '-webkit-box',
+                        maxWidth: 250,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    />
+                  ),
+                },
+                {
+                  label: 'Ngày hết hạn',
+                  skeleton: <Skeleton />,
+                  render: ({ dueDate }) => (
+                    <>
+                      {dueDate && (
+                        <Typography>
+                          {format(new Date(dueDate), 'dd/MM/yyyy')}
+                        </Typography>
+                      )}
+                    </>
+                  ),
+                },
+                {
+                  label: 'Trạng thái',
+                  align: 'right',
+                  skeleton: <Skeleton />,
+                  render: ({ publicationState }) => (
+                    <PublicationChip
+                      publication={publicationState as ANY}
+                      variant="outlined"
+                      size="small"
+                    />
+                  ),
+                },
+              ]}
+              pagination={{
+                count: totalCount,
+                rowsPerPage: perPage,
+                page,
+                onPageChange: (e, nextPage) => setPage(nextPage),
+                onRowsPerPageChange: (event) => setPerPage(+event.target.value),
+              }}
+            />
+          ) : (
+            <Typography>Không có bài tập</Typography>
+          )}
+        </CardContent>
       </SectionCard>
     </Grid>
   )

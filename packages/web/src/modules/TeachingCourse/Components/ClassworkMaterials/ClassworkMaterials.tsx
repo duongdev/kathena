@@ -102,7 +102,20 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Mô tả',
                   skeleton: <Skeleton />,
-                  field: 'description',
+                  render: ({ description }) => (
+                    <div
+                      // eslint-disable-next-line
+                      dangerouslySetInnerHTML={{ __html: description as ANY }}
+                      style={{
+                        display: '-webkit-box',
+                        maxWidth: 250,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    />
+                  ),
                 },
                 {
                   label: 'Ngày đăng',
