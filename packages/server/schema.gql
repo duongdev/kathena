@@ -356,7 +356,8 @@ input UpdateOrgOfficeInput {
 input CreateClassworkMaterialInput {
   title: String!
   description: String
-  publicationState: Publication!
+  publicationState: Publication
+  attachments: [Upload!]
 }
 
 input UpdateClassworkMaterialInput {
