@@ -130,6 +130,46 @@ export class ClassworkService {
     return classwork
   }
 
+  async uploadFilesAttachments(
+    orgId: string,
+    attachmentsInput: AddAttachmentsToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<string[]> {
+    const promiseFileUpload = attachmentsInput.attachments
+    const listFileId: string[] = []
+    if (promiseFileUpload) {
+      const arrFileId = promiseFileUpload.map(async (document) => {
+        const { createReadStream, filename, encoding } = await document
+
+        // eslint-disable-next-line no-console
+        console.log('encoding', encoding)
+
+        const documentFile = await this.fileStorageService.uploadFromReadStream(
+          {
+            orgId,
+            originalFileName: filename,
+            readStream: createReadStream(),
+            uploadedByAccountId,
+          },
+        )
+
+        return documentFile.id
+      })
+
+      await Promise.all(arrFileId)
+        .then((fileIds) => {
+          fileIds.forEach((fileId) => {
+            listFileId.push(fileId)
+          })
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+
+    return listFileId
+  }
+
   /**
    * END GENERAL FUNCTION
    */
@@ -153,22 +193,54 @@ export class ClassworkService {
       createClassworkMaterialInput,
     })
 
+    const { title, description, publicationState, attachments } =
+      createClassworkMaterialInput
+
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
 
     if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
-    this.logger.log(createClassworkMaterialInput)
+    let createInput = {}
 
-    const classworkMaterial = await this.classworkMaterialModel.create({
-      description: removeExtraSpaces(createClassworkMaterialInput.description),
-      title: removeExtraSpaces(createClassworkMaterialInput.title),
-      publicationState: createClassworkMaterialInput.publicationState,
-      createdByAccountId: creatorId,
-      orgId,
-      courseId,
-    })
+    if (publicationState) {
+      createInput = {
+        description: removeExtraSpaces(description),
+        title: removeExtraSpaces(title),
+        publicationState,
+        createdByAccountId: creatorId,
+        orgId,
+        courseId,
+      }
+    } else {
+      createInput = {
+        description: removeExtraSpaces(description),
+        title: removeExtraSpaces(title),
+        createdByAccountId: creatorId,
+        orgId,
+        courseId,
+      }
+    }
+    const classworkMaterial = await this.classworkMaterialModel.create(
+      createInput,
+    )
+
+    let classworkMaterialWithFile: ANY = null
+
+    if (attachments) {
+      classworkMaterialWithFile = await this.addAttachmentsToClassworkMaterial(
+        orgId,
+        classworkMaterial.id,
+        {
+          attachments,
+        },
+        creatorId,
+      )
+      if (!classworkMaterialWithFile) {
+        throw new Error(`CAN'T_UPLOAD_FILE`)
+      }
+    }
 
     this.logger.log(
       `[${this.createClassworkMaterial.name}] Created classworkMaterial successfully`,
@@ -176,13 +248,8 @@ export class ClassworkService {
 
     this.logger.verbose(classworkMaterial.toObject())
 
-    return classworkMaterial
+    return classworkMaterialWithFile || classworkMaterial
   }
-  // TODO: Delete this line and start the code here
-
-  // TODO: classworkService.findClassworkMaterial
-
-  // TODO: classworkService.updateClassworkMaterial
 
   async updateClassworkMaterial(
     orgId: string,
@@ -260,8 +327,6 @@ export class ClassworkService {
     return classworkMaterialUpdated
   }
 
-  // TODO: classworkService.updateClassworkMaterialPublication
-
   async updateClassworkMaterialPublication(
     query: {
       orgId: string
@@ -319,8 +384,6 @@ export class ClassworkService {
 
     return UpdatedClassworkMaterial
   }
-
-  // TODO: classworkService.removeAttachmentsFromClassworkMaterial
 
   async findClassworkMaterialById(
     orgId: string,
@@ -725,46 +788,6 @@ export class ClassworkService {
       ClassworkType.Assignment,
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
-  }
-
-  async uploadFilesAttachments(
-    orgId: string,
-    attachmentsInput: AddAttachmentsToClassworkInput,
-    uploadedByAccountId: string,
-  ): Promise<string[]> {
-    const promiseFileUpload = attachmentsInput.attachments
-    const listFileId: string[] = []
-    if (promiseFileUpload) {
-      const arrFileId = promiseFileUpload.map(async (document) => {
-        const { createReadStream, filename, encoding } = await document
-
-        // eslint-disable-next-line no-console
-        console.log('encoding', encoding)
-
-        const documentFile = await this.fileStorageService.uploadFromReadStream(
-          {
-            orgId,
-            originalFileName: filename,
-            readStream: createReadStream(),
-            uploadedByAccountId,
-          },
-        )
-
-        return documentFile.id
-      })
-
-      await Promise.all(arrFileId)
-        .then((fileIds) => {
-          fileIds.forEach((fileId) => {
-            listFileId.push(fileId)
-          })
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-
-    return listFileId
   }
   /**
    * END CLASSWORK ASSIGNMENT

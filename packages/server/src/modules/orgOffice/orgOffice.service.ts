@@ -1,3 +1,4 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
@@ -16,7 +17,11 @@ export class OrgOfficeService {
   constructor(
     @InjectModel(OrgOffice)
     private readonly orgOfficeModel: ReturnModelType<typeof OrgOffice>,
+
+    @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}
 

@@ -46,6 +46,7 @@ type Course implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   academicSubjectId: ID!
+  orgOfficeId: ID!
   code: String!
   name: String!
   startDate: DateTime!
@@ -55,6 +56,16 @@ type Course implements BaseModel {
   lecturerIds: [String!]!
   studentIds: [String!]!
   createdByAccountId: ID!
+}
+
+type OrgOffice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  phone: String!
 }
 
 type Account implements BaseModel {
@@ -227,9 +238,9 @@ type Query {
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
-  file(id: ID!): File
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
+  file(id: ID!): File
   classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
   classworkMaterial(Id: ID!): ClassworkMaterial!
   findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
@@ -279,10 +290,10 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
-  updateFile(newFile: Upload!, id: ID!): File!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
+  updateFile(newFile: Upload!, id: ID!): File!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
@@ -327,6 +338,7 @@ input UpdateAcademicSubjectInput {
 
 input CreateCourseInput {
   academicSubjectId: String!
+  orgOfficeId: String!
   code: String!
   name: String!
   startDate: String!
@@ -356,7 +368,8 @@ input UpdateOrgOfficeInput {
 input CreateClassworkMaterialInput {
   title: String!
   description: String
-  publicationState: Publication!
+  publicationState: Publication
+  attachments: [Upload!]
 }
 
 input UpdateClassworkMaterialInput {
@@ -371,9 +384,9 @@ input AddAttachmentsToClassworkInput {
 input CreateClassworkAssignmentInput {
   title: String!
   description: String!
-  attachments: [String!] = []
+  attachments: [Upload!] = []
   dueDate: String!
-  publicationState: Publication!
+  publicationState: Publication
 }
 
 input UpdateClassworkAssignmentInput {
