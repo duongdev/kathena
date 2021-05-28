@@ -141,6 +141,7 @@ export type Course = BaseModel & {
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   academicSubjectId: Scalars['ID']
+  orgOfficeId: Scalars['ID']
   code: Scalars['String']
   name: Scalars['String']
   startDate: Scalars['DateTime']
@@ -195,6 +196,7 @@ export type CreateClassworkMaterialInput = {
 
 export type CreateCourseInput = {
   academicSubjectId: Scalars['String']
+  orgOfficeId: Scalars['String']
   code: Scalars['String']
   name: Scalars['String']
   startDate: Scalars['String']
@@ -239,10 +241,10 @@ export type Mutation = {
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
-  updateFile: File
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
+  updateFile: File
   createClassworkMaterial: ClassworkMaterial
   updateClassworkMaterial: ClassworkMaterial
   updateClassworkMaterialPublication: ClassworkMaterial
@@ -318,11 +320,6 @@ export type MutationRemoveLecturersFromCourseArgs = {
   id: Scalars['ID']
 }
 
-export type MutationUpdateFileArgs = {
-  newFile: Scalars['Upload']
-  id: Scalars['ID']
-}
-
 export type MutationCreateOrgOfficeArgs = {
   input: CreateOrgOfficeInput
 }
@@ -335,6 +332,11 @@ export type MutationUpdateOrgOfficeArgs = {
 export type MutationFindOrgOfficesArgs = {
   searchText?: Maybe<Scalars['String']>
   orgId?: Maybe<Scalars['ID']>
+}
+
+export type MutationUpdateFileArgs = {
+  newFile: Scalars['Upload']
+  id: Scalars['ID']
 }
 
 export type MutationCreateClassworkMaterialArgs = {
@@ -471,9 +473,9 @@ export type Query = {
   academicSubject: AcademicSubject
   findCourseById: Course
   courses: CoursesPayload
-  file?: Maybe<File>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
+  file?: Maybe<File>
   classworkMaterials: ClassworkMaterialPayload
   classworkMaterial: ClassworkMaterial
   findClassworkAssignmentById: ClassworkAssignment
@@ -515,11 +517,11 @@ export type QueryCoursesArgs = {
   pageOptions: PageOptionsInput
 }
 
-export type QueryFileArgs = {
+export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
 
-export type QueryOrgOfficeArgs = {
+export type QueryFileArgs = {
   id: Scalars['ID']
 }
 
@@ -761,6 +763,7 @@ export type CoursesQuery = {
         | 'startDate'
         | 'tuitionFee'
         | 'lecturerIds'
+        | 'orgOfficeId'
       >
     >
   }
@@ -3238,6 +3241,10 @@ export const CoursesDocument: DocumentNode = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'lecturerIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'orgOfficeId' },
                       },
                     ],
                   },

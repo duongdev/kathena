@@ -7,6 +7,7 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { OrgService } from 'modules/org/org.service'
+import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
 import { AuthService } from './auth.service'
@@ -18,6 +19,7 @@ describe('auth.service', () => {
   let authService: AuthService
   let mongooseConnection: Connection
   let academicService: AcademicService
+  let orgOfficeService: OrgOfficeService
   let orgService: OrgService
 
   beforeAll(async () => {
@@ -31,6 +33,8 @@ describe('auth.service', () => {
     academicService = module.get<AcademicService>(AcademicService)
 
     orgService = module.get<OrgService>(OrgService)
+
+    orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
   })
 
   afterAll(async () => {
@@ -671,6 +675,7 @@ describe('auth.service', () => {
 
       const courseInpust: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'string',
         name: 'string',
         startDate: Date.now(),
@@ -686,6 +691,9 @@ describe('auth.service', () => {
         .mockResolvedValueOnce(true as never)
       jest
         .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
       const course = await academicService.createCourse(

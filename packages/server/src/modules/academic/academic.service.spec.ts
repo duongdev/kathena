@@ -4,6 +4,7 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
 import { AccountService } from '../account/account.service'
@@ -17,6 +18,7 @@ describe('academic.service', () => {
   let module: TestingModule
   let academicService: AcademicService
   let orgService: OrgService
+  let orgOfficeService: OrgOfficeService
   let authService: AuthService
   let accountService: AccountService
   let mongooseConnection: Connection
@@ -29,6 +31,7 @@ describe('academic.service', () => {
 
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
+    orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     authService = module.get<AuthService>(AuthService)
     accountService = module.get<AccountService>(AccountService)
   })
@@ -625,6 +628,7 @@ describe('academic.service', () => {
   describe('Course', () => {
     const createCourseInput: ANY = {
       academicSubjectId: objectId(),
+      orgOfficeId: objectId(),
       code: 'NodeJS-12',
       name: 'Node Js Thang 12',
       tuitionFee: 5000000,
@@ -690,6 +694,10 @@ describe('academic.service', () => {
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         const date = new Date()
         // Start date less than the current date
@@ -731,6 +739,10 @@ describe('academic.service', () => {
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         await expect(
           academicService.createCourse(objectId(), org.id, {
@@ -760,6 +772,9 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
         const creatorId = objectId()
@@ -812,6 +827,9 @@ describe('academic.service', () => {
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
 
         const creatorId = objectId()
         const orgId = objectId()
@@ -857,6 +875,9 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
         const creatorId = objectId()
@@ -921,6 +942,10 @@ describe('academic.service', () => {
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         const courseTest = await academicService.createCourse(
           objectId(),
@@ -979,6 +1004,10 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
@@ -1048,10 +1077,19 @@ describe('academic.service', () => {
           orgId: org.id,
         })
 
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25A Mai Thị Lựu',
+          createdByAccountId: creatorAccount.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
         const listCreatedCourses: ANY[] = []
         const date = new Date()
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
           startDate: date.toString(),
@@ -1157,10 +1195,19 @@ describe('academic.service', () => {
           orgId: org.id,
         })
 
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25A Mai Thị Lựu',
+          createdByAccountId: creatorAccount.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
         const listCreatedCourses: ANY[] = []
         const date = new Date()
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
           startDate: date.toString(),
@@ -1243,6 +1290,7 @@ describe('academic.service', () => {
         const createrId = objectId()
         const coutseInput: ANY = {
           academicSubjectId: objectId(),
+          orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
@@ -1265,6 +1313,10 @@ describe('academic.service', () => {
 
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
+          .mockResolvedValueOnce(testObject)
+          .mockResolvedValueOnce(testObject)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(testObject)
           .mockResolvedValueOnce(testObject)
 
@@ -1310,6 +1362,7 @@ describe('academic.service', () => {
     describe('addStudentsToCourse', () => {
       const course: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -1463,6 +1516,14 @@ describe('academic.service', () => {
           createdByAccountId: objectId(),
         })
 
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25 A Mai Thi Lựu',
+          createdByAccountId: accountAdmin.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
         const courseBefore = await academicService.createCourse(
           accountAdmin.id,
           org.id,
@@ -1470,6 +1531,7 @@ describe('academic.service', () => {
             ...createCourseInput,
             startDate: Date.now(),
             academicSubjectId: academicSubject.id,
+            orgOfficeId: orgOffice.id,
           },
         )
 
@@ -1496,6 +1558,7 @@ describe('academic.service', () => {
     describe('addLecturersToCourse', () => {
       const course: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
@@ -1649,6 +1712,14 @@ describe('academic.service', () => {
           createdByAccountId: objectId(),
         })
 
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25 A Mai Thi Lựu',
+          createdByAccountId: accountAdmin.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
         const courseBefore = await academicService.createCourse(
           accountAdmin.id,
           org.id,
@@ -1656,6 +1727,7 @@ describe('academic.service', () => {
             ...createCourseInput,
             startDate: Date.now(),
             academicSubjectId: academicSubject.id,
+            orgOfficeId: orgOffice.id,
           },
         )
 
@@ -1683,6 +1755,7 @@ describe('academic.service', () => {
     describe('removeLecturersFromCourse', () => {
       const courseDemo: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 3000,
@@ -1841,6 +1914,10 @@ describe('academic.service', () => {
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
 
         const courseTest = await academicService.createCourse(
           objectId(),
@@ -1874,6 +1951,7 @@ describe('academic.service', () => {
     describe('removeStudentsFromCourse', () => {
       const courseDemo: ANY = {
         academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 3000,
@@ -2038,9 +2116,18 @@ describe('academic.service', () => {
           orgId: org.id,
         })
 
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25 A Mai Thi Lựu',
+          createdByAccountId: creatorAccount.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
         const date = new Date()
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
           startDate: date.toString(),

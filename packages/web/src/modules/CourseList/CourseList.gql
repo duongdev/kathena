@@ -13,6 +13,7 @@ query Courses($orgId: ID!, $skip: Int!, $limit: Int!) {
       startDate
       tuitionFee
       lecturerIds
+      orgOfficeId
     }
     count
   }
