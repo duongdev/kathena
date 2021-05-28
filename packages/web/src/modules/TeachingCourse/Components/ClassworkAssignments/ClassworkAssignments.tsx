@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react'
 import { CardContent, Grid, Skeleton } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
+import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -14,6 +15,7 @@ import {
   DataTable,
   Typography,
   Link,
+  Button,
 } from '@kathena/ui'
 import {
   useCourseDetailQuery,
@@ -22,6 +24,7 @@ import {
 import {
   buildPath,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+  TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
 } from 'utils/path-builder'
 
 export type ClassworkAssignmentsProps = {}
@@ -38,7 +41,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkAssignmentListQuery({
       variables: {
-        courseId: course?.id ?? '',
+        courseId: courseId ?? '',
         limit: perPage,
         skip: page * perPage,
       },
@@ -70,7 +73,20 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard title="Bài tập" gridItem={{ xs: 12 }}>
+      <SectionCard
+        title="Bài tập"
+        gridItem={{ xs: 12 }}
+        action={
+          <Button
+            startIcon={<FilePlus size={24} />}
+            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT, {
+              id: courseId,
+            })}
+          >
+            Thêm bài tập
+          </Button>
+        }
+      >
         <CardContent>
           {classworkAssignments.length ? (
             <DataTable

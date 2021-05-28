@@ -2,9 +2,11 @@ import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
 import CourseName from 'components/CourseName'
+import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
+import { ANY } from '@kathena/types'
 import {
   Button,
   InfoBlock,
@@ -76,7 +78,21 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                     <CourseName courseId={classworkAssignment.courseId} />
                   </InfoBlock>
                   <InfoBlock label="Mô tả">
-                    {classworkAssignment.description}
+                    <div
+                      // eslint-disable-next-line
+                      dangerouslySetInnerHTML={{
+                        __html: classworkAssignment.description as ANY,
+                      }}
+                    />
+                  </InfoBlock>
+                  <InfoBlock label="Tập tin đính kèm">
+                    {classworkAssignment.attachments.length ? (
+                      classworkAssignment.attachments.map((attachment) => (
+                        <FileComponent key={attachment} fileId={attachment} />
+                      ))
+                    ) : (
+                      <Typography>Không có tập tin</Typography>
+                    )}
                   </InfoBlock>
                 </Stack>
               </Grid>
