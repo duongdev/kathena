@@ -1,43 +1,37 @@
 import { FC, useMemo } from 'react'
 
-import { Grid, Skeleton, CardContent } from '@material-ui/core'
+import { CardContent, Grid, Skeleton } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
-import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
-  DataTable,
-  SectionCard,
   SectionCardSkeleton,
-  Typography,
-  Button,
+  SectionCard,
   usePagination,
-  Link,
+  DataTable,
+  Typography,
 } from '@kathena/ui'
-// import { useAuth } from 'common/auth'
 import {
-  useClassworkMaterialsListQuery,
   useCourseDetailQuery,
+  useClassworkAssignmentListQuery,
 } from 'graphql/generated'
-import { buildPath, USER_PROFILE } from 'utils/path-builder'
 
-export type ClassworkMaterialsProps = {}
+export type ClassworkAssignmentsProps = {}
 
-const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
+const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
-  const { data, loading } = useCourseDetailQuery({
+  const { data: dataCourse, loading: loadingCourse } = useCourseDetailQuery({
     variables: { id: courseId },
   })
-  // const { $org: org } = useAuth()
-  const { page, perPage, setPage, setPerPage } = usePagination()
+  const course = useMemo(() => dataCourse?.findCourseById, [dataCourse])
 
-  const course = useMemo(() => data?.findCourseById, [data])
+  const { page, perPage, setPage, setPerPage } = usePagination()
   const { data: dataClasswork, loading: loadingClasswork } =
-    useClassworkMaterialsListQuery({
+    useClassworkAssignmentListQuery({
       variables: {
         courseId: course?.id ?? '',
         limit: perPage,
@@ -45,16 +39,17 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
       },
     })
 
-  const classworkMaterials = useMemo(
-    () => dataClasswork?.classworkMaterials.classworkMaterials ?? [],
-    [dataClasswork?.classworkMaterials.classworkMaterials],
+  const classworkAssignments = useMemo(
+    () => dataClasswork?.classworkAssignments.classworkAssignments ?? [],
+    [dataClasswork?.classworkAssignments.classworkAssignments],
   )
 
   const totalCount = useMemo(
-    () => dataClasswork?.classworkMaterials.count ?? 0,
-    [dataClasswork?.classworkMaterials.count],
+    () => dataClasswork?.classworkAssignments.count ?? 0,
+    [dataClasswork?.classworkAssignments.count],
   )
-  if (loading) {
+
+  if (loadingCourse) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
         <Grid item xs={12}>
@@ -65,39 +60,23 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   }
 
   if (!course) {
-    return <div>Không có khóa học</div>
+    return <div>Course not found</div>
   }
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard
-        title="Tài liệu"
-        gridItem={{ xs: 12 }}
-        action={<Button endIcon={<FilePlus size={30} />}>Thêm tài liệu</Button>}
-      >
+      <SectionCard title="Bài tập" gridItem={{ xs: 12 }}>
         <CardContent>
-          {classworkMaterials.length ? (
+          {classworkAssignments.length ? (
             <DataTable
-              data={classworkMaterials}
+              data={classworkAssignments}
               rowKey="id"
               loading={loadingClasswork}
               columns={[
                 {
                   label: 'Tiêu đề',
                   skeleton: <Skeleton />,
-                  render: (classworkMaterial) => (
-                    <>
-                      <Link
-                        to={buildPath(USER_PROFILE, {
-                          username: classworkMaterial.id,
-                        })}
-                      >
-                        <Typography variant="body1">
-                          {classworkMaterial.title}
-                        </Typography>
-                      </Link>
-                    </>
-                  ),
+                  field: 'title',
                 },
                 {
                   label: 'Mô tả',
@@ -118,13 +97,13 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                   ),
                 },
                 {
-                  label: 'Ngày đăng',
+                  label: 'Ngày hết hạn',
                   skeleton: <Skeleton />,
-                  render: ({ createdAt }) => (
+                  render: ({ dueDate }) => (
                     <>
-                      {createdAt && (
+                      {dueDate && (
                         <Typography>
-                          {format(new Date(createdAt), 'dd/MM/yyyy')}
+                          {format(new Date(dueDate), 'dd/MM/yyyy')}
                         </Typography>
                       )}
                     </>
@@ -152,7 +131,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               }}
             />
           ) : (
-            'Không có tài liệu'
+            <Typography>Không có bài tập</Typography>
           )}
         </CardContent>
       </SectionCard>
@@ -160,4 +139,4 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   )
 }
 
-export default ClassworkMaterials
+export default ClassworkAssignments

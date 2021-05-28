@@ -3,7 +3,6 @@ import { FC, useMemo } from 'react'
 import { Grid, Skeleton, CardContent } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
-import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -13,7 +12,6 @@ import {
   SectionCard,
   SectionCardSkeleton,
   Typography,
-  Button,
   usePagination,
   Link,
 } from '@kathena/ui'
@@ -70,11 +68,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard
-        title="Tài liệu"
-        gridItem={{ xs: 12 }}
-        action={<Button endIcon={<FilePlus size={30} />}>Thêm tài liệu</Button>}
-      >
+      <SectionCard title="Tài liệu" gridItem={{ xs: 12 }}>
         <CardContent>
           {classworkMaterials.length ? (
             <DataTable
@@ -152,7 +146,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               }}
             />
           ) : (
-            'Không có tài liệu'
+            <Typography>Không có tài liệu</Typography>
           )}
         </CardContent>
       </SectionCard>
