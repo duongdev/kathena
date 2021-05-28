@@ -404,13 +404,13 @@ export type OrgAccountsPayload = {
 }
 
 export type OrgOffice = BaseModel & {
-  id: Scalars['ID']
-  orgId: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  name: Scalars['String']
   address: Scalars['String']
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  name: Scalars['String']
+  orgId: Scalars['ID']
   phone: Scalars['String']
+  updatedAt: Scalars['DateTime']
 }
 
 export type PageOptionsInput = {

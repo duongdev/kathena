@@ -83,6 +83,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
               title: input.title,
               description: input.description,
               publicationState: input.publicationState as ANY,
+              attachments: input.attachments as ANY,
             },
           },
         })

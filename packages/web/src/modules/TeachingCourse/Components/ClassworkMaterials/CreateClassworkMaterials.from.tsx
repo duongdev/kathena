@@ -30,19 +30,19 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
-  // const handleMaterialSelect = useCallback(
-  //   (files: File[]) => {
-  //     formik.setFieldValue('attachments', files ?? null)
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [],
-  // )
+  const handleMaterialSelect = useCallback(
+    (files: File[]) => {
+      formik.setFieldValue('attachments', files ?? null)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
         maxContentHeight={false}
-        gridItem={{ xs: 12, sm: 12 }}
+        gridItem={{ xs: 12, sm: 6 }}
         title="Thông tin bài tập"
       >
         <CardContent>
@@ -77,7 +77,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
           </Stack>
         </CardContent>
       </SectionCard>
-      {/* <SectionCard
+      <SectionCard
         maxContentHeight={false}
         gridItem={{ xs: 12, sm: 6 }}
         title={labels.attachments}
@@ -96,7 +96,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
             </Typography>
           )}
         </CardContent>
-      </SectionCard> */}
+      </SectionCard>
     </Grid>
   )
 }
