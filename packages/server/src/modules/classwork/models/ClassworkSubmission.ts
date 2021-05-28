@@ -5,7 +5,7 @@ import { Types } from 'mongoose'
 import { BaseModel } from 'core'
 
 @ObjectType({ implements: [BaseModel] })
-export class Submit extends BaseModel {
+export class ClassworkSubmission extends BaseModel {
   @Field()
   @prop({ required: true, type: Types.ObjectId })
   createdByAccountId: string
