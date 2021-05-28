@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react'
 
 import { Grid, Skeleton, CardContent } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
