@@ -1,48 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 
-import { makeStyles, CardContent, Grid } from '@material-ui/core'
-import AccountStatusChip from 'components/AccountStatusChip'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import format from 'date-fns/format'
 import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { ANY } from '@kathena/types'
-import {
-  Button,
-  InfoBlock,
-  PageContainer,
-  PageContainerSkeleton,
-  SectionCard,
-  useDialogState,
-} from '@kathena/ui'
-import { RequiredManageRoles } from 'common/auth'
-import {
-  useAccountProfileQuery,
-  useUpdateAccountStatusMutation,
-  AccountProfileDocument,
-  AccountStatus,
-} from 'graphql/generated'
-import { getDisplayName } from 'utils/useAccountUtils'
+import { InfoBlock, PageContainer, SectionCard, Typography } from '@kathena/ui'
+import { useDetailClassworkMaterialQuery } from 'graphql/generated'
 
 export type DetailClassworkMaterialsProps = {}
 
 const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
-  const params: { username: string } = useParams()
-  const username = useMemo(() => params.username, [params])
+  const params: { id: string } = useParams()
+  const id = useMemo(() => params.id, [params.id])
 
-  const { data, loading, refetch } = useAccountProfileQuery({
-    variables: { username },
+  const { data } = useDetailClassworkMaterialQuery({
+    variables: { Id: id },
   })
-  const account = useMemo(() => data?.accountByUserName, [data])
+  const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
   return (
     <PageContainer
       withBackButton
-      maxWidth="xl"
-      title="Bùi Huy Hoàng"
-      subtitle={`@${account?.email}`}
+      maxWidth="md"
+      title={`${classworkMaterial?.title}`}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
@@ -53,19 +36,21 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                Bùi huy hoàng
+                Giảng viên thêm: {`${classworkMaterial?.createdByAccountId}`}
               </Grid>
-              <InfoBlock gridItem={{ xs: 6 }} label="Tên người dùng">
-                Bùi huy hoàng
+              <InfoBlock gridItem={{ xs: 9 }} label="Tiêu đề:">
+                {`${classworkMaterial?.title}`}
               </InfoBlock>
-              <InfoBlock gridItem={{ xs: 6 }} label="Tên đăng nhập">
-                Bùi huy hoàng
+              <InfoBlock gridItem={{ xs: 3 }} label="Ngày đăng:">
+                <Typography>
+                  {format(new Date(classworkMaterial?.createdAt), 'dd/MM/yyyy')}
+                </Typography>
               </InfoBlock>
-              <InfoBlock gridItem={{ xs: 6 }} label="Email">
-                Bùi huy hoàng
+              <InfoBlock gridItem={{ xs: 12 }} label="Mô tả:">
+                {`${classworkMaterial?.description}`}
               </InfoBlock>
-              <InfoBlock gridItem={{ xs: 6 }} label="Phân quyền">
-                Bùi huy hoàng
+              <InfoBlock gridItem={{ xs: 12 }} label="Tài liệu">
+                {`${classworkMaterial?.attachments}`}
               </InfoBlock>
             </Grid>
           </CardContent>
