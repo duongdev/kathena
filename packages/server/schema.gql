@@ -384,9 +384,9 @@ input AddAttachmentsToClassworkInput {
 input CreateClassworkAssignmentInput {
   title: String!
   description: String!
-  attachments: [String!] = []
+  attachments: [Upload!] = []
   dueDate: String!
-  publicationState: Publication!
+  publicationState: Publication
 }
 
 input UpdateClassworkAssignmentInput {

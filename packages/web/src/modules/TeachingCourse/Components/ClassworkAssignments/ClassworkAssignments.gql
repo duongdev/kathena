@@ -1,5 +1,5 @@
-query ClassworkAssignmentList($orgId: ID!, $skip: Int!, $limit: Int!, $courseId: ID!) {
-  classworkAssignments(pageOptions: { skip: $skip, limit: $limit }, filter: { orgId: $orgId, courseId: $courseId }) {
+query ClassworkAssignmentList($skip: Int!, $limit: Int!, $courseId: ID!) {
+  classworkAssignments(pageOptions: { skip: $skip, limit: $limit },courseId: $courseId) {
     classworkAssignments {
       id
       orgId
