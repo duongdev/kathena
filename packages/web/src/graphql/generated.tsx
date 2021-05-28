@@ -79,6 +79,10 @@ export type AccountsFilterInput = {
   searchText?: Maybe<Scalars['String']>
 }
 
+export type AddAttachmentsToClassworkInput = {
+  attachments: Array<Scalars['Upload']>
+}
+
 export type AuthenticatePayload = {
   account: Account
   org: Org
@@ -110,11 +114,6 @@ export type ClassworkAssignment = BaseModel & {
 export type ClassworkAssignmentPayload = {
   classworkAssignments: Array<ClassworkAssignment>
   count: Scalars['Int']
-}
-
-export type ClassworkFilterInput = {
-  orgId: Scalars['ID']
-  courseId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkMaterial = BaseModel & {
@@ -183,14 +182,16 @@ export type CreateAccountInput = {
 export type CreateClassworkAssignmentInput = {
   title: Scalars['String']
   description: Scalars['String']
-  attachments?: Maybe<Array<Scalars['String']>>
+  attachments?: Maybe<Array<Scalars['Upload']>>
   dueDate: Scalars['String']
+  publicationState?: Maybe<Publication>
 }
 
 export type CreateClassworkMaterialInput = {
   title: Scalars['String']
   description?: Maybe<Scalars['String']>
-  publicationState: Publication
+  publicationState?: Maybe<Publication>
+  attachments?: Maybe<Array<Scalars['Upload']>>
 }
 
 export type CreateCourseInput = {
@@ -247,10 +248,13 @@ export type Mutation = {
   createClassworkMaterial: ClassworkMaterial
   updateClassworkMaterial: ClassworkMaterial
   updateClassworkMaterialPublication: ClassworkMaterial
-  findClassworkMaterialById: ClassworkMaterial
+  addAttachmentsToClassworkMaterial: ClassworkMaterial
+  removeAttachmentsFromClassworkMaterial: ClassworkMaterial
   createClassworkAssignment: ClassworkAssignment
   updateClassworkAssignment: ClassworkAssignment
   updateClassworkAssignmentPublication: ClassworkAssignment
+  addAttachmentsToClassworkAssignment: ClassworkAssignment
+  removeAttachmentsFromClassworkAssignments: ClassworkAssignment
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -350,9 +354,14 @@ export type MutationUpdateClassworkMaterialPublicationArgs = {
   classworkMaterialId: Scalars['ID']
 }
 
-export type MutationFindClassworkMaterialByIdArgs = {
-  orgId: Scalars['ID']
-  classworkMaterial: Scalars['ID']
+export type MutationAddAttachmentsToClassworkMaterialArgs = {
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkMaterialId: Scalars['ID']
+}
+
+export type MutationRemoveAttachmentsFromClassworkMaterialArgs = {
+  attachments: Array<Scalars['String']>
+  classworkMaterialId: Scalars['ID']
 }
 
 export type MutationCreateClassworkAssignmentArgs = {
@@ -368,6 +377,16 @@ export type MutationUpdateClassworkAssignmentArgs = {
 export type MutationUpdateClassworkAssignmentPublicationArgs = {
   publication: Scalars['String']
   id: Scalars['ID']
+}
+
+export type MutationAddAttachmentsToClassworkAssignmentArgs = {
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
+  attachments: Array<Scalars['String']>
+  classworkAssignmentId: Scalars['ID']
 }
 
 export type Org = BaseModel & {
@@ -429,9 +448,13 @@ export enum Permission {
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
+  Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
+  Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
+  Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
+  Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   NoPermission = 'NoPermission',
 }
 
@@ -454,6 +477,7 @@ export type Query = {
   orgOffice: OrgOffice
   file?: Maybe<File>
   classworkMaterials: ClassworkMaterialPayload
+  classworkMaterial: ClassworkMaterial
   findClassworkAssignmentById: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
 }
@@ -507,12 +531,17 @@ export type QueryClassworkMaterialsArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryClassworkMaterialArgs = {
+  Id: Scalars['ID']
+}
+
 export type QueryFindClassworkAssignmentByIdArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
 export type QueryClassworkAssignmentsArgs = {
-  filter: ClassworkFilterInput
+  searchText?: Maybe<Scalars['String']>
+  courseId: Scalars['ID']
   pageOptions: PageOptionsInput
 }
 
@@ -891,7 +920,6 @@ export type StudyingCourseListQuery = {
 }
 
 export type ClassworkAssignmentListQueryVariables = Exact<{
-  orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
   courseId: Scalars['ID']
@@ -5281,17 +5309,6 @@ export const ClassworkAssignmentListDocument: DocumentNode = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'orgId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: {
             kind: 'NonNullType',
@@ -5355,27 +5372,10 @@ export const ClassworkAssignmentListDocument: DocumentNode = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
+                name: { kind: 'Name', value: 'courseId' },
                 value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'orgId' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'orgId' },
-                      },
-                    },
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'courseId' },
-                      value: {
-                        kind: 'Variable',
-                        name: { kind: 'Name', value: 'courseId' },
-                      },
-                    },
-                  ],
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
                 },
               },
             ],
@@ -5469,7 +5469,6 @@ export function withClassworkAssignmentList<
  * @example
  * const { data, loading, error } = useClassworkAssignmentListQuery({
  *   variables: {
- *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
  *      courseId: // value for 'courseId'
