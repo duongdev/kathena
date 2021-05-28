@@ -1,6 +1,6 @@
 import {
   createUnionType,
-  Field /* , Field, ID, InputType, Int, ObjectType */,
+  Field,
   InputType,
   ID,
   Int,
@@ -48,8 +48,11 @@ export class CreateClassworkMaterialInput {
   @Field({ nullable: true })
   description?: string
 
-  @Field((_type) => Publication)
+  @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+
+  @Field((_type) => [GraphQLUpload], { nullable: true })
+  attachments?: Promise<FileUpload>[]
 }
 
 @ObjectType()
@@ -88,14 +91,14 @@ export class CreateClassworkAssignmentInput {
   @Field()
   description?: string
 
-  @Field((_type) => [String], { defaultValue: [] })
-  attachments?: string[]
+  @Field((_type) => [GraphQLUpload], { defaultValue: [] })
+  attachments?: Promise<FileUpload>[]
 
   @Field()
   @IsNotEmpty({ message: 'Due date cannot be empty' })
   dueDate: string
 
-  @Field((_type) => Publication)
+  @Field((_type) => Publication, { nullable: true })
   publicationState?: string
 }
 

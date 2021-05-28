@@ -41,7 +41,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkAssignmentListQuery({
       variables: {
-        courseId: courseId ?? '',
+        courseId,
         limit: perPage,
         skip: page * perPage,
       },

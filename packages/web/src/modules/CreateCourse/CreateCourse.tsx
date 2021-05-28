@@ -34,6 +34,7 @@ export type CourseFormInput = {
   tuitionFee: number
   lecturerIds: Array<Account>
   startDate: string
+  orgOfficeId: string
 }
 
 const labels: { [k in keyof CourseFormInput]: string } = {
@@ -42,6 +43,7 @@ const labels: { [k in keyof CourseFormInput]: string } = {
   tuitionFee: 'Học phí',
   lecturerIds: 'Giảng viên',
   startDate: 'Ngày bắt đầu',
+  orgOfficeId: 'Chi nhánh',
 }
 
 const validationSchema = yup.object({
@@ -50,6 +52,7 @@ const validationSchema = yup.object({
   tuitionFee: yup.number().label(labels.tuitionFee).min(0).required(),
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
+  orgOfficeId: yup.string().label(labels.orgOfficeId).trim().required(),
 })
 
 const CreateCourse: FC<CreateCourseProps> = (props) => {
@@ -64,9 +67,10 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
       Id: idSubject,
     },
   })
-  const academicSubject = useMemo(() => data?.academicSubject, [
-    data?.academicSubject,
-  ])
+  const academicSubject = useMemo(
+    () => data?.academicSubject,
+    [data?.academicSubject],
+  )
   const [createCourse] = useCreateCourseMutation({
     refetchQueries: [
       {
@@ -81,6 +85,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
     tuitionFee: 0,
     lecturerIds: [],
     startDate: '',
+    orgOfficeId: '',
   }
 
   const handleSubmitForm = useCallback(
@@ -98,6 +103,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
               name: input.name,
               startDate: input.startDate,
               tuitionFee: input.tuitionFee,
+              orgOfficeId: input.orgOfficeId,
               lecturerIds,
             },
           },
