@@ -181,15 +181,16 @@ export type CreateAccountInput = {
 export type CreateClassworkAssignmentInput = {
   title: Scalars['String']
   description: Scalars['String']
-  attachments?: Maybe<Array<Scalars['String']>>
+  attachments?: Maybe<Array<Scalars['Upload']>>
   dueDate: Scalars['String']
-  publicationState: Publication
+  publicationState?: Maybe<Publication>
 }
 
 export type CreateClassworkMaterialInput = {
   title: Scalars['String']
   description?: Maybe<Scalars['String']>
-  publicationState: Publication
+  publicationState?: Maybe<Publication>
+  attachments?: Maybe<Array<Scalars['Upload']>>
 }
 
 export type CreateCourseInput = {
