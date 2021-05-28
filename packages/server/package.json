@@ -36,7 +36,7 @@
     "class-transformer": "0.4.0",
     "class-validator": "0.13.1",
     "cross-env": "7.0.3",
-    "date-fns": "2.21.3",
+    "date-fns": "2.22.1",
     "dotenv": "10.0.0",
     "fastify-static": "4.2.2",
     "file-type": "16.5.0",
