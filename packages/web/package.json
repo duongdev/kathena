@@ -30,7 +30,7 @@
     "apollo-upload-client": "15.0.0",
     "autosuggest-highlight": "3.1.1",
     "clsx": "1.1.1",
-    "date-fns": "2.21.3",
+    "date-fns": "2.22.1",
     "formik": "2.2.8",
     "graphql": "15.5.0",
     "gravatar": "1.8.1",
