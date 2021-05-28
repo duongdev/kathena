@@ -1,3 +1,4 @@
+# Danh sách tài liệu
 query ClassworkMaterialsList($courseId: String!, $skip: Int!, $limit: Int!) {
   classworkMaterials(
     courseId: $courseId
@@ -16,7 +17,7 @@ query ClassworkMaterialsList($courseId: String!, $skip: Int!, $limit: Int!) {
     count
   }
 }
-
+# Tạo tài liệu
 mutation CreateClassworkMaterial(
   $courseId: ID!
   $CreateClassworkMaterialInput: CreateClassworkMaterialInput!
@@ -31,5 +32,19 @@ mutation CreateClassworkMaterial(
     title
     description
     attachments
+  }
+}
+# Chi tiết một tài liệu
+query DetailClassworkMaterial($Id: ID!) {
+  classworkMaterial(Id: $Id) {
+    id
+    createdAt
+    updatedAt
+    createdByAccountId
+    title
+    description
+    attachments
+    publicationState
+    courseId
   }
 }
