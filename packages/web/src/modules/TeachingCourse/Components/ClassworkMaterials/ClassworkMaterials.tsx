@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react'
 
 import { Grid, Skeleton, CardContent } from '@material-ui/core'
+import SplitButton from 'components/SplitButton'
 import format from 'date-fns/format'
 import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
@@ -140,6 +141,18 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                         </Typography>
                       )}
                     </>
+                  ),
+                },
+                {
+                  label: 'Trạng thái',
+                  align: 'right',
+                  skeleton: <Skeleton />,
+                  render: ({ publicationState }) => (
+                    <SplitButton
+                      publication={publicationState as ANY}
+                      variant="outlined"
+                      size="small"
+                    />
                   ),
                 },
               ]}
