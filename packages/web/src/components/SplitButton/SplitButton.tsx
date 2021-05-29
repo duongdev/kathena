@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper'
 import Popper from '@material-ui/core/Popper'
 
 import { SemanticColor } from '@kathena/theme'
-import { StatusChipProps } from '@kathena/ui'
+import { StatusChip, StatusChipProps } from '@kathena/ui'
 import { Publication } from 'graphql/generated'
 
 const colorMap: { [p in Publication]: keyof SemanticColor } = {
@@ -32,15 +32,9 @@ const SplitButton: FC<SplitButtonProps> = (props) => {
   const classes = useStyles(props)
   const [open, setOpen] = React.useState(false)
   const anchorRef = React.useRef<HTMLDivElement>(null)
-  const [selectedIndex, setSelectedIndex] = React.useState(1)
   const { publication, variant, size } = props
   const color = useMemo(() => colorMap[publication], [publication])
-
-  const handleMenuItemClick = (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-    index: number,
-  ) => {
-    setSelectedIndex(index)
+  const handleMenuItemClick = () => {
     setOpen(false)
   }
 
@@ -61,62 +55,49 @@ const SplitButton: FC<SplitButtonProps> = (props) => {
 
   return (
     <>
-      {/* <StatusChip variant={variant} color={color} size={size}>
-        {publication}
-      </StatusChip> */}
-      <>
-        <ButtonGroup
-          variant={variant}
-          ref={anchorRef}
-          aria-label="split button"
+      <ButtonGroup variant={variant} ref={anchorRef} aria-label="split button">
+        <Button
+          size={size}
+          aria-controls={open ? 'split-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-label="select merge strategy"
+          aria-haspopup="menu"
+          onClick={handleToggle}
         >
-          {/* <Button onClick={handleClick}>{options[selectedIndex]}</Button> */}
-          <Button
-            size={size}
-            aria-controls={open ? 'split-button-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-label="select merge strategy"
-            aria-haspopup="menu"
-            onClick={handleToggle}
-          >
+          <StatusChip color={color} size={size}>
             {publication}
-          </Button>
-        </ButtonGroup>
-        <Popper
-          color={color}
-          open={open}
-          anchorEl={anchorRef.current}
-          role={undefined}
-          transition
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList id="split-button-menu" className={classes.root}>
-                    {options.map((option, index) => (
-                      <MenuItem
-                        className={classes.root}
-                        key={option}
-                        selected={index === selectedIndex}
-                        onClick={(event) => handleMenuItemClick(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </>
+          </StatusChip>
+        </Button>
+      </ButtonGroup>
+      <Popper
+        color={color}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" className={classes.root}>
+                  {options.map((option) => (
+                    <MenuItem key={option} onClick={handleMenuItemClick}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
     </>
   )
 }

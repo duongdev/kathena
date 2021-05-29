@@ -146,6 +146,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Trạng thái',
                   align: 'right',
+                  width: '10%',
                   skeleton: <Skeleton />,
                   render: ({ publicationState }) => (
                     <SplitButton
