@@ -32,4 +32,8 @@ describe('comment.service', () => {
   it('should be defined', () => {
     expect(commentService).toBeDefined()
   })
+
+  // TODO: Implement createComment unit test
+
+  // TODO: Implement listCommentByTargetId unit test
 })

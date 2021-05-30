@@ -23,6 +23,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type OrgOffice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  phone: String!
+}
+
 type AcademicSubject implements BaseModel {
   id: ID!
   orgId: ID!
@@ -56,16 +66,6 @@ type Course implements BaseModel {
   lecturerIds: [String!]!
   studentIds: [String!]!
   createdByAccountId: ID!
-}
-
-type OrgOffice implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  address: String!
-  phone: String!
 }
 
 type Account implements BaseModel {
@@ -147,6 +147,11 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
+type OrgAccountsPayload {
+  accounts: [Account!]!
+  count: Int!
+}
+
 type File implements BaseModel {
   id: ID!
   orgId: ID!
@@ -174,11 +179,6 @@ type CoursesPayload {
   count: Int!
 }
 
-type OrgAccountsPayload {
-  accounts: [Account!]!
-  count: Int!
-}
-
 type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -191,7 +191,10 @@ type ClassworkAssignment implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  resolveType: [String!]!
+  comments: [Comment!]!
   dueDate: DateTime!
+  maxScores: Float!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -206,6 +209,18 @@ type ClassworkMaterial implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  resolveType: [String!]!
+  comments: [Comment!]!
+}
+
+type Comment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  targetId: ID!
+  content: String!
 }
 
 type ClassworkAssignmentPayload {
@@ -216,16 +231,6 @@ type ClassworkAssignmentPayload {
 type ClassworkMaterialPayload {
   classworkMaterials: [ClassworkMaterial!]!
   count: Int!
-}
-
-type OrgOffice implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  address: String!
-  phone: String!
 }
 
 type Query {

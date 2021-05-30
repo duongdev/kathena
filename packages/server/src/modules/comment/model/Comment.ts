@@ -12,7 +12,7 @@ export class Comment extends BaseModel {
 
   @Field((_type) => ID)
   @prop({ required: true })
-  submitId: string
+  targetId: string
 
   @Field()
   @prop({ required: true })

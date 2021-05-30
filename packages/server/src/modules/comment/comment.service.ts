@@ -13,5 +13,7 @@ export class CommentService {
     private readonly commentModel: ReturnModelType<typeof Comment>,
   ) {}
 
-  // TODO: createComment function definition here
+  // TODO: Implement commentService.createComment
+
+  // TODO: Implement commentService.listCommentByTargetId
 }

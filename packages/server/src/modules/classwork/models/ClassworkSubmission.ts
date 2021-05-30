@@ -16,9 +16,5 @@ export class ClassworkSubmission extends BaseModel {
 
   @Field()
   @prop({ required: true, default: 0 })
-  scores: number
-
-  @Field()
-  @prop({ required: true })
-  commentIds: string[]
+  grade: number
 }
