@@ -11,7 +11,7 @@ export class ClassworkResolver {
    *START CLASSWORK RESOLVER
    */
 
-  // This ABC needs to be redone
+  // This needs to be edited
   @ResolveField((_returns) => [String])
   resolveType(value: { type: ClassworkType }): [...ANY] {
     if (value.type === ClassworkType.Material) {
@@ -25,7 +25,7 @@ export class ClassworkResolver {
     return ['ClassworkMaterial', 'ClassworkAssignment']
   }
 
-  // This ABC needs to be redone
+  // This needs to be edited
   @ResolveField((_returns) => [Comment])
   comments(): [] {
     return []
