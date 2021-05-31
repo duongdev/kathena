@@ -61,6 +61,9 @@ export * from './SelectFormField'
 export { default as SidebarMenu } from './SidebarMenu'
 export * from './SidebarMenu'
 
+export { default as SplitButton } from './SplitButton'
+export * from './SplitButton'
+
 export { default as Spinner } from './Spinner'
 export * from './Spinner'
 

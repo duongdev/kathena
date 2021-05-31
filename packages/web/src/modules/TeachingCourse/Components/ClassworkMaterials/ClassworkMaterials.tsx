@@ -43,7 +43,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkMaterialsListQuery({
       variables: {
-        courseId: course?.id ?? '',
+        courseId: courseId ?? '',
         limit: perPage,
         skip: page * perPage,
       },
