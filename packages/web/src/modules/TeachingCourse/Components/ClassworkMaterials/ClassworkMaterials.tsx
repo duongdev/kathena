@@ -43,7 +43,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkMaterialsListQuery({
       variables: {
-        courseId: course?.id ?? '',
+        courseId: courseId ?? '',
         limit: perPage,
         skip: page * perPage,
       },
@@ -82,7 +82,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
             link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS, {
               id: courseId,
             })}
-            endIcon={<FilePlus size={30} />}
+            startIcon={<FilePlus size={30} />}
           >
             Thêm tài liệu
           </Button>
