@@ -14,7 +14,7 @@ export class ClassworkSubmissionResolver {
   constructor(private readonly classworkService: ClassworkService) {}
 
   @Mutation((_return) => ClassworkSubmission)
-  @UseAuthGuard(P.Classwork_ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_CreateClassworkSubmission)
   @UsePipes(ValidationPipe)
   async createClassworkSubmission(
     @Args('courseId', { type: () => ID }) courseId: string,

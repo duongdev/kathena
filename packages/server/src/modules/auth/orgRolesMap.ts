@@ -38,7 +38,7 @@ export const student: Role = {
     P.Studying_Course_Access,
     P.Classwork_ListClassworkAssignment,
     P.Classwork_ListClassworkMaterial,
-    P.Classwork_ClassworkSubmission,
+    P.Classwork_CreateClassworkSubmission,
   ],
 }
 

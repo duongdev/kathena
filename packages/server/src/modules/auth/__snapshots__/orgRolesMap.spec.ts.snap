@@ -121,7 +121,7 @@ Array [
       "Studying_Course_Access",
       "Classwork_ListClassworkAssignment",
       "Classwork_ListClassworkMaterial",
-      "Classwork_ClassworkSubmission",
+      "Classwork_CreateClassworkSubmission",
     ],
     "priority": 4,
   },
