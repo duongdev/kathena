@@ -716,11 +716,16 @@ export class ClassworkService {
       const currentDate = new Date()
       const dueDateInput = new Date(update.dueDate)
       if (
-        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        classworkAssignmentUpdate.dueDate.setHours(7, 0, 0, 0) !==
+        dueDateInput.setHours(7, 0, 0, 0)
       ) {
-        throw new Error('START_DATE_INVALID')
+        if (
+          dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        ) {
+          throw new Error('START_DATE_INVALID')
+        }
+        classworkAssignmentUpdate.dueDate = dueDateInput
       }
-      classworkAssignmentUpdate.dueDate = dueDateInput
     }
 
     const updated = await classworkAssignmentUpdate.save()

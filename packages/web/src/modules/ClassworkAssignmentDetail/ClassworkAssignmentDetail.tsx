@@ -14,13 +14,14 @@ import {
   PageContainerSkeleton,
   SectionCard,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
-import { WithAuth } from 'common/auth'
+import { RequiredPermission, WithAuth } from 'common/auth'
 import {
   Permission,
   useClassworkAssignmentDetailQuery,
 } from 'graphql/generated'
-import { buildPath } from 'utils/path-builder'
+import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
 
 export type ClassworkAssignmentDetailProps = {}
 
@@ -32,6 +33,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   })
 
   const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
+
+  const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
 
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -53,10 +57,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       maxWidth="lg"
       title={classworkAssignment.title}
       actions={[
-        <Button
-          variant="contained"
-          link={buildPath('123', { id: classworkAssignment.id })}
-        >
+        <Button onClick={handleOpenUpdateDialog} variant="contained">
           Sửa bài tập
         </Button>,
       ]}
@@ -67,6 +68,15 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           gridItem={{ xs: 9 }}
           title="Thông tin bài tập"
         >
+          <RequiredPermission
+            permission={Permission.Classwork_UpdateClassworkAssignment}
+          >
+            <UpdateClassworkAssignmentDialog
+              open={updateDialogOpen}
+              onClose={handleCloseUpdateDialog}
+              classworkAssignment={classworkAssignment}
+            />
+          </RequiredPermission>
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12} md={7}>
