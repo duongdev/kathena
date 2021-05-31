@@ -10,6 +10,7 @@ import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
+import { ClassworkResolver } from './classwork.resolver'
 import { ClassworkService } from './classwork.service'
 import {
   CreateClassworkAssignmentInput,
@@ -21,8 +22,10 @@ import {
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
-export class ClassworkAssignmentsResolver {
-  constructor(private readonly classworkService: ClassworkService) {}
+export class ClassworkAssignmentsResolver extends ClassworkResolver {
+  constructor(private readonly classworkService: ClassworkService) {
+    super()
+  }
 
   /**
    *START ASSIGNMENTS RESOLVER

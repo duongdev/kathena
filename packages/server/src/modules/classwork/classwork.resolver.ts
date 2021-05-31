@@ -1,32 +1,18 @@
-import {
-  ResolveField,
-  /** Args,
-  ID,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField, */
-  Resolver,
-} from '@nestjs/graphql'
+import { ResolveField, Resolver } from '@nestjs/graphql'
 
+import { Comment } from 'modules/comment/model/Comment'
 import { ANY } from 'types'
-// import { differenceInMinutes } from 'date-fns'
-// import { ForbiddenError } from 'type-graphql'
 
-// import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core/auth'
-// import { P } from 'modules/auth/models'
-// import { Org } from 'modules/org/models/Org'
-// import { Nullable, PageOptionsInput } from 'types'
+import { Classwork, ClassworkType } from './models/Classwork'
 
-import { ClassworkType } from './models/Classwork'
-
-@Resolver('ResultClassworkUnion')
-export class ResultClassworkUnionResolver {
+@Resolver((_of) => Classwork)
+export class ClassworkResolver {
   /**
-   *START RESULT CLASSWORK UNION RESOLVER
+   *START CLASSWORK RESOLVER
    */
 
-  @ResolveField()
+  // This needs to be edited
+  @ResolveField((_returns) => [String])
   resolveType(value: { type: ClassworkType }): [...ANY] {
     if (value.type === ClassworkType.Material) {
       return ['ClassworkMaterial']
@@ -39,7 +25,13 @@ export class ResultClassworkUnionResolver {
     return ['ClassworkMaterial', 'ClassworkAssignment']
   }
 
+  // This needs to be edited
+  @ResolveField((_returns) => [Comment])
+  comments(): [] {
+    return []
+  }
+
   /**
-   * END RESULT CLASSWORK UNION RESOLVER
+   * END CLASSWORK RESOLVER
    */
 }

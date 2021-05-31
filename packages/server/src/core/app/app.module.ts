@@ -9,6 +9,7 @@ import { AcademicModule } from 'modules/academic/academic.module'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { ClassworkModule } from 'modules/classwork/classwork.module'
+import { CommentModule } from 'modules/comment/comment.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
@@ -25,6 +26,7 @@ export const appModules = [
   FileStorageModule,
   OrgOfficeModule,
   ClassworkModule,
+  CommentModule,
 ]
 
 @Module({
