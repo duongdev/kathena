@@ -82,7 +82,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
             link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS, {
               id: courseId,
             })}
-            endIcon={<FilePlus size={30} />}
+            startIcon={<FilePlus size={24} />}
           >
             Thêm tài liệu
           </Button>
