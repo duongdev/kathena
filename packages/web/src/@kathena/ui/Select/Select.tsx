@@ -21,7 +21,7 @@ export interface SelectProps extends MuiSelectProps {
   className?: string
   fullWidth?: boolean
   label?: string
-  value?: string | number | null
+  value?: string[] | string | number | null
   options: { label: ReactNode; value: string | number }[]
   helperText?: ReactNode
   disablePortal?: boolean
@@ -44,6 +44,7 @@ const Select: FC<SelectProps> = (props) => {
     helperText,
     disablePortal,
     required,
+    multiple,
     ...rest
   } = props
   const [isFocused, setFocus] = useState(false)
@@ -97,7 +98,8 @@ const Select: FC<SelectProps> = (props) => {
         onFocus={handleFocus}
         onBlur={handleBlur}
         displayEmpty
-        value={value || ''}
+        multiple={multiple}
+        value={value || (multiple ? [] : '')}
         {...rest}
         required={false}
       >
