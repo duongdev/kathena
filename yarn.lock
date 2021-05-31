@@ -3829,10 +3829,10 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
   integrity sha512-FTgBI767POY/lKNDNbIzgAX6miIDBs6NTCbdlDb8TrWovHsSvaVIZDlTqym29C6UqhzwcJx4CYr+AlrMywA0cA==
 
-"@typegoose/typegoose@8.0.0-beta.11":
-  version "8.0.0-beta.11"
-  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.11.tgz#8ae428f968904bd3f20f87cee3da5cd84dbc2ea2"
-  integrity sha512-STJROip4aesNX6TvKFNMAPHp0Zgnlh7bJAtJ6/35psbyKuQkzi0KQR+sf31cP5Rt/AaEZQFMIJK8yN0c8cVQug==
+"@typegoose/typegoose@8.0.0-beta.12":
+  version "8.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.12.tgz#011e92d06943c12bca6078f99c71d5cc2c90b8ab"
+  integrity sha512-eFn3LrH5NSrkxbHKEkDAe5RsFYEJ+y9ROYQTc7+jf7AmynrwXAaA1TpZeQ6G7xBm36wfoPiL7kOOkC0Z8++Abg==
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
@@ -16126,15 +16126,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@2.3.0:
+prettier@2.3.0, prettier@~2.0.5:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.0.tgz#b6a5bf1284026ae640f17f7ff5658a7567fc0d18"
   integrity sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==
-
-prettier@~2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
-  integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
 
 pretty-bytes@^5.3.0:
   version "5.6.0"
@@ -16712,7 +16707,7 @@ react-popper@^2.2.4:
     react-fast-compare "^3.0.1"
     warning "^4.0.2"
 
-react-quill@^1.3.5:
+react-quill@1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/react-quill/-/react-quill-1.3.5.tgz#8c4ad759da03365b17c79c6c52afa9772259844e"
   integrity sha512-/W/rNCW+6QpGz8yQ9tFK5Ka/h/No1RqrcOOvCIOR092OiKzRFlU2xbPEwiP3Wgy/Dx13pi1YhjReDMX/5uotJg==
