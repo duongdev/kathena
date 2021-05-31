@@ -7,12 +7,11 @@ import { useFormikContext } from 'formik'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import {
+  EditorFormField,
   SectionCard,
   Spinner,
   TextFormField,
   Typography,
-  SelectFormField,
-  EditorFormField,
   UploadInput,
 } from '@kathena/ui'
 
@@ -59,20 +58,6 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               required
               name="description"
               label={labels.description}
-            />
-          </Stack>
-          <Stack mt={3}>
-            <SelectFormField
-              gridItem={{ xs: 12 }}
-              fullWidth
-              required
-              name="publicationState"
-              label={labels.publicationState}
-              placeholder="Chọn trạng thái"
-              options={[
-                { label: 'Published', value: 'Published' },
-                { label: 'Draft', value: 'Draft' },
-              ]}
             />
           </Stack>
         </CardContent>
