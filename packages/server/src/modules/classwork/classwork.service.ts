@@ -174,6 +174,8 @@ export class ClassworkService {
    * END GENERAL FUNCTION
    */
 
+  //= ==========================================================================
+
   /**
    * START CLASSWORK MATERIAL
    */
@@ -516,6 +518,8 @@ export class ClassworkService {
    * END CLASSWORK MATERIAL
    */
 
+  //= ==========================================================================
+
   /**
    * START CLASSWORK ASSIGNMENT
    */
@@ -789,7 +793,20 @@ export class ClassworkService {
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
+
   /**
    * END CLASSWORK ASSIGNMENT
+   */
+
+  //= ==========================================================================
+
+  /**
+   * START CLASSWORK SUBMISSION
+   */
+
+  // TODO: Implement classworkService.createSubmitFile
+
+  /**
+   * END CLASSWORK SUBMISSION
    */
 }
