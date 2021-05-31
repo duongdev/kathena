@@ -30,6 +30,7 @@ export const TEACHING_COURSE_LIST = `${TEACHING_COURSES}`
 export const TEACHING_COURSE = `${TEACHING_COURSES}/:id/detail`
 export const TEACHING_COURSE_CLASSWORK_ASSIGNMENTS = `${TEACHING_COURSES}/:id/detail/classwork-assignments`
 export const TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT = `${TEACHING_COURSES}/:id/classwork-assignments/create`
+export const TEACHING_COURSE_CLASSWORK_ASSIGNMENT = `${TEACHING_COURSES}/classwork-assignments/:id/detail`
 export const TEACHING_COURSE_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/detail/classwork-materials`
 
 export const STUDYING_MODULE = `${ORG_WORKSPACE}/studying`

@@ -248,7 +248,7 @@ type Query {
   file(id: ID!): File
   classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
   classworkMaterial(Id: ID!): ClassworkMaterial!
-  findClassworkAssignmentById(classworkAssignmentId: ID!): ClassworkAssignment!
+  classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
 }
 
