@@ -1,35 +1,11 @@
-import {
-  createUnionType,
-  Field,
-  InputType,
-  ID,
-  Int,
-  ObjectType,
-} from '@nestjs/graphql'
+import { Field, InputType, ID, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { Publication } from 'core'
 
-import { ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-
-export const ResultClassworkUnion = createUnionType({
-  name: 'ResultClassworkUnion',
-  types: () => [ClassworkMaterial, ClassworkAssignment],
-  resolveType(value) {
-    if (value.type === ClassworkType.Material) {
-      return [ClassworkMaterial]
-    }
-
-    if (value.type === ClassworkType.Assignment) {
-      return [ClassworkAssignment]
-    }
-
-    return [ClassworkMaterial, ClassworkAssignment]
-  },
-})
 
 @InputType()
 export class UpdateClassworkMaterialInput {
@@ -91,7 +67,7 @@ export class CreateClassworkAssignmentInput {
   @Field()
   description?: string
 
-  @Field((_type) => [String], { defaultValue: [] })
+  @Field((_type) => [GraphQLUpload], { defaultValue: [] })
   attachments?: Promise<FileUpload>[]
 
   @Field()

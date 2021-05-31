@@ -58,6 +58,10 @@ export class CreateCourseInput {
   academicSubjectId: string
 
   @Field()
+  @IsNotEmpty({ message: 'OrgOffice id cannot be empty' })
+  orgOfficeId: string
+
+  @Field()
   @IsNotEmpty({ message: 'Code cannot be empty' })
   code: string
 

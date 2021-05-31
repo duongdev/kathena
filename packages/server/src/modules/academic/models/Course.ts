@@ -21,6 +21,10 @@ export class Course extends BaseModel {
   @prop({ type: Types.ObjectId, required: true, index: true })
   academicSubjectId: string
 
+  @Field((_type) => ID)
+  @prop({ type: Types.ObjectId, required: true, index: true })
+  orgOfficeId: string
+
   @Field()
   @prop({
     required: true,
