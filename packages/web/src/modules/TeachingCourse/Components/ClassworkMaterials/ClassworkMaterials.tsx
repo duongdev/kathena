@@ -39,7 +39,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
   const { data: dataClasswork, loading: loadingClasswork } =
     useClassworkMaterialsListQuery({
       variables: {
-        courseId: course?.id ?? '',
+        courseId: courseId ?? '',
         limit: perPage,
         skip: page * perPage,
       },
@@ -73,7 +73,9 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
       <SectionCard
         title="Tài liệu"
         gridItem={{ xs: 12 }}
-        action={<Button endIcon={<FilePlus size={30} />}>Thêm tài liệu</Button>}
+        action={
+          <Button startIcon={<FilePlus size={24} />}>Thêm tài liệu</Button>
+        }
       >
         <CardContent>
           {classworkMaterials.length ? (
