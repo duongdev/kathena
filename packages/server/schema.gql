@@ -191,7 +191,10 @@ type ClassworkAssignment implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  resolveType: [String!]!
+  comments: [Comment!]!
   dueDate: DateTime!
+  maxScores: Float!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -206,6 +209,18 @@ type ClassworkMaterial implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
+  resolveType: [String!]!
+  comments: [Comment!]!
+}
+
+type Comment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  targetId: ID!
+  content: String!
 }
 
 type ClassworkAssignmentPayload {

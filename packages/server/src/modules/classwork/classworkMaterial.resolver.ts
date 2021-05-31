@@ -7,6 +7,7 @@ import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
+import { ClassworkResolver } from './classwork.resolver'
 import { ClassworkService } from './classwork.service'
 import {
   UpdateClassworkMaterialInput,
@@ -14,12 +15,13 @@ import {
   ClassworkMaterialPayload,
   AddAttachmentsToClassworkInput,
 } from './classwork.type'
-import { Classwork } from './models/Classwork'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
-@Resolver((_of) => Classwork)
-export class ClassworkMaterialResolver {
-  constructor(private readonly classworkService: ClassworkService) {}
+@Resolver((_of) => ClassworkMaterial)
+export class ClassworkMaterialResolver extends ClassworkResolver {
+  constructor(private readonly classworkService: ClassworkService) {
+    super()
+  }
 
   /**
    *START MATERIAL RESOLVER
@@ -66,12 +68,6 @@ export class ClassworkMaterialResolver {
     )
   }
 
-  // TODO: Delete this line and start the code here
-
-  // TODO: classworkService.findClassworkMaterial
-
-  // TODO: classworkService.updateClassworkMaterial
-
   @Mutation((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_UpdateClassworkMaterial)
   @UsePipes(ValidationPipe)
@@ -90,8 +86,6 @@ export class ClassworkMaterialResolver {
       updateClassworkMaterialInput,
     )
   }
-
-  // TODO: classworkService.updateClassworkMaterialPublication
 
   @Mutation((_return) => ClassworkMaterial)
   @UseAuthGuard(P.Classwork_SetClassworkMaterialPublication)
