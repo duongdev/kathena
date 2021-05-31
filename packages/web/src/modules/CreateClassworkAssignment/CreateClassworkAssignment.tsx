@@ -1,19 +1,19 @@
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 
 import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { Check } from 'phosphor-react'
 import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, PageContainer, renderApolloError } from '@kathena/ui'
+import { PageContainer, renderApolloError, SplitButton } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import {
   useCreateClassworkAssignmentMutation,
   Permission,
   ClassworkAssignmentListDocument,
+  Publication,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -56,6 +56,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
   props,
 ) => {
   const classes = useStyles(props)
+  const [publication, setPublication] = useState(Publication.Published)
   const params: { id: string } = useParams()
   const idCourse = useMemo(() => params.id, [params])
   const { enqueueSnackbar } = useSnackbar()
@@ -71,13 +72,19 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
     context: { hasFileUpload: true },
   })
 
-  const handleCreateAcademicSubject = useCallback(
+  const handleSubmitForm = useCallback(
     async (input: ClassworkAssignmentFormInput) => {
       try {
         if (!idCourse) return
         const dataCreated = (
           await createClassworkAssignment({
-            variables: { courseId: idCourse, input: input as ANY },
+            variables: {
+              courseId: idCourse,
+              input: {
+                ...input,
+                publicationState: publication,
+              },
+            },
           })
         ).data
 
@@ -86,7 +93,12 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
         if (!classworkAssignment) {
           return
         }
-        enqueueSnackbar('Thêm bài tập thành công', { variant: 'success' })
+        enqueueSnackbar(
+          `${
+            publication === Publication.Draft ? 'Lưu nháp' : 'Đăng'
+          } bài tập thành công`,
+          { variant: 'success' },
+        )
         history.push(
           buildPath(TEACHING_COURSE_CLASSWORK_ASSIGNMENTS, {
             id: idCourse,
@@ -101,14 +113,20 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
         console.error(error)
       }
     },
-    [createClassworkAssignment, enqueueSnackbar, idCourse, history],
+    [
+      createClassworkAssignment,
+      enqueueSnackbar,
+      idCourse,
+      history,
+      publication,
+    ],
   )
 
   return (
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={handleCreateAcademicSubject}
+      onSubmit={handleSubmitForm}
     >
       {(formik) => (
         <PageContainer
@@ -118,15 +136,26 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
             id: idCourse,
           })}
           actions={[
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Check />}
-              onClick={formik.submitForm}
-              loading={formik.isSubmitting}
-            >
-              Tạo bài tập
-            </Button>,
+            <SplitButton
+              items={[
+                {
+                  children: 'Đăng bài tập',
+                  onClick: () => {
+                    setPublication(Publication.Published)
+                    formik.submitForm()
+                  },
+                  loading: formik.isSubmitting,
+                },
+                {
+                  children: 'Lưu nháp bài tập',
+                  onClick: () => {
+                    setPublication(Publication.Draft)
+                    formik.submitForm()
+                  },
+                  loading: formik.isSubmitting,
+                },
+              ]}
+            />,
           ]}
           className={classes.root}
         >

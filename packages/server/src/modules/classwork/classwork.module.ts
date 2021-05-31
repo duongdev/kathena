@@ -12,6 +12,7 @@ import { ClassworkAssignmentsResolver } from './classworkAssignments.resolver'
 import { ClassworkMaterialResolver } from './classworkMaterial.resolver'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
+import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @Global()
 @Module({
@@ -23,6 +24,7 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
     TypegooseModule.forFeature([
       ClassworkAssignment,
       ClassworkMaterial,
+      ClassworkSubmission,
       Course,
     ]),
   ],

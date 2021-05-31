@@ -478,7 +478,7 @@ export type Query = {
   file?: Maybe<File>
   classworkMaterials: ClassworkMaterialPayload
   classworkMaterial: ClassworkMaterial
-  findClassworkAssignmentById: ClassworkAssignment
+  classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
 }
 
@@ -533,6 +533,10 @@ export type QueryClassworkMaterialsArgs = {
 
 export type QueryClassworkMaterialArgs = {
   Id: Scalars['ID']
+}
+
+export type QueryClassworkAssignmentArgs = {
+  id: Scalars['ID']
 }
 
 export type QueryFindClassworkAssignmentByIdArgs = {
@@ -642,6 +646,16 @@ export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
+export type FileQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type FileQuery = {
+  file?: Maybe<
+    Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size' | 'signedUrl'>
+  >
+}
+
 export type ImageFileQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -741,6 +755,25 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 
 export type UpdateSelfAccountMutation = {
   updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+}
+
+export type ClassworkAssignmentDetailQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type ClassworkAssignmentDetailQuery = {
+  classworkAssignment: Pick<
+    ClassworkAssignment,
+    | 'id'
+    | 'orgId'
+    | 'courseId'
+    | 'title'
+    | 'type'
+    | 'description'
+    | 'publicationState'
+    | 'attachments'
+    | 'dueDate'
+  >
 }
 
 export type CoursesQueryVariables = Exact<{
@@ -1911,6 +1944,117 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
+export const FileDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'File' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'file' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'mimeType' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'size' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'signedUrl' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
+} &
+  TChildProps
+export function withFile<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FileQuery,
+    FileQueryVariables,
+    FileProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FileQuery,
+    FileQueryVariables,
+    FileProps<TChildProps, TDataName>
+  >(FileDocument, {
+    alias: 'file',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFileQuery__
+ *
+ * To run a query within a React component, call `useFileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFileQuery(
+  baseOptions: Apollo.QueryHookOptions<FileQuery, FileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FileQuery, FileQueryVariables>(FileDocument, options)
+}
+export function useFileLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<FileQuery, FileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FileQuery, FileQueryVariables>(
+    FileDocument,
+    options,
+  )
+}
+export type FileQueryHookResult = ReturnType<typeof useFileQuery>
+export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>
+export type FileQueryResult = Apollo.QueryResult<FileQuery, FileQueryVariables>
 export const ImageFileDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -3131,6 +3275,145 @@ export type UpdateSelfAccountMutationResult =
 export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
+>
+export const ClassworkAssignmentDetailDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ClassworkAssignmentDetail' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type ClassworkAssignmentDetailProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables
+  >
+} &
+  TChildProps
+export function withClassworkAssignmentDetail<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables,
+    ClassworkAssignmentDetailProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables,
+    ClassworkAssignmentDetailProps<TChildProps, TDataName>
+  >(ClassworkAssignmentDetailDocument, {
+    alias: 'classworkAssignmentDetail',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useClassworkAssignmentDetailQuery__
+ *
+ * To run a query within a React component, call `useClassworkAssignmentDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useClassworkAssignmentDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useClassworkAssignmentDetailQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useClassworkAssignmentDetailQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables
+  >(ClassworkAssignmentDetailDocument, options)
+}
+export function useClassworkAssignmentDetailLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ClassworkAssignmentDetailQuery,
+    ClassworkAssignmentDetailQueryVariables
+  >(ClassworkAssignmentDetailDocument, options)
+}
+export type ClassworkAssignmentDetailQueryHookResult = ReturnType<
+  typeof useClassworkAssignmentDetailQuery
+>
+export type ClassworkAssignmentDetailLazyQueryHookResult = ReturnType<
+  typeof useClassworkAssignmentDetailLazyQuery
+>
+export type ClassworkAssignmentDetailQueryResult = Apollo.QueryResult<
+  ClassworkAssignmentDetailQuery,
+  ClassworkAssignmentDetailQueryVariables
 >
 export const CoursesDocument: DocumentNode = {
   kind: 'Document',
