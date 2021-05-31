@@ -1805,8 +1805,6 @@ describe('classwork.service', () => {
       it(`returns the created classworkSubmission have files`, async () => {
         expect.assertions(3)
 
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
-
         const arrayFileIds = [objectId(), objectId()]
 
         jest
