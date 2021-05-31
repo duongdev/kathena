@@ -404,13 +404,13 @@ export type OrgAccountsPayload = {
 }
 
 export type OrgOffice = BaseModel & {
-  id: Scalars['ID']
-  orgId: Scalars['ID']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
-  name: Scalars['String']
   address: Scalars['String']
+  createdAt: Scalars['DateTime']
+  id: Scalars['ID']
+  name: Scalars['String']
+  orgId: Scalars['ID']
   phone: Scalars['String']
+  updatedAt: Scalars['DateTime']
 }
 
 export type PageOptionsInput = {
@@ -999,6 +999,18 @@ export type ClassworkMaterialsListQuery = {
       >
     >
   }
+}
+
+export type CreateClassworkMaterialMutationVariables = Exact<{
+  courseId: Scalars['ID']
+  CreateClassworkMaterialInput: CreateClassworkMaterialInput
+}>
+
+export type CreateClassworkMaterialMutation = {
+  createClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'createdAt' | 'courseId' | 'title' | 'description' | 'attachments'
+  >
 }
 
 export type CourseDetailQueryVariables = Exact<{
@@ -6003,6 +6015,157 @@ export type ClassworkMaterialsListLazyQueryHookResult = ReturnType<
 export type ClassworkMaterialsListQueryResult = Apollo.QueryResult<
   ClassworkMaterialsListQuery,
   ClassworkMaterialsListQueryVariables
+>
+export const CreateClassworkMaterialDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type CreateClassworkMaterialMutationFn = Apollo.MutationFunction<
+  CreateClassworkMaterialMutation,
+  CreateClassworkMaterialMutationVariables
+>
+export type CreateClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateClassworkMaterialMutation,
+    CreateClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateClassworkMaterialMutation,
+    CreateClassworkMaterialMutationVariables,
+    CreateClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateClassworkMaterialMutation,
+    CreateClassworkMaterialMutationVariables,
+    CreateClassworkMaterialProps<TChildProps, TDataName>
+  >(CreateClassworkMaterialDocument, {
+    alias: 'createClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useCreateClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClassworkMaterialMutation, { data, loading, error }] = useCreateClassworkMaterialMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      CreateClassworkMaterialInput: // value for 'CreateClassworkMaterialInput'
+ *   },
+ * });
+ */
+export function useCreateClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateClassworkMaterialMutation,
+    CreateClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateClassworkMaterialMutation,
+    CreateClassworkMaterialMutationVariables
+  >(CreateClassworkMaterialDocument, options)
+}
+export type CreateClassworkMaterialMutationHookResult = ReturnType<
+  typeof useCreateClassworkMaterialMutation
+>
+export type CreateClassworkMaterialMutationResult =
+  Apollo.MutationResult<CreateClassworkMaterialMutation>
+export type CreateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
+  CreateClassworkMaterialMutation,
+  CreateClassworkMaterialMutationVariables
 >
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',
