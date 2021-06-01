@@ -194,9 +194,13 @@ type ClassworkAssignment implements BaseModel {
   attachments: [String!]!
   publicationState: String!
   resolveType: [String!]!
-  comments: [Comment!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
   dueDate: DateTime!
   maxScores: Float!
+}
+
+input CommentPageOptionInput {
+  limit: Int!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -212,7 +216,7 @@ type ClassworkMaterial implements BaseModel {
   attachments: [String!]!
   publicationState: String!
   resolveType: [String!]!
-  comments: [Comment!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
 }
 
 type ClassworkSubmission implements BaseModel {
@@ -234,6 +238,11 @@ type Comment implements BaseModel {
   createdByAccountId: String!
   targetId: ID!
   content: String!
+}
+
+type CommentsPayload {
+  comments: [Comment!]!
+  count: Int!
 }
 
 type ClassworkAssignmentPayload {
