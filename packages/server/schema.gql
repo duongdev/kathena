@@ -137,6 +137,7 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Comment_CreateComment
   NoPermission
 }
 
@@ -309,6 +310,7 @@ type Mutation {
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  createComment(commentInput: CreateCommentInput!): Comment!
 }
 
 input CreateAccountInput {
@@ -398,4 +400,10 @@ input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: String
+}
+
+input CreateCommentInput {
+  createdByAccountId: ID!
+  targetId: ID!
+  content: String!
 }
