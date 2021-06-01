@@ -137,6 +137,7 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Classwork_CreateClassworkSubmission
   NoPermission
 }
 
@@ -211,6 +212,17 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
   resolveType: [String!]!
   comments: [Comment!]!
+}
+
+type ClassworkSubmission implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  classworkId: ID!
+  grade: Float!
+  submissionFilseIds: [String!]!
 }
 
 type Comment implements BaseModel {
@@ -309,6 +321,7 @@ type Mutation {
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
 }
 
 input CreateAccountInput {
@@ -398,4 +411,10 @@ input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: String
+}
+
+input CreateClassworkSubmissionInput {
+  createdByAccountId: ID!
+  classworkId: ID!
+  submissionFileIds: [Upload!]
 }

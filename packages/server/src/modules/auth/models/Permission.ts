@@ -47,6 +47,7 @@ export enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
 
+  Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
