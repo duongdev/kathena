@@ -137,7 +137,7 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
-  Classwork_ClassworkSubmission
+  Classwork_CreateClassworkSubmission
   NoPermission
 }
 
