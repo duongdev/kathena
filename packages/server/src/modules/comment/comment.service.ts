@@ -21,7 +21,6 @@ export class CommentService {
 
   // TODO: Implement commentService.createComment
 
-  // TODO: Implement commentService.listCommentByTargetId
   async listCommentByTargetId(
     commentPageOptionInput: CommentPageOptionInput,
     filter: {
