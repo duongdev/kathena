@@ -2,6 +2,7 @@ import { Field, InputType, ID, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty } from 'class-validator'
 
 import { Comment } from 'modules/comment/model/Comment'
+
 @InputType()
 export class CommentPageOptionInput {
   @Field((_type) => Int)
