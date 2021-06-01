@@ -1,7 +1,7 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
-import { Service, InjectModel, Logger, objectId } from 'core'
+import { Service, InjectModel, Logger } from 'core'
 import { OrgService } from 'modules/org/org.service'
 
 import { CommentPageOptionInput } from './comment.type'

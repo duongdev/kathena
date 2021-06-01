@@ -33,16 +33,14 @@ export class ClassworkResolver {
     return ['ClassworkMaterial', 'ClassworkAssignment']
   }
 
-  // This needs to be edited
   @ResolveField((_returns) => CommentsPayload)
   comments(
-    @Root() { id }: Classwork,
+    @Root() { id },
     @CurrentOrg() org: Org,
     @Args('lastId', { type: () => ID, nullable: true }) lastId: string,
     @Args('commentPageOptionInput')
     commentPageOptionInput: CommentPageOptionInput,
   ): Promise<CommentsPayload> {
-    console.log('id: ', id)
     return this.commentService.listCommentByTargetId(commentPageOptionInput, {
       orgId: org.id,
       lastId,
