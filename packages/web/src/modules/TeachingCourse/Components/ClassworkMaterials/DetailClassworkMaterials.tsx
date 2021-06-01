@@ -12,19 +12,23 @@ import {
   Button,
   InfoBlock,
   PageContainer,
+  useDialogState,
   SectionCard,
   SectionCardSkeleton,
   Typography,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
-import { useDetailClassworkMaterialQuery } from 'graphql/generated'
+import { useAuth, RequiredPermission } from 'common/auth'
+import { useDetailClassworkMaterialQuery, Permission } from 'graphql/generated'
 import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
-import { buildPath } from 'utils/path-builder'
+
+import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
 
 const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const classes = useStyles(props)
+  const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params.id])
   const { account } = useAuth()
@@ -83,14 +87,20 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           gridItem={{ xs: 12 }}
           title="Thông tin tài liệu"
           action={[
-            <Button
-              variant="contained"
-              link={buildPath('123', { id: classworkMaterial?.id as ANY })}
-            >
+            <Button onClick={handleOpenUpdateDialog} variant="contained">
               Sửa tài liệu
             </Button>,
           ]}
         >
+          <RequiredPermission
+            permission={Permission.Classwork_UpdateClassworkAssignment}
+          >
+            <UpdateClassworkMaterialDialog
+              open={updateDialogOpen}
+              onClose={handleCloseUpdateDialog}
+              classworkMaterial={classworkMaterial as ANY}
+            />
+          </RequiredPermission>
           <CardContent>
             <Grid container spacing={2} className={classes.root}>
               <InfoBlock gridItem={{ xs: 10 }} label="Tiêu đề:">
