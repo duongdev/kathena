@@ -98,3 +98,15 @@ export class AddAttachmentsToClassworkInput {
   @Field((_type) => [GraphQLUpload])
   attachments?: Promise<FileUpload>[]
 }
+
+@InputType()
+export class CreateClassworkSubmissionInput {
+  @Field((_type) => ID)
+  createdByAccountId: string
+
+  @Field((_type) => ID)
+  classworkId: string
+
+  @Field((_type) => [GraphQLUpload], { nullable: true })
+  submissionFileIds?: Promise<FileUpload>[]
+}
