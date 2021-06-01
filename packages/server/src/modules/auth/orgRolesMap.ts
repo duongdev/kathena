@@ -40,6 +40,7 @@ export const student: Role = {
     P.Classwork_ListClassworkAssignment,
     P.Classwork_ListClassworkMaterial,
     P.Comment_CreateComment,
+    P.Classwork_CreateClassworkSubmission,
   ],
 }
 

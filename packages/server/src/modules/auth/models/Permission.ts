@@ -49,6 +49,7 @@ export enum Permission {
 
   Comment_CreateComment = 'Comment_CreateComment',
 
+  Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
