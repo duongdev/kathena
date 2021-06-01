@@ -17,6 +17,7 @@ export type SelectFormFieldProps = {
 
 const SelectFormField: FC<SelectFormFieldProps> = ({
   name,
+  multiple,
   overrideErrorMessage,
   ...props
 }) => {
@@ -34,7 +35,8 @@ const SelectFormField: FC<SelectFormFieldProps> = ({
 
   return (
     <Select
-      value={value || ''}
+      multiple={multiple}
+      value={value || (multiple ? [] : '')}
       {...field}
       {...props}
       error={!!error}

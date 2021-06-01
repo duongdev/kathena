@@ -1,19 +1,19 @@
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 
 import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { Check } from 'phosphor-react'
 import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { Button, PageContainer } from '@kathena/ui'
+import { PageContainer, SplitButton } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import {
-  useCreateClassworkMaterialMutation,
-  Permission,
   ClassworkMaterialsListDocument,
+  Permission,
+  Publication,
+  useCreateClassworkMaterialMutation,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -27,7 +27,6 @@ export type CreateClassworkMaterialProps = {}
 export type ClassworkMaterialFormInput = {
   title: string
   description: string
-  publicationState: string
   attachments: File[] | null
 }
 
@@ -35,29 +34,23 @@ const labels: { [k in keyof ClassworkMaterialFormInput]: string } = {
   title: 'Tiêu đề',
   description: 'Mô tả',
   attachments: 'Tập tin đính kèm',
-  publicationState: 'Trạng thái',
 }
 
 const validationSchema: SchemaOf<ClassworkMaterialFormInput> = yup.object({
   title: yup.string().label(labels.title).trim().required(),
   description: yup.string().label(labels.description).required(),
-  publicationState: yup
-    .string()
-    .label(labels.publicationState)
-    .trim()
-    .required(),
   attachments: yup.mixed().label(labels.attachments).notRequired() as ANY,
 })
 
 const initialValues = {
   title: '',
   description: '',
-  publicationState: '',
   attachments: null,
 }
 
 const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const classes = useStyles(props)
+  const [publication, setPublication] = useState(Publication.Published)
   const params: { id: string } = useParams()
   const idCourse = useMemo(() => params.id, [params.id])
   const { enqueueSnackbar } = useSnackbar()
@@ -82,12 +75,18 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
             CreateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
-              publicationState: input.publicationState as ANY,
+              publicationState: publication,
+              attachments: input.attachments as ANY,
             },
           },
         })
 
-        enqueueSnackbar('Thêm tài liệu thành công', { variant: 'success' })
+        enqueueSnackbar(
+          `${
+            publication === Publication.Draft ? 'Lưu nháp' : 'Đăng'
+          } tài liệu thành công`,
+          { variant: 'success' },
+        )
         history.push(
           buildPath(TEACHING_COURSE_CLASSWORK_MATERIALS, {
             id: idCourse,
@@ -97,7 +96,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
         enqueueSnackbar('Thêm tài liệu thất bại', { variant: 'error' })
       }
     },
-    [createClassworkMaterial, enqueueSnackbar, idCourse, history],
+    [createClassworkMaterial, enqueueSnackbar, idCourse, history, publication],
   )
 
   return (
@@ -114,15 +113,26 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
             id: idCourse,
           })}
           actions={[
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Check />}
-              onClick={formik.submitForm}
-              loading={formik.isSubmitting}
-            >
-              Tạo tài liệu
-            </Button>,
+            <SplitButton
+              items={[
+                {
+                  children: 'Đăng tài liệu',
+                  onClick: () => {
+                    setPublication(Publication.Published)
+                    formik.submitForm()
+                  },
+                  loading: formik.isSubmitting,
+                },
+                {
+                  children: 'Lưu nháp tài liệu',
+                  onClick: () => {
+                    setPublication(Publication.Draft)
+                    formik.submitForm()
+                  },
+                  loading: formik.isSubmitting,
+                },
+              ]}
+            />,
           ]}
           className={classes.root}
         >

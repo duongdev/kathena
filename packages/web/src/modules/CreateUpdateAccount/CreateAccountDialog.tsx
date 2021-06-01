@@ -4,6 +4,7 @@ import { Grid } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
+import { ANY } from '@kathena/types'
 import {
   Alert,
   ApolloErrorList,
@@ -18,7 +19,7 @@ export type CreateAccountInput = {
   displayName?: string
   username: string
   email: string
-  role: string
+  roles: string[]
 }
 
 const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
@@ -49,14 +50,14 @@ const validationSchema: SchemaOf<CreateAccountInput> = yup.object({
     .lowercase()
     .email()
     .required(),
-  role: yup.string().label('Phân quyền').trim().required(),
+  roles: yup.mixed().label('Phân quyền').required() as ANY,
 })
 
 const initialValues: CreateAccountInput = {
   displayName: '',
   username: '',
   email: '',
-  role: '',
+  roles: [],
 }
 
 export type CreateAccountDialogProps = {
@@ -79,7 +80,7 @@ export const CreateAccountDialog: FC<CreateAccountDialogProps> = (props) => {
               displayName: accountInput.displayName,
               email: accountInput.email,
               username: accountInput.username,
-              roles: [accountInput.role],
+              roles: accountInput.roles,
             },
           },
         })
@@ -131,10 +132,10 @@ export const CreateAccountDialog: FC<CreateAccountDialogProps> = (props) => {
         <SelectFormField
           gridItem={{ xs: 12 }}
           fullWidth
+          multiple
           required
-          name="role"
+          name="roles"
           label="Phân quyền"
-          placeholder="Chọn phân quyền"
           options={[
             { label: 'Admin', value: 'admin' },
             { label: 'Nhân viên', value: 'staff' },

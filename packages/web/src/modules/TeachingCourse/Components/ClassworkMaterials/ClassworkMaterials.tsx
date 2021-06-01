@@ -1,6 +1,7 @@
+/* eslint-disable import/order */
 import { FC, useMemo } from 'react'
 
-import { Grid, Skeleton, CardContent } from '@material-ui/core'
+import { CardContent, Grid, Skeleton } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { FilePlus } from 'phosphor-react'
@@ -9,14 +10,15 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
+  Button,
   DataTable,
+  Link,
   SectionCard,
   SectionCardSkeleton,
   Typography,
-  Button,
   usePagination,
-  Link,
 } from '@kathena/ui'
+
 // import { useAuth } from 'common/auth'
 import {
   useClassworkMaterialsListQuery,
@@ -82,7 +84,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
             link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS, {
               id: courseId,
             })}
-            startIcon={<FilePlus size={30} />}
+            startIcon={<FilePlus size={24} />}
           >
             Thêm tài liệu
           </Button>
@@ -149,6 +151,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Trạng thái',
                   align: 'right',
+                  width: '10%',
                   skeleton: <Skeleton />,
                   render: ({ publicationState }) => (
                     <PublicationChip
