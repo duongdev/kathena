@@ -4,7 +4,7 @@ import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { Service, InjectModel, Logger } from 'core'
 import { OrgService } from 'modules/org/org.service'
 
-import { CommentPageOptionInput } from './comment.type'
+import { CommentPageOptionInput, CreateCommentInput } from './comment.type'
 import { Comment } from './model/Comment'
 
 @Service()
@@ -19,7 +19,25 @@ export class CommentService {
     private readonly orgService: OrgService,
   ) {}
 
-  // TODO: Implement commentService.createComment
+  async createComment(
+    orgId: string,
+    commentInput: CreateCommentInput,
+  ): Promise<DocumentType<Comment>> {
+    const { createdByAccountId, targetId, content } = commentInput
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    const comment = this.commentModel.create({
+      createdByAccountId,
+      orgId,
+      targetId,
+      content,
+    })
+
+    return comment
+  }
 
   async listCommentByTargetId(
     commentPageOptionInput: CommentPageOptionInput,
