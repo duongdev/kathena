@@ -1,6 +1,8 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import FileComponent from 'components/FileComponent'
+import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
 
@@ -15,6 +17,7 @@ import {
 } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { useDetailClassworkMaterialQuery } from 'graphql/generated'
+import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
 
 export type DetailClassworkMaterialsProps = {}
 
@@ -45,6 +48,32 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       withBackButton
       maxWidth="md"
       title={`${classworkMaterial?.title}`}
+      subtitle={[
+        <>
+          <Grid container spacing={2} className={classes.root}>
+            <InfoBlock gridItem={{ xs: 2 }} label="Ngày đăng:">
+              {`${format(
+                new Date(classworkMaterial?.createdAt),
+                'dd/MM/yyyy',
+              )}`}
+            </InfoBlock>
+            <InfoBlock gridItem={{ xs: 10 }} label="Người đăng:">
+              <AccountInfoRow
+                gridItem={{ xs: 4 }}
+                key={`${account?.id}`}
+                accountId={`${account?.id}`}
+              />
+            </InfoBlock>
+          </Grid>
+        </>,
+      ]}
+      actions={[
+        <PublicationChip
+          publication={classworkMaterial?.publicationState as ANY}
+          variant="outlined"
+          size="medium"
+        />,
+      ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
@@ -54,13 +83,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
         >
           <CardContent>
             <Grid container spacing={2} className={classes.root}>
-              <InfoBlock gridItem={{ xs: 10 }} label="  Giảng viên thêm:">
-                <Typography variant="h5">{`${account?.displayName}`}</Typography>
-              </InfoBlock>
-              <InfoBlock gridItem={{ xs: 2 }} label="Ngày đăng:">
-                {format(new Date(classworkMaterial?.createdAt), 'dd/MM/yyyy')}
-              </InfoBlock>
-              <InfoBlock gridItem={{ xs: 12 }} label="Tiêu đề:">
+              <InfoBlock gridItem={{ xs: 10 }} label="Tiêu đề:">
                 {`${classworkMaterial?.title}`}
               </InfoBlock>
               <InfoBlock gridItem={{ xs: 12 }} label="Mô tả:">
@@ -78,10 +101,19 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                   }}
                 />
               </InfoBlock>
-              <InfoBlock gridItem={{ xs: 12 }} label="Tài liệu:">
-                {classworkMaterial?.attachments.map((attachment) => (
-                  <Grid container>{attachment}</Grid>
-                ))}
+              <InfoBlock gridItem={{ xs: 12 }} label="Tập tin đính kèm: ">
+                {classworkMaterial?.attachments.length ? (
+                  classworkMaterial?.attachments.map((attachment) => (
+                    <Grid container>
+                      <FileComponent key={attachment} fileId={attachment} />
+                    </Grid>
+                  ))
+                ) : (
+                  <Grid container>
+                    {' '}
+                    <Typography>Không có tập tin</Typography>
+                  </Grid>
+                )}
               </InfoBlock>
             </Grid>
           </CardContent>
