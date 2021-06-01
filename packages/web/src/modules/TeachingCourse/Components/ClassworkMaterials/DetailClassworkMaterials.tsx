@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
+  Button,
   InfoBlock,
   PageContainer,
   SectionCard,
@@ -18,6 +19,7 @@ import {
 import { useAuth } from 'common/auth'
 import { useDetailClassworkMaterialQuery } from 'graphql/generated'
 import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
+import { buildPath } from 'utils/path-builder'
 
 export type DetailClassworkMaterialsProps = {}
 
@@ -80,6 +82,14 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin tài liệu"
+          action={[
+            <Button
+              variant="contained"
+              link={buildPath('123', { id: classworkMaterial?.id as ANY })}
+            >
+              Sửa tài liệu
+            </Button>,
+          ]}
         >
           <CardContent>
             <Grid container spacing={2} className={classes.root}>
