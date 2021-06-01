@@ -145,5 +145,187 @@ describe('comment.service', () => {
     })
   })
 
-  // TODO: Implement listCommentByTargetId unit test
+  describe('listCommentByTargetId', () => {
+    it(`throws error if orgId invalid`, async () => {
+      expect.assertions(1)
+
+      await expect(
+        commentService.listCommentByTargetId(
+          {
+            limit: 2,
+          },
+          {
+            orgId: 'day_la_org_id',
+            lastId: objectId(),
+            targetId: objectId(),
+          },
+        ),
+      ).rejects.toThrowError(`ORG_ID_INVALID`)
+    })
+
+    it(`returns an array of comments`, async () => {
+      expect.assertions(3)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'thanhcanh',
+        roles: ['lecturer'],
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classWorkAssignmentTest1 =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      const classWorkAssignmentTest2 =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
+      const comment1 = await commentService.createComment(org.id, {
+        createdByAccountId: accountLecturer.id,
+        targetId: classWorkAssignmentTest1.id,
+        content: 'cmt 1',
+      })
+
+      const comment2 = await commentService.createComment(org.id, {
+        createdByAccountId: accountLecturer.id,
+        targetId: classWorkAssignmentTest2.id,
+        content: 'cmt 2',
+      })
+
+      const comment3 = await commentService.createComment(org.id, {
+        createdByAccountId: accountLecturer.id,
+        targetId: classWorkAssignmentTest1.id,
+        content: 'cmt 3',
+      })
+
+      const comment4 = await commentService.createComment(org.id, {
+        createdByAccountId: accountLecturer.id,
+        targetId: classWorkAssignmentTest2.id,
+        content: 'cmt 4',
+      })
+
+      await expect(
+        commentService.listCommentByTargetId(
+          {
+            limit: 2,
+          },
+          {
+            orgId: org.id,
+            lastId: comment3.id,
+            targetId: classWorkAssignmentTest1.id,
+          },
+        ),
+      ).resolves.toMatchObject({
+        comments: [
+          {
+            targetId: classWorkAssignmentTest1.id,
+            content: comment1.content,
+          },
+        ],
+      })
+
+      await expect(
+        commentService.listCommentByTargetId(
+          {
+            limit: 2,
+          },
+          {
+            orgId: org.id,
+            lastId: comment4.id,
+            targetId: classWorkAssignmentTest2.id,
+          },
+        ),
+      ).resolves.toMatchObject({
+        comments: [
+          {
+            targetId: classWorkAssignmentTest2.id,
+            content: comment2.content,
+          },
+        ],
+      })
+
+      await expect(
+        commentService.listCommentByTargetId(
+          {
+            limit: 2,
+          },
+          {
+            orgId: org.id,
+            targetId: classWorkAssignmentTest1.id,
+          },
+        ),
+      ).resolves.toMatchObject({
+        comments: [
+          {
+            targetId: classWorkAssignmentTest1.id,
+            content: comment3.content,
+          },
+          {
+            targetId: classWorkAssignmentTest1.id,
+            content: comment1.content,
+          },
+        ],
+      })
+    })
+  })
 })
