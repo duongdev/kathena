@@ -24,7 +24,7 @@ export type UpdateAccountFormInput = {
   username: string
   password: string
   verifyPassword: string
-  role: string
+  roles: string[]
 }
 
 const validationSchema = yup.object({
@@ -42,7 +42,7 @@ const validationSchema = yup.object({
   verifyPassword: yup
     .string()
     .oneOf([yup.ref('password')], 'Mật khẩu không khớp'),
-  role: yup.string().label('Phân quyền').trim().required(),
+  roles: yup.mixed().label('Phân quyền').required() as ANY,
 })
 
 export type UpdateAccountDialogProps = {
@@ -62,7 +62,7 @@ export const UpdateAccountDialog: FC<UpdateAccountDialogProps> = (props) => {
       displayName: account.displayName ?? '',
       email: account.email,
       username: account.username,
-      role: account.roles[0],
+      roles: account.roles,
 
       password: '',
       verifyPassword: '',
@@ -73,10 +73,9 @@ export const UpdateAccountDialog: FC<UpdateAccountDialogProps> = (props) => {
   const handleSubmit = useCallback(
     async (accountInput: UpdateAccountFormInput) => {
       try {
-        const roles = [accountInput.role]
         const update: UpdateAccountInput = {
           displayName: accountInput.displayName,
-          roles,
+          roles: accountInput.roles,
         }
         if (accountInput.password) update.password = accountInput.password
 
@@ -132,9 +131,9 @@ export const UpdateAccountDialog: FC<UpdateAccountDialogProps> = (props) => {
           gridItem={{ xs: 12 }}
           fullWidth
           required
-          name="role"
+          multiple
+          name="roles"
           label="Phân quyền"
-          placeholder="Chọn phân quyền"
           options={[
             { label: 'Admin', value: 'admin' },
             { label: 'Nhân viên', value: 'staff' },
