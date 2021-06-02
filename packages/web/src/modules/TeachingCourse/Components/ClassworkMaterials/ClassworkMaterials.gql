@@ -49,3 +49,21 @@ query DetailClassworkMaterial($Id: ID!) {
     courseId
   }
 }
+
+#Cập nhật một tài liệu
+mutation UpdateClassworkMaterial(
+  $classworkMaterialId: ID!
+  $updateClassworkMaterialInput: UpdateClassworkMaterialInput!
+) {
+  updateClassworkMaterial(
+    classworkMaterialId: $classworkMaterialId
+    updateClassworkMaterialInput: $updateClassworkMaterialInput
+  ) {
+    id
+    createdAt
+    courseId
+    title
+    description
+    attachments
+  }
+}
