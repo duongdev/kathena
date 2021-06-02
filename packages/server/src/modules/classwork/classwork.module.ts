@@ -10,6 +10,7 @@ import { OrgModule } from 'modules/org/org.module'
 import { ClassworkService } from './classwork.service'
 import { ClassworkAssignmentsResolver } from './classworkAssignments.resolver'
 import { ClassworkMaterialResolver } from './classworkMaterial.resolver'
+import { ClassworkSubmissionResolver } from './classworkSubmission.resolver'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 import { ClassworkSubmission } from './models/ClassworkSubmission'
@@ -32,6 +33,7 @@ import { ClassworkSubmission } from './models/ClassworkSubmission'
     ClassworkService,
     ClassworkMaterialResolver,
     ClassworkAssignmentsResolver,
+    ClassworkSubmissionResolver,
   ],
   exports: [ClassworkService],
 })
