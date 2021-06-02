@@ -454,6 +454,329 @@ describe('classwork.service', () => {
         })
       })
     })
+
+    describe('findAndPaginateClassworkMaterials', () => {
+      it('throws error if course is not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          classworkService.findAndPaginateClassworkMaterials(
+            {
+              limit: 1,
+              skip: 0,
+            },
+            {
+              orgId: objectId(),
+              accountId: objectId(),
+              courseId: objectId(),
+            },
+          ),
+        ).rejects.toThrowError(`COURSE NOT FOUND`)
+      })
+
+      it('throws error if account have not permissions', async () => {
+        expect.assertions(1)
+
+        const createCourse: ANY = {
+          academicSubjectId: objectId(),
+          code: 'FECBT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: Date.now().toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [objectId()],
+        }
+
+        jest
+          .spyOn(classworkService['courseModel'], 'findOne')
+          .mockResolvedValueOnce(createCourse as ANY)
+
+        await expect(
+          classworkService.findAndPaginateClassworkMaterials(
+            {
+              limit: 2,
+              skip: 1,
+            },
+            {
+              orgId: objectId(),
+              courseId: objectId(),
+              accountId: objectId(),
+            },
+          ),
+        ).rejects.toThrowError(`ACCOUNT HAVEN'T PERMISSION`)
+      })
+
+      it('returns array draft and publish classworkMaterial if account is Lecturer', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin',
+          namespace: 'kmin-edu',
+        })
+
+        const creatorAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai@gmail.com',
+          password: '123456',
+          username: 'admin',
+          roles: ['admin'],
+          displayName: 'Admin',
+        })
+
+        const lecturerAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'lecturer@gmail.com',
+          password: '123456',
+          username: 'lecturer',
+          roles: ['lecturer'],
+          displayName: 'Lecturer',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          code: 'HTML',
+          createdByAccountId: creatorAccount.id,
+          description: 'HTML',
+          imageFileId: objectId(),
+          name: 'HTMl',
+          orgId: org.id,
+        })
+
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25A Mai Thị Lưu',
+          createdByAccountId: creatorAccount.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0564125185',
+        })
+
+        const listCreateClassWorkMaterial: ANY[] = []
+        const date = new Date()
+        const createdByAccountId = lecturerAccount.id
+
+        const createCourse: CreateCourseInput = {
+          academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
+          code: 'FECBT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: date.toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [lecturerAccount.id],
+        }
+
+        const course = await academicService.createCourse(
+          creatorAccount.id,
+          org.id,
+          {
+            ...createCourse,
+          },
+        )
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 01',
+              description: 'bai tap so 01',
+              attachments: [],
+            },
+          ),
+        )
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 02',
+              description: 'bai tap so 02',
+              attachments: [],
+            },
+          ),
+        )
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 03',
+              description: 'bai tap so 03',
+              attachments: [],
+            },
+          ),
+        )
+
+        await expect(
+          classworkService.findAndPaginateClassworkMaterials(
+            {
+              limit: 2,
+              skip: 0,
+            },
+            {
+              orgId: org.id,
+              accountId: lecturerAccount.id,
+              courseId: course.id,
+            },
+          ),
+        ).resolves.toMatchObject({
+          classworkMaterials: [
+            {
+              title: 'Bai Tap So 03',
+            },
+            {
+              title: 'Bai Tap So 02',
+            },
+          ],
+          count: listCreateClassWorkMaterial.length,
+        })
+      })
+
+      it('returns array publish classworkMaterial if account is Student', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          name: 'kmin',
+          namespace: 'kmin-edu',
+        })
+
+        const creatorAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'vanhai@gmail.com',
+          password: '123456',
+          username: 'admin',
+          roles: ['admin'],
+          displayName: 'Admin',
+        })
+
+        const lecturerAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'lecturer@gmail.com',
+          password: '123456',
+          username: 'lecturer',
+          roles: ['lecturer'],
+          displayName: 'Lecturer',
+        })
+
+        const studentAccount = await accountService.createAccount({
+          orgId: org.id,
+          email: 'student@gmail.com',
+          password: '123456',
+          username: 'student',
+          roles: ['student'],
+          displayName: 'Student',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          code: 'HTML',
+          createdByAccountId: creatorAccount.id,
+          description: 'HTML',
+          imageFileId: objectId(),
+          name: 'HTMl',
+          orgId: org.id,
+        })
+
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          address: '25A Mai Thị Lưu',
+          createdByAccountId: creatorAccount.id,
+          name: 'Kmin Quận 1',
+          orgId: org.id,
+          phone: '0564125185',
+        })
+
+        const listCreateClassWorkMaterial: ANY[] = []
+        const date = new Date()
+        const createdByAccountId = lecturerAccount.id
+
+        const createCourse: CreateCourseInput = {
+          academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
+          code: 'FECBT1',
+          name: 'Frontend cơ bản tháng 1',
+          startDate: date.toString(),
+          tuitionFee: 5000000,
+          lecturerIds: [lecturerAccount.id],
+        }
+
+        const course = await academicService.createCourse(
+          creatorAccount.id,
+          org.id,
+          {
+            ...createCourse,
+          },
+        )
+
+        course.studentIds = [studentAccount.id]
+        course.save()
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 01',
+              description: 'bai tap so 01',
+              attachments: [],
+              publicationState: Publication.Published,
+            },
+          ),
+        )
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 02',
+              description: 'bai tap so 02',
+              attachments: [],
+            },
+          ),
+        )
+
+        listCreateClassWorkMaterial.push(
+          await classworkService.createClassworkMaterial(
+            createdByAccountId,
+            org.id,
+            course.id,
+            {
+              title: 'Bai Tap So 03',
+              description: 'bai tap so 03',
+              attachments: [],
+            },
+          ),
+        )
+
+        await expect(
+          classworkService.findAndPaginateClassworkMaterials(
+            {
+              limit: 2,
+              skip: 0,
+            },
+            {
+              orgId: org.id,
+              accountId: studentAccount.id,
+              courseId: course.id,
+            },
+          ),
+        ).resolves.toMatchObject({
+          classworkMaterials: [
+            {
+              title: 'Bai Tap So 01',
+            },
+          ],
+          count: listCreateClassWorkMaterial.length,
+        })
+      })
+    })
   })
   /**
    * END CLASSWORK MATERIAL
