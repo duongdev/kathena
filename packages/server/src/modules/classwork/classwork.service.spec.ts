@@ -16,6 +16,7 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
+  SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 
 describe('classwork.service', () => {
@@ -1779,7 +1780,7 @@ describe('classwork.service', () => {
             if (!classWorkSubmission) return false
             const submission = classWorkSubmission
 
-            if (!submission.submissionFilseIds) return false
+            if (!submission.submissionFileIds) return false
             return (
               submission.classworkId.toString() ===
               createClassWorkSubmissionInput.classworkId
@@ -1792,7 +1793,7 @@ describe('classwork.service', () => {
             if (!classWorkSubmission) return false
             const submission = classWorkSubmission
 
-            if (!submission.submissionFilseIds) return false
+            if (!submission.submissionFileIds) return false
 
             return (
               submission.createdByAccountId.toString() ===
@@ -1822,7 +1823,7 @@ describe('classwork.service', () => {
         const createInputWithFile: ANY = {
           classworkId: objectId(),
           createdByAccountId: objectId(),
-          submissionFileIds: arrayFileIds,
+          submissionFiles: arrayFileIds,
         }
 
         const classWorkSubmissionWithFiles =
@@ -1837,9 +1838,9 @@ describe('classwork.service', () => {
             if (!classWorkSubmissionWithFiles) return false
             const submission = classWorkSubmissionWithFiles
 
-            if (!submission.submissionFilseIds) return false
+            if (!submission.submissionFileIds) return false
             return (
-              submission.submissionFilseIds[0].toString() === arrayFileIds[0]
+              submission.submissionFileIds[0].toString() === arrayFileIds[0]
             )
           })(),
         ).resolves.toBeTruthy()
@@ -1849,9 +1850,9 @@ describe('classwork.service', () => {
             if (!classWorkSubmissionWithFiles) return false
             const submission = classWorkSubmissionWithFiles
 
-            if (!submission.submissionFilseIds) return false
+            if (!submission.submissionFileIds) return false
             return (
-              submission.submissionFilseIds[1].toString() === arrayFileIds[1]
+              submission.submissionFileIds[1].toString() === arrayFileIds[1]
             )
           })(),
         ).resolves.toBeTruthy()
@@ -1861,10 +1862,176 @@ describe('classwork.service', () => {
             if (!classWorkSubmissionWithFiles) return false
             const submission = classWorkSubmissionWithFiles
 
-            if (!submission.submissionFilseIds) return false
-            return submission.submissionFilseIds.length === arrayFileIds.length
+            if (!submission.submissionFileIds) return false
+            return submission.submissionFileIds.length === arrayFileIds.length
           })(),
         ).resolves.toBeTruthy()
+      })
+    })
+
+    describe('setGradeForClassworkSubmission', () => {
+      it('throws error if OrgId invalid', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: 70,
+            },
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+      })
+
+      it('throws error if the account is not a course lecturer', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: 70,
+            },
+          ),
+        ).rejects.toThrowError(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
+      })
+
+      it('throws error if classwork submission not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: 70,
+            },
+          ),
+        ).rejects.toThrowError(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+      })
+
+      it('throws error if grade is not valid', async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkSubmission: ANY = {
+          createdByAccountId: objectId(),
+          classworkId: objectId(),
+          grade: 0,
+          submissionFileIds: [],
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findById')
+          .mockResolvedValueOnce(classworkSubmission)
+          .mockResolvedValueOnce(classworkSubmission)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: -1,
+            },
+          ),
+        ).rejects.toThrowError(`GRADE_INVALID`)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: 101,
+            },
+          ),
+        ).rejects.toThrowError(`GRADE_INVALID`)
+      })
+
+      it('returns classworkSubmission with new grade', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        const orgId = objectId()
+        const courseId = objectId()
+        const gradeByAccountId = objectId()
+
+        const classworkSubmissionInput: ANY = {
+          classworkId: objectId(),
+          createdByAccountId: objectId(),
+        }
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkSubmission =
+          await classworkService.createClassworkSubmission(
+            orgId,
+            courseId,
+            classworkSubmissionInput,
+          )
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findById')
+          .mockResolvedValueOnce(classworkSubmission)
+          .mockResolvedValueOnce(classworkSubmission)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            orgId,
+            courseId,
+            gradeByAccountId,
+            {
+              submissionId: classworkSubmission.id,
+              grade: 100,
+            },
+          ),
+        ).resolves.toMatchObject({
+          grade: 100,
+        })
       })
     })
 

@@ -22,6 +22,7 @@ import {
   CreateClassworkMaterialInput,
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
+  SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -827,7 +828,7 @@ export class ClassworkService {
       createClassworkSubmissionInput,
     })
 
-    const { createdByAccountId, classworkId, submissionFileIds } =
+    const { createdByAccountId, classworkId, submissionFiles } =
       createClassworkSubmissionInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
@@ -850,11 +851,11 @@ export class ClassworkService {
 
     let classworkSubmissionWithFileIds: ANY = null
 
-    if (submissionFileIds) {
+    if (submissionFiles) {
       const fileIds = await this.uploadFilesAttachments(
         orgId,
         createdByAccountId,
-        submissionFileIds,
+        submissionFiles,
       )
       if (!fileIds) {
         this.classworkSubmissionModel.findByIdAndDelete(classworkSubmission)
@@ -864,7 +865,7 @@ export class ClassworkService {
         await this.classworkSubmissionModel.findByIdAndUpdate(
           classworkSubmission.id,
           {
-            submissionFilseIds: fileIds,
+            submissionFileIds: fileIds,
           },
           {
             new: true,
@@ -879,6 +880,43 @@ export class ClassworkService {
     this.logger.verbose(classworkSubmission.toObject())
 
     return classworkSubmissionWithFileIds || classworkSubmission
+  }
+
+  async setGradeForClassworkSubmission(
+    orgId: string,
+    courseId: string,
+    gradeByAccountId: string,
+    setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    const { submissionId, grade } = setGradeForClassworkSubmissionInput
+
+    if (!(await this.orgService.validateOrgId(orgId)))
+      throw new Error('ORG_ID_INVALID')
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        gradeByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
+    }
+
+    const classworkSubmissionBefore =
+      await this.classworkSubmissionModel.findById(submissionId)
+
+    if (!classworkSubmissionBefore) {
+      throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+    }
+
+    if (grade < 0 || grade > 100) {
+      throw new Error(`GRADE_INVALID`)
+    }
+
+    classworkSubmissionBefore.grade = grade
+    const classworkSubmissionAfter = await classworkSubmissionBefore.save()
+
+    return classworkSubmissionAfter
   }
 
   /**
