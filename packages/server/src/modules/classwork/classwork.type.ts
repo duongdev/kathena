@@ -108,5 +108,14 @@ export class CreateClassworkSubmissionInput {
   classworkId: string
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
-  submissionFileIds?: Promise<FileUpload>[]
+  submissionFiles?: Promise<FileUpload>[]
+}
+
+@InputType()
+export class SetGradeForClassworkSubmissionInput {
+  @Field((_type) => ID)
+  submissionId: string
+
+  @Field((_type) => Number)
+  grade: number
 }

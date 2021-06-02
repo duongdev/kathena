@@ -1,12 +1,16 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
+import { DocumentType } from '@typegoose/typegoose'
 
-import { CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 
 import { ClassworkService } from './classwork.service'
-import { CreateClassworkSubmissionInput } from './classwork.type'
+import {
+  CreateClassworkSubmissionInput,
+  SetGradeForClassworkSubmissionInput,
+} from './classwork.type'
 import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @Resolver((_of) => ClassworkSubmission)
@@ -26,6 +30,24 @@ export class ClassworkSubmissionResolver {
       org.id,
       courseId,
       createClassworkSubmissionInput,
+    )
+  }
+
+  @Mutation((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_SetGradeForClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async setGradeForClassworkSubmission(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('setGradeForClassworkSubmissionInput')
+    setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    return this.classworkService.setGradeForClassworkSubmission(
+      org.id,
+      courseId,
+      account.id,
+      setGradeForClassworkSubmissionInput,
     )
   }
 }
