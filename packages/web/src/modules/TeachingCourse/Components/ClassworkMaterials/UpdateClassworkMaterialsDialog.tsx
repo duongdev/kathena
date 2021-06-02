@@ -55,7 +55,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
     [classworkMaterial],
   )
 
-  const handleUpdateClassworkAssignment = useCallback(
+  const handleUpdateClassworkMaterial = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
       try {
         const { data: dataUpdated } = await updateClassworkMaterial({
@@ -91,7 +91,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       onClose={onClose}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleUpdateClassworkAssignment}
+      onSubmit={handleUpdateClassworkMaterial}
       dialogTitle="Sửa tài liệu"
       submitButtonLabel="Sửa"
     >
