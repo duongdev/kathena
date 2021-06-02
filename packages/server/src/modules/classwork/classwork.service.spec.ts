@@ -16,7 +16,6 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
-  SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 
 describe('classwork.service', () => {
