@@ -108,7 +108,10 @@ export type ClassworkAssignment = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
+  resolveType: Array<Scalars['String']>
+  comments: Array<Comment>
   dueDate: Scalars['DateTime']
+  maxScores: Scalars['Float']
 }
 
 export type ClassworkAssignmentPayload = {
@@ -128,11 +131,23 @@ export type ClassworkMaterial = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
+  resolveType: Array<Scalars['String']>
+  comments: Array<Comment>
 }
 
 export type ClassworkMaterialPayload = {
   classworkMaterials: Array<ClassworkMaterial>
   count: Scalars['Int']
+}
+
+export type Comment = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  targetId: Scalars['ID']
+  content: Scalars['String']
 }
 
 export type Course = BaseModel & {
@@ -537,10 +552,6 @@ export type QueryClassworkMaterialArgs = {
 
 export type QueryClassworkAssignmentArgs = {
   id: Scalars['ID']
-}
-
-export type QueryFindClassworkAssignmentByIdArgs = {
-  classworkAssignmentId: Scalars['ID']
 }
 
 export type QueryClassworkAssignmentsArgs = {
@@ -1013,6 +1024,25 @@ export type CreateClassworkMaterialMutation = {
   >
 }
 
+export type DetailClassworkMaterialQueryVariables = Exact<{
+  Id: Scalars['ID']
+}>
+
+export type DetailClassworkMaterialQuery = {
+  classworkMaterial: Pick<
+    ClassworkMaterial,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'createdByAccountId'
+    | 'title'
+    | 'description'
+    | 'attachments'
+    | 'publicationState'
+    | 'courseId'
+  >
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -1055,6 +1085,18 @@ export type TeachingCourseListQuery = {
       >
     >
   }
+}
+
+export type UpdateClassworkAssignmentMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UpdateClassworkAssignmentInput
+}>
+
+export type UpdateClassworkAssignmentMutation = {
+  updateClassworkAssignment: Pick<
+    ClassworkAssignment,
+    'id' | 'courseId' | 'title' | 'description' | 'dueDate'
+  >
 }
 
 export type AddLecturesToCourseMutationVariables = Exact<{
@@ -6167,6 +6209,148 @@ export type CreateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
 >
+export const DetailClassworkMaterialDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'DetailClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'Id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type DetailClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >
+} &
+  TChildProps
+export function withDetailClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >(DetailClassworkMaterialDocument, {
+    alias: 'detailClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useDetailClassworkMaterialQuery__
+ *
+ * To run a query within a React component, call `useDetailClassworkMaterialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailClassworkMaterialQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailClassworkMaterialQuery({
+ *   variables: {
+ *      Id: // value for 'Id'
+ *   },
+ * });
+ */
+export function useDetailClassworkMaterialQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export function useDetailClassworkMaterialLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export type DetailClassworkMaterialQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialQuery
+>
+export type DetailClassworkMaterialLazyQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialLazyQuery
+>
+export type DetailClassworkMaterialQueryResult = Apollo.QueryResult<
+  DetailClassworkMaterialQuery,
+  DetailClassworkMaterialQueryVariables
+>
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
@@ -6544,6 +6728,154 @@ export type TeachingCourseListQueryResult = Apollo.QueryResult<
   TeachingCourseListQuery,
   TeachingCourseListQueryVariables
 >
+export const UpdateClassworkAssignmentDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateClassworkAssignmentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  UpdateClassworkAssignmentMutation,
+  UpdateClassworkAssignmentMutationVariables
+>
+export type UpdateClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >(UpdateClassworkAssignmentDocument, {
+    alias: 'updateClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkAssignmentMutation, { data, loading, error }] = useUpdateClassworkAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >(UpdateClassworkAssignmentDocument, options)
+}
+export type UpdateClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useUpdateClassworkAssignmentMutation
+>
+export type UpdateClassworkAssignmentMutationResult =
+  Apollo.MutationResult<UpdateClassworkAssignmentMutation>
+export type UpdateClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
 export const AddLecturesToCourseDocument: DocumentNode = {
   kind: 'Document',
   definitions: [

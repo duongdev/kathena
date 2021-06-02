@@ -1,0 +1,9 @@
+mutation UpdateClassworkAssignment($id: ID!, $input: UpdateClassworkAssignmentInput!) {
+  updateClassworkAssignment(id: $id, updateInput: $input) {
+    id
+    courseId
+    title
+    description
+    dueDate
+  }
+}
