@@ -1,12 +1,20 @@
-import { ResolveField, Resolver } from '@nestjs/graphql'
+import { Args, ID, ResolveField, Resolver, Root } from '@nestjs/graphql'
 
-import { Comment } from 'modules/comment/model/Comment'
+import { CurrentOrg } from 'core'
+import { CommentService } from 'modules/comment/comment.service'
+import {
+  CommentPageOptionInput,
+  CommentsPayload,
+} from 'modules/comment/comment.type'
+import { Org } from 'modules/org/models/Org'
 import { ANY } from 'types'
 
 import { Classwork, ClassworkType } from './models/Classwork'
 
 @Resolver((_of) => Classwork)
 export class ClassworkResolver {
+  constructor(private readonly commentService: CommentService) {}
+
   /**
    *START CLASSWORK RESOLVER
    */
@@ -25,10 +33,19 @@ export class ClassworkResolver {
     return ['ClassworkMaterial', 'ClassworkAssignment']
   }
 
-  // This needs to be edited
-  @ResolveField((_returns) => [Comment])
-  comments(): [] {
-    return []
+  @ResolveField((_returns) => CommentsPayload)
+  comments(
+    @Root() { id },
+    @CurrentOrg() org: Org,
+    @Args('lastId', { type: () => ID, nullable: true }) lastId: string,
+    @Args('commentPageOptionInput')
+    commentPageOptionInput: CommentPageOptionInput,
+  ): Promise<CommentsPayload> {
+    return this.commentService.listCommentByTargetId(commentPageOptionInput, {
+      orgId: org.id,
+      lastId,
+      targetId: id,
+    })
   }
 
   /**

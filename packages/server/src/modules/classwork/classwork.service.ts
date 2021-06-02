@@ -1,5 +1,6 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { FileUpload } from 'graphql-upload'
 
 import {
   Service,
@@ -20,10 +21,12 @@ import {
   CreateClassworkAssignmentInput,
   CreateClassworkMaterialInput,
   AddAttachmentsToClassworkInput,
+  CreateClassworkSubmissionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
+import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @Service()
 export class ClassworkService {
@@ -38,6 +41,11 @@ export class ClassworkService {
     @InjectModel(ClassworkMaterial)
     private readonly classworkMaterialModel: ReturnModelType<
       typeof ClassworkMaterial
+    >,
+
+    @InjectModel(ClassworkSubmission)
+    private readonly classworkSubmissionModel: ReturnModelType<
+      typeof ClassworkSubmission
     >,
 
     @InjectModel(Course)
@@ -132,10 +140,10 @@ export class ClassworkService {
 
   async uploadFilesAttachments(
     orgId: string,
-    attachmentsInput: AddAttachmentsToClassworkInput,
     uploadedByAccountId: string,
+    attachmentsInput?: Promise<FileUpload>[],
   ): Promise<string[]> {
-    const promiseFileUpload = attachmentsInput.attachments
+    const promiseFileUpload = attachmentsInput
     const listFileId: string[] = []
     if (promiseFileUpload) {
       const arrFileId = promiseFileUpload.map(async (document) => {
@@ -240,6 +248,7 @@ export class ClassworkService {
         creatorId,
       )
       if (!classworkMaterialWithFile) {
+        this.classworkMaterialModel.findByIdAndDelete(classworkMaterial.id)
         throw new Error(`CAN'T_UPLOAD_FILE`)
       }
     }
@@ -491,8 +500,8 @@ export class ClassworkService {
   ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
     const attachments = await this.uploadFilesAttachments(
       orgId,
-      attachmentsInput,
       uploadedByAccountId,
+      attachmentsInput.attachments,
     )
     return this.addAttachmentsToClasswork(
       orgId,
@@ -775,8 +784,8 @@ export class ClassworkService {
   ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
     const attachments = await this.uploadFilesAttachments(
       orgId,
-      attachmentsInput,
       uploadedByAccountId,
+      attachmentsInput.attachments,
     )
     return this.addAttachmentsToClasswork(
       orgId,
@@ -809,7 +818,73 @@ export class ClassworkService {
    * START CLASSWORK SUBMISSION
    */
 
-  // TODO: Implement classworkService.createSubmitFile
+  async createClassworkSubmission(
+    orgId: string,
+    courseId: string,
+    createClassworkSubmissionInput: CreateClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    this.logger.log(
+      `[${this.createClassworkSubmission.name}] Creating new createClassworkSubmission`,
+    )
+    this.logger.verbose({
+      orgId,
+      courseId,
+      createClassworkSubmissionInput,
+    })
+
+    const { createdByAccountId, classworkId, submissionFileIds } =
+      createClassworkSubmissionInput
+
+    if (!(await this.orgService.validateOrgId(orgId)))
+      throw new Error('ORG_ID_INVALID')
+
+    if (
+      !(await this.authService.isAccountStudentFormCourse(
+        createdByAccountId,
+        courseId,
+        orgId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
+    }
+
+    const classworkSubmission = await this.classworkSubmissionModel.create({
+      createdByAccountId,
+      classworkId,
+    })
+
+    let classworkSubmissionWithFileIds: ANY = null
+
+    if (submissionFileIds) {
+      const fileIds = await this.uploadFilesAttachments(
+        orgId,
+        createdByAccountId,
+        submissionFileIds,
+      )
+      if (!fileIds) {
+        this.classworkSubmissionModel.findByIdAndDelete(classworkSubmission)
+        throw new Error(`CAN'T_UPLOAD_FILE`)
+      }
+      classworkSubmissionWithFileIds =
+        await this.classworkSubmissionModel.findByIdAndUpdate(
+          classworkSubmission.id,
+          {
+            submissionFilseIds: fileIds,
+          },
+          {
+            new: true,
+          },
+        )
+    }
+
+    this.logger.log(
+      `[${this.createClassworkSubmission.name}] Created createClassworkSubmission successfully`,
+    )
+
+    this.logger.verbose(classworkSubmission.toObject())
+
+    return classworkSubmissionWithFileIds || classworkSubmission
+  }
 
   /**
    * END CLASSWORK SUBMISSION

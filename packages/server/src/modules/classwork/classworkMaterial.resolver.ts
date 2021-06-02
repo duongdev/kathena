@@ -4,6 +4,7 @@ import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
+import { CommentService } from 'modules/comment/comment.service'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
@@ -19,8 +20,11 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Resolver((_of) => ClassworkMaterial)
 export class ClassworkMaterialResolver extends ClassworkResolver {
-  constructor(private readonly classworkService: ClassworkService) {
-    super()
+  constructor(
+    commentService: CommentService,
+    private readonly classworkService: ClassworkService,
+  ) {
+    super(commentService)
   }
 
   /**
