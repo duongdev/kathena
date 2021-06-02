@@ -16,6 +16,7 @@ import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
+import { GRADE_MAX, GRADE_MIN } from './classwork.const'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
@@ -914,7 +915,7 @@ export class ClassworkService {
       throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
     }
 
-    if (grade < 0 || grade > 100) {
+    if (grade < GRADE_MIN || grade > GRADE_MAX) {
       throw new Error(`GRADE_INVALID`)
     }
 
