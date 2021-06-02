@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack'
 import { ANY } from '@kathena/types'
 import { FormDialog } from '@kathena/ui'
 import {
-  DetailClassworkMaterialDocument,
   useUpdateClassworkMaterialMutation,
   useDetailClassworkMaterialQuery,
   ClassworkMaterial,
@@ -39,14 +38,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
     props as ClassworkMaterialWithClassworkMaterial
 
   const [updateClassworkMaterial, { error }] =
-    useUpdateClassworkMaterialMutation({
-      refetchQueries: [
-        {
-          query: DetailClassworkMaterialDocument,
-          // variables: { classworkMaterialId: classworkMaterial.id },
-        },
-      ],
-    })
+    useUpdateClassworkMaterialMutation()
   const { data } = useDetailClassworkMaterialQuery({
     variables: { Id: classworkMaterialId },
     skip: !!classworkMaterialProp,
@@ -66,17 +58,17 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const handleUpdateClassworkAssignment = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
       try {
-        const { data: dateUpdated } = await updateClassworkMaterial({
+        const { data: dataUpdated } = await updateClassworkMaterial({
           variables: {
-            classworkMaterialId: classworkMaterialProp.id,
+            classworkMaterialId: classworkMaterial.id,
             updateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
             },
           },
         })
-        const classworkMaterialUpdated = dateUpdated?.updateClassworkMaterial
-        console.log(classworkMaterialProp.id)
+        const classworkMaterialUpdated = dataUpdated?.updateClassworkMaterial
+        // console.log(classworkMaterialProp.id)
         if (!classworkMaterialUpdated) {
           return
         }
@@ -90,12 +82,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
         console.error(err)
       }
     },
-    [
-      updateClassworkMaterial,
-      enqueueSnackbar,
-      onClose,
-      classworkMaterialProp.id,
-    ],
+    [updateClassworkMaterial, enqueueSnackbar, onClose, classworkMaterial.id],
   )
 
   return (
