@@ -137,6 +137,7 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Comment_CreateComment
   Classwork_CreateClassworkSubmission
   NoPermission
 }
@@ -193,9 +194,13 @@ type ClassworkAssignment implements BaseModel {
   attachments: [String!]!
   publicationState: String!
   resolveType: [String!]!
-  comments: [Comment!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
   dueDate: DateTime!
   maxScores: Float!
+}
+
+input CommentPageOptionInput {
+  limit: Int!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -211,7 +216,7 @@ type ClassworkMaterial implements BaseModel {
   attachments: [String!]!
   publicationState: String!
   resolveType: [String!]!
-  comments: [Comment!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
 }
 
 type ClassworkSubmission implements BaseModel {
@@ -233,6 +238,11 @@ type Comment implements BaseModel {
   createdByAccountId: String!
   targetId: ID!
   content: String!
+}
+
+type CommentsPayload {
+  comments: [Comment!]!
+  count: Int!
 }
 
 type ClassworkAssignmentPayload {
@@ -322,6 +332,7 @@ type Mutation {
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
+  createComment(commentInput: CreateCommentInput!): Comment!
 }
 
 input CreateAccountInput {
@@ -417,4 +428,10 @@ input CreateClassworkSubmissionInput {
   createdByAccountId: ID!
   classworkId: ID!
   submissionFileIds: [Upload!]
+}
+
+input CreateCommentInput {
+  createdByAccountId: ID!
+  targetId: ID!
+  content: String!
 }

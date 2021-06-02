@@ -6,6 +6,7 @@ import { DocumentType } from '@typegoose/typegoose'
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
+import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
@@ -23,8 +24,11 @@ import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver extends ClassworkResolver {
-  constructor(private readonly classworkService: ClassworkService) {
-    super()
+  constructor(
+    commentService: CommentService,
+    private readonly classworkService: ClassworkService,
+  ) {
+    super(commentService)
   }
 
   /**
