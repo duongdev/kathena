@@ -27,6 +27,7 @@ export const staff: Role = {
     P.Classwork_CreateClassworkAssignment,
     P.Classwork_SetClassworkAssignmentPublication,
     P.Classwork_UpdateClassworkAssignment,
+    P.Comment_CreateComment,
   ],
 }
 
@@ -38,6 +39,8 @@ export const student: Role = {
     P.Studying_Course_Access,
     P.Classwork_ListClassworkAssignment,
     P.Classwork_ListClassworkMaterial,
+    P.Comment_CreateComment,
+    P.Classwork_CreateClassworkSubmission,
   ],
 }
 
@@ -59,6 +62,7 @@ export const lecturer: Role = {
     P.Classwork_AddAttachmentsToClassworkMaterial,
     P.Classwork_RemoveAttachmentsFromClassworkAssignment,
     P.Classwork_RemoveAttachmentsFromClassworkMaterial,
+    P.Comment_CreateComment,
   ],
 }
 

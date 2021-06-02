@@ -15,6 +15,7 @@ import { ClassworkService } from './classwork.service'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
+  CreateClassworkSubmissionInput,
 } from './classwork.type'
 
 describe('classwork.service', () => {
@@ -172,12 +173,6 @@ describe('classwork.service', () => {
       })
     })
 
-    // TODO: Delete this line and start the code here
-
-    // TODO: classworkService.findClassworkMaterial
-
-    // TODO: classworkService.updateClassworkMaterial
-
     describe('updateClassworkMaterial', () => {
       const updateClassworkMaterialInput: UpdateClassworkMaterialInput = {
         title: 'title',
@@ -287,8 +282,6 @@ describe('classwork.service', () => {
         })
       })
     })
-
-    // TODO: classworkService.updateClassworkMaterialPublication
 
     describe('updateClassworkMaterialPublication', () => {
       it(`throws error if classworkMaterial not found`, async () => {
@@ -418,10 +411,6 @@ describe('classwork.service', () => {
         })
       })
     })
-
-    // TODO: classworkService.removeAttachmentsFromClassworkMaterial
-
-    // TODO: classworkService.findClassworkMaterialById
 
     describe('findClassworkMaterialById', () => {
       it('throws error if the classworkMaterial not found', async () => {
@@ -736,28 +725,78 @@ describe('classwork.service', () => {
     it(`throw error if start date invalid`, async () => {
       expect.assertions(1)
 
-      const classworkAssignmentId = objectId()
-      const orgIdTest = objectId()
-      const accountIdTest = objectId()
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
 
       jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
       jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
+      const classworkAssignmentUpdate =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap 01',
+            dueDate: '2021-07-21',
+            description: '',
+          },
+        )
+
       jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(classworkAssignmentUpdate)
 
       await expect(
         classworkService.updateClassworkAssignment(
           {
-            id: classworkAssignmentId,
-            accountId: accountIdTest,
-            orgId: orgIdTest,
+            id: classworkAssignmentUpdate.id,
+            accountId: accountLecturer.id,
+            orgId: org.id,
           },
           {
             dueDate: '2020-07-21',
@@ -1699,5 +1738,194 @@ describe('classwork.service', () => {
   })
   /**
    * END CLASSWORK ASSIGNMENTS
+   */
+
+  /**
+   * END CLASSWORK SUBMISSION
+   */
+
+  describe('ClassWorkSubmission', () => {
+    describe('CreateClassWorkSubmission', () => {
+      const createClassWorkSubmissionInput: CreateClassworkSubmissionInput = {
+        classworkId: objectId(),
+        createdByAccountId: objectId(),
+      }
+
+      it('throws error if OrgId invalid', async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(false as ANY)
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            createClassWorkSubmissionInput,
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+
+        await expect(
+          classworkService.createClassworkSubmission(
+            'objectId()',
+            objectId(),
+            createClassWorkSubmissionInput,
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+      })
+
+      it(`throws error if account isn't a student course`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(false as ANY)
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            createClassWorkSubmissionInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
+
+        await expect(
+          classworkService.createClassworkSubmission(
+            objectId(),
+            'objectId()',
+            createClassWorkSubmissionInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
+      })
+
+      it(`returns the created classworkSubmission haven't files`, async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classWorkSubmission =
+          await classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            createClassWorkSubmissionInput,
+          )
+
+        await expect(
+          (async (): Promise<boolean> => {
+            if (!classWorkSubmission) return false
+            const submission = classWorkSubmission
+
+            if (!submission.submissionFilseIds) return false
+            return (
+              submission.classworkId.toString() ===
+              createClassWorkSubmissionInput.classworkId
+            )
+          })(),
+        ).resolves.toBeTruthy()
+
+        await expect(
+          (async (): Promise<boolean> => {
+            if (!classWorkSubmission) return false
+            const submission = classWorkSubmission
+
+            if (!submission.submissionFilseIds) return false
+
+            return (
+              submission.createdByAccountId.toString() ===
+              createClassWorkSubmissionInput.createdByAccountId
+            )
+          })(),
+        ).resolves.toBeTruthy()
+      })
+
+      it(`returns the created classworkSubmission have files`, async () => {
+        expect.assertions(3)
+
+        const arrayFileIds = [objectId(), objectId()]
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService, 'uploadFilesAttachments')
+          .mockResolvedValueOnce(arrayFileIds as ANY)
+
+        const createInputWithFile: ANY = {
+          classworkId: objectId(),
+          createdByAccountId: objectId(),
+          submissionFileIds: arrayFileIds,
+        }
+
+        const classWorkSubmissionWithFiles =
+          await classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            createInputWithFile,
+          )
+
+        await expect(
+          (async (): Promise<boolean> => {
+            if (!classWorkSubmissionWithFiles) return false
+            const submission = classWorkSubmissionWithFiles
+
+            if (!submission.submissionFilseIds) return false
+            return (
+              submission.submissionFilseIds[0].toString() === arrayFileIds[0]
+            )
+          })(),
+        ).resolves.toBeTruthy()
+
+        await expect(
+          (async (): Promise<boolean> => {
+            if (!classWorkSubmissionWithFiles) return false
+            const submission = classWorkSubmissionWithFiles
+
+            if (!submission.submissionFilseIds) return false
+            return (
+              submission.submissionFilseIds[1].toString() === arrayFileIds[1]
+            )
+          })(),
+        ).resolves.toBeTruthy()
+
+        await expect(
+          (async (): Promise<boolean> => {
+            if (!classWorkSubmissionWithFiles) return false
+            const submission = classWorkSubmissionWithFiles
+
+            if (!submission.submissionFilseIds) return false
+            return submission.submissionFilseIds.length === arrayFileIds.length
+          })(),
+        ).resolves.toBeTruthy()
+      })
+    })
+
+    // TODO : update
+
+    // TODO : findId
+
+    // TODO : finds
+  })
+
+  /**
+   * END CLASSWORK SUBMISSION
    */
 })

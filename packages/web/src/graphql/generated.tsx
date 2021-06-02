@@ -1099,6 +1099,18 @@ export type TeachingCourseListQuery = {
   }
 }
 
+export type UpdateClassworkAssignmentMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UpdateClassworkAssignmentInput
+}>
+
+export type UpdateClassworkAssignmentMutation = {
+  updateClassworkAssignment: Pick<
+    ClassworkAssignment,
+    'id' | 'courseId' | 'title' | 'description' | 'dueDate'
+  >
+}
+
 export type AddLecturesToCourseMutationVariables = Exact<{
   lecturerIds: Array<Scalars['ID']> | Scalars['ID']
   courseId: Scalars['ID']
@@ -6879,6 +6891,154 @@ export type TeachingCourseListQueryResult = Apollo.QueryResult<
   TeachingCourseListQuery,
   TeachingCourseListQueryVariables
 >
+export const UpdateClassworkAssignmentDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateClassworkAssignmentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type UpdateClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  UpdateClassworkAssignmentMutation,
+  UpdateClassworkAssignmentMutationVariables
+>
+export type UpdateClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >(UpdateClassworkAssignmentDocument, {
+    alias: 'updateClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkAssignmentMutation, { data, loading, error }] = useUpdateClassworkAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >(UpdateClassworkAssignmentDocument, options)
+}
+export type UpdateClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useUpdateClassworkAssignmentMutation
+>
+export type UpdateClassworkAssignmentMutationResult =
+  Apollo.MutationResult<UpdateClassworkAssignmentMutation>
+export type UpdateClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
 export const AddLecturesToCourseDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
