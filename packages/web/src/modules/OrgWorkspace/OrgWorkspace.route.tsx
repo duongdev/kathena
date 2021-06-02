@@ -21,6 +21,7 @@ import {
   UPDATE_ACADEMIC_COURSE,
   TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS,
   TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
+  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
 } from 'utils/path-builder'
 
@@ -109,6 +110,12 @@ const CreateClassworkAssignment = lazy(
       'modules/CreateClassworkAssignment'
     ) /* webpackChunkName: "modules/CreateClassworkAssignment" */,
 )
+const DetailClassworkMaterial = lazy(
+  () =>
+    import(
+      'modules/TeachingCourse/Components/ClassworkMaterials/DetailClassworkMaterials'
+    ) /* webpackChunkName: "modules/CreateClassworkAssignment" */,
+)
 const ClassworkAssignmentDetail = lazy(
   () =>
     import(
@@ -156,6 +163,11 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         path={TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT}
         exact
         component={CreateClassworkAssignment}
+      />
+      <Route
+        path={TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS}
+        exact
+        component={DetailClassworkMaterial}
       />
       <Route
         path={TEACHING_COURSE_CLASSWORK_ASSIGNMENT}

@@ -1024,6 +1024,25 @@ export type CreateClassworkMaterialMutation = {
   >
 }
 
+export type DetailClassworkMaterialQueryVariables = Exact<{
+  Id: Scalars['ID']
+}>
+
+export type DetailClassworkMaterialQuery = {
+  classworkMaterial: Pick<
+    ClassworkMaterial,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'createdByAccountId'
+    | 'title'
+    | 'description'
+    | 'attachments'
+    | 'publicationState'
+    | 'courseId'
+  >
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -6189,6 +6208,148 @@ export type CreateClassworkMaterialMutationResult =
 export type CreateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
+>
+export const DetailClassworkMaterialDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'DetailClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'Id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type DetailClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >
+} &
+  TChildProps
+export function withDetailClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >(DetailClassworkMaterialDocument, {
+    alias: 'detailClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useDetailClassworkMaterialQuery__
+ *
+ * To run a query within a React component, call `useDetailClassworkMaterialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailClassworkMaterialQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailClassworkMaterialQuery({
+ *   variables: {
+ *      Id: // value for 'Id'
+ *   },
+ * });
+ */
+export function useDetailClassworkMaterialQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export function useDetailClassworkMaterialLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export type DetailClassworkMaterialQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialQuery
+>
+export type DetailClassworkMaterialLazyQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialLazyQuery
+>
+export type DetailClassworkMaterialQueryResult = Apollo.QueryResult<
+  DetailClassworkMaterialQuery,
+  DetailClassworkMaterialQueryVariables
 >
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',
