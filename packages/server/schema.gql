@@ -137,6 +137,7 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Classwork_SetGradeForClassworkSubmission
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
   NoPermission
@@ -332,6 +333,7 @@ type Mutation {
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
+  setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   createComment(commentInput: CreateCommentInput!): Comment!
 }
 
@@ -427,7 +429,12 @@ input UpdateClassworkAssignmentInput {
 input CreateClassworkSubmissionInput {
   createdByAccountId: ID!
   classworkId: ID!
-  submissionFileIds: [Upload!]
+  submissionFiles: [Upload!]
+}
+
+input SetGradeForClassworkSubmissionInput {
+  submissionId: ID!
+  grade: Float!
 }
 
 input CreateCommentInput {
