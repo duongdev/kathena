@@ -37,40 +37,46 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const { classworkMaterialId } = props as ClassworkMaterialWithId
   const { classworkMaterial: classworkMaterialProp } =
     props as ClassworkMaterialWithClassworkMaterial
-  const { data } = useDetailClassworkMaterialQuery({
-    variables: { Id: classworkMaterialId },
-    skip: !!classworkMaterialProp,
-  })
-  const classworkMaterial = useMemo(
-    () => classworkMaterialProp || data?.classworkMaterial,
-    [data?.classworkMaterial, classworkMaterialProp],
-  )
+
   const [updateClassworkMaterial, { error }] =
     useUpdateClassworkMaterialMutation({
       refetchQueries: [
         {
           query: DetailClassworkMaterialDocument,
-          variables: { classworkMaterialId: classworkMaterial.id },
+          // variables: { classworkMaterialId: classworkMaterial.id },
         },
       ],
     })
+  const { data } = useDetailClassworkMaterialQuery({
+    variables: { Id: classworkMaterialId },
+    skip: !!classworkMaterialProp,
+  })
+
+  const classworkMaterial = useMemo(
+    () => classworkMaterialProp || data?.classworkMaterial,
+    [data?.classworkMaterial, classworkMaterialProp],
+  )
+  const { enqueueSnackbar } = useSnackbar()
+
   const initialValues: ANY = useMemo(
     () => classworkMaterial,
     [classworkMaterial],
   )
 
-  const { enqueueSnackbar } = useSnackbar()
   const handleUpdateClassworkAssignment = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
       try {
         const { data: dateUpdated } = await updateClassworkMaterial({
           variables: {
-            classworkMaterialId: classworkMaterial.id,
-            updateClassworkMaterialInput: input,
+            classworkMaterialId: classworkMaterialProp.id,
+            updateClassworkMaterialInput: {
+              title: input.title,
+              description: input.description,
+            },
           },
         })
         const classworkMaterialUpdated = dateUpdated?.updateClassworkMaterial
-
+        console.log(classworkMaterialProp.id)
         if (!classworkMaterialUpdated) {
           return
         }
@@ -84,7 +90,12 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
         console.error(err)
       }
     },
-    [updateClassworkMaterial, enqueueSnackbar, onClose, classworkMaterial],
+    [
+      updateClassworkMaterial,
+      enqueueSnackbar,
+      onClose,
+      classworkMaterialProp.id,
+    ],
   )
 
   return (

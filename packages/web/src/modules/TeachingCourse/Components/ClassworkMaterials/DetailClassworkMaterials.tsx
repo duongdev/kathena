@@ -93,7 +93,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           ]}
         >
           <RequiredPermission
-            permission={Permission.Classwork_UpdateClassworkAssignment}
+            permission={Permission.Classwork_UpdateClassworkMaterial}
           >
             <UpdateClassworkMaterialDialog
               open={updateDialogOpen}
