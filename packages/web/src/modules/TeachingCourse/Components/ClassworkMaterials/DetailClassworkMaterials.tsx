@@ -1,9 +1,11 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState, useCallback } from 'react'
 
-import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import FileComponent from 'components/FileComponent'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
+import { useSnackbar } from 'notistack'
+import { FilePlus, Trash } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -18,9 +20,14 @@ import {
   Typography,
 } from '@kathena/ui'
 import { useAuth, RequiredPermission } from 'common/auth'
-import { useDetailClassworkMaterialQuery, Permission } from 'graphql/generated'
+import {
+  useDetailClassworkMaterialQuery,
+  ClassworkMaterialsListDocument,
+  Permission,
+} from 'graphql/generated'
 import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
 
+import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
@@ -31,6 +38,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
     useDialogState()
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params.id])
+  const [openAddFile, setOpenAddFile] = useState(false)
   const { account } = useAuth()
 
   const { data, loading } = useDetailClassworkMaterialQuery({
@@ -130,11 +138,30 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                   ))
                 ) : (
                   <Grid container>
-                    {' '}
                     <Typography>Không có tập tin</Typography>
                   </Grid>
                 )}
               </InfoBlock>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Stack spacing={2}>
+                  {!openAddFile && (
+                    <Button
+                      onClick={() => setOpenAddFile(true)}
+                      startIcon={<FilePlus />}
+                    >
+                      Thêm tập tin
+                    </Button>
+                  )}
+                  {openAddFile && (
+                    <AddAttachmentsToClassworkMaterial
+                      idClassworkMaterial={classworkMaterial?.id as ANY}
+                      setOpen={setOpenAddFile}
+                    />
+                  )}
+                </Stack>
+              </Grid>
             </Grid>
           </CardContent>
         </SectionCard>
