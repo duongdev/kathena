@@ -67,3 +67,19 @@ mutation UpdateClassworkMaterial(
     attachments
   }
 }
+
+# Thêm tệp vào tài liệu
+mutation AddAttachmentsToClassworkMaterial(
+  $attachmentsInput: AddAttachmentsToClassworkInput!
+  $classworkMaterialId: ID!
+) {
+  addAttachmentsToClassworkMaterial(
+    attachmentsInput: $attachmentsInput
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
+    orgId
+    title
+    attachments
+  }
+}

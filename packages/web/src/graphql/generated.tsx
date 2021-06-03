@@ -109,9 +109,14 @@ export type ClassworkAssignment = BaseModel & {
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
   resolveType: Array<Scalars['String']>
-  comments: Array<Comment>
+  comments: CommentsPayload
   dueDate: Scalars['DateTime']
   maxScores: Scalars['Float']
+}
+
+export type ClassworkAssignmentCommentsArgs = {
+  commentPageOptionInput: CommentPageOptionInput
+  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkAssignmentPayload = {
@@ -132,12 +137,28 @@ export type ClassworkMaterial = BaseModel & {
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
   resolveType: Array<Scalars['String']>
-  comments: Array<Comment>
+  comments: CommentsPayload
+}
+
+export type ClassworkMaterialCommentsArgs = {
+  commentPageOptionInput: CommentPageOptionInput
+  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkMaterialPayload = {
   classworkMaterials: Array<ClassworkMaterial>
   count: Scalars['Int']
+}
+
+export type ClassworkSubmission = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  classworkId: Scalars['ID']
+  grade: Scalars['Float']
+  submissionFilseIds: Array<Scalars['String']>
 }
 
 export type Comment = BaseModel & {
@@ -148,6 +169,15 @@ export type Comment = BaseModel & {
   createdByAccountId: Scalars['String']
   targetId: Scalars['ID']
   content: Scalars['String']
+}
+
+export type CommentPageOptionInput = {
+  limit: Scalars['Int']
+}
+
+export type CommentsPayload = {
+  comments: Array<Comment>
+  count: Scalars['Int']
 }
 
 export type Course = BaseModel & {
@@ -207,6 +237,18 @@ export type CreateClassworkMaterialInput = {
   description?: Maybe<Scalars['String']>
   publicationState?: Maybe<Publication>
   attachments?: Maybe<Array<Scalars['Upload']>>
+}
+
+export type CreateClassworkSubmissionInput = {
+  createdByAccountId: Scalars['ID']
+  classworkId: Scalars['ID']
+  submissionFileIds?: Maybe<Array<Scalars['Upload']>>
+}
+
+export type CreateCommentInput = {
+  createdByAccountId: Scalars['ID']
+  targetId: Scalars['ID']
+  content: Scalars['String']
 }
 
 export type CreateCourseInput = {
@@ -270,6 +312,8 @@ export type Mutation = {
   updateClassworkAssignmentPublication: ClassworkAssignment
   addAttachmentsToClassworkAssignment: ClassworkAssignment
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
+  createClassworkSubmission: ClassworkSubmission
+  createComment: Comment
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -404,6 +448,15 @@ export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
+export type MutationCreateClassworkSubmissionArgs = {
+  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  courseId: Scalars['ID']
+}
+
+export type MutationCreateCommentArgs = {
+  commentInput: CreateCommentInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -470,6 +523,8 @@ export enum Permission {
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Comment_CreateComment = 'Comment_CreateComment',
+  Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   NoPermission = 'NoPermission',
 }
 
@@ -1052,6 +1107,18 @@ export type UpdateClassworkMaterialMutation = {
   updateClassworkMaterial: Pick<
     ClassworkMaterial,
     'id' | 'createdAt' | 'courseId' | 'title' | 'description' | 'attachments'
+  >
+}
+
+export type AddAttachmentsToClassworkMaterialMutationVariables = Exact<{
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type AddAttachmentsToClassworkMaterialMutation = {
+  addAttachmentsToClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'orgId' | 'title' | 'attachments'
   >
 }
 
@@ -6514,6 +6581,157 @@ export type UpdateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   UpdateClassworkMaterialMutation,
   UpdateClassworkMaterialMutationVariables
 >
+export const AddAttachmentsToClassworkMaterialDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddAttachmentsToClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachmentsInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddAttachmentsToClassworkInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addAttachmentsToClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachmentsInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachmentsInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+export type AddAttachmentsToClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+export type AddAttachmentsToClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withAddAttachmentsToClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >(AddAttachmentsToClassworkMaterialDocument, {
+    alias: 'addAttachmentsToClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddAttachmentsToClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useAddAttachmentsToClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttachmentsToClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttachmentsToClassworkMaterialMutation, { data, loading, error }] = useAddAttachmentsToClassworkMaterialMutation({
+ *   variables: {
+ *      attachmentsInput: // value for 'attachmentsInput'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useAddAttachmentsToClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >(AddAttachmentsToClassworkMaterialDocument, options)
+}
+export type AddAttachmentsToClassworkMaterialMutationHookResult = ReturnType<
+  typeof useAddAttachmentsToClassworkMaterialMutation
+>
+export type AddAttachmentsToClassworkMaterialMutationResult =
+  Apollo.MutationResult<AddAttachmentsToClassworkMaterialMutation>
+export type AddAttachmentsToClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
 export const CourseDetailDocument: DocumentNode = {
   kind: 'Document',
   definitions: [
