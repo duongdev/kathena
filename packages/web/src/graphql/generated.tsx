@@ -6762,7 +6762,7 @@ export const RemoveAttachmentsFromClassworkMaterialDocument: DocumentNode = {
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'removeAttachmentsFromClassworkMaterial' },
+      name: { kind: 'Name', value: 'RemoveAttachmentsFromClassworkMaterial' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
