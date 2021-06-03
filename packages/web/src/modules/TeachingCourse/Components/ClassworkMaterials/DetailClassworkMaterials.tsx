@@ -1,9 +1,11 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState, useCallback } from 'react'
 
-import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import FileComponent from 'components/FileComponent'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
+import { useSnackbar } from 'notistack'
+import { FilePlus, Trash } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -18,9 +20,14 @@ import {
   Typography,
 } from '@kathena/ui'
 import { useAuth, RequiredPermission } from 'common/auth'
-import { useDetailClassworkMaterialQuery, Permission } from 'graphql/generated'
+import {
+  useDetailClassworkMaterialQuery,
+  Permission,
+  useRemoveAttachmentsFromClassworkMaterialMutation,
+} from 'graphql/generated'
 import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
 
+import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
@@ -31,12 +38,54 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
     useDialogState()
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params.id])
+  const [openAddFile, setOpenAddFile] = useState(false)
   const { account } = useAuth()
 
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
   const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
+  const [removeAttachmentsFromClassworkMaterial] =
+    useRemoveAttachmentsFromClassworkMaterialMutation()
+  const { enqueueSnackbar } = useSnackbar()
+
+  const removeAttachment = useCallback(
+    async (attachmentId: string) => {
+      if (!classworkMaterial) return
+      try {
+        const dataCreated = (
+          await removeAttachmentsFromClassworkMaterial({
+            variables: {
+              classworkMaterialId: classworkMaterial.id,
+              attachments: [attachmentId],
+            },
+          })
+        ).data
+
+        const classworkMaterialsUpdated =
+          dataCreated?.removeAttachmentsFromClassworkMaterial
+
+        if (!classworkMaterialsUpdated) {
+          return
+        }
+        enqueueSnackbar(`Xóa tập tin thành công`, {
+          variant: 'success',
+        })
+        // eslint-disable-next-line no-console
+        console.log(classworkMaterial)
+      } catch (error) {
+        enqueueSnackbar(error, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [
+      removeAttachmentsFromClassworkMaterial,
+      enqueueSnackbar,
+      classworkMaterial,
+    ],
+  )
+
   if (loading) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -125,16 +174,45 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                 {classworkMaterial?.attachments.length ? (
                   classworkMaterial?.attachments.map((attachment) => (
                     <Grid container>
-                      <FileComponent key={attachment} fileId={attachment} />
+                      <FileComponent
+                        key={attachment}
+                        fileId={attachment}
+                        actions={[
+                          <Trash
+                            onClick={() => removeAttachment(attachment)}
+                            style={{ cursor: 'pointer' }}
+                            size={24}
+                          />,
+                        ]}
+                      />
                     </Grid>
                   ))
                 ) : (
                   <Grid container>
-                    {' '}
                     <Typography>Không có tập tin</Typography>
                   </Grid>
                 )}
               </InfoBlock>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Stack spacing={2}>
+                  {!openAddFile && (
+                    <Button
+                      onClick={() => setOpenAddFile(true)}
+                      startIcon={<FilePlus />}
+                    >
+                      Thêm tập tin
+                    </Button>
+                  )}
+                  {openAddFile && (
+                    <AddAttachmentsToClassworkMaterial
+                      idClassworkMaterial={classworkMaterial?.id as ANY}
+                      setOpen={setOpenAddFile}
+                    />
+                  )}
+                </Stack>
+              </Grid>
             </Grid>
           </CardContent>
         </SectionCard>

@@ -67,3 +67,35 @@ mutation UpdateClassworkMaterial(
     attachments
   }
 }
+
+# Thêm tệp vào tài liệu
+mutation AddAttachmentsToClassworkMaterial(
+  $attachmentsInput: AddAttachmentsToClassworkInput!
+  $classworkMaterialId: ID!
+) {
+  addAttachmentsToClassworkMaterial(
+    attachmentsInput: $attachmentsInput
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
+    orgId
+    title
+    attachments
+  }
+}
+
+#Xóa tài liệu
+mutation RemoveAttachmentsFromClassworkMaterial(
+  $attachments: [String!]!
+  $classworkMaterialId: ID!
+) {
+  removeAttachmentsFromClassworkMaterial(
+    attachments: $attachments
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
+    orgId
+    title
+    attachments
+  }
+}
