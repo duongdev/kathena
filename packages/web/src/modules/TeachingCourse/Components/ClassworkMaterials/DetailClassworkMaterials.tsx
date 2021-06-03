@@ -1,11 +1,10 @@
-import { FC, useMemo, useState, useCallback } from 'react'
+import { FC, useMemo, useState } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import FileComponent from 'components/FileComponent'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
-import { useSnackbar } from 'notistack'
-import { FilePlus, Trash } from 'phosphor-react'
+import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -20,11 +19,7 @@ import {
   Typography,
 } from '@kathena/ui'
 import { useAuth, RequiredPermission } from 'common/auth'
-import {
-  useDetailClassworkMaterialQuery,
-  ClassworkMaterialsListDocument,
-  Permission,
-} from 'graphql/generated'
+import { useDetailClassworkMaterialQuery, Permission } from 'graphql/generated'
 import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'

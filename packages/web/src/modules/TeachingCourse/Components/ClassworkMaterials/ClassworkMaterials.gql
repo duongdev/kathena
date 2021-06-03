@@ -83,3 +83,19 @@ mutation AddAttachmentsToClassworkMaterial(
     attachments
   }
 }
+
+#Xóa tài liệu
+mutation removeAttachmentsFromClassworkMaterial(
+  $attachments: [String!]!
+  $classworkMaterialId: ID!
+) {
+  removeAttachmentsFromClassworkMaterial(
+    attachments: $attachments
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
+    orgId
+    title
+    attachments
+  }
+}
