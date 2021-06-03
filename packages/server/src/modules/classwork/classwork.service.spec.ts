@@ -974,6 +974,8 @@ describe('classwork.service', () => {
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
+      const date = new Date()
+
       await expect(
         classworkService.createClassworkAssignment(
           accountLecturer.id,
@@ -981,8 +983,8 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
+            dueDate: date,
           },
         ),
       ).resolves.toMatchObject({
@@ -1045,7 +1047,7 @@ describe('classwork.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
-    it(`throw error if start date invalid`, async () => {
+    it(`throw error if START_DATE_INVALID invalid`, async () => {
       expect.assertions(1)
 
       const createCourseInput: ANY = {
@@ -1105,8 +1107,8 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap 01',
-            dueDate: '2021-07-21',
             description: '',
+            dueDate: new Date(),
           },
         )
 
@@ -1188,7 +1190,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap 01',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1273,7 +1274,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1359,8 +1359,8 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
+            dueDate: new Date(),
           },
         )
 
@@ -1484,7 +1484,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1498,7 +1498,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1512,7 +1512,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1526,7 +1526,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1540,7 +1540,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1657,7 +1657,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
             publicationState: Publication.Published,
           },
         ),
@@ -1672,7 +1672,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
             publicationState: Publication.Published,
           },
         ),
@@ -1687,7 +1687,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1701,7 +1701,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1715,7 +1715,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1860,7 +1860,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1940,7 +1939,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -2043,7 +2041,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: 'Day la bai tap moi nhat',
           },
         )

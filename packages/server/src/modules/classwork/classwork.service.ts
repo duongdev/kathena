@@ -659,7 +659,6 @@ export class ClassworkService {
 
     const currentDate = new Date()
     let dueDateInput
-
     if (dueDate) {
       dueDateInput = new Date(dueDate)
 
