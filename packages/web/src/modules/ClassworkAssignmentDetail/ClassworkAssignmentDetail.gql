@@ -11,3 +11,31 @@ query ClassworkAssignmentDetail($id: ID!) {
     dueDate
   }
 }
+
+mutation AddAttachmentsToClassworkAssignment($classworkAssignmentId: ID!, $attachmentsInput: AddAttachmentsToClassworkInput!){
+  addAttachmentsToClassworkAssignment(attachmentsInput: $attachmentsInput,classworkAssignmentId: $classworkAssignmentId){
+    id
+    orgId
+    courseId
+    title
+    type
+    description
+    publicationState
+    attachments
+    dueDate
+  }
+}
+
+mutation RemoveAttachmentsFromClassworkAssignment($classworkAssignmentId: ID!, $attachments: [String!]!){
+  removeAttachmentsFromClassworkAssignments(attachments: $attachments,classworkAssignmentId: $classworkAssignmentId){
+    id
+    orgId
+    courseId
+    title
+    type
+    description
+    publicationState
+    attachments
+    dueDate
+  }
+}
