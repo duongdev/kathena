@@ -16,12 +16,14 @@ import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
+import { GRADE_MAX, GRADE_MIN } from './classwork.const'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
   CreateClassworkMaterialInput,
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
+  SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -725,11 +727,16 @@ export class ClassworkService {
       const currentDate = new Date()
       const dueDateInput = new Date(update.dueDate)
       if (
-        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        classworkAssignmentUpdate.dueDate.setHours(7, 0, 0, 0) !==
+        dueDateInput.setHours(7, 0, 0, 0)
       ) {
-        throw new Error('START_DATE_INVALID')
+        if (
+          dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        ) {
+          throw new Error('START_DATE_INVALID')
+        }
+        classworkAssignmentUpdate.dueDate = dueDateInput
       }
-      classworkAssignmentUpdate.dueDate = dueDateInput
     }
 
     const updated = await classworkAssignmentUpdate.save()
@@ -827,7 +834,7 @@ export class ClassworkService {
       createClassworkSubmissionInput,
     })
 
-    const { createdByAccountId, classworkId, submissionFileIds } =
+    const { createdByAccountId, classworkId, submissionFiles } =
       createClassworkSubmissionInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
@@ -850,11 +857,11 @@ export class ClassworkService {
 
     let classworkSubmissionWithFileIds: ANY = null
 
-    if (submissionFileIds) {
+    if (submissionFiles) {
       const fileIds = await this.uploadFilesAttachments(
         orgId,
         createdByAccountId,
-        submissionFileIds,
+        submissionFiles,
       )
       if (!fileIds) {
         this.classworkSubmissionModel.findByIdAndDelete(classworkSubmission)
@@ -864,7 +871,7 @@ export class ClassworkService {
         await this.classworkSubmissionModel.findByIdAndUpdate(
           classworkSubmission.id,
           {
-            submissionFilseIds: fileIds,
+            submissionFileIds: fileIds,
           },
           {
             new: true,
@@ -879,6 +886,43 @@ export class ClassworkService {
     this.logger.verbose(classworkSubmission.toObject())
 
     return classworkSubmissionWithFileIds || classworkSubmission
+  }
+
+  async setGradeForClassworkSubmission(
+    orgId: string,
+    courseId: string,
+    gradeByAccountId: string,
+    setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    const { submissionId, grade } = setGradeForClassworkSubmissionInput
+
+    if (!(await this.orgService.validateOrgId(orgId)))
+      throw new Error('ORG_ID_INVALID')
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        gradeByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
+    }
+
+    const classworkSubmissionBefore =
+      await this.classworkSubmissionModel.findById(submissionId)
+
+    if (!classworkSubmissionBefore) {
+      throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+    }
+
+    if (grade < GRADE_MIN || grade > GRADE_MAX) {
+      throw new Error(`GRADE_INVALID`)
+    }
+
+    classworkSubmissionBefore.grade = grade
+    const classworkSubmissionAfter = await classworkSubmissionBefore.save()
+
+    return classworkSubmissionAfter
   }
 
   /**

@@ -46,6 +46,7 @@ export enum Permission {
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
 
   Comment_CreateComment = 'Comment_CreateComment',
 
