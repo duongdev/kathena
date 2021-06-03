@@ -925,6 +925,39 @@ export class ClassworkService {
     return classworkSubmissionAfter
   }
 
+  async listClassworkSubmissionsByClassworkAssignmentId(
+    accountId: string,
+    orgId: string,
+    classworkAssignmentId: string,
+  ): Promise<DocumentType<ClassworkSubmission>[]> {
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: classworkAssignmentId,
+      orgId,
+    })
+
+    if (!classworkAssignment) {
+      throw new Error('CLASSWORKASSIGNMENT_NOT_FOUND')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const list = await this.classworkSubmissionModel.find({
+      classworkId: classworkAssignmentId,
+      orgId,
+    })
+
+    console.log(list)
+
+    return list
+  }
+
   /**
    * END CLASSWORK SUBMISSION
    */

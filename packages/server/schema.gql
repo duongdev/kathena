@@ -228,7 +228,7 @@ type ClassworkSubmission implements BaseModel {
   createdByAccountId: String!
   classworkId: ID!
   grade: Float!
-  submissionFilseIds: [String!]!
+  submissionFileIds: [String!]!
 }
 
 type Comment implements BaseModel {
