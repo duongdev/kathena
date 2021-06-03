@@ -1047,7 +1047,7 @@ describe('classwork.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
-    it(`throw error if START_DATE_INVALID invalid`, async () => {
+    it(`throw error if start date invalid`, async () => {
       expect.assertions(1)
 
       const createCourseInput: ANY = {
