@@ -2490,11 +2490,85 @@ describe('classwork.service', () => {
       })
     })
 
-    // TODO : update
+    describe('listClassworkSubmissions', () => {
+      it('throws error if  CLASSWORKASSIGNMENT_NOT_FOUND', async () => {
+        expect.assertions(1)
 
-    // TODO : findId
+        await expect(
+          classworkService.listClassworkSubmissionsByClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError('CLASSWORKASSIGNMENT_NOT_FOUND')
+      })
 
-    // TODO : finds
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+          .mockResolvedValueOnce({ courseId: objectId() } as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmissionsByClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`returns an empty array ClassworkSubmissions if haven't ClassworkSubmission`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+          .mockResolvedValueOnce({ courseId: objectId() } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          classworkService.listClassworkSubmissionsByClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([])
+      })
+
+      it(`returns an array ClassworkSubmissions`, async () => {
+        expect.assertions(1)
+
+        const arrayClassworkSubmissions = [
+          { name: '1' },
+          { name: '2' },
+          { name: '3' },
+        ]
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+          .mockResolvedValueOnce({ courseId: objectId() } as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'find')
+          .mockResolvedValueOnce(arrayClassworkSubmissions as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmissionsByClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject(arrayClassworkSubmissions)
+      })
+    })
   })
 
   /**

@@ -1,5 +1,5 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
@@ -48,6 +48,22 @@ export class ClassworkSubmissionResolver {
       courseId,
       account.id,
       setGradeForClassworkSubmissionInput,
+    )
+  }
+
+  @Query((_return) => [ClassworkSubmission])
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async listClassworkSubmissionsByClassworkAssignmentId(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
+  ): Promise<ClassworkSubmission[]> {
+    return this.classworkService.listClassworkSubmissionsByClassworkAssignmentId(
+      account.id,
+      org.id,
+      classworkAssignmentId,
     )
   }
 }
