@@ -2410,7 +2410,6 @@ describe('classwork.service', () => {
     describe('listClassworkSubmissionsByClassworkAssignmentId', () => {
       it('throws error if ClassworkSubmission not found', async () => {
         expect.assertions(1)
-
         await expect(
           classworkService.listClassworkSubmissionsByClassworkAssignmentId(
             objectId(),
