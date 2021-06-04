@@ -2407,8 +2407,8 @@ describe('classwork.service', () => {
       })
     })
 
-    describe('listClassworkSubmissions', () => {
-      it('throws error if OrgId invalid', async () => {
+    describe('listClassworkSubmissionsByClassworkAssignmentId', () => {
+      it('throws error if ClassworkSubmission not found', async () => {
         expect.assertions(1)
 
         await expect(
