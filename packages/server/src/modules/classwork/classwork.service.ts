@@ -735,7 +735,7 @@ export class ClassworkService {
         if (
           dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
         ) {
-          throw new Error('START_DATE_INVALID')
+          throw new Error('DUE_DATE_INVALID')
         }
         classworkAssignmentUpdate.dueDate = dueDateInput
       } else if (
@@ -745,7 +745,7 @@ export class ClassworkService {
         if (
           dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
         ) {
-          throw new Error('START_DATE_INVALID')
+          throw new Error('DUE_DATE_INVALID')
         }
         classworkAssignmentUpdate.dueDate = dueDateInput
       }

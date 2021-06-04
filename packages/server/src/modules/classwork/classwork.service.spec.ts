@@ -1047,7 +1047,7 @@ describe('classwork.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
-    it(`throw error if start date invalid`, async () => {
+    it(`throw error if DUE_DATE_INVALID`, async () => {
       expect.assertions(1)
 
       const createCourseInput: ANY = {
@@ -1127,7 +1127,7 @@ describe('classwork.service', () => {
             dueDate: '2020-07-21',
           },
         ),
-      ).rejects.toThrowError('START_DATE_INVALID')
+      ).rejects.toThrowError('DUE_DATE_INVALID')
     })
 
     it(`returns the classworkAssignment with a new title`, async () => {
