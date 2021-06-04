@@ -12,8 +12,8 @@ import { Classwork, ClassworkType } from './Classwork'
 })
 @ObjectType()
 export class ClassworkAssignment extends Classwork {
-  @Field((_type) => Date)
-  @prop({ type: Date, required: true })
+  @Field((_type) => Date, { nullable: true })
+  @prop({ type: Date, default: null })
   dueDate: Date
 
   @Field()

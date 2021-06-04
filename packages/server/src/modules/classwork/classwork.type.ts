@@ -70,9 +70,8 @@ export class CreateClassworkAssignmentInput {
   @Field((_type) => [GraphQLUpload], { defaultValue: [] })
   attachments?: Promise<FileUpload>[]
 
-  @Field()
-  @IsNotEmpty({ message: 'Due date cannot be empty' })
-  dueDate: string
+  @Field({ nullable: true })
+  dueDate?: Date
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string

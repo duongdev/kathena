@@ -196,7 +196,7 @@ type ClassworkAssignment implements BaseModel {
   publicationState: String!
   resolveType: [String!]!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
-  dueDate: DateTime!
+  dueDate: DateTime
   maxScores: Float!
 }
 
@@ -416,7 +416,7 @@ input CreateClassworkAssignmentInput {
   title: String!
   description: String!
   attachments: [Upload!] = []
-  dueDate: String!
+  dueDate: DateTime
   publicationState: Publication
 }
 
