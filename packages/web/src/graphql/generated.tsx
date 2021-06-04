@@ -110,7 +110,7 @@ export type ClassworkAssignment = BaseModel & {
   publicationState: Scalars['String']
   resolveType: Array<Scalars['String']>
   comments: CommentsPayload
-  dueDate: Scalars['DateTime']
+  dueDate?: Maybe<Scalars['DateTime']>
   maxScores: Scalars['Float']
 }
 
@@ -158,7 +158,7 @@ export type ClassworkSubmission = BaseModel & {
   createdByAccountId: Scalars['String']
   classworkId: Scalars['ID']
   grade: Scalars['Float']
-  submissionFilseIds: Array<Scalars['String']>
+  submissionFileIds: Array<Scalars['String']>
 }
 
 export type Comment = BaseModel & {
@@ -228,7 +228,7 @@ export type CreateClassworkAssignmentInput = {
   title: Scalars['String']
   description: Scalars['String']
   attachments?: Maybe<Array<Scalars['Upload']>>
-  dueDate: Scalars['String']
+  dueDate?: Maybe<Scalars['DateTime']>
   publicationState?: Maybe<Publication>
 }
 
@@ -242,7 +242,7 @@ export type CreateClassworkMaterialInput = {
 export type CreateClassworkSubmissionInput = {
   createdByAccountId: Scalars['ID']
   classworkId: Scalars['ID']
-  submissionFileIds?: Maybe<Array<Scalars['Upload']>>
+  submissionFiles?: Maybe<Array<Scalars['Upload']>>
 }
 
 export type CreateCommentInput = {
@@ -313,6 +313,7 @@ export type Mutation = {
   addAttachmentsToClassworkAssignment: ClassworkAssignment
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
   createClassworkSubmission: ClassworkSubmission
+  setGradeForClassworkSubmission: ClassworkSubmission
   createComment: Comment
 }
 
@@ -453,6 +454,11 @@ export type MutationCreateClassworkSubmissionArgs = {
   courseId: Scalars['ID']
 }
 
+export type MutationSetGradeForClassworkSubmissionArgs = {
+  setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
+  courseId: Scalars['ID']
+}
+
 export type MutationCreateCommentArgs = {
   commentInput: CreateCommentInput
 }
@@ -523,8 +529,10 @@ export enum Permission {
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
   Comment_CreateComment = 'Comment_CreateComment',
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
+  Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   NoPermission = 'NoPermission',
 }
 
@@ -550,6 +558,7 @@ export type Query = {
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
+  listClassworkSubmissionsByClassworkAssignmentId: Array<ClassworkSubmission>
 }
 
 export type QueryAccountArgs = {
@@ -613,6 +622,15 @@ export type QueryClassworkAssignmentsArgs = {
   searchText?: Maybe<Scalars['String']>
   courseId: Scalars['ID']
   pageOptions: PageOptionsInput
+}
+
+export type QueryListClassworkSubmissionsByClassworkAssignmentIdArgs = {
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type SetGradeForClassworkSubmissionInput = {
+  submissionId: Scalars['ID']
+  grade: Scalars['Float']
 }
 
 export type SignInPayload = {
@@ -1150,6 +1168,30 @@ export type UpdateClassworkMaterialMutation = {
   >
 }
 
+export type AddAttachmentsToClassworkMaterialMutationVariables = Exact<{
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type AddAttachmentsToClassworkMaterialMutation = {
+  addAttachmentsToClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'orgId' | 'title' | 'attachments'
+  >
+}
+
+export type RemoveAttachmentsFromClassworkMaterialMutationVariables = Exact<{
+  attachments: Array<Scalars['String']> | Scalars['String']
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type RemoveAttachmentsFromClassworkMaterialMutation = {
+  removeAttachmentsFromClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'orgId' | 'title' | 'attachments'
+  >
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -1253,7 +1295,7 @@ export type RemoveStudentsFromCourseMutation = {
   removeStudentsFromCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
-export const AuthAccountFragmentDoc: DocumentNode = {
+export const AuthAccountFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -1276,8 +1318,8 @@ export const AuthAccountFragmentDoc: DocumentNode = {
       },
     },
   ],
-}
-export const AuthOrgFragmentDoc: DocumentNode = {
+} as unknown as DocumentNode
+export const AuthOrgFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -1297,8 +1339,8 @@ export const AuthOrgFragmentDoc: DocumentNode = {
       },
     },
   ],
-}
-export const SignInDocument: DocumentNode = {
+} as unknown as DocumentNode
+export const SignInDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1453,7 +1495,7 @@ export const SignInDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type SignInMutationFn = Apollo.MutationFunction<
   SignInMutation,
   SignInMutationVariables
@@ -1526,7 +1568,7 @@ export type SignInMutationOptions = Apollo.BaseMutationOptions<
   SignInMutation,
   SignInMutationVariables
 >
-export const AuthenticateDocument: DocumentNode = {
+export const AuthenticateDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1611,7 +1653,7 @@ export const AuthenticateDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AuthenticateProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1694,7 +1736,7 @@ export type AuthenticateQueryResult = Apollo.QueryResult<
   AuthenticateQuery,
   AuthenticateQueryVariables
 >
-export const CanAccountManageRolesDocument: DocumentNode = {
+export const CanAccountManageRolesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1744,7 +1786,7 @@ export const CanAccountManageRolesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CanAccountManageRolesProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1828,7 +1870,7 @@ export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
   CanAccountManageRolesQuery,
   CanAccountManageRolesQueryVariables
 >
-export const AccountAvatarDocument: DocumentNode = {
+export const AccountAvatarDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1879,7 +1921,7 @@ export const AccountAvatarDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountAvatarProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1963,7 +2005,7 @@ export type AccountAvatarQueryResult = Apollo.QueryResult<
   AccountAvatarQuery,
   AccountAvatarQueryVariables
 >
-export const AccountDisplayNameDocument: DocumentNode = {
+export const AccountDisplayNameDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2009,7 +2051,7 @@ export const AccountDisplayNameDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountDisplayNameProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2093,7 +2135,7 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
-export const FileDocument: DocumentNode = {
+export const FileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2142,7 +2184,7 @@ export const FileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
 } &
@@ -2204,7 +2246,7 @@ export function useFileLazyQuery(
 export type FileQueryHookResult = ReturnType<typeof useFileQuery>
 export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>
 export type FileQueryResult = Apollo.QueryResult<FileQuery, FileQueryVariables>
-export const ImageFileDocument: DocumentNode = {
+export const ImageFileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2253,7 +2295,7 @@ export const ImageFileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ImageFileProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2332,7 +2374,7 @@ export type ImageFileQueryResult = Apollo.QueryResult<
   ImageFileQuery,
   ImageFileQueryVariables
 >
-export const AcademicSubjectDetailDocument: DocumentNode = {
+export const AcademicSubjectDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2381,7 +2423,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AcademicSubjectDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2465,7 +2507,7 @@ export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
 >
-export const UpdateFileDocument: DocumentNode = {
+export const UpdateFileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2532,7 +2574,7 @@ export const UpdateFileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateFileMutationFn = Apollo.MutationFunction<
   UpdateFileMutation,
   UpdateFileMutationVariables
@@ -2608,7 +2650,7 @@ export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<
   UpdateFileMutation,
   UpdateFileMutationVariables
 >
-export const AcademicSubjectListDocument: DocumentNode = {
+export const AcademicSubjectListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2749,7 +2791,7 @@ export const AcademicSubjectListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AcademicSubjectListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2836,7 +2878,7 @@ export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
 >
-export const AccountProfileDocument: DocumentNode = {
+export const AccountProfileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2895,7 +2937,7 @@ export const AccountProfileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountProfileProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2979,7 +3021,7 @@ export type AccountProfileQueryResult = Apollo.QueryResult<
   AccountProfileQuery,
   AccountProfileQueryVariables
 >
-export const UpdateAccountStatusDocument: DocumentNode = {
+export const UpdateAccountStatusDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3050,7 +3092,7 @@ export const UpdateAccountStatusDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAccountStatusMutationFn = Apollo.MutationFunction<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
@@ -3127,7 +3169,7 @@ export type UpdateAccountStatusMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
 >
-export const UpdateAccountDocument: DocumentNode = {
+export const UpdateAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3199,7 +3241,7 @@ export const UpdateAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAccountMutationFn = Apollo.MutationFunction<
   UpdateAccountMutation,
   UpdateAccountMutationVariables
@@ -3276,7 +3318,7 @@ export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountMutation,
   UpdateAccountMutationVariables
 >
-export const UpdateSelfAccountDocument: DocumentNode = {
+export const UpdateSelfAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3348,7 +3390,7 @@ export const UpdateSelfAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateSelfAccountMutationFn = Apollo.MutationFunction<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
@@ -3425,7 +3467,7 @@ export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
 >
-export const ClassworkAssignmentDetailDocument: DocumentNode = {
+export const ClassworkAssignmentDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3480,7 +3522,7 @@ export const ClassworkAssignmentDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkAssignmentDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -3564,7 +3606,7 @@ export type ClassworkAssignmentDetailQueryResult = Apollo.QueryResult<
   ClassworkAssignmentDetailQuery,
   ClassworkAssignmentDetailQueryVariables
 >
-export const AddAttachmentsToClassworkAssignmentDocument: DocumentNode = {
+export const AddAttachmentsToClassworkAssignmentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3647,7 +3689,7 @@ export const AddAttachmentsToClassworkAssignmentDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AddAttachmentsToClassworkAssignmentMutationFn =
   Apollo.MutationFunction<
     AddAttachmentsToClassworkAssignmentMutation,
@@ -3726,7 +3768,7 @@ export type AddAttachmentsToClassworkAssignmentMutationOptions =
     AddAttachmentsToClassworkAssignmentMutation,
     AddAttachmentsToClassworkAssignmentMutationVariables
   >
-export const RemoveAttachmentsFromClassworkAssignmentDocument: DocumentNode = {
+export const RemoveAttachmentsFromClassworkAssignmentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3815,7 +3857,7 @@ export const RemoveAttachmentsFromClassworkAssignmentDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type RemoveAttachmentsFromClassworkAssignmentMutationFn =
   Apollo.MutationFunction<
     RemoveAttachmentsFromClassworkAssignmentMutation,
@@ -3893,7 +3935,7 @@ export type RemoveAttachmentsFromClassworkAssignmentMutationOptions =
     RemoveAttachmentsFromClassworkAssignmentMutation,
     RemoveAttachmentsFromClassworkAssignmentMutationVariables
   >
-export const CoursesDocument: DocumentNode = {
+export const CoursesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4030,7 +4072,7 @@ export const CoursesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CoursesProps<TChildProps = {}, TDataName extends string = 'data'> =
   {
     [key in TDataName]: ApolloReactHoc.DataValue<
@@ -4107,7 +4149,7 @@ export type CoursesQueryResult = Apollo.QueryResult<
   CoursesQuery,
   CoursesQueryVariables
 >
-export const CreateClassworkAssignmentDocument: DocumentNode = {
+export const CreateClassworkAssignmentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4178,7 +4220,7 @@ export const CreateClassworkAssignmentDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateClassworkAssignmentMutationFn = Apollo.MutationFunction<
   CreateClassworkAssignmentMutation,
   CreateClassworkAssignmentMutationVariables
@@ -4256,7 +4298,7 @@ export type CreateClassworkAssignmentMutationOptions =
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
-export const CreateCourseDocument: DocumentNode = {
+export const CreateCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4308,7 +4350,7 @@ export const CreateCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateCourseMutationFn = Apollo.MutationFunction<
   CreateCourseMutation,
   CreateCourseMutationVariables
@@ -4384,7 +4426,7 @@ export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
 >
-export const CreateAcademicSubjectDocument: DocumentNode = {
+export const CreateAcademicSubjectDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4436,7 +4478,7 @@ export const CreateAcademicSubjectDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateAcademicSubjectMutationFn = Apollo.MutationFunction<
   CreateAcademicSubjectMutation,
   CreateAcademicSubjectMutationVariables
@@ -4512,7 +4554,7 @@ export type CreateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   CreateAcademicSubjectMutation,
   CreateAcademicSubjectMutationVariables
 >
-export const FindAcademicSubjectByIdDocument: DocumentNode = {
+export const FindAcademicSubjectByIdDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4561,7 +4603,7 @@ export const FindAcademicSubjectByIdDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FindAcademicSubjectByIdProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -4645,7 +4687,7 @@ export type FindAcademicSubjectByIdQueryResult = Apollo.QueryResult<
   FindAcademicSubjectByIdQuery,
   FindAcademicSubjectByIdQueryVariables
 >
-export const UpdateAcademicSubjectDocument: DocumentNode = {
+export const UpdateAcademicSubjectDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4713,7 +4755,7 @@ export const UpdateAcademicSubjectDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAcademicSubjectMutationFn = Apollo.MutationFunction<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
@@ -4790,7 +4832,7 @@ export type UpdateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
 >
-export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
+export const UpdateAcademicSubjectPublicationDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4858,7 +4900,7 @@ export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAcademicSubjectPublicationMutationFn =
   Apollo.MutationFunction<
     UpdateAcademicSubjectPublicationMutation,
@@ -4937,7 +4979,7 @@ export type UpdateAcademicSubjectPublicationMutationOptions =
     UpdateAcademicSubjectPublicationMutation,
     UpdateAcademicSubjectPublicationMutationVariables
   >
-export const CreateAccountDocument: DocumentNode = {
+export const CreateAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4990,7 +5032,7 @@ export const CreateAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateAccountMutationFn = Apollo.MutationFunction<
   CreateAccountMutation,
   CreateAccountMutationVariables
@@ -5066,7 +5108,7 @@ export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
   CreateAccountMutation,
   CreateAccountMutationVariables
 >
-export const OrgAccountListDocument: DocumentNode = {
+export const OrgAccountListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5235,7 +5277,7 @@ export const OrgAccountListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type OrgAccountListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5323,7 +5365,7 @@ export type OrgAccountListQueryResult = Apollo.QueryResult<
   OrgAccountListQuery,
   OrgAccountListQueryVariables
 >
-export const ListOrgOfficesDocument: DocumentNode = {
+export const ListOrgOfficesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5350,7 +5392,7 @@ export const ListOrgOfficesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ListOrgOfficesProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5433,7 +5475,7 @@ export type ListOrgOfficesQueryResult = Apollo.QueryResult<
   ListOrgOfficesQuery,
   ListOrgOfficesQueryVariables
 >
-export const CreateOrgOfficeDocument: DocumentNode = {
+export const CreateOrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5484,7 +5526,7 @@ export const CreateOrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateOrgOfficeMutationFn = Apollo.MutationFunction<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
@@ -5560,7 +5602,7 @@ export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
 >
-export const UpdateOrgOfficeDocument: DocumentNode = {
+export const UpdateOrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5627,7 +5669,7 @@ export const UpdateOrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateOrgOfficeMutationFn = Apollo.MutationFunction<
   UpdateOrgOfficeMutation,
   UpdateOrgOfficeMutationVariables
@@ -5704,7 +5746,7 @@ export type UpdateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   UpdateOrgOfficeMutation,
   UpdateOrgOfficeMutationVariables
 >
-export const OrgOfficeDocument: DocumentNode = {
+export const OrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5751,7 +5793,7 @@ export const OrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type OrgOfficeProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5830,7 +5872,7 @@ export type OrgOfficeQueryResult = Apollo.QueryResult<
   OrgOfficeQuery,
   OrgOfficeQueryVariables
 >
-export const StudyingCourseListDocument: DocumentNode = {
+export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5985,7 +6027,7 @@ export const StudyingCourseListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type StudyingCourseListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6072,7 +6114,7 @@ export type StudyingCourseListQueryResult = Apollo.QueryResult<
   StudyingCourseListQuery,
   StudyingCourseListQueryVariables
 >
-export const ClassworkAssignmentListDocument: DocumentNode = {
+export const ClassworkAssignmentListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6196,7 +6238,7 @@ export const ClassworkAssignmentListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkAssignmentListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6282,7 +6324,7 @@ export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
 >
-export const ClassworkMaterialsListDocument: DocumentNode = {
+export const ClassworkMaterialsListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6408,7 +6450,7 @@ export const ClassworkMaterialsListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkMaterialsListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6494,7 +6536,7 @@ export type ClassworkMaterialsListQueryResult = Apollo.QueryResult<
   ClassworkMaterialsListQuery,
   ClassworkMaterialsListQueryVariables
 >
-export const CreateClassworkMaterialDocument: DocumentNode = {
+export const CreateClassworkMaterialDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6568,7 +6610,7 @@ export const CreateClassworkMaterialDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateClassworkMaterialMutationFn = Apollo.MutationFunction<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
@@ -6645,7 +6687,7 @@ export type CreateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
 >
-export const DetailClassworkMaterialDocument: DocumentNode = {
+export const DetailClassworkMaterialDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6703,7 +6745,7 @@ export const DetailClassworkMaterialDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type DetailClassworkMaterialProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6787,7 +6829,7 @@ export type DetailClassworkMaterialQueryResult = Apollo.QueryResult<
   DetailClassworkMaterialQuery,
   DetailClassworkMaterialQueryVariables
 >
-export const UpdateClassworkMaterialDocument: DocumentNode = {
+export const UpdateClassworkMaterialDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6861,7 +6903,7 @@ export const UpdateClassworkMaterialDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateClassworkMaterialMutationFn = Apollo.MutationFunction<
   UpdateClassworkMaterialMutation,
   UpdateClassworkMaterialMutationVariables
@@ -6938,7 +6980,317 @@ export type UpdateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   UpdateClassworkMaterialMutation,
   UpdateClassworkMaterialMutationVariables
 >
-export const CourseDetailDocument: DocumentNode = {
+export const AddAttachmentsToClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddAttachmentsToClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachmentsInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddAttachmentsToClassworkInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addAttachmentsToClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachmentsInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachmentsInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddAttachmentsToClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+export type AddAttachmentsToClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withAddAttachmentsToClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >(AddAttachmentsToClassworkMaterialDocument, {
+    alias: 'addAttachmentsToClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddAttachmentsToClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useAddAttachmentsToClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttachmentsToClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttachmentsToClassworkMaterialMutation, { data, loading, error }] = useAddAttachmentsToClassworkMaterialMutation({
+ *   variables: {
+ *      attachmentsInput: // value for 'attachmentsInput'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useAddAttachmentsToClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >(AddAttachmentsToClassworkMaterialDocument, options)
+}
+export type AddAttachmentsToClassworkMaterialMutationHookResult = ReturnType<
+  typeof useAddAttachmentsToClassworkMaterialMutation
+>
+export type AddAttachmentsToClassworkMaterialMutationResult =
+  Apollo.MutationResult<AddAttachmentsToClassworkMaterialMutation>
+export type AddAttachmentsToClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+export const RemoveAttachmentsFromClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveAttachmentsFromClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachments' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'removeAttachmentsFromClassworkMaterial',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachments' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachments' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveAttachmentsFromClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export type RemoveAttachmentsFromClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveAttachmentsFromClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables,
+    RemoveAttachmentsFromClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables,
+    RemoveAttachmentsFromClassworkMaterialProps<TChildProps, TDataName>
+  >(RemoveAttachmentsFromClassworkMaterialDocument, {
+    alias: 'removeAttachmentsFromClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveAttachmentsFromClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useRemoveAttachmentsFromClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveAttachmentsFromClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeAttachmentsFromClassworkMaterialMutation, { data, loading, error }] = useRemoveAttachmentsFromClassworkMaterialMutation({
+ *   variables: {
+ *      attachments: // value for 'attachments'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useRemoveAttachmentsFromClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >(RemoveAttachmentsFromClassworkMaterialDocument, options)
+}
+export type RemoveAttachmentsFromClassworkMaterialMutationHookResult =
+  ReturnType<typeof useRemoveAttachmentsFromClassworkMaterialMutation>
+export type RemoveAttachmentsFromClassworkMaterialMutationResult =
+  Apollo.MutationResult<RemoveAttachmentsFromClassworkMaterialMutation>
+export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6993,7 +7345,7 @@ export const CourseDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CourseDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -7077,7 +7429,7 @@ export type CourseDetailQueryResult = Apollo.QueryResult<
   CourseDetailQuery,
   CourseDetailQueryVariables
 >
-export const TeachingCourseListDocument: DocumentNode = {
+export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7228,7 +7580,7 @@ export const TeachingCourseListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type TeachingCourseListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -7315,7 +7667,7 @@ export type TeachingCourseListQueryResult = Apollo.QueryResult<
   TeachingCourseListQuery,
   TeachingCourseListQueryVariables
 >
-export const UpdateClassworkAssignmentDocument: DocumentNode = {
+export const UpdateClassworkAssignmentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7385,7 +7737,7 @@ export const UpdateClassworkAssignmentDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateClassworkAssignmentMutationFn = Apollo.MutationFunction<
   UpdateClassworkAssignmentMutation,
   UpdateClassworkAssignmentMutationVariables
@@ -7463,7 +7815,7 @@ export type UpdateClassworkAssignmentMutationOptions =
     UpdateClassworkAssignmentMutation,
     UpdateClassworkAssignmentMutationVariables
   >
-export const AddLecturesToCourseDocument: DocumentNode = {
+export const AddLecturesToCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7540,7 +7892,7 @@ export const AddLecturesToCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AddLecturesToCourseMutationFn = Apollo.MutationFunction<
   AddLecturesToCourseMutation,
   AddLecturesToCourseMutationVariables
@@ -7617,7 +7969,7 @@ export type AddLecturesToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddLecturesToCourseMutation,
   AddLecturesToCourseMutationVariables
 >
-export const AddStudentToCourseDocument: DocumentNode = {
+export const AddStudentToCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7694,7 +8046,7 @@ export const AddStudentToCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AddStudentToCourseMutationFn = Apollo.MutationFunction<
   AddStudentToCourseMutation,
   AddStudentToCourseMutationVariables
@@ -7771,7 +8123,7 @@ export type AddStudentToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddStudentToCourseMutation,
   AddStudentToCourseMutationVariables
 >
-export const FindCourseByIdDocument: DocumentNode = {
+export const FindCourseByIdDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7819,7 +8171,7 @@ export const FindCourseByIdDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FindCourseByIdProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -7903,7 +8255,7 @@ export type FindCourseByIdQueryResult = Apollo.QueryResult<
   FindCourseByIdQuery,
   FindCourseByIdQueryVariables
 >
-export const RemoveLecturersFromCourseDocument: DocumentNode = {
+export const RemoveLecturersFromCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7977,7 +8329,7 @@ export const RemoveLecturersFromCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
   RemoveLecturersFromCourseMutation,
   RemoveLecturersFromCourseMutationVariables
@@ -8055,7 +8407,7 @@ export type RemoveLecturersFromCourseMutationOptions =
     RemoveLecturersFromCourseMutation,
     RemoveLecturersFromCourseMutationVariables
   >
-export const RemoveStudentsFromCourseDocument: DocumentNode = {
+export const RemoveStudentsFromCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -8129,7 +8481,7 @@ export const RemoveStudentsFromCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type RemoveStudentsFromCourseMutationFn = Apollo.MutationFunction<
   RemoveStudentsFromCourseMutation,
   RemoveStudentsFromCourseMutationVariables

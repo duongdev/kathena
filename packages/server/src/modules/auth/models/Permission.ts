@@ -46,10 +46,12 @@ export enum Permission {
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
 
   Comment_CreateComment = 'Comment_CreateComment',
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
+  Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

@@ -137,8 +137,10 @@ enum Permission {
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
+  Classwork_SetGradeForClassworkSubmission
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
+  Classwork_ListClassworkSubmission
   NoPermission
 }
 
@@ -195,7 +197,7 @@ type ClassworkAssignment implements BaseModel {
   publicationState: String!
   resolveType: [String!]!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
-  dueDate: DateTime!
+  dueDate: DateTime
   maxScores: Float!
 }
 
@@ -227,7 +229,7 @@ type ClassworkSubmission implements BaseModel {
   createdByAccountId: String!
   classworkId: ID!
   grade: Float!
-  submissionFilseIds: [String!]!
+  submissionFileIds: [String!]!
 }
 
 type Comment implements BaseModel {
@@ -272,6 +274,7 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  listClassworkSubmissionsByClassworkAssignmentId(classworkAssignmentId: ID!): [ClassworkSubmission!]!
 }
 
 input AccountsFilterInput {
@@ -332,6 +335,7 @@ type Mutation {
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
+  setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   createComment(commentInput: CreateCommentInput!): Comment!
 }
 
@@ -414,7 +418,7 @@ input CreateClassworkAssignmentInput {
   title: String!
   description: String!
   attachments: [Upload!] = []
-  dueDate: String!
+  dueDate: DateTime
   publicationState: Publication
 }
 
@@ -427,7 +431,12 @@ input UpdateClassworkAssignmentInput {
 input CreateClassworkSubmissionInput {
   createdByAccountId: ID!
   classworkId: ID!
-  submissionFileIds: [Upload!]
+  submissionFiles: [Upload!]
+}
+
+input SetGradeForClassworkSubmissionInput {
+  submissionId: ID!
+  grade: Float!
 }
 
 input CreateCommentInput {
