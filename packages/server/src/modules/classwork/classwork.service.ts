@@ -930,6 +930,15 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentId: string,
   ): Promise<DocumentType<ClassworkSubmission>[]> {
+    this.logger.log(
+      `[${this.listClassworkSubmissionsByClassworkAssignmentId.name}] List ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      accountId,
+      orgId,
+      classworkAssignmentId,
+    })
+
     const classworkAssignment = await this.classworkAssignmentsModel.findOne({
       _id: classworkAssignmentId,
       orgId,
@@ -953,7 +962,14 @@ export class ClassworkService {
       orgId,
     })
 
-    console.log(list)
+    this.logger.log(
+      `[${this.listClassworkSubmissionsByClassworkAssignmentId.name}] listed ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      accountId,
+      orgId,
+      classworkAssignmentId,
+    })
 
     return list
   }
