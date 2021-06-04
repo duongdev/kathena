@@ -2491,7 +2491,7 @@ describe('classwork.service', () => {
     })
 
     describe('listClassworkSubmissions', () => {
-      it('throws error if  CLASSWORKASSIGNMENT_NOT_FOUND ', async () => {
+      it('throws error if  CLASSWORKASSIGNMENT_NOT_FOUND', async () => {
         expect.assertions(1)
 
         await expect(
