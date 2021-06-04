@@ -974,6 +974,8 @@ describe('classwork.service', () => {
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
+      const date = new Date()
+
       await expect(
         classworkService.createClassworkAssignment(
           accountLecturer.id,
@@ -981,8 +983,8 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
+            dueDate: date,
           },
         ),
       ).resolves.toMatchObject({
@@ -1045,7 +1047,7 @@ describe('classwork.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
-    it(`throw error if start date invalid`, async () => {
+    it(`throw error if DUE_DATE_INVALID`, async () => {
       expect.assertions(1)
 
       const createCourseInput: ANY = {
@@ -1105,8 +1107,8 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap 01',
-            dueDate: '2021-07-21',
             description: '',
+            dueDate: new Date(),
           },
         )
 
@@ -1125,7 +1127,7 @@ describe('classwork.service', () => {
             dueDate: '2020-07-21',
           },
         ),
-      ).rejects.toThrowError('START_DATE_INVALID')
+      ).rejects.toThrowError('DUE_DATE_INVALID')
     })
 
     it(`returns the classworkAssignment with a new title`, async () => {
@@ -1188,7 +1190,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap 01',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1273,7 +1274,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1359,7 +1359,93 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
+            description: '',
+            dueDate: new Date(),
+          },
+        )
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
+        .mockResolvedValueOnce(classworkAssignmentUpdate)
+
+      const updateDate = await classworkService.updateClassworkAssignment(
+        {
+          id: classworkAssignmentUpdate.id,
+          accountId: accountLecturer.id,
+          orgId: org.id,
+        },
+        {
+          dueDate: '2021-08-01',
+        },
+      )
+
+      const dateUpdated = new Date(updateDate.dueDate).toString()
+      const expectDate = new Date(
+        new Date('2021-08-01').setHours(7, 0, 0, 0),
+      ).toString()
+      expect(dateUpdated).toBe(expectDate)
+    })
+
+    it(`returns the classworkAssignment with a new dueDate if dueDate of classworkAssignment is null`, async () => {
+      expect.assertions(1)
+
+      const createCourseInput: ANY = {
+        academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [],
+      }
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await academicService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accountLecturer.id],
+        },
+      )
+
+      jest
+        .spyOn(academicService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true as never)
+
+      const classworkAssignmentUpdate =
+        await classworkService.createClassworkAssignment(
+          accountLecturer.id,
+          courseTest.id,
+          org.id,
+          {
+            title: 'Bai Tap Nay Moi Nhat',
             description: '',
           },
         )
@@ -1484,7 +1570,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1498,7 +1584,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1512,7 +1598,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1526,7 +1612,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1540,7 +1626,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1657,7 +1743,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 1',
             description: 'Bai tap 1',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
             publicationState: Publication.Published,
           },
         ),
@@ -1672,7 +1758,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 2',
             description: 'Bai tap 2',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
             publicationState: Publication.Published,
           },
         ),
@@ -1687,7 +1773,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 3',
             description: 'Bai tap 3',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1701,7 +1787,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 4',
             description: 'Bai tap 4',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1715,7 +1801,7 @@ describe('classwork.service', () => {
             title: 'Bai tap 5',
             description: 'Bai tap 5',
             attachments: [],
-            dueDate: date.toString(),
+            dueDate: date,
           },
         ),
       )
@@ -1860,7 +1946,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -1940,7 +2025,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -2043,7 +2127,6 @@ describe('classwork.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: 'Day la bai tap moi nhat',
           },
         )

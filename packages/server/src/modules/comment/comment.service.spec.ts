@@ -128,7 +128,6 @@ describe('comment.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -223,7 +222,6 @@ describe('comment.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
@@ -235,7 +233,6 @@ describe('comment.service', () => {
           org.id,
           {
             title: 'Bai Tap Nay Moi Nhat',
-            dueDate: '2021-07-21',
             description: '',
           },
         )
