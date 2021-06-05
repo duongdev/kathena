@@ -429,7 +429,6 @@ input UpdateClassworkAssignmentInput {
 }
 
 input CreateClassworkSubmissionInput {
-  createdByAccountId: ID!
   classworkId: ID!
   submissionFiles: [Upload!]
 }
