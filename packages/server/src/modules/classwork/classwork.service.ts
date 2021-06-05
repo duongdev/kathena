@@ -865,6 +865,7 @@ export class ClassworkService {
     const classworkSubmission = await this.classworkSubmissionModel.create({
       createdByAccountId,
       classworkId,
+      orgId,
     })
 
     let classworkSubmissionWithFileIds: ANY = null
@@ -891,13 +892,15 @@ export class ClassworkService {
         )
     }
 
+    const res = classworkSubmissionWithFileIds || classworkSubmission
+
     this.logger.log(
       `[${this.createClassworkSubmission.name}] Created createClassworkSubmission successfully`,
     )
 
-    this.logger.verbose(classworkSubmission.toObject())
+    this.logger.verbose(res.toObject())
 
-    return classworkSubmissionWithFileIds || classworkSubmission
+    return res
   }
 
   async setGradeForClassworkSubmission(
