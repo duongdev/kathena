@@ -101,9 +101,6 @@ export class AddAttachmentsToClassworkInput {
 @InputType()
 export class CreateClassworkSubmissionInput {
   @Field((_type) => ID)
-  createdByAccountId: string
-
-  @Field((_type) => ID)
   classworkId: string
 
   @Field((_type) => [GraphQLUpload], { nullable: true })

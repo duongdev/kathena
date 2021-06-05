@@ -25,10 +25,12 @@ export class ClassworkSubmissionResolver {
     @Args('CreateClassworkMaterialInput')
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<ClassworkSubmission> {
     return this.classworkService.createClassworkSubmission(
       org.id,
       courseId,
+      account.id,
       createClassworkSubmissionInput,
     )
   }

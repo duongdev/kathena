@@ -835,6 +835,7 @@ export class ClassworkService {
   async createClassworkSubmission(
     orgId: string,
     courseId: string,
+    accountId: string,
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
   ): Promise<DocumentType<ClassworkSubmission>> {
     this.logger.log(
@@ -846,15 +847,14 @@ export class ClassworkService {
       createClassworkSubmissionInput,
     })
 
-    const { createdByAccountId, classworkId, submissionFiles } =
-      createClassworkSubmissionInput
+    const { classworkId, submissionFiles } = createClassworkSubmissionInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
 
     if (
       !(await this.authService.isAccountStudentFormCourse(
-        createdByAccountId,
+        accountId,
         courseId,
         orgId,
       ))
@@ -863,7 +863,7 @@ export class ClassworkService {
     }
 
     const classworkSubmission = await this.classworkSubmissionModel.create({
-      createdByAccountId,
+      createdByAccountId: accountId,
       classworkId,
       orgId,
     })
@@ -873,7 +873,7 @@ export class ClassworkService {
     if (submissionFiles) {
       const fileIds = await this.uploadFilesAttachments(
         orgId,
-        createdByAccountId,
+        accountId,
         submissionFiles,
       )
       if (!fileIds) {
