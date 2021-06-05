@@ -12,12 +12,17 @@ import {
   SectionCard,
   usePagination,
   DataTable,
+  Link,
   Typography,
 } from '@kathena/ui'
 import {
   useCourseDetailQuery,
   useClassworkAssignmentListQuery,
 } from 'graphql/generated'
+import {
+  buildPath,
+  STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS,
+} from 'utils/path-builder'
 
 export type ClassworkAssignmentsProps = {}
 
@@ -76,7 +81,22 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                 {
                   label: 'Tiêu đề',
                   skeleton: <Skeleton />,
-                  field: 'title',
+                  render: (classworkAssignment) => (
+                    <>
+                      <Link
+                        to={buildPath(
+                          STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS,
+                          {
+                            id: classworkAssignment.id,
+                          },
+                        )}
+                      >
+                        <Typography variant="body1">
+                          {classworkAssignment.title}
+                        </Typography>
+                      </Link>
+                    </>
+                  ),
                 },
                 {
                   label: 'Mô tả',
