@@ -1,6 +1,5 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
