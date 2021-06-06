@@ -2154,7 +2154,6 @@ describe('classwork.service', () => {
     describe('CreateClassWorkSubmission', () => {
       const createClassWorkSubmissionInput: CreateClassworkSubmissionInput = {
         classworkId: objectId(),
-        createdByAccountId: objectId(),
       }
 
       it('throws error if OrgId invalid', async () => {
@@ -2169,6 +2168,7 @@ describe('classwork.service', () => {
           classworkService.createClassworkSubmission(
             objectId(),
             objectId(),
+            objectId(),
             createClassWorkSubmissionInput,
           ),
         ).rejects.toThrowError('ORG_ID_INVALID')
@@ -2176,6 +2176,7 @@ describe('classwork.service', () => {
         await expect(
           classworkService.createClassworkSubmission(
             'objectId()',
+            objectId(),
             objectId(),
             createClassWorkSubmissionInput,
           ),
@@ -2199,6 +2200,7 @@ describe('classwork.service', () => {
           classworkService.createClassworkSubmission(
             objectId(),
             objectId(),
+            objectId(),
             createClassWorkSubmissionInput,
           ),
         ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
@@ -2207,6 +2209,7 @@ describe('classwork.service', () => {
           classworkService.createClassworkSubmission(
             objectId(),
             'objectId()',
+            objectId(),
             createClassWorkSubmissionInput,
           ),
         ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
@@ -2223,10 +2226,13 @@ describe('classwork.service', () => {
           .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
           .mockResolvedValueOnce(true as ANY)
 
+        const createdByAccountId = objectId()
+
         const classWorkSubmission =
           await classworkService.createClassworkSubmission(
             objectId(),
             objectId(),
+            createdByAccountId,
             createClassWorkSubmissionInput,
           )
 
@@ -2251,8 +2257,7 @@ describe('classwork.service', () => {
             if (!submission.submissionFileIds) return false
 
             return (
-              submission.createdByAccountId.toString() ===
-              createClassWorkSubmissionInput.createdByAccountId
+              submission.createdByAccountId.toString() === createdByAccountId
             )
           })(),
         ).resolves.toBeTruthy()
@@ -2283,6 +2288,7 @@ describe('classwork.service', () => {
 
         const classWorkSubmissionWithFiles =
           await classworkService.createClassworkSubmission(
+            objectId(),
             objectId(),
             objectId(),
             createInputWithFile,
@@ -2455,7 +2461,6 @@ describe('classwork.service', () => {
 
         const classworkSubmissionInput: ANY = {
           classworkId: objectId(),
-          createdByAccountId: objectId(),
         }
 
         jest
@@ -2466,6 +2471,7 @@ describe('classwork.service', () => {
           await classworkService.createClassworkSubmission(
             orgId,
             courseId,
+            gradeByAccountId,
             classworkSubmissionInput,
           )
 
@@ -2490,10 +2496,9 @@ describe('classwork.service', () => {
       })
     })
 
-    describe('listClassworkSubmissions', () => {
-      it('throws error if  CLASSWORKASSIGNMENT_NOT_FOUND', async () => {
+    describe('listClassworkSubmissionsByClassworkAssignmentId', () => {
+      it('throws error if ClassworkSubmission not found', async () => {
         expect.assertions(1)
-
         await expect(
           classworkService.listClassworkSubmissionsByClassworkAssignmentId(
             objectId(),

@@ -1,6 +1,5 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
@@ -25,10 +24,12 @@ export class ClassworkSubmissionResolver {
     @Args('CreateClassworkMaterialInput')
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<ClassworkSubmission> {
     return this.classworkService.createClassworkSubmission(
       org.id,
       courseId,
+      account.id,
       createClassworkSubmissionInput,
     )
   }
@@ -42,7 +43,7 @@ export class ClassworkSubmissionResolver {
     setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
-  ): Promise<DocumentType<ClassworkSubmission>> {
+  ): Promise<ClassworkSubmission> {
     return this.classworkService.setGradeForClassworkSubmission(
       org.id,
       courseId,
