@@ -413,12 +413,12 @@ describe('classwork.service', () => {
     })
 
     describe('findClassworkMaterialById', () => {
-      it('throws error if the classworkMaterial not found', async () => {
+      it(`returns null if Id doesn't exist`, async () => {
         expect.assertions(1)
 
         await expect(
           classworkService.findClassworkMaterialById(objectId(), objectId()),
-        ).rejects.toThrow(`ClassworkMaterial not found`)
+        ).resolves.toBeNull()
       })
 
       it('returns a classworkMaterial', async () => {
@@ -2050,12 +2050,12 @@ describe('classwork.service', () => {
   })
 
   describe('findClassworkAssignmentById', () => {
-    it('throws error if the classworkAssignment not found', async () => {
+    it(`returns null if Id doesn't exist`, async () => {
       expect.assertions(1)
 
       await expect(
         classworkService.findClassworkAssignmentById(objectId(), objectId()),
-      ).rejects.toThrowError(`ClassworkAssignment not found.`)
+      ).resolves.toBeNull()
     })
 
     it('returns a classworkAssignment', async () => {
