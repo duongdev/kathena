@@ -5,6 +5,7 @@ import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
+import { Pie } from 'react-chartjs-2'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -30,6 +31,27 @@ import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDi
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
 
 export type ClassworkAssignmentDetailProps = {}
+
+const data1 = {
+  labels: ['Không nộp', 'Nộp muộn', 'Nộp đúng hạn'],
+  datasets: [
+    {
+      label: '# of Votes',
+      data: [12, 3, 5],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+      ],
+      borderWidth: 1,
+    },
+  ],
+}
 
 const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const params: { id: string } = useParams()
@@ -135,7 +157,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           </RequiredPermission>
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={7}>
                 <Stack spacing={2}>
                   <InfoBlock label="Tiêu đề">
                     {classworkAssignment.title}
@@ -185,6 +207,20 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                     />
                   )}
                 </Stack>
+              </Grid>
+              <Grid
+                item
+                xs={5}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography>Tỷ lệ nộp bài</Typography>
+                <div>
+                  <Pie data={data1} type="pie" />
+                </div>
               </Grid>
             </Grid>
           </CardContent>

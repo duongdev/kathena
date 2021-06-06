@@ -26,10 +26,10 @@
   "devDependencies": {
     "husky": "6.0.0",
     "lint-staged": "11.0.0",
-    "prettier": "2.3.0"
+    "prettier": "2.3.1"
   },
   "resolutions": {
-    "prettier": "2.3.0"
+    "prettier": "2.3.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "yarn prettier --write",

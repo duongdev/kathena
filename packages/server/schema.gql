@@ -140,6 +140,7 @@ enum Permission {
   Classwork_SetGradeForClassworkSubmission
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
+  Classwork_ListClassworkSubmission
   NoPermission
 }
 
@@ -196,7 +197,7 @@ type ClassworkAssignment implements BaseModel {
   publicationState: String!
   resolveType: [String!]!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
-  dueDate: DateTime!
+  dueDate: DateTime
   maxScores: Float!
 }
 
@@ -273,6 +274,7 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  listClassworkSubmissionsByClassworkAssignmentId(classworkAssignmentId: ID!): [ClassworkSubmission!]!
 }
 
 input AccountsFilterInput {
@@ -417,7 +419,7 @@ input CreateClassworkAssignmentInput {
   title: String!
   description: String!
   attachments: [Upload!] = []
-  dueDate: String!
+  dueDate: DateTime
   publicationState: Publication
 }
 
@@ -432,7 +434,6 @@ input AvgGradeOfClassworkByCourseOptionInput {
 }
 
 input CreateClassworkSubmissionInput {
-  createdByAccountId: ID!
   classworkId: ID!
   submissionFiles: [Upload!]
 }

@@ -116,6 +116,7 @@ Array [
       "Classwork_RemoveAttachmentsFromClassworkMaterial",
       "Classwork_SetGradeForClassworkSubmission",
       "Comment_CreateComment",
+      "Classwork_ListClassworkSubmission",
     ],
     "priority": 4,
   },
