@@ -3,6 +3,7 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
+import { CommentService } from 'modules/comment/comment.service'
 import { Org } from 'modules/org/models/Org'
 
 import { ClassworkService } from './classwork.service'

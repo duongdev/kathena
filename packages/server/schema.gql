@@ -230,6 +230,7 @@ type ClassworkSubmission implements BaseModel {
   classworkId: ID!
   grade: Float!
   submissionFileIds: [String!]!
+  description: String!
 }
 
 type Comment implements BaseModel {
@@ -431,6 +432,7 @@ input UpdateClassworkAssignmentInput {
 input CreateClassworkSubmissionInput {
   classworkId: ID!
   submissionFiles: [Upload!]
+  description: String = null
 }
 
 input SetGradeForClassworkSubmissionInput {
