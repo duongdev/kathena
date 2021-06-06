@@ -407,10 +407,6 @@ export class ClassworkService {
       _id: classworkMaterialId,
     })
 
-    if (!classworkMaterial) {
-      throw new Error(`ClassworkMaterial not found`)
-    }
-
     return classworkMaterial
   }
 
@@ -543,10 +539,6 @@ export class ClassworkService {
       _id: classworkAssignmentId,
       orgId,
     })
-
-    if (!classworkAssignment) {
-      throw new Error(`ClassworkAssignment not found.`)
-    }
 
     return classworkAssignment
   }
