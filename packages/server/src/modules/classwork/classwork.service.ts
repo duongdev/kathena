@@ -1,6 +1,7 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
+import { Types } from 'mongoose'
 
 import {
   Service,
@@ -24,6 +25,7 @@ import {
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
+  AvgGradeOfClassworkByCourseOptionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -927,5 +929,115 @@ export class ClassworkService {
 
   /**
    * END CLASSWORK SUBMISSION
+   */
+
+  /**
+   * START STATISTICAL
+   */
+
+  async test(
+    courseId: string,
+    optionInput: AvgGradeOfClassworkByCourseOptionInput,
+  ): Promise<DocumentType<Course>[]> {
+    const { limit } = optionInput
+
+    const { ObjectId } = Types
+
+    const result = await this.courseModel.aggregate([
+      {
+        $match: {
+          _id: ObjectId(courseId),
+        },
+      },
+      {
+        $project: {
+          code: 1,
+          name: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: 'classworkassignments',
+          pipeline: [
+            {
+              $match: {
+                courseId,
+              },
+            },
+            {
+              $project: {
+                title: 1,
+                courseId: 1,
+              },
+            },
+            {
+              $lookup: {
+                from: 'classworksubmissions',
+                as: 'grades',
+                let: {
+                  classworkId: '$classworkId',
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $eq: ['$$classworkId', '$id'],
+                      },
+                    },
+                  },
+                  {
+                    $group: {
+                      _id: '$classworkId',
+                      classworkId: {
+                        $sum: '$grade',
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      grade: 1,
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+          as: 'classworks',
+        },
+      },
+    ])
+
+    // const kq = await this.classworkAssignmentsModel.aggregate(
+    //   [
+    //     {
+    //       $match: {
+    //         courseId: courseId
+    //       },
+    //     },
+    //     {
+    //       $lookup: {
+    //         from: 'classworksubmissions',
+    //         pipeline: [
+    //           {
+    //             $group: {
+    //               _id: '$classworkId',
+    //               // sumGrade: { $sum: '$grade' },
+    //             }
+    //           }
+    //         ],
+    //         as: "grades",
+    //       }
+
+    //     }
+    //   ]
+    // )
+
+    this.logger.log(result[0])
+
+    return result
+  }
+
+  /**
+   * END STATISTICAL
    */
 }

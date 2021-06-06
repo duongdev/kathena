@@ -5,6 +5,7 @@ import { DocumentType } from '@typegoose/typegoose'
 
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
+import { Course } from 'modules/academic/models/Course'
 import { P } from 'modules/auth/models'
 import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order
@@ -18,6 +19,7 @@ import {
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
+  AvgGradeOfClassworkByCourseOptionInput,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -154,6 +156,14 @@ export class ClassworkAssignmentsResolver extends ClassworkResolver {
       classworkAssignmentId,
       attachments,
     )
+  }
+
+  @Mutation((_returns) => [Course])
+  async test(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
+  ): Promise<Course[]> {
+    return this.classworkService.test(courseId, optionInput)
   }
 
   /**
