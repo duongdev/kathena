@@ -51,6 +51,7 @@ export enum Permission {
   Comment_CreateComment = 'Comment_CreateComment',
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
+  Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
