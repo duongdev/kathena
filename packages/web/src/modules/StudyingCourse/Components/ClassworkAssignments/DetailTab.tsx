@@ -7,8 +7,7 @@ import { WithAuth } from 'common/auth'
 import { Permission } from 'graphql/generated'
 import {
   buildPath,
-  STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS,
-  STUDYING_COURSE_CLASSWORK_MATERIALS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
@@ -19,10 +18,7 @@ const DetailContentClassworkAssignment = lazy(
 )
 
 const DetailCommentClassworkAssignment = lazy(
-  () => import('../ClassworkAssignments/DetailCommentClassworkAssignment'),
-)
-const ClassworkMaterials = lazy(
-  () => import('../ClassworkMaterials/ClassworkMaterials'),
+  () => import('./DetailCommentClassworkAssignment'),
 )
 
 export type DetailTabProps = {}
@@ -39,9 +35,12 @@ const DetailTab: FC<DetailTabProps> = () => {
         items={[
           {
             title: 'Nội dung',
-            to: buildPath(STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS, {
-              id: params.id,
-            }),
+            to: buildPath(
+              STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
+              {
+                id: params.id,
+              },
+            ),
             exact: true,
           },
           {
@@ -54,31 +53,20 @@ const DetailTab: FC<DetailTabProps> = () => {
             ),
             exact: true,
           },
-          {
-            title: 'Lời giải',
-            to: buildPath(STUDYING_COURSE_CLASSWORK_MATERIALS, {
-              id: params.id,
-            }),
-            exact: true,
-          },
         ]}
       />
       <Suspense fallback={<Spinner p={4} center />}>
         <Switch>
           <Route
-            path={STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS}
+            path={STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS}
             exact
             component={DetailContentClassworkAssignment}
           />
+
           <Route
             path={STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS}
             exact
             component={DetailCommentClassworkAssignment}
-          />
-          <Route
-            path={STUDYING_COURSE_CLASSWORK_MATERIALS}
-            exact
-            component={ClassworkMaterials}
           />
         </Switch>
       </Suspense>

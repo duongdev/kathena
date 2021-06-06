@@ -1,13 +1,10 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
-import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { ANY } from '@kathena/types'
 import {
-  Button,
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
@@ -37,9 +34,7 @@ const DetailCommentClassworkAssignment: FC<DetailCommentClassworkAssignmentProps
     if (!classworkAssignment) {
       return (
         <PageContainer maxWidth="md">
-          <Typography align="center">
-            Bài tập không tồn tại hoặc đã bị xoá.
-          </Typography>
+          <Typography align="center">Không có nhận xét.</Typography>
         </PageContainer>
       )
     }
@@ -48,30 +43,18 @@ const DetailCommentClassworkAssignment: FC<DetailCommentClassworkAssignmentProps
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
-          gridItem={{ xs: 12 }}
+          gridItem={{ xs: 10 }}
           title={classworkAssignment.title}
-          action={[<Button variant="contained">Nộp bài</Button>]}
         >
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Stack spacing={2}>
-                  <InfoBlock label="Nội dung: ">
-                    <div
-                      // eslint-disable-next-line
-                      dangerouslySetInnerHTML={{
-                        __html: classworkAssignment.description as ANY,
-                      }}
-                    />
+                  <InfoBlock label="Điểm: ">
+                    <Typography>8đ</Typography>
                   </InfoBlock>
-                  <InfoBlock label="Bài tập:">
-                    {classworkAssignment.attachments.length ? (
-                      classworkAssignment.attachments.map((attachment) => (
-                        <FileComponent key={attachment} fileId={attachment} />
-                      ))
-                    ) : (
-                      <Typography>Không có file bài tập</Typography>
-                    )}
+                  <InfoBlock label="Nhận xét:">
+                    <Typography>Tốt</Typography>
                   </InfoBlock>
                 </Stack>
               </Grid>

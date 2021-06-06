@@ -21,7 +21,7 @@ import {
 } from 'graphql/generated'
 import {
   buildPath,
-  STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 export type ClassworkAssignmentsProps = {}
@@ -85,7 +85,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                     <>
                       <Link
                         to={buildPath(
-                          STUDYING_COURSE_DETAIL_CLASSWORK_ASSIGNMENTS,
+                          STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
                           {
                             id: classworkAssignment.id,
                           },
