@@ -2177,7 +2177,7 @@ describe('classwork.service', () => {
       ).rejects.toThrowError('NOT_FOUND_CLASSWORK_ASSIGNMENT_IN_COURSE')
     })
 
-    it('returns an array of data', async () => {
+    it('returns average grade', async () => {
       expect.assertions(1)
 
       const org = await orgService.createOrg({
