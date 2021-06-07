@@ -99,21 +99,21 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               columns={[
                 {
                   label: 'Tiêu đề',
-                  skeleton: <Skeleton />,
+
                   render: (classworkMaterial) => (
                     <>
-                      <Link
-                        to={buildPath(
-                          TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
-                          {
-                            id: classworkMaterial.id,
-                          },
-                        )}
-                      >
-                        <Typography variant="body1">
+                      <Typography variant="body1" fontWeight="bold">
+                        <Link
+                          to={buildPath(
+                            TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                            {
+                              id: classworkMaterial.id,
+                            },
+                          )}
+                        >
                           {classworkMaterial.title}
-                        </Typography>
-                      </Link>
+                        </Link>
+                      </Typography>
                     </>
                   ),
                 },

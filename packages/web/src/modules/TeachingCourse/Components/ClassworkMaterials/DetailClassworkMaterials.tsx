@@ -152,66 +152,59 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           </RequiredPermission>
           <CardContent>
             <Grid container spacing={2} className={classes.root}>
-              <InfoBlock gridItem={{ xs: 10 }} label="Tiêu đề:">
-                {`${classworkMaterial?.title}`}
-              </InfoBlock>
-              <InfoBlock gridItem={{ xs: 12 }} label="Mô tả:">
-                <div
-                  // eslint-disable-next-line
-                  dangerouslySetInnerHTML={{
-                    __html: classworkMaterial?.description as ANY,
-                  }}
-                  style={{
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: 'vertical',
-                  }}
-                />
-              </InfoBlock>
-              <InfoBlock gridItem={{ xs: 12 }} label="Tập tin đính kèm: ">
-                {classworkMaterial?.attachments.length ? (
-                  classworkMaterial?.attachments.map((attachment) => (
-                    <Grid container>
-                      <FileComponent
-                        key={attachment}
-                        fileId={attachment}
-                        actions={[
-                          <Trash
-                            onClick={() => removeAttachment(attachment)}
-                            style={{ cursor: 'pointer' }}
-                            size={24}
-                          />,
-                        ]}
-                      />
-                    </Grid>
-                  ))
-                ) : (
-                  <Grid container>
-                    <Typography>Không có tập tin</Typography>
-                  </Grid>
-                )}
-              </InfoBlock>
-            </Grid>
-            <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Stack spacing={2}>
-                  {!openAddFile && (
-                    <Button
-                      onClick={() => setOpenAddFile(true)}
-                      startIcon={<FilePlus />}
-                    >
-                      Thêm tập tin
-                    </Button>
-                  )}
-                  {openAddFile && (
-                    <AddAttachmentsToClassworkMaterial
-                      idClassworkMaterial={classworkMaterial?.id as ANY}
-                      setOpen={setOpenAddFile}
+                  <InfoBlock label="Tiêu đề:">
+                    {`${classworkMaterial?.title}`}
+                  </InfoBlock>
+                  <InfoBlock label="Mô tả:">
+                    <div
+                      // eslint-disable-next-line
+                      dangerouslySetInnerHTML={{
+                        __html: classworkMaterial?.description as ANY,
+                      }}
                     />
-                  )}
+                  </InfoBlock>
+                  <InfoBlock label="Tập tin đính kèm: ">
+                    {classworkMaterial?.attachments.length ? (
+                      classworkMaterial?.attachments.map((attachment) => (
+                        <FileComponent
+                          key={attachment}
+                          fileId={attachment}
+                          actions={[
+                            <Trash
+                              onClick={() => removeAttachment(attachment)}
+                              style={{ cursor: 'pointer' }}
+                              size={24}
+                            />,
+                          ]}
+                        />
+                      ))
+                    ) : (
+                      <Typography>Không có tập tin</Typography>
+                    )}
+                  </InfoBlock>
                 </Stack>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Stack spacing={2}>
+                    {!openAddFile && (
+                      <Button
+                        onClick={() => setOpenAddFile(true)}
+                        startIcon={<FilePlus />}
+                      >
+                        Thêm tập tin
+                      </Button>
+                    )}
+                    {openAddFile && (
+                      <AddAttachmentsToClassworkMaterial
+                        idClassworkMaterial={classworkMaterial?.id as ANY}
+                        setOpen={setOpenAddFile}
+                      />
+                    )}
+                  </Stack>
+                </Grid>
               </Grid>
             </Grid>
           </CardContent>
