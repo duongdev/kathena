@@ -824,7 +824,7 @@ export class ClassworkService {
     const { classworkSubmissionModel } = this
 
     if (!(await this.orgService.validateOrgId(orgId))) {
-      throw new Error(`Org ID is invalid`)
+      throw new Error(`ORG_ID_INVALID`)
     }
 
     const classworkAssignment = await this.findClassworkAssignmentById(
@@ -834,7 +834,7 @@ export class ClassworkService {
 
     let avgGrade = 0
     if (!classworkAssignment) {
-      throw new Error(`Not found classwork assignment in course`)
+      throw new Error(`NOT_FOUND_CLASSWORK_ASSIGNMENT_IN_COURSE`)
     }
 
     const classworkSubmissions = await classworkSubmissionModel
