@@ -105,6 +105,10 @@ export class CreateClassworkSubmissionInput {
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
   submissionFiles?: Promise<FileUpload>[]
+
+  @Field({ nullable: true, defaultValue: null })
+  @IsOptional()
+  description?: string
 }
 
 @InputType()
