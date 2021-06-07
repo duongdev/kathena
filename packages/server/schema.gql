@@ -141,6 +141,7 @@ enum Permission {
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
+  AvgGradeStatisticsOfClassworkInTheCourse
   NoPermission
 }
 
@@ -257,6 +258,11 @@ type ClassworkMaterialPayload {
   count: Int!
 }
 
+type AvgGradeOfClassworkByCourse {
+  classworkTitle: String!
+  avgGrade: Float!
+}
+
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
@@ -334,7 +340,7 @@ type Mutation {
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
-  test(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [Course!]!
+  calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   createComment(commentInput: CreateCommentInput!): Comment!
@@ -430,7 +436,7 @@ input UpdateClassworkAssignmentInput {
 }
 
 input AvgGradeOfClassworkByCourseOptionInput {
-  limit: Float
+  limit: Float = 0
 }
 
 input CreateClassworkSubmissionInput {

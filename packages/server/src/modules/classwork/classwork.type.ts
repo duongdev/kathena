@@ -118,8 +118,8 @@ export class SetGradeForClassworkSubmissionInput {
 
 @InputType()
 export class AvgGradeOfClassworkByCourseOptionInput {
-  @Field({ nullable: true })
-  limit?: number
+  @Field({ nullable: true, defaultValue: 0 })
+  limit: number
 }
 
 @ObjectType()

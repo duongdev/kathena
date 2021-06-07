@@ -16,6 +16,7 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
+  AvgGradeOfClassworkByCourseOptionInput,
 } from './classwork.type'
 
 describe('classwork.service', () => {
@@ -2578,5 +2579,213 @@ describe('classwork.service', () => {
 
   /**
    * END CLASSWORK SUBMISSION
+   */
+
+  /**
+   * START STATISTICAL
+   */
+
+  describe('Statistical', () => {
+    describe('calculateAvgGradeOfClassworkAssignmentInCourse', () => {
+      const optionInput: AvgGradeOfClassworkByCourseOptionInput = {
+        limit: 0,
+      }
+
+      it('throws error if OrgId invalid', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
+            objectId(),
+            objectId(),
+            optionInput,
+          ),
+        ).rejects.toThrowError('ORG_ID_INVALID')
+      })
+
+      it('throws error if course not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        await expect(
+          classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
+            objectId(),
+            objectId(),
+            optionInput,
+          ),
+        ).rejects.toThrowError('COURSE_NOT_FOUND')
+      })
+
+      it('returns an array of data', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accStudent = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accStudent2 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh22.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh2',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accLecturer = await accountService.createAccount({
+          roles: ['lecturer'],
+          email: 'huynhthanhcanh1.top@gmail.com',
+          username: 'thanhcanh',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        const accStaff = await accountService.createAccount({
+          roles: ['staff'],
+          username: 'thanhchanh',
+          email: 'huynhthanhcanh2.top@gmail.com',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Chanh',
+        })
+
+        const accAdmin = await accountService.createAccount({
+          roles: ['admin'],
+          username: 'thanhcanh123',
+          orgId: org.id,
+          email: 'huynhthanhcanh3.top@gmail.com',
+          displayName: 'Huynh Thanh Canh Thanh',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          orgId: org.id,
+          code: 'NODEJS',
+          name: 'NodeJS',
+          description: 'This is NodeJs',
+          createdByAccountId: accAdmin.id,
+          imageFileId: objectId(),
+        })
+
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          name: 'Kmin Quận 1',
+          address: '25A',
+          createdByAccountId: accAdmin.id,
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
+        const createCourseInput: ANY = {
+          academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
+          code: 'NodeJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+          lecturerIds: [accLecturer.id],
+        }
+
+        const course = await academicService.createCourse(accAdmin.id, org.id, {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accLecturer.id],
+        })
+
+        course.studentIds = [accStudent.id, accStudent2.id]
+        course.save()
+
+        const classwork1 = await classworkService.createClassworkAssignment(
+          accLecturer.id,
+          course.id,
+          org.id,
+          {
+            title: 'Bai tap 1',
+            description: 'Day la bai tap 1',
+          },
+        )
+
+        const classwork2 = await classworkService.createClassworkAssignment(
+          accLecturer.id,
+          course.id,
+          org.id,
+          {
+            title: 'Bai tap 2',
+            description: 'Day la bai tap 2',
+          },
+        )
+
+        const classwork3 = await classworkService.createClassworkAssignment(
+          accLecturer.id,
+          course.id,
+          org.id,
+          {
+            title: 'Bai tap 3',
+            description: 'Day la bai tap 3',
+          },
+        )
+
+        await authService.signIn({
+          password: 'huynhthanhcanh1.top@gmail.com',
+          usernameOrEmail: 'huynhthanhcanh1.top@gmail.com',
+          orgNamespace: 'kmin-edu',
+        })
+
+        const createInputWithFile: ANY = {
+          classworkId: classwork1.id,
+        }
+
+        const classWorkSubmission1 =
+          await classworkService.createClassworkSubmission(
+            org.id,
+            course.id,
+            accStudent.id,
+            createInputWithFile,
+          )
+
+        classWorkSubmission1.grade = 60
+        classWorkSubmission1.save()
+
+        const classWorkSubmission2 =
+          await classworkService.createClassworkSubmission(
+            org.id,
+            course.id,
+            accStudent.id,
+            createInputWithFile,
+          )
+
+        classWorkSubmission2.grade = 50
+        classWorkSubmission2.save()
+
+        await expect(
+          classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
+            course.id,
+            org.id,
+            optionInput,
+          ),
+        ).resolves.toMatchObject([
+          { avgGrade: 0, classworkTitle: 'Bai tap 3' },
+          { avgGrade: 0, classworkTitle: 'Bai tap 2' },
+          { avgGrade: 55, classworkTitle: 'Bai tap 1' },
+        ])
+      })
+    })
+  })
+
+  /**
+   * END STATISTICAL
    */
 })

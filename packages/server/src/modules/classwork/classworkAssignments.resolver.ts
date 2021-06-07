@@ -4,8 +4,13 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 // eslint-disable-next-line import/order
-import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
-import { Course } from 'modules/academic/models/Course'
+import {
+  CurrentAccount,
+  CurrentOrg,
+  Logger,
+  Publication,
+  UseAuthGuard,
+} from 'core'
 import { P } from 'modules/auth/models'
 import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order
@@ -27,6 +32,8 @@ import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver extends ClassworkResolver {
+  private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
+
   constructor(
     commentService: CommentService,
     private readonly classworkService: ClassworkService,
@@ -160,12 +167,18 @@ export class ClassworkAssignmentsResolver extends ClassworkResolver {
   }
 
   @Mutation((_returns) => [AvgGradeOfClassworkByCourse])
-  async test(
+  @UseAuthGuard(P.AvgGradeStatisticsOfClassworkInTheCourse)
+  async calculateAvgGradeOfClassworkAssignmentInCourse(
     @Args('courseId', { type: () => ID }) courseId: string,
-    @Args('orgId', { type: () => ID }) orgId: string,
+    @CurrentOrg() org: Org,
     @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
   ): Promise<AvgGradeOfClassworkByCourse[]> {
-    return this.classworkService.test(courseId, orgId, optionInput)
+    this.logger.log(org)
+    return this.classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
+      courseId,
+      org.id,
+      optionInput,
+    )
   }
 
   /**

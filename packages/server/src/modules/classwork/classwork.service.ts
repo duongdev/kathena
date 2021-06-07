@@ -9,7 +9,6 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
-import { AcademicService } from 'modules/academic/academic.service'
 import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
@@ -67,9 +66,6 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
-
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
   ) {}
 
   /**
@@ -827,12 +823,14 @@ export class ClassworkService {
   ): Promise<number> {
     const { classworkSubmissionModel } = this
 
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
     const classworkAssignment = await this.findClassworkAssignmentById(
       orgId,
       classworkAssignmentId,
     )
-
-    this.logger.log(classworkAssignment)
 
     let avgGrade = 0
     if (!classworkAssignment) {
@@ -847,15 +845,17 @@ export class ClassworkService {
 
     let sum = 0
 
-    const classworkSubmissionsMap = classworkSubmissions.map(
-      async (classworkSubmission) => {
-        sum += classworkSubmission.grade
-      },
-    )
+    if (classworkSubmissions.length) {
+      const classworkSubmissionsMap = classworkSubmissions.map(
+        async (classworkSubmission) => {
+          sum += classworkSubmission.grade
+        },
+      )
 
-    await Promise.all(classworkSubmissionsMap).then(() => {
-      avgGrade = sum / numberOfStudent
-    })
+      await Promise.all(classworkSubmissionsMap).then(() => {
+        avgGrade = sum / numberOfStudent
+      })
+    }
 
     return avgGrade
   }
@@ -1035,7 +1035,7 @@ export class ClassworkService {
    * START STATISTICAL
    */
 
-  async test(
+  async calculateAvgGradeOfClassworkAssignmentInCourse(
     courseId: string,
     orgId: string,
     optionInput: AvgGradeOfClassworkByCourseOptionInput,
@@ -1044,25 +1044,28 @@ export class ClassworkService {
 
     const { courseModel, classworkAssignmentsModel } = this
 
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`ORG_ID_INVALID`)
+    }
+
     const course = await courseModel.findOne({
       _id: courseId,
       orgId,
     })
 
     if (!course) {
-      throw new Error(`Course not found`)
+      throw new Error(`COURSE_NOT_FOUND`)
     }
 
     const numberOfStudent = course.studentIds.length
 
-    const classworkAssignments = await classworkAssignmentsModel.find({
-      courseId,
-      orgId,
-    })
-
-    if (!classworkAssignments) {
-      throw new Error(`Not found classwork assignment in course`)
-    }
+    const classworkAssignments = await classworkAssignmentsModel
+      .find({
+        courseId,
+        orgId,
+      })
+      .sort({ _id: -1 })
+      .limit(limit)
 
     const dataList: AvgGradeOfClassworkByCourse[] = []
 
