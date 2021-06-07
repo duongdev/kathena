@@ -885,7 +885,8 @@ export class ClassworkService {
       createClassworkSubmissionInput,
     })
 
-    const { classworkId, submissionFiles } = createClassworkSubmissionInput
+    const { classworkId, submissionFiles, description } =
+      createClassworkSubmissionInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
@@ -903,6 +904,7 @@ export class ClassworkService {
     const classworkSubmission = await this.classworkSubmissionModel.create({
       createdByAccountId: accountId,
       classworkId,
+      description,
       orgId,
     })
 

@@ -21,4 +21,8 @@ export class ClassworkSubmission extends BaseModel {
   @Field((_type) => [String])
   @prop({ type: [Types.ObjectId] })
   submissionFileIds?: string[]
+
+  @Field()
+  @prop({ default: '' })
+  description?: string
 }
