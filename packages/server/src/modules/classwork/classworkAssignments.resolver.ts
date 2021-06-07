@@ -173,7 +173,6 @@ export class ClassworkAssignmentsResolver extends ClassworkResolver {
     @CurrentOrg() org: Org,
     @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
   ): Promise<AvgGradeOfClassworkByCourse[]> {
-    this.logger.log(org)
     return this.classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
       courseId,
       org.id,
