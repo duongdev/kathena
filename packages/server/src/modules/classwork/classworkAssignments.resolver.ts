@@ -20,6 +20,7 @@ import {
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
   AvgGradeOfClassworkByCourseOptionInput,
+  AvgGradeOfClassworkByCourse,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -158,12 +159,13 @@ export class ClassworkAssignmentsResolver extends ClassworkResolver {
     )
   }
 
-  @Mutation((_returns) => [Course])
+  @Mutation((_returns) => [AvgGradeOfClassworkByCourse])
   async test(
     @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('orgId', { type: () => ID }) orgId: string,
     @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
-  ): Promise<Course[]> {
-    return this.classworkService.test(courseId, optionInput)
+  ): Promise<AvgGradeOfClassworkByCourse[]> {
+    return this.classworkService.test(courseId, orgId, optionInput)
   }
 
   /**

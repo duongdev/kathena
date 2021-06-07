@@ -1,7 +1,6 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
-import { Types } from 'mongoose'
 
 import {
   Service,
@@ -10,6 +9,7 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
+import { AcademicService } from 'modules/academic/academic.service'
 import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
@@ -26,6 +26,7 @@ import {
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
   AvgGradeOfClassworkByCourseOptionInput,
+  AvgGradeOfClassworkByCourse,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -66,6 +67,9 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
+
+    @Inject(forwardRef(() => AcademicService))
+    private readonly academicService: AcademicService,
   ) {}
 
   /**
@@ -816,6 +820,46 @@ export class ClassworkService {
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
 
+  async calculateAvgGradeOfClassworkAssignment(
+    numberOfStudent: number,
+    classworkAssignmentId: string,
+    orgId: string,
+  ): Promise<number> {
+    const { classworkSubmissionModel } = this
+
+    const classworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      classworkAssignmentId,
+    )
+
+    this.logger.log(classworkAssignment)
+
+    let avgGrade = 0
+    if (!classworkAssignment) {
+      throw new Error(`Not found classwork assignment in course`)
+    }
+
+    const classworkSubmissions = await classworkSubmissionModel
+      .find({
+        classworkId: classworkAssignment.id,
+      })
+      .select({ grade: 1 })
+
+    let sum = 0
+
+    const classworkSubmissionsMap = classworkSubmissions.map(
+      async (classworkSubmission) => {
+        sum += classworkSubmission.grade
+      },
+    )
+
+    await Promise.all(classworkSubmissionsMap).then(() => {
+      avgGrade = sum / numberOfStudent
+    })
+
+    return avgGrade
+  }
+
   /**
    * END CLASSWORK ASSIGNMENT
    */
@@ -993,104 +1037,57 @@ export class ClassworkService {
 
   async test(
     courseId: string,
+    orgId: string,
     optionInput: AvgGradeOfClassworkByCourseOptionInput,
-  ): Promise<DocumentType<Course>[]> {
+  ): Promise<AvgGradeOfClassworkByCourse[]> {
     const { limit } = optionInput
 
-    const { ObjectId } = Types
+    const { courseModel, classworkAssignmentsModel } = this
 
-    const result = await this.courseModel.aggregate([
-      {
-        $match: {
-          _id: ObjectId(courseId),
-        },
+    const course = await courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    if (!course) {
+      throw new Error(`Course not found`)
+    }
+
+    const numberOfStudent = course.studentIds.length
+
+    const classworkAssignments = await classworkAssignmentsModel.find({
+      courseId,
+      orgId,
+    })
+
+    if (!classworkAssignments) {
+      throw new Error(`Not found classwork assignment in course`)
+    }
+
+    const dataList: AvgGradeOfClassworkByCourse[] = []
+
+    const classworkAssignmentsMap = classworkAssignments.map(
+      async (classworkAssignment) => {
+        const avgGrade = await this.calculateAvgGradeOfClassworkAssignment(
+          numberOfStudent,
+          classworkAssignment.id,
+          orgId,
+        )
+        const dataObj: AvgGradeOfClassworkByCourse = {
+          classworkTitle: classworkAssignment.title,
+          avgGrade,
+        }
+        return dataObj
       },
-      {
-        $project: {
-          code: 1,
-          name: 1,
-        },
-      },
-      {
-        $lookup: {
-          from: 'classworkassignments',
-          pipeline: [
-            {
-              $match: {
-                courseId,
-              },
-            },
-            {
-              $project: {
-                title: 1,
-                courseId: 1,
-              },
-            },
-            {
-              $lookup: {
-                from: 'classworksubmissions',
-                as: 'grades',
-                let: {
-                  classworkId: '$classworkId',
-                },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $eq: ['$$classworkId', '$id'],
-                      },
-                    },
-                  },
-                  {
-                    $group: {
-                      _id: '$classworkId',
-                      classworkId: {
-                        $sum: '$grade',
-                      },
-                    },
-                  },
-                  {
-                    $project: {
-                      grade: 1,
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-          as: 'classworks',
-        },
-      },
-    ])
+    )
 
-    // const kq = await this.classworkAssignmentsModel.aggregate(
-    //   [
-    //     {
-    //       $match: {
-    //         courseId: courseId
-    //       },
-    //     },
-    //     {
-    //       $lookup: {
-    //         from: 'classworksubmissions',
-    //         pipeline: [
-    //           {
-    //             $group: {
-    //               _id: '$classworkId',
-    //               // sumGrade: { $sum: '$grade' },
-    //             }
-    //           }
-    //         ],
-    //         as: "grades",
-    //       }
+    await Promise.all(classworkAssignmentsMap).then((dataObj) => {
+      dataObj.forEach((data) => {
+        dataList.push(data)
+      })
+    })
 
-    //     }
-    //   ]
-    // )
-
-    this.logger.log(result[0])
-
-    return result
+    return dataList
   }
 
   /**
