@@ -42,6 +42,7 @@ export const STUDYING_COURSE = `${STUDYING_COURSES}/:id/detail`
 export const STUDYING_COURSE_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/detail/classwork-assignments`
 export const STUDYING_COURSE_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/detail/classwork-materials`
 export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/detail-content`
+export const STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/Submission`
 export const STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/detail-comment`
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
