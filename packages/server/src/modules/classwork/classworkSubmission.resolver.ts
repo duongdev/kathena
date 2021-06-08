@@ -21,7 +21,7 @@ export class ClassworkSubmissionResolver {
   @UsePipes(ValidationPipe)
   async createClassworkSubmission(
     @Args('courseId', { type: () => ID }) courseId: string,
-    @Args('CreateClassworkMaterialInput')
+    @Args('createClassworkSubmissionInput')
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
