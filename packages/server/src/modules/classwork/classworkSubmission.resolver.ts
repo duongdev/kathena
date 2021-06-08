@@ -21,7 +21,7 @@ export class ClassworkSubmissionResolver {
   @UsePipes(ValidationPipe)
   async createClassworkSubmission(
     @Args('courseId', { type: () => ID }) courseId: string,
-    @Args('CreateClassworkMaterialInput')
+    @Args('createClassworkSubmissionInput')
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
@@ -55,7 +55,7 @@ export class ClassworkSubmissionResolver {
   @Query((_return) => [ClassworkSubmission])
   @UseAuthGuard(P.Classwork_ListClassworkSubmission)
   @UsePipes(ValidationPipe)
-  async listClassworkSubmissionsByClassworkAssignmentId(
+  async classworkSubmissions(
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
     @CurrentAccount() account: Account,

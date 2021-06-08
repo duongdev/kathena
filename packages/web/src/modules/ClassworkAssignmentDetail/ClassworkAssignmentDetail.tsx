@@ -1,6 +1,8 @@
 import { FC, useMemo, useState, useCallback } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
+import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
+import AccountDisplayName from 'components/AccountDisplayName'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
 import { useSnackbar } from 'notistack'
@@ -13,6 +15,7 @@ import { ANY } from '@kathena/types'
 import {
   Button,
   InfoBlock,
+  Link,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
@@ -25,8 +28,13 @@ import {
   Permission,
   useClassworkAssignmentDetailQuery,
   useRemoveAttachmentsFromClassworkAssignmentMutation,
+  useListClassworkSubmissionQuery,
 } from 'graphql/generated'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
+import {
+  buildPath,
+  TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
+} from 'utils/path-builder'
 
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
 
@@ -60,6 +68,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
+  const { data: dataSubmissions } = useListClassworkSubmissionQuery({
+    variables: { classworkAssignmentId: id },
+  })
   const [removeAttachmentsFromClassworkAssignment] =
     useRemoveAttachmentsFromClassworkAssignmentMutation({
       refetchQueries: [
@@ -74,6 +85,11 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
+
+  const classworkSubmissions = useMemo(
+    () => dataSubmissions?.classworkSubmissions,
+    [dataSubmissions],
+  )
 
   const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
     useDialogState()
@@ -229,8 +245,38 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 3 }}
           title="Sinh viên đã nộp"
+          fullHeight={false}
         >
-          <CardContent>Render tại đây</CardContent>
+          <CardContent>
+            {classworkSubmissions?.length ? (
+              classworkSubmissions.map((classworkSubmission) => (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '5px',
+                  }}
+                >
+                  <AccountAvatar
+                    accountId={classworkSubmission.createdByAccountId}
+                  />
+                  <Link
+                    style={{ marginLeft: '10px' }}
+                    to={buildPath(
+                      TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
+                      { id: classworkSubmission.id },
+                    )}
+                  >
+                    <AccountDisplayName
+                      accountId={classworkSubmission.createdByAccountId}
+                    />
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <Typography>Chưa có học viên nộp bài</Typography>
+            )}
+          </CardContent>
         </SectionCard>
       </Grid>
     </PageContainer>
