@@ -24,8 +24,6 @@ import {
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
-  AvgGradeOfClassworkByCourseOptionInput,
-  AvgGradeOfClassworkByCourse,
 } from './classwork.type'
 // import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'

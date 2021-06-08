@@ -24,8 +24,6 @@ import {
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
-  AvgGradeOfClassworkByCourseOptionInput,
-  AvgGradeOfClassworkByCourse,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
