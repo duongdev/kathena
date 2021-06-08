@@ -166,20 +166,6 @@ export class ClassworkAssignmentsResolver extends ClassworkResolver {
     )
   }
 
-  @Mutation((_returns) => [AvgGradeOfClassworkByCourse])
-  @UseAuthGuard(P.AvgGradeStatisticsOfClassworkInTheCourse)
-  async calculateAvgGradeOfClassworkAssignmentInCourse(
-    @Args('courseId', { type: () => ID }) courseId: string,
-    @CurrentOrg() org: Org,
-    @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
-  ): Promise<AvgGradeOfClassworkByCourse[]> {
-    return this.classworkService.calculateAvgGradeOfClassworkAssignmentInCourse(
-      courseId,
-      org.id,
-      optionInput,
-    )
-  }
-
   /**
    * END ASSIGNMENTS RESOLVER
    */
