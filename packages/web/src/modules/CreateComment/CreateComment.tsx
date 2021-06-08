@@ -1,6 +1,5 @@
 import { FC, useCallback } from 'react'
 
-import { makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 
@@ -35,7 +34,6 @@ const initialValues = {
 
 const CreateComment: FC<CreateCommentProps> = (props) => {
   const { targetId } = props
-  const classes = useStyles(props)
   const { enqueueSnackbar } = useSnackbar()
   const { $account: account } = useAuth()
   const [createComment] = useCreateCommentMutation()
@@ -59,7 +57,8 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
           return
         }
         enqueueSnackbar(`Bạn vừa bình luận`, { variant: 'success' })
-        // eslint-disable-next-line no-console
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        props.onSuccess && props.onSuccess(comment)
       } catch (error) {
         const errorMessage = renderApolloError(error)()
         enqueueSnackbar(errorMessage, { variant: 'error' })
@@ -67,7 +66,7 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
         console.error(error)
       }
     },
-    [account.id, targetId, createComment, enqueueSnackbar],
+    [props, account.id, targetId, createComment, enqueueSnackbar],
   )
 
   return (
@@ -80,9 +79,5 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
     </Formik>
   )
 }
-
-const useStyles = makeStyles(() => ({
-  root: {},
-}))
 
 export default CreateComment

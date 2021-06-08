@@ -11,8 +11,7 @@ import { CommentFormInput } from './CreateComment'
 
 export type CreateCommentFormProps = {}
 
-const CreateCommentForm: FC<CreateCommentFormProps> = (props) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const CreateCommentForm: FC<CreateCommentFormProps> = () => {
   const formik = useFormikContext<CommentFormInput>()
 
   return (
