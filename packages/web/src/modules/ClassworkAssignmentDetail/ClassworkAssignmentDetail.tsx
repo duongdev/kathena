@@ -157,90 +157,99 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
-        <SectionCard
-          maxContentHeight={false}
-          gridItem={{ xs: 9 }}
-          title="Thông tin bài tập"
-        >
-          <RequiredPermission
-            permission={Permission.Classwork_UpdateClassworkAssignment}
+        <Grid item xs={9} container spacing={DASHBOARD_SPACING}>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin bài tập"
           >
-            <UpdateClassworkAssignmentDialog
-              open={updateDialogOpen}
-              onClose={handleCloseUpdateDialog}
-              classworkAssignment={classworkAssignment}
-            />
-          </RequiredPermission>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={7}>
-                <Stack spacing={2}>
-                  <InfoBlock label="Tiêu đề">
-                    {classworkAssignment.title}
-                  </InfoBlock>
-                  <InfoBlock label="Khóa học">
-                    <CourseName courseId={classworkAssignment.courseId} />
-                  </InfoBlock>
-                  <InfoBlock label="Mô tả">
-                    <div
-                      // eslint-disable-next-line
-                      dangerouslySetInnerHTML={{
-                        __html: classworkAssignment.description as ANY,
-                      }}
-                    />
-                  </InfoBlock>
-                  <InfoBlock label="Tập tin đính kèm">
-                    {classworkAssignment.attachments.length ? (
-                      classworkAssignment.attachments.map((attachment) => (
-                        <FileComponent
-                          key={attachment}
-                          fileId={attachment}
-                          actions={[
-                            <Trash
-                              onClick={() => removeAttachment(attachment)}
-                              style={{ cursor: 'pointer' }}
-                              size={24}
-                            />,
-                          ]}
-                        />
-                      ))
-                    ) : (
-                      <Typography>Không có tập tin</Typography>
+            <RequiredPermission
+              permission={Permission.Classwork_UpdateClassworkAssignment}
+            >
+              <UpdateClassworkAssignmentDialog
+                open={updateDialogOpen}
+                onClose={handleCloseUpdateDialog}
+                classworkAssignment={classworkAssignment}
+              />
+            </RequiredPermission>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={7}>
+                  <Stack spacing={2}>
+                    <InfoBlock label="Tiêu đề">
+                      {classworkAssignment.title}
+                    </InfoBlock>
+                    <InfoBlock label="Khóa học">
+                      <CourseName courseId={classworkAssignment.courseId} />
+                    </InfoBlock>
+                    <InfoBlock label="Mô tả">
+                      <div
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                          __html: classworkAssignment.description as ANY,
+                        }}
+                      />
+                    </InfoBlock>
+                    <InfoBlock label="Tập tin đính kèm">
+                      {classworkAssignment.attachments.length ? (
+                        classworkAssignment.attachments.map((attachment) => (
+                          <FileComponent
+                            key={attachment}
+                            fileId={attachment}
+                            actions={[
+                              <Trash
+                                onClick={() => removeAttachment(attachment)}
+                                style={{ cursor: 'pointer' }}
+                                size={24}
+                              />,
+                            ]}
+                          />
+                        ))
+                      ) : (
+                        <Typography>Không có tập tin</Typography>
+                      )}
+                    </InfoBlock>
+                    {!openAddFile && (
+                      <Button
+                        onClick={() => setOpenAddFile(true)}
+                        startIcon={<FilePlus />}
+                      >
+                        Thêm tập tin
+                      </Button>
                     )}
-                  </InfoBlock>
-                  {!openAddFile && (
-                    <Button
-                      onClick={() => setOpenAddFile(true)}
-                      startIcon={<FilePlus />}
-                    >
-                      Thêm tập tin
-                    </Button>
-                  )}
-                  {openAddFile && (
-                    <AddAttachmentsToClassworkAssignment
-                      idClassworkAssignment={classworkAssignment.id}
-                      setOpen={setOpenAddFile}
-                    />
-                  )}
-                </Stack>
+                    {openAddFile && (
+                      <AddAttachmentsToClassworkAssignment
+                        idClassworkAssignment={classworkAssignment.id}
+                        setOpen={setOpenAddFile}
+                      />
+                    )}
+                  </Stack>
+                </Grid>
+                <Grid
+                  item
+                  xs={5}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography>Tỷ lệ nộp bài</Typography>
+                  <div>
+                    <Pie data={data1} type="pie" />
+                  </div>
+                </Grid>
               </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography>Tỷ lệ nộp bài</Typography>
-                <div>
-                  <Pie data={data1} type="pie" />
-                </div>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </SectionCard>
+            </CardContent>
+          </SectionCard>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Bình luận"
+          >
+            <CardContent>Comment here</CardContent>
+          </SectionCard>
+        </Grid>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 3 }}
