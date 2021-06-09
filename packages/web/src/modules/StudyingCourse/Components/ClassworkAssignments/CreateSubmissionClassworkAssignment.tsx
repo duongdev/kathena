@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useCallback, useMemo } from 'react'
 
 import { makeStyles } from '@material-ui/core'
@@ -61,15 +62,12 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
 
     const handleCreateAcademicSubject = useCallback(
       async (input: CreateSubmissionFormInput) => {
-        console.log(input)
-        console.log(id)
-        console.log(classworkAssignment?.id)
         try {
           await createCreateSubmission({
             variables: {
-              courseId: classworkAssignment?.id ?? '',
+              courseId: classworkAssignment?.courseId ?? '',
               CreateClassworkMaterialInput: {
-                classworkId: '',
+                classworkId: classworkAssignment?.id ?? '',
                 description: input.description,
                 submissionFiles: input.submissionFiles as ANY,
               },
@@ -92,6 +90,7 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
         classworkAssignment?.id,
         history,
         id,
+        classworkAssignment?.courseId,
       ],
     )
     return (
