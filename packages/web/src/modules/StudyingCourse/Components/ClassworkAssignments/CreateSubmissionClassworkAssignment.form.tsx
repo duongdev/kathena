@@ -36,7 +36,7 @@ const CreateSubmissionClassworkAssignmentForm: FC<CreateSubmissionClassworkAssig
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
-          gridItem={{ xs: 12, sm: 6 }}
+          gridItem={{ xs: 12, sm: 12 }}
           title="Thông tin bài tập"
         >
           <CardContent>
@@ -51,7 +51,7 @@ const CreateSubmissionClassworkAssignmentForm: FC<CreateSubmissionClassworkAssig
         </SectionCard>
         <SectionCard
           maxContentHeight={false}
-          gridItem={{ xs: 12, sm: 6 }}
+          gridItem={{ xs: 12, sm: 12 }}
           title={labels.submissionFiles}
           classes={{ root: classes.attachmentsCard }}
           fullHeight={false}

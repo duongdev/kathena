@@ -101,6 +101,7 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
       >
         {(formik) => (
           <PageContainer
+            maxWidth="md"
             title="Nộp bài tập"
             backButtonLabel="Chi tiết bài tập"
             withBackButton={buildPath(
