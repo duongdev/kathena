@@ -451,7 +451,7 @@ export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
 }
 
 export type MutationCreateClassworkSubmissionArgs = {
-  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  createClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }
 
@@ -559,7 +559,7 @@ export type Query = {
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
-  listClassworkSubmissionsByClassworkAssignmentId: Array<ClassworkSubmission>
+  classworkSubmissions: Array<ClassworkSubmission>
 }
 
 export type QueryAccountArgs = {
@@ -625,7 +625,7 @@ export type QueryClassworkAssignmentsArgs = {
   pageOptions: PageOptionsInput
 }
 
-export type QueryListClassworkSubmissionsByClassworkAssignmentIdArgs = {
+export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
@@ -901,6 +901,16 @@ export type RemoveAttachmentsFromClassworkAssignmentMutation = {
   >
 }
 
+export type ListClassworkSubmissionQueryVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+}>
+
+export type ListClassworkSubmissionQuery = {
+  classworkSubmissions: Array<
+    Pick<ClassworkSubmission, 'id' | 'createdByAccountId' | 'createdAt'>
+  >
+}
+
 export type CoursesQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
@@ -936,6 +946,17 @@ export type CreateClassworkAssignmentMutation = {
   createClassworkAssignment: Pick<
     ClassworkAssignment,
     'id' | 'title' | 'description'
+  >
+}
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput
+}>
+
+export type CreateCommentMutation = {
+  createComment: Pick<
+    Comment,
+    'id' | 'targetId' | 'content' | 'createdAt' | 'createdByAccountId'
   >
 }
 
@@ -3950,6 +3971,142 @@ export type RemoveAttachmentsFromClassworkAssignmentMutationOptions =
     RemoveAttachmentsFromClassworkAssignmentMutation,
     RemoveAttachmentsFromClassworkAssignmentMutationVariables
   >
+export const ListClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkSubmissions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >
+} &
+  TChildProps
+export function withListClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >(ListClassworkSubmissionDocument, {
+    alias: 'listClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListClassworkSubmissionQuery__
+ *
+ * To run a query within a React component, call `useListClassworkSubmissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClassworkSubmissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClassworkSubmissionQuery({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *   },
+ * });
+ */
+export function useListClassworkSubmissionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export function useListClassworkSubmissionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export type ListClassworkSubmissionQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionQuery
+>
+export type ListClassworkSubmissionLazyQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionLazyQuery
+>
+export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
+  ListClassworkSubmissionQuery,
+  ListClassworkSubmissionQueryVariables
+>
 export const CoursesDocument = {
   kind: 'Document',
   definitions: [
@@ -4315,6 +4472,139 @@ export type CreateClassworkAssignmentMutationOptions =
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
+export const CreateCommentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateComment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateCommentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createComment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'commentInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateCommentMutationFn = Apollo.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
+export type CreateCommentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateComment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateCommentMutation,
+    CreateCommentMutationVariables,
+    CreateCommentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateCommentMutation,
+    CreateCommentMutationVariables,
+    CreateCommentProps<TChildProps, TDataName>
+  >(CreateCommentDocument, {
+    alias: 'createComment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >(CreateCommentDocument, options)
+}
+export type CreateCommentMutationHookResult = ReturnType<
+  typeof useCreateCommentMutation
+>
+export type CreateCommentMutationResult =
+  Apollo.MutationResult<CreateCommentMutation>
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
 export const CreateCourseDocument = {
   kind: 'Document',
   definitions: [

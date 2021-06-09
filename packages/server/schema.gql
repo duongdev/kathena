@@ -275,7 +275,7 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
-  listClassworkSubmissionsByClassworkAssignmentId(classworkAssignmentId: ID!): [ClassworkSubmission!]!
+  classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
 }
 
 input AccountsFilterInput {
@@ -335,7 +335,7 @@ type Mutation {
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
-  createClassworkSubmission(CreateClassworkMaterialInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
+  createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   createComment(commentInput: CreateCommentInput!): Comment!
 }
