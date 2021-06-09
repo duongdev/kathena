@@ -1,18 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-props-no-spreading */
-import { FC, useMemo } from 'react'
+import { FC, useMemo, ReactNode } from 'react'
 
 import { makeStyles, Skeleton } from '@material-ui/core'
-import { File } from 'phosphor-react'
+import { Download, File } from 'phosphor-react'
 
 import { Typography } from '@kathena/ui'
 import { useFileQuery } from 'graphql/generated'
 
 export type FileComponentProps = {
   fileId: string
+  withDowloadButton?: boolean
+  actions?: ReactNode[]
 }
 const FileComponent: FC<FileComponentProps> = (props) => {
-  const { fileId, ...rest } = props
+  const { fileId, withDowloadButton = true, actions, ...rest } = props
   const classes = useStyles(props)
 
   const { data, loading } = useFileQuery({ variables: { id: fileId } })
@@ -49,9 +51,17 @@ const FileComponent: FC<FileComponentProps> = (props) => {
   }
 
   return (
-    <div className={classes.root} onClick={handleDownloadFile}>
+    <div className={classes.root}>
       <File size={24} />
       <Typography>{file?.name}</Typography>
+      {withDowloadButton && (
+        <Download
+          size={24}
+          style={{ margin: '0 10px', cursor: 'pointer' }}
+          onClick={handleDownloadFile}
+        />
+      )}
+      {actions?.length && actions.map((action) => action)}
     </div>
   )
 }
@@ -59,9 +69,8 @@ const FileComponent: FC<FileComponentProps> = (props) => {
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    alignContent: 'center',
+    alignItems: 'center',
     margin: '5px 10px',
-    cursor: 'pointer',
   },
 }))
 

@@ -1,6 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { index, prop } from '@typegoose/typegoose'
 
+import { GRADE_MIN } from '../classwork.const'
+
 import { Classwork, ClassworkType } from './Classwork'
 
 @index({
@@ -10,8 +12,8 @@ import { Classwork, ClassworkType } from './Classwork'
 })
 @ObjectType()
 export class ClassworkAssignment extends Classwork {
-  @Field((_type) => Date)
-  @prop({ type: Date, required: true })
+  @Field((_type) => Date, { nullable: true })
+  @prop({ type: Date, default: null })
   dueDate: Date
 
   @Field()
@@ -19,6 +21,6 @@ export class ClassworkAssignment extends Classwork {
   type: string
 
   @Field()
-  @prop({ default: 100 })
+  @prop({ default: GRADE_MIN })
   maxScores: number
 }

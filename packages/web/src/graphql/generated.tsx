@@ -108,7 +108,15 @@ export type ClassworkAssignment = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
-  dueDate: Scalars['DateTime']
+  resolveType: Array<Scalars['String']>
+  comments: CommentsPayload
+  dueDate?: Maybe<Scalars['DateTime']>
+  maxScores: Scalars['Float']
+}
+
+export type ClassworkAssignmentCommentsArgs = {
+  commentPageOptionInput: CommentPageOptionInput
+  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkAssignmentPayload = {
@@ -128,10 +136,48 @@ export type ClassworkMaterial = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
+  resolveType: Array<Scalars['String']>
+  comments: CommentsPayload
+}
+
+export type ClassworkMaterialCommentsArgs = {
+  commentPageOptionInput: CommentPageOptionInput
+  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkMaterialPayload = {
   classworkMaterials: Array<ClassworkMaterial>
+  count: Scalars['Int']
+}
+
+export type ClassworkSubmission = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  classworkId: Scalars['ID']
+  grade: Scalars['Float']
+  submissionFileIds: Array<Scalars['String']>
+  description: Scalars['String']
+}
+
+export type Comment = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  targetId: Scalars['ID']
+  content: Scalars['String']
+}
+
+export type CommentPageOptionInput = {
+  limit: Scalars['Int']
+}
+
+export type CommentsPayload = {
+  comments: Array<Comment>
   count: Scalars['Int']
 }
 
@@ -183,7 +229,7 @@ export type CreateClassworkAssignmentInput = {
   title: Scalars['String']
   description: Scalars['String']
   attachments?: Maybe<Array<Scalars['Upload']>>
-  dueDate: Scalars['String']
+  dueDate?: Maybe<Scalars['DateTime']>
   publicationState?: Maybe<Publication>
 }
 
@@ -192,6 +238,18 @@ export type CreateClassworkMaterialInput = {
   description?: Maybe<Scalars['String']>
   publicationState?: Maybe<Publication>
   attachments?: Maybe<Array<Scalars['Upload']>>
+}
+
+export type CreateClassworkSubmissionInput = {
+  classworkId: Scalars['ID']
+  submissionFiles?: Maybe<Array<Scalars['Upload']>>
+  description?: Maybe<Scalars['String']>
+}
+
+export type CreateCommentInput = {
+  createdByAccountId: Scalars['ID']
+  targetId: Scalars['ID']
+  content: Scalars['String']
 }
 
 export type CreateCourseInput = {
@@ -255,6 +313,9 @@ export type Mutation = {
   updateClassworkAssignmentPublication: ClassworkAssignment
   addAttachmentsToClassworkAssignment: ClassworkAssignment
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
+  createClassworkSubmission: ClassworkSubmission
+  setGradeForClassworkSubmission: ClassworkSubmission
+  createComment: Comment
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -389,6 +450,20 @@ export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
+export type MutationCreateClassworkSubmissionArgs = {
+  createClassworkSubmissionInput: CreateClassworkSubmissionInput
+  courseId: Scalars['ID']
+}
+
+export type MutationSetGradeForClassworkSubmissionArgs = {
+  setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
+  courseId: Scalars['ID']
+}
+
+export type MutationCreateCommentArgs = {
+  commentInput: CreateCommentInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -404,13 +479,13 @@ export type OrgAccountsPayload = {
 }
 
 export type OrgOffice = BaseModel & {
-  address: Scalars['String']
-  createdAt: Scalars['DateTime']
   id: Scalars['ID']
-  name: Scalars['String']
   orgId: Scalars['ID']
-  phone: Scalars['String']
+  createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
+  name: Scalars['String']
+  address: Scalars['String']
+  phone: Scalars['String']
 }
 
 export type PageOptionsInput = {
@@ -455,6 +530,10 @@ export enum Permission {
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
+  Comment_CreateComment = 'Comment_CreateComment',
+  Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
+  Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   NoPermission = 'NoPermission',
 }
 
@@ -480,6 +559,7 @@ export type Query = {
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
+  classworkSubmissions: Array<ClassworkSubmission>
 }
 
 export type QueryAccountArgs = {
@@ -539,14 +619,19 @@ export type QueryClassworkAssignmentArgs = {
   id: Scalars['ID']
 }
 
-export type QueryFindClassworkAssignmentByIdArgs = {
-  classworkAssignmentId: Scalars['ID']
-}
-
 export type QueryClassworkAssignmentsArgs = {
   searchText?: Maybe<Scalars['String']>
   courseId: Scalars['ID']
   pageOptions: PageOptionsInput
+}
+
+export type QueryClassworkSubmissionsArgs = {
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type SetGradeForClassworkSubmissionInput = {
+  submissionId: Scalars['ID']
+  grade: Scalars['Float']
 }
 
 export type SignInPayload = {
@@ -773,6 +858,56 @@ export type ClassworkAssignmentDetailQuery = {
     | 'publicationState'
     | 'attachments'
     | 'dueDate'
+  >
+}
+
+export type AddAttachmentsToClassworkAssignmentMutationVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+  attachmentsInput: AddAttachmentsToClassworkInput
+}>
+
+export type AddAttachmentsToClassworkAssignmentMutation = {
+  addAttachmentsToClassworkAssignment: Pick<
+    ClassworkAssignment,
+    | 'id'
+    | 'orgId'
+    | 'courseId'
+    | 'title'
+    | 'type'
+    | 'description'
+    | 'publicationState'
+    | 'attachments'
+    | 'dueDate'
+  >
+}
+
+export type RemoveAttachmentsFromClassworkAssignmentMutationVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+  attachments: Array<Scalars['String']> | Scalars['String']
+}>
+
+export type RemoveAttachmentsFromClassworkAssignmentMutation = {
+  removeAttachmentsFromClassworkAssignments: Pick<
+    ClassworkAssignment,
+    | 'id'
+    | 'orgId'
+    | 'courseId'
+    | 'title'
+    | 'type'
+    | 'description'
+    | 'publicationState'
+    | 'attachments'
+    | 'dueDate'
+  >
+}
+
+export type ListClassworkSubmissionQueryVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+}>
+
+export type ListClassworkSubmissionQuery = {
+  classworkSubmissions: Array<
+    Pick<ClassworkSubmission, 'id' | 'createdByAccountId' | 'createdAt'>
   >
 }
 
@@ -1013,6 +1148,61 @@ export type CreateClassworkMaterialMutation = {
   >
 }
 
+export type DetailClassworkMaterialQueryVariables = Exact<{
+  Id: Scalars['ID']
+}>
+
+export type DetailClassworkMaterialQuery = {
+  classworkMaterial: Pick<
+    ClassworkMaterial,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'createdByAccountId'
+    | 'title'
+    | 'description'
+    | 'attachments'
+    | 'publicationState'
+    | 'courseId'
+  >
+}
+
+export type UpdateClassworkMaterialMutationVariables = Exact<{
+  classworkMaterialId: Scalars['ID']
+  updateClassworkMaterialInput: UpdateClassworkMaterialInput
+}>
+
+export type UpdateClassworkMaterialMutation = {
+  updateClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'createdAt' | 'courseId' | 'title' | 'description' | 'attachments'
+  >
+}
+
+export type AddAttachmentsToClassworkMaterialMutationVariables = Exact<{
+  attachmentsInput: AddAttachmentsToClassworkInput
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type AddAttachmentsToClassworkMaterialMutation = {
+  addAttachmentsToClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'orgId' | 'title' | 'attachments'
+  >
+}
+
+export type RemoveAttachmentsFromClassworkMaterialMutationVariables = Exact<{
+  attachments: Array<Scalars['String']> | Scalars['String']
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type RemoveAttachmentsFromClassworkMaterialMutation = {
+  removeAttachmentsFromClassworkMaterial: Pick<
+    ClassworkMaterial,
+    'id' | 'orgId' | 'title' | 'attachments'
+  >
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -1055,6 +1245,18 @@ export type TeachingCourseListQuery = {
       >
     >
   }
+}
+
+export type UpdateClassworkAssignmentMutationVariables = Exact<{
+  id: Scalars['ID']
+  input: UpdateClassworkAssignmentInput
+}>
+
+export type UpdateClassworkAssignmentMutation = {
+  updateClassworkAssignment: Pick<
+    ClassworkAssignment,
+    'id' | 'courseId' | 'title' | 'description' | 'dueDate'
+  >
 }
 
 export type AddLecturesToCourseMutationVariables = Exact<{
@@ -1104,7 +1306,7 @@ export type RemoveStudentsFromCourseMutation = {
   removeStudentsFromCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
-export const AuthAccountFragmentDoc: DocumentNode = {
+export const AuthAccountFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -1127,8 +1329,8 @@ export const AuthAccountFragmentDoc: DocumentNode = {
       },
     },
   ],
-}
-export const AuthOrgFragmentDoc: DocumentNode = {
+} as unknown as DocumentNode
+export const AuthOrgFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
@@ -1148,8 +1350,8 @@ export const AuthOrgFragmentDoc: DocumentNode = {
       },
     },
   ],
-}
-export const SignInDocument: DocumentNode = {
+} as unknown as DocumentNode
+export const SignInDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1304,7 +1506,7 @@ export const SignInDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type SignInMutationFn = Apollo.MutationFunction<
   SignInMutation,
   SignInMutationVariables
@@ -1377,7 +1579,7 @@ export type SignInMutationOptions = Apollo.BaseMutationOptions<
   SignInMutation,
   SignInMutationVariables
 >
-export const AuthenticateDocument: DocumentNode = {
+export const AuthenticateDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1462,7 +1664,7 @@ export const AuthenticateDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AuthenticateProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1545,7 +1747,7 @@ export type AuthenticateQueryResult = Apollo.QueryResult<
   AuthenticateQuery,
   AuthenticateQueryVariables
 >
-export const CanAccountManageRolesDocument: DocumentNode = {
+export const CanAccountManageRolesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1595,7 +1797,7 @@ export const CanAccountManageRolesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CanAccountManageRolesProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1679,7 +1881,7 @@ export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
   CanAccountManageRolesQuery,
   CanAccountManageRolesQueryVariables
 >
-export const AccountAvatarDocument: DocumentNode = {
+export const AccountAvatarDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1730,7 +1932,7 @@ export const AccountAvatarDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountAvatarProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1814,7 +2016,7 @@ export type AccountAvatarQueryResult = Apollo.QueryResult<
   AccountAvatarQuery,
   AccountAvatarQueryVariables
 >
-export const AccountDisplayNameDocument: DocumentNode = {
+export const AccountDisplayNameDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1860,7 +2062,7 @@ export const AccountDisplayNameDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountDisplayNameProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -1944,7 +2146,7 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
-export const FileDocument: DocumentNode = {
+export const FileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -1993,7 +2195,7 @@ export const FileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
 } &
@@ -2055,7 +2257,7 @@ export function useFileLazyQuery(
 export type FileQueryHookResult = ReturnType<typeof useFileQuery>
 export type FileLazyQueryHookResult = ReturnType<typeof useFileLazyQuery>
 export type FileQueryResult = Apollo.QueryResult<FileQuery, FileQueryVariables>
-export const ImageFileDocument: DocumentNode = {
+export const ImageFileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2104,7 +2306,7 @@ export const ImageFileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ImageFileProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2183,7 +2385,7 @@ export type ImageFileQueryResult = Apollo.QueryResult<
   ImageFileQuery,
   ImageFileQueryVariables
 >
-export const AcademicSubjectDetailDocument: DocumentNode = {
+export const AcademicSubjectDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2232,7 +2434,7 @@ export const AcademicSubjectDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AcademicSubjectDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2316,7 +2518,7 @@ export type AcademicSubjectDetailQueryResult = Apollo.QueryResult<
   AcademicSubjectDetailQuery,
   AcademicSubjectDetailQueryVariables
 >
-export const UpdateFileDocument: DocumentNode = {
+export const UpdateFileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2383,7 +2585,7 @@ export const UpdateFileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateFileMutationFn = Apollo.MutationFunction<
   UpdateFileMutation,
   UpdateFileMutationVariables
@@ -2459,7 +2661,7 @@ export type UpdateFileMutationOptions = Apollo.BaseMutationOptions<
   UpdateFileMutation,
   UpdateFileMutationVariables
 >
-export const AcademicSubjectListDocument: DocumentNode = {
+export const AcademicSubjectListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2600,7 +2802,7 @@ export const AcademicSubjectListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AcademicSubjectListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2687,7 +2889,7 @@ export type AcademicSubjectListQueryResult = Apollo.QueryResult<
   AcademicSubjectListQuery,
   AcademicSubjectListQueryVariables
 >
-export const AccountProfileDocument: DocumentNode = {
+export const AccountProfileDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2746,7 +2948,7 @@ export const AccountProfileDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AccountProfileProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -2830,7 +3032,7 @@ export type AccountProfileQueryResult = Apollo.QueryResult<
   AccountProfileQuery,
   AccountProfileQueryVariables
 >
-export const UpdateAccountStatusDocument: DocumentNode = {
+export const UpdateAccountStatusDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -2901,7 +3103,7 @@ export const UpdateAccountStatusDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAccountStatusMutationFn = Apollo.MutationFunction<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
@@ -2978,7 +3180,7 @@ export type UpdateAccountStatusMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountStatusMutation,
   UpdateAccountStatusMutationVariables
 >
-export const UpdateAccountDocument: DocumentNode = {
+export const UpdateAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3050,7 +3252,7 @@ export const UpdateAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAccountMutationFn = Apollo.MutationFunction<
   UpdateAccountMutation,
   UpdateAccountMutationVariables
@@ -3127,7 +3329,7 @@ export type UpdateAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateAccountMutation,
   UpdateAccountMutationVariables
 >
-export const UpdateSelfAccountDocument: DocumentNode = {
+export const UpdateSelfAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3199,7 +3401,7 @@ export const UpdateSelfAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateSelfAccountMutationFn = Apollo.MutationFunction<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
@@ -3276,7 +3478,7 @@ export type UpdateSelfAccountMutationOptions = Apollo.BaseMutationOptions<
   UpdateSelfAccountMutation,
   UpdateSelfAccountMutationVariables
 >
-export const ClassworkAssignmentDetailDocument: DocumentNode = {
+export const ClassworkAssignmentDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3331,7 +3533,7 @@ export const ClassworkAssignmentDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkAssignmentDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -3415,7 +3617,472 @@ export type ClassworkAssignmentDetailQueryResult = Apollo.QueryResult<
   ClassworkAssignmentDetailQuery,
   ClassworkAssignmentDetailQueryVariables
 >
-export const CoursesDocument: DocumentNode = {
+export const AddAttachmentsToClassworkAssignmentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddAttachmentsToClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachmentsInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddAttachmentsToClassworkInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'addAttachmentsToClassworkAssignment',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachmentsInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachmentsInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddAttachmentsToClassworkAssignmentMutationFn =
+  Apollo.MutationFunction<
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables
+  >
+export type AddAttachmentsToClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withAddAttachmentsToClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables,
+    AddAttachmentsToClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables,
+    AddAttachmentsToClassworkAssignmentProps<TChildProps, TDataName>
+  >(AddAttachmentsToClassworkAssignmentDocument, {
+    alias: 'addAttachmentsToClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddAttachmentsToClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useAddAttachmentsToClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttachmentsToClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttachmentsToClassworkAssignmentMutation, { data, loading, error }] = useAddAttachmentsToClassworkAssignmentMutation({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *      attachmentsInput: // value for 'attachmentsInput'
+ *   },
+ * });
+ */
+export function useAddAttachmentsToClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables
+  >(AddAttachmentsToClassworkAssignmentDocument, options)
+}
+export type AddAttachmentsToClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useAddAttachmentsToClassworkAssignmentMutation
+>
+export type AddAttachmentsToClassworkAssignmentMutationResult =
+  Apollo.MutationResult<AddAttachmentsToClassworkAssignmentMutation>
+export type AddAttachmentsToClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddAttachmentsToClassworkAssignmentMutation,
+    AddAttachmentsToClassworkAssignmentMutationVariables
+  >
+export const RemoveAttachmentsFromClassworkAssignmentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveAttachmentsFromClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachments' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'removeAttachmentsFromClassworkAssignments',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachments' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachments' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveAttachmentsFromClassworkAssignmentMutationFn =
+  Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables
+  >
+export type RemoveAttachmentsFromClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveAttachmentsFromClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables,
+    RemoveAttachmentsFromClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables,
+    RemoveAttachmentsFromClassworkAssignmentProps<TChildProps, TDataName>
+  >(RemoveAttachmentsFromClassworkAssignmentDocument, {
+    alias: 'removeAttachmentsFromClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveAttachmentsFromClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useRemoveAttachmentsFromClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveAttachmentsFromClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeAttachmentsFromClassworkAssignmentMutation, { data, loading, error }] = useRemoveAttachmentsFromClassworkAssignmentMutation({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *      attachments: // value for 'attachments'
+ *   },
+ * });
+ */
+export function useRemoveAttachmentsFromClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables
+  >(RemoveAttachmentsFromClassworkAssignmentDocument, options)
+}
+export type RemoveAttachmentsFromClassworkAssignmentMutationHookResult =
+  ReturnType<typeof useRemoveAttachmentsFromClassworkAssignmentMutation>
+export type RemoveAttachmentsFromClassworkAssignmentMutationResult =
+  Apollo.MutationResult<RemoveAttachmentsFromClassworkAssignmentMutation>
+export type RemoveAttachmentsFromClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveAttachmentsFromClassworkAssignmentMutation,
+    RemoveAttachmentsFromClassworkAssignmentMutationVariables
+  >
+export const ListClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkSubmissions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >
+} &
+  TChildProps
+export function withListClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >(ListClassworkSubmissionDocument, {
+    alias: 'listClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListClassworkSubmissionQuery__
+ *
+ * To run a query within a React component, call `useListClassworkSubmissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClassworkSubmissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClassworkSubmissionQuery({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *   },
+ * });
+ */
+export function useListClassworkSubmissionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export function useListClassworkSubmissionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export type ListClassworkSubmissionQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionQuery
+>
+export type ListClassworkSubmissionLazyQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionLazyQuery
+>
+export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
+  ListClassworkSubmissionQuery,
+  ListClassworkSubmissionQueryVariables
+>
+export const CoursesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3552,7 +4219,7 @@ export const CoursesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CoursesProps<TChildProps = {}, TDataName extends string = 'data'> =
   {
     [key in TDataName]: ApolloReactHoc.DataValue<
@@ -3629,7 +4296,7 @@ export type CoursesQueryResult = Apollo.QueryResult<
   CoursesQuery,
   CoursesQueryVariables
 >
-export const CreateClassworkAssignmentDocument: DocumentNode = {
+export const CreateClassworkAssignmentDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3700,7 +4367,7 @@ export const CreateClassworkAssignmentDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateClassworkAssignmentMutationFn = Apollo.MutationFunction<
   CreateClassworkAssignmentMutation,
   CreateClassworkAssignmentMutationVariables
@@ -3778,7 +4445,7 @@ export type CreateClassworkAssignmentMutationOptions =
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
-export const CreateCourseDocument: DocumentNode = {
+export const CreateCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3830,7 +4497,7 @@ export const CreateCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateCourseMutationFn = Apollo.MutationFunction<
   CreateCourseMutation,
   CreateCourseMutationVariables
@@ -3906,7 +4573,7 @@ export type CreateCourseMutationOptions = Apollo.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
 >
-export const CreateAcademicSubjectDocument: DocumentNode = {
+export const CreateAcademicSubjectDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -3958,7 +4625,7 @@ export const CreateAcademicSubjectDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateAcademicSubjectMutationFn = Apollo.MutationFunction<
   CreateAcademicSubjectMutation,
   CreateAcademicSubjectMutationVariables
@@ -4034,7 +4701,7 @@ export type CreateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   CreateAcademicSubjectMutation,
   CreateAcademicSubjectMutationVariables
 >
-export const FindAcademicSubjectByIdDocument: DocumentNode = {
+export const FindAcademicSubjectByIdDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4083,7 +4750,7 @@ export const FindAcademicSubjectByIdDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FindAcademicSubjectByIdProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -4167,7 +4834,7 @@ export type FindAcademicSubjectByIdQueryResult = Apollo.QueryResult<
   FindAcademicSubjectByIdQuery,
   FindAcademicSubjectByIdQueryVariables
 >
-export const UpdateAcademicSubjectDocument: DocumentNode = {
+export const UpdateAcademicSubjectDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4235,7 +4902,7 @@ export const UpdateAcademicSubjectDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAcademicSubjectMutationFn = Apollo.MutationFunction<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
@@ -4312,7 +4979,7 @@ export type UpdateAcademicSubjectMutationOptions = Apollo.BaseMutationOptions<
   UpdateAcademicSubjectMutation,
   UpdateAcademicSubjectMutationVariables
 >
-export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
+export const UpdateAcademicSubjectPublicationDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4380,7 +5047,7 @@ export const UpdateAcademicSubjectPublicationDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateAcademicSubjectPublicationMutationFn =
   Apollo.MutationFunction<
     UpdateAcademicSubjectPublicationMutation,
@@ -4459,7 +5126,7 @@ export type UpdateAcademicSubjectPublicationMutationOptions =
     UpdateAcademicSubjectPublicationMutation,
     UpdateAcademicSubjectPublicationMutationVariables
   >
-export const CreateAccountDocument: DocumentNode = {
+export const CreateAccountDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4512,7 +5179,7 @@ export const CreateAccountDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateAccountMutationFn = Apollo.MutationFunction<
   CreateAccountMutation,
   CreateAccountMutationVariables
@@ -4588,7 +5255,7 @@ export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
   CreateAccountMutation,
   CreateAccountMutationVariables
 >
-export const OrgAccountListDocument: DocumentNode = {
+export const OrgAccountListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4757,7 +5424,7 @@ export const OrgAccountListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type OrgAccountListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -4845,7 +5512,7 @@ export type OrgAccountListQueryResult = Apollo.QueryResult<
   OrgAccountListQuery,
   OrgAccountListQueryVariables
 >
-export const ListOrgOfficesDocument: DocumentNode = {
+export const ListOrgOfficesDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -4872,7 +5539,7 @@ export const ListOrgOfficesDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ListOrgOfficesProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -4955,7 +5622,7 @@ export type ListOrgOfficesQueryResult = Apollo.QueryResult<
   ListOrgOfficesQuery,
   ListOrgOfficesQueryVariables
 >
-export const CreateOrgOfficeDocument: DocumentNode = {
+export const CreateOrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5006,7 +5673,7 @@ export const CreateOrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateOrgOfficeMutationFn = Apollo.MutationFunction<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
@@ -5082,7 +5749,7 @@ export type CreateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   CreateOrgOfficeMutation,
   CreateOrgOfficeMutationVariables
 >
-export const UpdateOrgOfficeDocument: DocumentNode = {
+export const UpdateOrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5149,7 +5816,7 @@ export const UpdateOrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type UpdateOrgOfficeMutationFn = Apollo.MutationFunction<
   UpdateOrgOfficeMutation,
   UpdateOrgOfficeMutationVariables
@@ -5226,7 +5893,7 @@ export type UpdateOrgOfficeMutationOptions = Apollo.BaseMutationOptions<
   UpdateOrgOfficeMutation,
   UpdateOrgOfficeMutationVariables
 >
-export const OrgOfficeDocument: DocumentNode = {
+export const OrgOfficeDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5273,7 +5940,7 @@ export const OrgOfficeDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type OrgOfficeProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5352,7 +6019,7 @@ export type OrgOfficeQueryResult = Apollo.QueryResult<
   OrgOfficeQuery,
   OrgOfficeQueryVariables
 >
-export const StudyingCourseListDocument: DocumentNode = {
+export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5507,7 +6174,7 @@ export const StudyingCourseListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type StudyingCourseListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5594,7 +6261,7 @@ export type StudyingCourseListQueryResult = Apollo.QueryResult<
   StudyingCourseListQuery,
   StudyingCourseListQueryVariables
 >
-export const ClassworkAssignmentListDocument: DocumentNode = {
+export const ClassworkAssignmentListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5718,7 +6385,7 @@ export const ClassworkAssignmentListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkAssignmentListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -5804,7 +6471,7 @@ export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
 >
-export const ClassworkMaterialsListDocument: DocumentNode = {
+export const ClassworkMaterialsListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -5930,7 +6597,7 @@ export const ClassworkMaterialsListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type ClassworkMaterialsListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6016,7 +6683,7 @@ export type ClassworkMaterialsListQueryResult = Apollo.QueryResult<
   ClassworkMaterialsListQuery,
   ClassworkMaterialsListQueryVariables
 >
-export const CreateClassworkMaterialDocument: DocumentNode = {
+export const CreateClassworkMaterialDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6090,7 +6757,7 @@ export const CreateClassworkMaterialDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CreateClassworkMaterialMutationFn = Apollo.MutationFunction<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
@@ -6167,7 +6834,610 @@ export type CreateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
   CreateClassworkMaterialMutation,
   CreateClassworkMaterialMutationVariables
 >
-export const CourseDetailDocument: DocumentNode = {
+export const DetailClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'DetailClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'Id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'Id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type DetailClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >
+} &
+  TChildProps
+export function withDetailClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables,
+    DetailClassworkMaterialProps<TChildProps, TDataName>
+  >(DetailClassworkMaterialDocument, {
+    alias: 'detailClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useDetailClassworkMaterialQuery__
+ *
+ * To run a query within a React component, call `useDetailClassworkMaterialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailClassworkMaterialQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailClassworkMaterialQuery({
+ *   variables: {
+ *      Id: // value for 'Id'
+ *   },
+ * });
+ */
+export function useDetailClassworkMaterialQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export function useDetailClassworkMaterialLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    DetailClassworkMaterialQuery,
+    DetailClassworkMaterialQueryVariables
+  >(DetailClassworkMaterialDocument, options)
+}
+export type DetailClassworkMaterialQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialQuery
+>
+export type DetailClassworkMaterialLazyQueryHookResult = ReturnType<
+  typeof useDetailClassworkMaterialLazyQuery
+>
+export type DetailClassworkMaterialQueryResult = Apollo.QueryResult<
+  DetailClassworkMaterialQuery,
+  DetailClassworkMaterialQueryVariables
+>
+export const UpdateClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updateClassworkMaterialInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateClassworkMaterialInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateClassworkMaterialInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updateClassworkMaterialInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateClassworkMaterialMutationFn = Apollo.MutationFunction<
+  UpdateClassworkMaterialMutation,
+  UpdateClassworkMaterialMutationVariables
+>
+export type UpdateClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkMaterialMutation,
+    UpdateClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkMaterialMutation,
+    UpdateClassworkMaterialMutationVariables,
+    UpdateClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkMaterialMutation,
+    UpdateClassworkMaterialMutationVariables,
+    UpdateClassworkMaterialProps<TChildProps, TDataName>
+  >(UpdateClassworkMaterialDocument, {
+    alias: 'updateClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkMaterialMutation, { data, loading, error }] = useUpdateClassworkMaterialMutation({
+ *   variables: {
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *      updateClassworkMaterialInput: // value for 'updateClassworkMaterialInput'
+ *   },
+ * });
+ */
+export function useUpdateClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkMaterialMutation,
+    UpdateClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkMaterialMutation,
+    UpdateClassworkMaterialMutationVariables
+  >(UpdateClassworkMaterialDocument, options)
+}
+export type UpdateClassworkMaterialMutationHookResult = ReturnType<
+  typeof useUpdateClassworkMaterialMutation
+>
+export type UpdateClassworkMaterialMutationResult =
+  Apollo.MutationResult<UpdateClassworkMaterialMutation>
+export type UpdateClassworkMaterialMutationOptions = Apollo.BaseMutationOptions<
+  UpdateClassworkMaterialMutation,
+  UpdateClassworkMaterialMutationVariables
+>
+export const AddAttachmentsToClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddAttachmentsToClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachmentsInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddAttachmentsToClassworkInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addAttachmentsToClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachmentsInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachmentsInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddAttachmentsToClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+export type AddAttachmentsToClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withAddAttachmentsToClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables,
+    AddAttachmentsToClassworkMaterialProps<TChildProps, TDataName>
+  >(AddAttachmentsToClassworkMaterialDocument, {
+    alias: 'addAttachmentsToClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddAttachmentsToClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useAddAttachmentsToClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttachmentsToClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttachmentsToClassworkMaterialMutation, { data, loading, error }] = useAddAttachmentsToClassworkMaterialMutation({
+ *   variables: {
+ *      attachmentsInput: // value for 'attachmentsInput'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useAddAttachmentsToClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >(AddAttachmentsToClassworkMaterialDocument, options)
+}
+export type AddAttachmentsToClassworkMaterialMutationHookResult = ReturnType<
+  typeof useAddAttachmentsToClassworkMaterialMutation
+>
+export type AddAttachmentsToClassworkMaterialMutationResult =
+  Apollo.MutationResult<AddAttachmentsToClassworkMaterialMutation>
+export type AddAttachmentsToClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddAttachmentsToClassworkMaterialMutation,
+    AddAttachmentsToClassworkMaterialMutationVariables
+  >
+export const RemoveAttachmentsFromClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveAttachmentsFromClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'attachments' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'String' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'removeAttachmentsFromClassworkMaterial',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'attachments' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'attachments' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveAttachmentsFromClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export type RemoveAttachmentsFromClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveAttachmentsFromClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables,
+    RemoveAttachmentsFromClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables,
+    RemoveAttachmentsFromClassworkMaterialProps<TChildProps, TDataName>
+  >(RemoveAttachmentsFromClassworkMaterialDocument, {
+    alias: 'removeAttachmentsFromClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveAttachmentsFromClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useRemoveAttachmentsFromClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveAttachmentsFromClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeAttachmentsFromClassworkMaterialMutation, { data, loading, error }] = useRemoveAttachmentsFromClassworkMaterialMutation({
+ *   variables: {
+ *      attachments: // value for 'attachments'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useRemoveAttachmentsFromClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >(RemoveAttachmentsFromClassworkMaterialDocument, options)
+}
+export type RemoveAttachmentsFromClassworkMaterialMutationHookResult =
+  ReturnType<typeof useRemoveAttachmentsFromClassworkMaterialMutation>
+export type RemoveAttachmentsFromClassworkMaterialMutationResult =
+  Apollo.MutationResult<RemoveAttachmentsFromClassworkMaterialMutation>
+export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveAttachmentsFromClassworkMaterialMutation,
+    RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6222,7 +7492,7 @@ export const CourseDetailDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type CourseDetailProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6306,7 +7576,7 @@ export type CourseDetailQueryResult = Apollo.QueryResult<
   CourseDetailQuery,
   CourseDetailQueryVariables
 >
-export const TeachingCourseListDocument: DocumentNode = {
+export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6457,7 +7727,7 @@ export const TeachingCourseListDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type TeachingCourseListProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6544,7 +7814,155 @@ export type TeachingCourseListQueryResult = Apollo.QueryResult<
   TeachingCourseListQuery,
   TeachingCourseListQueryVariables
 >
-export const AddLecturesToCourseDocument: DocumentNode = {
+export const UpdateClassworkAssignmentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateClassworkAssignmentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  UpdateClassworkAssignmentMutation,
+  UpdateClassworkAssignmentMutationVariables
+>
+export type UpdateClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables,
+    UpdateClassworkAssignmentProps<TChildProps, TDataName>
+  >(UpdateClassworkAssignmentDocument, {
+    alias: 'updateClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkAssignmentMutation, { data, loading, error }] = useUpdateClassworkAssignmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >(UpdateClassworkAssignmentDocument, options)
+}
+export type UpdateClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useUpdateClassworkAssignmentMutation
+>
+export type UpdateClassworkAssignmentMutationResult =
+  Apollo.MutationResult<UpdateClassworkAssignmentMutation>
+export type UpdateClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkAssignmentMutation,
+    UpdateClassworkAssignmentMutationVariables
+  >
+export const AddLecturesToCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6621,7 +8039,7 @@ export const AddLecturesToCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AddLecturesToCourseMutationFn = Apollo.MutationFunction<
   AddLecturesToCourseMutation,
   AddLecturesToCourseMutationVariables
@@ -6698,7 +8116,7 @@ export type AddLecturesToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddLecturesToCourseMutation,
   AddLecturesToCourseMutationVariables
 >
-export const AddStudentToCourseDocument: DocumentNode = {
+export const AddStudentToCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6775,7 +8193,7 @@ export const AddStudentToCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type AddStudentToCourseMutationFn = Apollo.MutationFunction<
   AddStudentToCourseMutation,
   AddStudentToCourseMutationVariables
@@ -6852,7 +8270,7 @@ export type AddStudentToCourseMutationOptions = Apollo.BaseMutationOptions<
   AddStudentToCourseMutation,
   AddStudentToCourseMutationVariables
 >
-export const FindCourseByIdDocument: DocumentNode = {
+export const FindCourseByIdDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -6900,7 +8318,7 @@ export const FindCourseByIdDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type FindCourseByIdProps<
   TChildProps = {},
   TDataName extends string = 'data',
@@ -6984,7 +8402,7 @@ export type FindCourseByIdQueryResult = Apollo.QueryResult<
   FindCourseByIdQuery,
   FindCourseByIdQueryVariables
 >
-export const RemoveLecturersFromCourseDocument: DocumentNode = {
+export const RemoveLecturersFromCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7058,7 +8476,7 @@ export const RemoveLecturersFromCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
   RemoveLecturersFromCourseMutation,
   RemoveLecturersFromCourseMutationVariables
@@ -7136,7 +8554,7 @@ export type RemoveLecturersFromCourseMutationOptions =
     RemoveLecturersFromCourseMutation,
     RemoveLecturersFromCourseMutationVariables
   >
-export const RemoveStudentsFromCourseDocument: DocumentNode = {
+export const RemoveStudentsFromCourseDocument = {
   kind: 'Document',
   definitions: [
     {
@@ -7210,7 +8628,7 @@ export const RemoveStudentsFromCourseDocument: DocumentNode = {
       },
     },
   ],
-}
+} as unknown as DocumentNode
 export type RemoveStudentsFromCourseMutationFn = Apollo.MutationFunction<
   RemoveStudentsFromCourseMutation,
   RemoveStudentsFromCourseMutationVariables

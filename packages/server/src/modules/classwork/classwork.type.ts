@@ -70,9 +70,8 @@ export class CreateClassworkAssignmentInput {
   @Field((_type) => [GraphQLUpload], { defaultValue: [] })
   attachments?: Promise<FileUpload>[]
 
-  @Field()
-  @IsNotEmpty({ message: 'Due date cannot be empty' })
-  dueDate: string
+  @Field({ nullable: true })
+  dueDate?: Date
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
@@ -102,11 +101,21 @@ export class AddAttachmentsToClassworkInput {
 @InputType()
 export class CreateClassworkSubmissionInput {
   @Field((_type) => ID)
-  createdByAccountId: string
-
-  @Field((_type) => ID)
   classworkId: string
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
-  submissionFileIds?: Promise<FileUpload>[]
+  submissionFiles?: Promise<FileUpload>[]
+
+  @Field({ nullable: true, defaultValue: null })
+  @IsOptional()
+  description?: string
+}
+
+@InputType()
+export class SetGradeForClassworkSubmissionInput {
+  @Field((_type) => ID)
+  submissionId: string
+
+  @Field((_type) => Number)
+  grade: number
 }

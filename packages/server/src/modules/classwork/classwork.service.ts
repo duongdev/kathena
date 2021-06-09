@@ -16,12 +16,14 @@ import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
+import { GRADE_MAX, GRADE_MIN } from './classwork.const'
 import {
   UpdateClassworkMaterialInput,
   CreateClassworkAssignmentInput,
   CreateClassworkMaterialInput,
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
+  SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -405,10 +407,6 @@ export class ClassworkService {
       _id: classworkMaterialId,
     })
 
-    if (!classworkMaterial) {
-      throw new Error(`ClassworkMaterial not found`)
-    }
-
     return classworkMaterial
   }
 
@@ -542,10 +540,6 @@ export class ClassworkService {
       orgId,
     })
 
-    if (!classworkAssignment) {
-      throw new Error(`ClassworkAssignment not found.`)
-    }
-
     return classworkAssignment
   }
 
@@ -656,10 +650,15 @@ export class ClassworkService {
     }
 
     const currentDate = new Date()
-    const dueDateInput = new Date(dueDate)
+    let dueDateInput
+    if (dueDate) {
+      dueDateInput = new Date(dueDate)
 
-    if (dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)) {
-      throw new Error(`DUE_DATE_INVALID`)
+      if (
+        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      ) {
+        throw new Error(`DUE_DATE_INVALID`)
+      }
     }
 
     let classworkAssignment = await this.classworkAssignmentsModel.create({
@@ -724,12 +723,24 @@ export class ClassworkService {
     if (update.dueDate) {
       const currentDate = new Date()
       const dueDateInput = new Date(update.dueDate)
-      if (
-        dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+      if (classworkAssignmentUpdate.dueDate === null) {
+        if (
+          dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        ) {
+          throw new Error('DUE_DATE_INVALID')
+        }
+        classworkAssignmentUpdate.dueDate = dueDateInput
+      } else if (
+        classworkAssignmentUpdate.dueDate.setHours(7, 0, 0, 0) !==
+        dueDateInput.setHours(7, 0, 0, 0)
       ) {
-        throw new Error('START_DATE_INVALID')
+        if (
+          dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+        ) {
+          throw new Error('DUE_DATE_INVALID')
+        }
+        classworkAssignmentUpdate.dueDate = dueDateInput
       }
-      classworkAssignmentUpdate.dueDate = dueDateInput
     }
 
     const updated = await classworkAssignmentUpdate.save()
@@ -816,6 +827,7 @@ export class ClassworkService {
   async createClassworkSubmission(
     orgId: string,
     courseId: string,
+    accountId: string,
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
   ): Promise<DocumentType<ClassworkSubmission>> {
     this.logger.log(
@@ -827,7 +839,7 @@ export class ClassworkService {
       createClassworkSubmissionInput,
     })
 
-    const { createdByAccountId, classworkId, submissionFileIds } =
+    const { classworkId, submissionFiles, description } =
       createClassworkSubmissionInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
@@ -835,7 +847,7 @@ export class ClassworkService {
 
     if (
       !(await this.authService.isAccountStudentFormCourse(
-        createdByAccountId,
+        accountId,
         courseId,
         orgId,
       ))
@@ -844,17 +856,19 @@ export class ClassworkService {
     }
 
     const classworkSubmission = await this.classworkSubmissionModel.create({
-      createdByAccountId,
+      createdByAccountId: accountId,
       classworkId,
+      description,
+      orgId,
     })
 
     let classworkSubmissionWithFileIds: ANY = null
 
-    if (submissionFileIds) {
+    if (submissionFiles) {
       const fileIds = await this.uploadFilesAttachments(
         orgId,
-        createdByAccountId,
-        submissionFileIds,
+        accountId,
+        submissionFiles,
       )
       if (!fileIds) {
         this.classworkSubmissionModel.findByIdAndDelete(classworkSubmission)
@@ -864,7 +878,7 @@ export class ClassworkService {
         await this.classworkSubmissionModel.findByIdAndUpdate(
           classworkSubmission.id,
           {
-            submissionFilseIds: fileIds,
+            submissionFileIds: fileIds,
           },
           {
             new: true,
@@ -872,13 +886,101 @@ export class ClassworkService {
         )
     }
 
+    const res = classworkSubmissionWithFileIds || classworkSubmission
+
     this.logger.log(
       `[${this.createClassworkSubmission.name}] Created createClassworkSubmission successfully`,
     )
 
-    this.logger.verbose(classworkSubmission.toObject())
+    this.logger.verbose(res.toObject())
 
-    return classworkSubmissionWithFileIds || classworkSubmission
+    return res
+  }
+
+  async setGradeForClassworkSubmission(
+    orgId: string,
+    courseId: string,
+    gradeByAccountId: string,
+    setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    const { submissionId, grade } = setGradeForClassworkSubmissionInput
+
+    if (!(await this.orgService.validateOrgId(orgId)))
+      throw new Error('ORG_ID_INVALID')
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        gradeByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
+    }
+
+    const classworkSubmissionBefore =
+      await this.classworkSubmissionModel.findById(submissionId)
+
+    if (!classworkSubmissionBefore) {
+      throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+    }
+
+    if (grade < GRADE_MIN || grade > GRADE_MAX) {
+      throw new Error(`GRADE_INVALID`)
+    }
+
+    classworkSubmissionBefore.grade = grade
+    const classworkSubmissionAfter = await classworkSubmissionBefore.save()
+
+    return classworkSubmissionAfter
+  }
+
+  async listClassworkSubmissionsByClassworkAssignmentId(
+    accountId: string,
+    orgId: string,
+    classworkAssignmentId: string,
+  ): Promise<DocumentType<ClassworkSubmission>[]> {
+    this.logger.log(
+      `[${this.listClassworkSubmissionsByClassworkAssignmentId.name}] List ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      accountId,
+      orgId,
+      classworkAssignmentId,
+    })
+
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: classworkAssignmentId,
+      orgId,
+    })
+
+    if (!classworkAssignment) {
+      throw new Error('CLASSWORKASSIGNMENT_NOT_FOUND')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        accountId,
+        classworkAssignment.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const list = await this.classworkSubmissionModel.find({
+      classworkId: classworkAssignmentId,
+      orgId,
+    })
+
+    this.logger.log(
+      `[${this.listClassworkSubmissionsByClassworkAssignmentId.name}] listed ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      accountId,
+      orgId,
+      classworkAssignmentId,
+    })
+
+    return list
   }
 
   /**
