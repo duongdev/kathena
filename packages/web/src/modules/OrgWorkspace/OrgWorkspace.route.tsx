@@ -25,6 +25,7 @@ import {
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -136,6 +137,12 @@ const DetailCommentClassworkAssignmentStudyingCourse = lazy(
       'modules/StudyingCourse/Components/ClassworkAssignments/DetailTab'
     ) /* webpackChunkName: "modules/ClassworkAssignmentDetail" */,
 )
+const CreateSubmissionClassworkAssignment = lazy(
+  () =>
+    import(
+      'modules/StudyingCourse/Components/ClassworkAssignments/CreateSubmissionClassworkAssignment'
+    ) /* webpackChunkName: "modules/ClassworkAssignmentDetail" */,
+)
 export type OrgWorkspaceRouteProps = {}
 
 const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
@@ -197,6 +204,11 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         path={STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS}
         exact
         component={DetailCommentClassworkAssignmentStudyingCourse}
+      />
+      <Route
+        path={STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS}
+        exact
+        component={CreateSubmissionClassworkAssignment}
       />
     </Switch>
   </Suspense>

@@ -949,6 +949,17 @@ export type CreateClassworkAssignmentMutation = {
   >
 }
 
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput
+}>
+
+export type CreateCommentMutation = {
+  createComment: Pick<
+    Comment,
+    'id' | 'targetId' | 'content' | 'createdAt' | 'createdByAccountId'
+  >
+}
+
 export type CreateCourseMutationVariables = Exact<{
   input: CreateCourseInput
 }>
@@ -1059,6 +1070,18 @@ export type OrgOfficeQueryVariables = Exact<{
 
 export type OrgOfficeQuery = {
   orgOffice: Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>
+}
+
+export type CreateClassworkSubmissionMutationVariables = Exact<{
+  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  courseId: Scalars['ID']
+}>
+
+export type CreateClassworkSubmissionMutation = {
+  createClassworkSubmission: Pick<
+    ClassworkSubmission,
+    'id' | 'createdAt' | 'submissionFileIds' | 'description'
+  >
 }
 
 export type StudyingCourseListQueryVariables = Exact<{
@@ -4445,6 +4468,139 @@ export type CreateClassworkAssignmentMutationOptions =
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
+export const CreateCommentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateComment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateCommentInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createComment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'commentInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateCommentMutationFn = Apollo.MutationFunction<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
+export type CreateCommentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateComment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateCommentMutation,
+    CreateCommentMutationVariables,
+    CreateCommentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateCommentMutation,
+    CreateCommentMutationVariables,
+    CreateCommentProps<TChildProps, TDataName>
+  >(CreateCommentDocument, {
+    alias: 'createComment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateCommentMutation,
+    CreateCommentMutationVariables
+  >(CreateCommentDocument, options)
+}
+export type CreateCommentMutationHookResult = ReturnType<
+  typeof useCreateCommentMutation
+>
+export type CreateCommentMutationResult =
+  Apollo.MutationResult<CreateCommentMutation>
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
+  CreateCommentMutation,
+  CreateCommentMutationVariables
+>
 export const CreateCourseDocument = {
   kind: 'Document',
   definitions: [
@@ -6019,6 +6175,159 @@ export type OrgOfficeQueryResult = Apollo.QueryResult<
   OrgOfficeQuery,
   OrgOfficeQueryVariables
 >
+export const CreateClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateClassworkSubmissionInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createClassworkSubmission' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'submissionFileIds' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateClassworkSubmissionMutationFn = Apollo.MutationFunction<
+  CreateClassworkSubmissionMutation,
+  CreateClassworkSubmissionMutationVariables
+>
+export type CreateClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables,
+    CreateClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables,
+    CreateClassworkSubmissionProps<TChildProps, TDataName>
+  >(CreateClassworkSubmissionDocument, {
+    alias: 'createClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateClassworkSubmissionMutation__
+ *
+ * To run a mutation, you first call `useCreateClassworkSubmissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClassworkSubmissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClassworkSubmissionMutation, { data, loading, error }] = useCreateClassworkSubmissionMutation({
+ *   variables: {
+ *      CreateClassworkMaterialInput: // value for 'CreateClassworkMaterialInput'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useCreateClassworkSubmissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables
+  >(CreateClassworkSubmissionDocument, options)
+}
+export type CreateClassworkSubmissionMutationHookResult = ReturnType<
+  typeof useCreateClassworkSubmissionMutation
+>
+export type CreateClassworkSubmissionMutationResult =
+  Apollo.MutationResult<CreateClassworkSubmissionMutation>
+export type CreateClassworkSubmissionMutationOptions =
+  Apollo.BaseMutationOptions<
+    CreateClassworkSubmissionMutation,
+    CreateClassworkSubmissionMutationVariables
+  >
 export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [

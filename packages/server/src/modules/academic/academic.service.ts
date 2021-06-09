@@ -7,6 +7,12 @@ import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission } from 'modules/auth/models'
+import { ClassworkService } from 'modules/classwork/classwork.service'
+import {
+  AvgGradeOfClassworkByCourse,
+  AvgGradeOfClassworkByCourseOptionInput,
+} from 'modules/classwork/classwork.type'
+import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 
@@ -26,6 +32,11 @@ export class AcademicService {
       typeof AcademicSubject
     >,
 
+    @InjectModel(ClassworkAssignment)
+    private readonly classworkAssignmentModel: ReturnModelType<
+      typeof ClassworkAssignment
+    >,
+
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
 
@@ -40,6 +51,9 @@ export class AcademicService {
 
     @Inject(forwardRef(() => OrgOfficeService))
     private readonly orgOfficeService: OrgOfficeService,
+
+    @Inject(forwardRef(() => ClassworkService))
+    private readonly classworkService: ClassworkService,
   ) {}
 
   async findAcademicSubjectByCode(
@@ -603,5 +617,72 @@ export class AcademicService {
   }
   /**
    * END COURSE
+   */
+
+  /**
+   * START STATISTICAL
+   */
+
+  async calculateAvgGradeOfClassworkAssignmentInCourse(
+    courseId: string,
+    orgId: string,
+    optionInput: AvgGradeOfClassworkByCourseOptionInput,
+  ): Promise<AvgGradeOfClassworkByCourse[]> {
+    const { limit } = optionInput
+
+    const { courseModel, classworkAssignmentModel, classworkService } = this
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`ORG_ID_INVALID`)
+    }
+
+    const course = await courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    if (!course) {
+      throw new Error(`COURSE_NOT_FOUND`)
+    }
+
+    const numberOfStudent = course.studentIds.length
+
+    const classworkAssignments = await classworkAssignmentModel
+      .find({
+        courseId,
+        orgId,
+      })
+      .sort({ _id: -1 })
+      .limit(limit)
+
+    const dataList: AvgGradeOfClassworkByCourse[] = []
+
+    const classworkAssignmentsMap = classworkAssignments.map(
+      async (classworkAssignment) => {
+        const avgGrade =
+          await classworkService.calculateAvgGradeOfClassworkAssignment(
+            numberOfStudent,
+            classworkAssignment.id,
+            orgId,
+          )
+        const dataObj: AvgGradeOfClassworkByCourse = {
+          classworkTitle: classworkAssignment.title,
+          avgGrade,
+        }
+        return dataObj
+      },
+    )
+
+    await Promise.all(classworkAssignmentsMap).then((dataObj) => {
+      dataObj.forEach((data) => {
+        dataList.push(data)
+      })
+    })
+
+    return dataList
+  }
+
+  /**
+   * END STATISTICAL
    */
 }
