@@ -281,7 +281,7 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
-  listClassworkSubmissionsByClassworkAssignmentId(classworkAssignmentId: ID!): [ClassworkSubmission!]!
+  classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
 }
 
 input AccountsFilterInput {

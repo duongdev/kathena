@@ -55,7 +55,7 @@ export class ClassworkSubmissionResolver {
   @Query((_return) => [ClassworkSubmission])
   @UseAuthGuard(P.Classwork_ListClassworkSubmission)
   @UsePipes(ValidationPipe)
-  async listClassworkSubmissionsByClassworkAssignmentId(
+  async classworkSubmissions(
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
     @CurrentAccount() account: Account,
