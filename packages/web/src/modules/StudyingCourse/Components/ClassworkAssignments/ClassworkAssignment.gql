@@ -1,0 +1,14 @@
+mutation CreateClassworkSubmission(
+  $CreateClassworkMaterialInput: CreateClassworkSubmissionInput!
+  $courseId: ID!
+) {
+  createClassworkSubmission(
+    CreateClassworkMaterialInput: $CreateClassworkMaterialInput
+    courseId: $courseId
+  ) {
+    id
+    createdAt
+    submissionFileIds
+    description
+  }
+}
