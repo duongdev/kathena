@@ -9,6 +9,7 @@ import { ANY } from '@kathena/types'
 import {
   Button,
   InfoBlock,
+  Link,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
@@ -19,6 +20,10 @@ import {
   Permission,
   useClassworkAssignmentDetailQuery,
 } from 'graphql/generated'
+import {
+  buildPath,
+  STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+} from 'utils/path-builder'
 
 export type DetailContentClassworkAssignmentProps = {}
 
@@ -50,7 +55,20 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title={classworkAssignment.title}
-          action={[<Button variant="contained">Nộp bài</Button>]}
+          action={[
+            <>
+              <Link
+                to={buildPath(
+                  STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                  {
+                    id: classworkAssignment.id,
+                  },
+                )}
+              >
+                <Button variant="contained">Nộp bài</Button>
+              </Link>
+            </>,
+          ]}
         >
           <CardContent>
             <Grid container spacing={2}>
