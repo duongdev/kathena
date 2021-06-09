@@ -1,6 +1,6 @@
 import { FC, useCallback } from 'react'
 
-import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { useFormikContext } from 'formik'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -40,13 +40,11 @@ const CreateSubmissionClassworkAssignmentForm: FC<CreateSubmissionClassworkAssig
           title="Thông tin bài tập"
         >
           <CardContent>
-            <Stack mt={3}>
-              <EditorFormField
-                required
-                name="description"
-                label={labels.description}
-              />
-            </Stack>
+            <EditorFormField
+              required
+              name="description"
+              label={labels.description}
+            />
           </CardContent>
         </SectionCard>
         <SectionCard
