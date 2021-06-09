@@ -39,3 +39,11 @@ mutation RemoveAttachmentsFromClassworkAssignment($classworkAssignmentId: ID!, $
     dueDate
   }
 }
+
+query ListClassworkSubmission($classworkAssignmentId: ID!){
+  classworkSubmissions(classworkAssignmentId: $classworkAssignmentId){
+    id
+    createdByAccountId
+    createdAt
+  }
+}

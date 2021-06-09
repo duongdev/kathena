@@ -451,7 +451,7 @@ export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
 }
 
 export type MutationCreateClassworkSubmissionArgs = {
-  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  createClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }
 
@@ -559,7 +559,7 @@ export type Query = {
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
-  listClassworkSubmissionsByClassworkAssignmentId: Array<ClassworkSubmission>
+  classworkSubmissions: Array<ClassworkSubmission>
 }
 
 export type QueryAccountArgs = {
@@ -625,7 +625,7 @@ export type QueryClassworkAssignmentsArgs = {
   pageOptions: PageOptionsInput
 }
 
-export type QueryListClassworkSubmissionsByClassworkAssignmentIdArgs = {
+export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
@@ -898,6 +898,16 @@ export type RemoveAttachmentsFromClassworkAssignmentMutation = {
     | 'publicationState'
     | 'attachments'
     | 'dueDate'
+  >
+}
+
+export type ListClassworkSubmissionQueryVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+}>
+
+export type ListClassworkSubmissionQuery = {
+  classworkSubmissions: Array<
+    Pick<ClassworkSubmission, 'id' | 'createdByAccountId' | 'createdAt'>
   >
 }
 
@@ -3950,6 +3960,142 @@ export type RemoveAttachmentsFromClassworkAssignmentMutationOptions =
     RemoveAttachmentsFromClassworkAssignmentMutation,
     RemoveAttachmentsFromClassworkAssignmentMutationVariables
   >
+export const ListClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'classworkSubmissions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >
+} &
+  TChildProps
+export function withListClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables,
+    ListClassworkSubmissionProps<TChildProps, TDataName>
+  >(ListClassworkSubmissionDocument, {
+    alias: 'listClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListClassworkSubmissionQuery__
+ *
+ * To run a query within a React component, call `useListClassworkSubmissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClassworkSubmissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClassworkSubmissionQuery({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *   },
+ * });
+ */
+export function useListClassworkSubmissionQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export function useListClassworkSubmissionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ListClassworkSubmissionQuery,
+    ListClassworkSubmissionQueryVariables
+  >(ListClassworkSubmissionDocument, options)
+}
+export type ListClassworkSubmissionQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionQuery
+>
+export type ListClassworkSubmissionLazyQueryHookResult = ReturnType<
+  typeof useListClassworkSubmissionLazyQuery
+>
+export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
+  ListClassworkSubmissionQuery,
+  ListClassworkSubmissionQueryVariables
+>
 export const CoursesDocument = {
   kind: 'Document',
   definitions: [
