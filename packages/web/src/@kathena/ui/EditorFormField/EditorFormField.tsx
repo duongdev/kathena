@@ -18,6 +18,7 @@ export type EditorFormFieldProps = {
   fullWidth?: boolean
   label?: string
   disabled?: boolean
+  modulesType?: 'full' | 'simple'
 } & {
   gridItem?: boolean | GridProps
   gridProps?: GridProps
@@ -25,8 +26,15 @@ export type EditorFormFieldProps = {
 
 const EditorFormField: FC<EditorFormFieldProps> = (props) =>
   useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { children, label, fullWidth, fastField, ...inputProps } = props
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      children,
+      label,
+      fullWidth,
+      modulesType = 'full',
+      fastField,
+      ...inputProps
+    } = props
     const FieldComponent = fastField ? FastField : Field
 
     return (
@@ -46,25 +54,52 @@ const EditorFormField: FC<EditorFormFieldProps> = (props) =>
               )}
               <ReactQuill
                 theme="snow"
-                modules={{
-                  toolbar: [
-                    [{ header: '1' }, { header: '2' }, { font: [] }],
-                    [{ size: [] }],
-                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                    [
-                      { list: 'ordered' },
-                      { list: 'bullet' },
-                      { indent: '-1' },
-                      { indent: '+1' },
-                    ],
-                    ['link', 'image', 'video'],
-                    ['clean'],
-                  ],
-                  clipboard: {
-                    // toggle to add extra line breaks when pasting HTML:
-                    matchVisual: false,
-                  },
-                }}
+                modules={
+                  modulesType === 'full'
+                    ? {
+                        toolbar: [
+                          [{ header: '1' }, { header: '2' }, { font: [] }],
+                          [{ size: [] }],
+                          [
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike',
+                            'blockquote',
+                          ],
+                          [
+                            { list: 'ordered' },
+                            { list: 'bullet' },
+                            { indent: '-1' },
+                            { indent: '+1' },
+                          ],
+                          ['link', 'image', 'video'],
+                          ['clean'],
+                        ],
+                        clipboard: {
+                          // toggle to add extra line breaks when pasting HTML:
+                          matchVisual: false,
+                        },
+                      }
+                    : {
+                        toolbar: [
+                          [
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike',
+                            'blockquote',
+                          ],
+                          [{ list: 'ordered' }, { list: 'bullet' }],
+                          ['link', 'image'],
+                          ['clean'],
+                        ],
+                        clipboard: {
+                          // toggle to add extra line breaks when pasting HTML:
+                          matchVisual: false,
+                        },
+                      }
+                }
                 formats={[
                   'header',
                   'font',
