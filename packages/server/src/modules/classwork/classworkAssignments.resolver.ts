@@ -12,12 +12,10 @@ import {
   UseAuthGuard,
 } from 'core'
 import { P } from 'modules/auth/models'
-import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
-import { ClassworkResolver } from './classwork.resolver'
 import { ClassworkService } from './classwork.service'
 import {
   CreateClassworkAssignmentInput,
@@ -29,15 +27,10 @@ import {
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
-export class ClassworkAssignmentsResolver extends ClassworkResolver {
+export class ClassworkAssignmentsResolver {
   private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
 
-  constructor(
-    commentService: CommentService,
-    private readonly classworkService: ClassworkService,
-  ) {
-    super(commentService)
-  }
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START ASSIGNMENTS RESOLVER

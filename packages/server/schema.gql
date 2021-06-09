@@ -2,13 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Org implements BaseModel {
+type Course implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  namespace: String!
+  academicSubjectId: ID!
+  orgOfficeId: ID!
+  code: String!
   name: String!
+  startDate: DateTime!
+  tuitionFee: Float!
+  publicationState: Publication!
+  publishedAt: DateTime!
+  lecturerIds: [String!]!
+  studentIds: [String!]!
+  createdByAccountId: ID!
 }
 
 interface BaseModel {
@@ -22,6 +31,94 @@ interface BaseModel {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+enum Publication {
+  Draft
+  Published
+}
+
+type File implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  size: Int!
+  mimeType: String!
+  storageProvider: FileLocation!
+  storageProviderIdentifier: String!
+  signedUrl: String
+}
+
+enum FileLocation {
+  LocalStorage
+}
+
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
+}
+
+type ClassworkAssignment implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+  dueDate: DateTime
+  maxScores: Float!
+}
+
+type ClassworkMaterial implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  courseId: ID!
+  title: String!
+  type: String!
+  description: String
+  attachments: [String!]!
+  publicationState: String!
+}
+
+type ClassworkSubmission implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  classworkId: ID!
+  grade: Float!
+  submissionFileIds: [String!]!
+  description: String!
+}
+
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
+}
+
+type ClassworkMaterialPayload {
+  classworkMaterials: [ClassworkMaterial!]!
+  count: Int!
+}
+
+type AvgGradeOfClassworkByCourse {
+  classworkTitle: String!
+  avgGrade: Float!
+}
 
 type OrgOffice implements BaseModel {
   id: ID!
@@ -43,111 +140,6 @@ type AcademicSubject implements BaseModel {
   description: String!
   publication: Publication!
   imageFileId: String!
-}
-
-enum Publication {
-  Draft
-  Published
-}
-
-type Course implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  academicSubjectId: ID!
-  orgOfficeId: ID!
-  code: String!
-  name: String!
-  startDate: DateTime!
-  tuitionFee: Float!
-  publicationState: Publication!
-  publishedAt: DateTime!
-  lecturerIds: [String!]!
-  studentIds: [String!]!
-  createdByAccountId: ID!
-}
-
-type ClassworkAssignment implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: String!
-  courseId: ID!
-  title: String!
-  type: String!
-  description: String
-  attachments: [String!]!
-  publicationState: String!
-  resolveType: [String!]!
-  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
-  dueDate: DateTime
-  maxScores: Float!
-}
-
-input CommentPageOptionInput {
-  limit: Int!
-}
-
-type ClassworkMaterial implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: String!
-  courseId: ID!
-  title: String!
-  type: String!
-  description: String
-  attachments: [String!]!
-  publicationState: String!
-  resolveType: [String!]!
-  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
-}
-
-type ClassworkAssignmentPayload {
-  classworkAssignments: [ClassworkAssignment!]!
-  count: Int!
-}
-
-type ClassworkMaterialPayload {
-  classworkMaterials: [ClassworkMaterial!]!
-  count: Int!
-}
-
-type AvgGradeOfClassworkByCourse {
-  classworkTitle: String!
-  avgGrade: Float!
-}
-
-type File implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  size: Int!
-  mimeType: String!
-  storageProvider: FileLocation!
-  storageProviderIdentifier: String!
-  signedUrl: String
-}
-
-enum FileLocation {
-  LocalStorage
-}
-
-type ClassworkSubmission implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: String!
-  classworkId: ID!
-  grade: Float!
-  submissionFileIds: [String!]!
-  description: String!
 }
 
 type Account implements BaseModel {
@@ -282,6 +274,7 @@ type Query {
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
 }
 
 input AccountsFilterInput {
@@ -305,6 +298,10 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input CommentPageOptionInput {
+  limit: Int!
 }
 
 type Mutation {
