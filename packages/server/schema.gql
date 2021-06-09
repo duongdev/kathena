@@ -195,14 +195,8 @@ type ClassworkAssignment implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
-  resolveType: [String!]!
-  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
   dueDate: DateTime
   maxScores: Float!
-}
-
-input CommentPageOptionInput {
-  limit: Int!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -217,8 +211,6 @@ type ClassworkMaterial implements BaseModel {
   description: String
   attachments: [String!]!
   publicationState: String!
-  resolveType: [String!]!
-  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID): CommentsPayload!
 }
 
 type ClassworkSubmission implements BaseModel {
@@ -233,6 +225,16 @@ type ClassworkSubmission implements BaseModel {
   description: String!
 }
 
+type ClassworkAssignmentPayload {
+  classworkAssignments: [ClassworkAssignment!]!
+  count: Int!
+}
+
+type ClassworkMaterialPayload {
+  classworkMaterials: [ClassworkMaterial!]!
+  count: Int!
+}
+
 type Comment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -245,16 +247,6 @@ type Comment implements BaseModel {
 
 type CommentsPayload {
   comments: [Comment!]!
-  count: Int!
-}
-
-type ClassworkAssignmentPayload {
-  classworkAssignments: [ClassworkAssignment!]!
-  count: Int!
-}
-
-type ClassworkMaterialPayload {
-  classworkMaterials: [ClassworkMaterial!]!
   count: Int!
 }
 
@@ -276,6 +268,7 @@ type Query {
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
+  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
 }
 
 input AccountsFilterInput {
@@ -299,6 +292,10 @@ input CoursesFilterInput {
   searchText: String
   lecturerIds: [ID!]
   studentIds: [ID!]
+}
+
+input CommentPageOptionInput {
+  limit: Int!
 }
 
 type Mutation {
