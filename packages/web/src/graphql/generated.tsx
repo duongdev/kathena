@@ -1073,7 +1073,7 @@ export type OrgOfficeQuery = {
 }
 
 export type CreateClassworkSubmissionMutationVariables = Exact<{
-  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  CreateClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }>
 
@@ -6191,7 +6191,7 @@ export const CreateClassworkSubmissionDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+            name: { kind: 'Name', value: 'CreateClassworkSubmissionInput' },
           },
           type: {
             kind: 'NonNullType',
@@ -6222,10 +6222,13 @@ export const CreateClassworkSubmissionDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                name: { kind: 'Name', value: 'createClassworkSubmissionInput' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                  name: {
+                    kind: 'Name',
+                    value: 'CreateClassworkSubmissionInput',
+                  },
                 },
               },
               {
@@ -6305,7 +6308,7 @@ export function withCreateClassworkSubmission<
  * @example
  * const [createClassworkSubmissionMutation, { data, loading, error }] = useCreateClassworkSubmissionMutation({
  *   variables: {
- *      CreateClassworkMaterialInput: // value for 'CreateClassworkMaterialInput'
+ *      CreateClassworkSubmissionInput: // value for 'CreateClassworkSubmissionInput'
  *      courseId: // value for 'courseId'
  *   },
  * });
