@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { AccountModule } from 'modules/account/account.module'
+import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
@@ -14,7 +15,7 @@ import { Course } from './models/Course'
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([AcademicSubject, Course]),
+    TypegooseModule.forFeature([AcademicSubject, Course, ClassworkAssignment]),
     forwardRef(() => OrgModule),
     forwardRef(() => OrgOfficeModule),
     forwardRef(() => AccountModule),

@@ -2142,6 +2142,182 @@ describe('classwork.service', () => {
       })
     })
   })
+
+  describe('calculateAvgGradeOfClassworkAssignment', () => {
+    it('throws error if OrgId invalid', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(false as ANY)
+
+      await expect(
+        classworkService.calculateAvgGradeOfClassworkAssignment(
+          5,
+          objectId(),
+          objectId(),
+        ),
+      ).rejects.toThrowError('ORG_ID_INVALID')
+    })
+
+    it('throws error if course not found', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(classworkService['orgService'], 'validateOrgId')
+        .mockResolvedValueOnce(true as ANY)
+
+      await expect(
+        classworkService.calculateAvgGradeOfClassworkAssignment(
+          5,
+          objectId(),
+          objectId(),
+        ),
+      ).rejects.toThrowError('NOT_FOUND_CLASSWORK_ASSIGNMENT_IN_COURSE')
+    })
+
+    it('returns average grade', async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accStudent = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh.top@gmail.com',
+        password: '123456',
+        username: 'thanhthanh',
+        roles: ['student'],
+        displayName: 'Huynh Thanh Thanh',
+      })
+
+      const accStudent2 = await accountService.createAccount({
+        orgId: org.id,
+        email: 'huynhthanhcanh22.top@gmail.com',
+        password: '123456',
+        username: 'thanhthanh2',
+        roles: ['student'],
+        displayName: 'Huynh Thanh Thanh',
+      })
+
+      const accLecturer = await accountService.createAccount({
+        roles: ['lecturer'],
+        email: 'huynhthanhcanh1.top@gmail.com',
+        username: 'thanhcanh',
+        orgId: org.id,
+        displayName: 'Huynh Thanh Canh',
+      })
+
+      const accAdmin = await accountService.createAccount({
+        roles: ['admin'],
+        username: 'thanhcanh123',
+        orgId: org.id,
+        email: 'huynhthanhcanh3.top@gmail.com',
+        displayName: 'Huynh Thanh Canh Thanh',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'NODEJS',
+        name: 'NodeJS',
+        description: 'This is NodeJs',
+        createdByAccountId: accAdmin.id,
+        imageFileId: objectId(),
+      })
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        name: 'Kmin Quận 1',
+        address: '25A',
+        createdByAccountId: accAdmin.id,
+        orgId: org.id,
+        phone: '0704917152',
+      })
+
+      const createCourseInput: ANY = {
+        academicSubjectId: academicSubject.id,
+        orgOfficeId: orgOffice.id,
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        tuitionFee: 5000000,
+        lecturerIds: [accLecturer.id],
+      }
+
+      const course = await academicService.createCourse(accAdmin.id, org.id, {
+        ...createCourseInput,
+        startDate: Date.now(),
+        lecturerIds: [accLecturer.id],
+      })
+
+      course.studentIds = [accStudent.id, accStudent2.id]
+      course.save()
+
+      const classwork1 = await classworkService.createClassworkAssignment(
+        accLecturer.id,
+        course.id,
+        org.id,
+        {
+          title: 'Bai tap 1',
+          description: 'Day la bai tap 1',
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accLecturer.id,
+        course.id,
+        org.id,
+        {
+          title: 'Bai tap 2',
+          description: 'Day la bai tap 2',
+        },
+      )
+
+      await classworkService.createClassworkAssignment(
+        accLecturer.id,
+        course.id,
+        org.id,
+        {
+          title: 'Bai tap 3',
+          description: 'Day la bai tap 3',
+        },
+      )
+
+      const createInputWithFile: ANY = {
+        classworkId: classwork1.id,
+      }
+
+      const classWorkSubmission1 =
+        await classworkService.createClassworkSubmission(
+          org.id,
+          course.id,
+          accStudent.id,
+          createInputWithFile,
+        )
+
+      classWorkSubmission1.grade = 60
+      classWorkSubmission1.save()
+
+      const classWorkSubmission2 =
+        await classworkService.createClassworkSubmission(
+          org.id,
+          course.id,
+          accStudent.id,
+          createInputWithFile,
+        )
+
+      classWorkSubmission2.grade = 50
+      classWorkSubmission2.save()
+
+      await expect(
+        classworkService.calculateAvgGradeOfClassworkAssignment(
+          course.studentIds.length,
+          classwork1.id,
+          org.id,
+        ),
+      ).resolves.toEqual(55)
+    })
+  })
   /**
    * END CLASSWORK ASSIGNMENTS
    */
@@ -2572,6 +2748,38 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toMatchObject(arrayClassworkSubmissions)
+      })
+    })
+
+    describe('findClassworkSubmissionById', () => {
+      it('returns a ClassworkSubmission it found', async () => {
+        expect.assertions(1)
+
+        const classworkSubmission = {
+          createdAt: '2021-06-06T10:51:12.280Z',
+          updatedAt: '2021-06-06T10:51:12.280Z',
+          description: 'Description',
+          grade: 0,
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(classworkSubmission as ANY)
+
+        await expect(
+          classworkService.findClassworkSubmissionById(objectId(), objectId()),
+        ).resolves.toMatchObject(classworkSubmission)
+      })
+      it('returns a null it not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          classworkService.findClassworkSubmissionById(objectId(), objectId()),
+        ).resolves.toBeNull()
       })
     })
   })

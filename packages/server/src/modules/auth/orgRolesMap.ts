@@ -28,6 +28,7 @@ export const staff: Role = {
     P.Classwork_SetClassworkAssignmentPublication,
     P.Classwork_UpdateClassworkAssignment,
     P.Comment_CreateComment,
+    P.AvgGradeStatisticsOfClassworkInTheCourse,
   ],
 }
 
@@ -65,6 +66,7 @@ export const lecturer: Role = {
     P.Classwork_SetGradeForClassworkSubmission,
     P.Comment_CreateComment,
     P.Classwork_ListClassworkSubmission,
+    P.AvgGradeStatisticsOfClassworkInTheCourse,
   ],
 }
 

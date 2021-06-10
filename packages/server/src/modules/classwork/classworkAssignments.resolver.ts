@@ -4,14 +4,18 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 // eslint-disable-next-line import/order
-import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
+import {
+  CurrentAccount,
+  CurrentOrg,
+  Logger,
+  Publication,
+  UseAuthGuard,
+} from 'core'
 import { P } from 'modules/auth/models'
-import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
-import { ClassworkResolver } from './classwork.resolver'
 import { ClassworkService } from './classwork.service'
 import {
   CreateClassworkAssignmentInput,
@@ -23,13 +27,10 @@ import {
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)
-export class ClassworkAssignmentsResolver extends ClassworkResolver {
-  constructor(
-    commentService: CommentService,
-    private readonly classworkService: ClassworkService,
-  ) {
-    super(commentService)
-  }
+export class ClassworkAssignmentsResolver {
+  private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
+
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START ASSIGNMENTS RESOLVER

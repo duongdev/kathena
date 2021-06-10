@@ -814,6 +814,50 @@ export class ClassworkService {
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
 
+  async calculateAvgGradeOfClassworkAssignment(
+    numberOfStudent: number,
+    classworkAssignmentId: string,
+    orgId: string,
+  ): Promise<number> {
+    const { classworkSubmissionModel } = this
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`ORG_ID_INVALID`)
+    }
+
+    const classworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      classworkAssignmentId,
+    )
+
+    let avgGrade = 0
+    if (!classworkAssignment) {
+      throw new Error(`NOT_FOUND_CLASSWORK_ASSIGNMENT_IN_COURSE`)
+    }
+
+    const classworkSubmissions = await classworkSubmissionModel
+      .find({
+        classworkId: classworkAssignment.id,
+      })
+      .select({ grade: 1 })
+
+    let sum = 0
+
+    if (classworkSubmissions.length) {
+      const classworkSubmissionsMap = classworkSubmissions.map(
+        async (classworkSubmission) => {
+          sum += classworkSubmission.grade
+        },
+      )
+
+      await Promise.all(classworkSubmissionsMap).then(() => {
+        avgGrade = sum / numberOfStudent
+      })
+    }
+
+    return avgGrade
+  }
+
   /**
    * END CLASSWORK ASSIGNMENT
    */
@@ -983,6 +1027,17 @@ export class ClassworkService {
     return list
   }
 
+  async findClassworkSubmissionById(
+    orgId: string,
+    classworkSubmissionId: string,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const classworkSubmission = await this.classworkSubmissionModel.findOne({
+      _id: classworkSubmissionId,
+      orgId,
+    })
+
+    return classworkSubmission
+  }
   /**
    * END CLASSWORK SUBMISSION
    */
