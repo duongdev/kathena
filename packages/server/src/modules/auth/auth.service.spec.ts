@@ -281,6 +281,7 @@ describe('auth.service', () => {
                 "Classwork_SetClassworkAssignmentPublication",
                 "Classwork_UpdateClassworkAssignment",
                 "Comment_CreateComment",
+                "AvgGradeStatisticsOfClassworkInTheCourse",
                 "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
                 "OrgOffice_CreateOrgOffice",

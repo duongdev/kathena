@@ -1534,16 +1534,14 @@ export type SignInMutationFn = Apollo.MutationFunction<
   SignInMutation,
   SignInMutationVariables
 >
-export type SignInProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    SignInMutation,
-    SignInMutationVariables
-  >
-} &
-  TChildProps
+export type SignInProps<TChildProps = {}, TDataName extends string = 'mutate'> =
+  {
+    [key in TDataName]: Apollo.MutationFunction<
+      SignInMutation,
+      SignInMutationVariables
+    >
+  } &
+    TChildProps
 export function withSignIn<
   TProps,
   TChildProps = {},
@@ -4245,16 +4243,14 @@ export const CoursesDocument = {
     },
   ],
 } as unknown as DocumentNode
-export type CoursesProps<
-  TChildProps = {},
-  TDataName extends string = 'data',
-> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    CoursesQuery,
-    CoursesQueryVariables
-  >
-} &
-  TChildProps
+export type CoursesProps<TChildProps = {}, TDataName extends string = 'data'> =
+  {
+    [key in TDataName]: ApolloReactHoc.DataValue<
+      CoursesQuery,
+      CoursesQueryVariables
+    >
+  } &
+    TChildProps
 export function withCourses<
   TProps,
   TChildProps = {},
