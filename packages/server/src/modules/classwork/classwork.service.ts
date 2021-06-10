@@ -1027,6 +1027,17 @@ export class ClassworkService {
     return list
   }
 
+  async findClassworkSubmissionById(
+    orgId: string,
+    classworkSubmissionId: string,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const classworkSubmission = await this.classworkSubmissionModel.findOne({
+      _id: classworkSubmissionId,
+      orgId,
+    })
+
+    return classworkSubmission
+  }
   /**
    * END CLASSWORK SUBMISSION
    */
