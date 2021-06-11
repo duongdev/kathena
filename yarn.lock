@@ -3829,10 +3829,10 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
   integrity sha512-FTgBI767POY/lKNDNbIzgAX6miIDBs6NTCbdlDb8TrWovHsSvaVIZDlTqym29C6UqhzwcJx4CYr+AlrMywA0cA==
 
-"@typegoose/typegoose@8.0.0-beta.13":
-  version "8.0.0-beta.13"
-  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.13.tgz#0af22244684fa738a37b739fc0a65601ec6cd297"
-  integrity sha512-rEXQucc4KNlX2pA8fWHZ+yUNnPFdtB5ir9lZb9/R/JXZ4d09zRrE9+R2dw/8tgAvJUblKpZoMkDmmVxn6kLHyQ==
+"@typegoose/typegoose@8.0.0-beta.14":
+  version "8.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.0.0-beta.14.tgz#4e50352cf73a1b8312a8e47aa2cc112c4ba9a46c"
+  integrity sha512-Y0UxiMI5uLYU40A4EBRh3E5G5VZ3qAAloGJiPxBRMMHdpXFV+xeFDVHRA5AkYg/TeNedVCHJ+Tf/BKzROwAc9Q==
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
@@ -4480,10 +4480,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@17.0.10":
-  version "17.0.10"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.10.tgz#c8bb4e37cc642f7cc5532959cb5e2ead6c74dec9"
-  integrity sha512-+Tc5aGO49L/cjFBfpIPB398ztmAUChglc+a+EYlvphMOMvwUEzmLiyfmnEseGE7inMO6XiSffHmXVPC8GonksQ==
+"@types/react@17.0.11":
+  version "17.0.11"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.11.tgz#67fcd0ddbf5a0b083a0f94e926c7d63f3b836451"
+  integrity sha512-yFRQbD+whVonItSk7ZzP/L+gPTJVBkL/7shLEF+i9GC/1cV3JmUxEQz6+9ylhUpWSDuqo1N9qEvqS6vTj4USUA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -5690,12 +5690,12 @@ apollo-upload-client@14.1.3:
     "@babel/runtime" "^7.12.5"
     extract-files "^9.0.0"
 
-apollo-upload-client@15.0.0:
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-15.0.0.tgz#02ad5a156c146c13f3a93b9658196e5d73a73fca"
-  integrity sha512-7kyBwflLTqRhfsNIIBc94z1Row3WVWOgLm77izAuG3YJEzUbpy8k4775G40j3xlToSey5c7CR/9NOdoDcQw/xg==
+apollo-upload-client@16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-16.0.0.tgz#704c9bc21e12bd4687172876eb927cf756b2e524"
+  integrity sha512-aLhYucyA0T8aBEQ5g+p13qnR9RUyL8xqb8FSZ7e/Kw2KUOsotLUlFluLobqaE7JSUFwc6sKfXIcwB7y4yEjbZg==
   dependencies:
-    extract-files "^10.0.0"
+    extract-files "^11.0.0"
 
 apollo-utilities@^1.0.1, apollo-utilities@^1.3.0:
   version "1.3.4"
@@ -9800,10 +9800,10 @@ extract-files@9.0.0, extract-files@^9.0.0:
   resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-9.0.0.tgz#8a7744f2437f81f5ed3250ed9f1550de902fe54a"
   integrity sha512-CvdFfHkC95B4bBBk36hcEmvdR2awOdhhVUYH6S/zrVj3477zven/fJMYg7121h4T1xHZC+tetUpubpAhxwI7hQ==
 
-extract-files@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-10.0.0.tgz#228b1da1d910971cf8d7f1ed259653c6001ba5ad"
-  integrity sha512-4KXYOSf8SlMlQCj94Ygy89xIZU2GTs0HU2Nz9mG2/F5TKsHyq/3sDWGjHgHmfw9RhXF3hO+pBKyC6JfIHD52bw==
+extract-files@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-11.0.0.tgz#b72d428712f787eef1f5193aff8ab5351ca8469a"
+  integrity sha512-FuoE1qtbJ4bBVvv94CC7s0oTnKUGvQs+Rjf1L2SJFfS+HTVVjhPFtehPdQ0JiGPqVNfSSZvL5yzHHQq2Z4WNhQ==
 
 extsprintf@1.3.0:
   version "1.3.0"
@@ -16715,10 +16715,10 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-number-format@4.6.2:
-  version "4.6.2"
-  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.6.2.tgz#89636efe6da6d957c1a06f0d58ecfc1f0db30fff"
-  integrity sha512-l8gFJ7BRjl0/vUNAp3WVJAcgueaqvoJKDpm3ngsGlCo529ikQ1oUB2/EX6Te2yuN2dqL4NWRHzjyOGLwLPCRrg==
+react-number-format@4.6.3:
+  version "4.6.3"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-4.6.3.tgz#41e99871e50167cc1ac86c961285504244382f55"
+  integrity sha512-AZJwR/2mnl1cTRxQRjIITKp+Rg+4bYgjNylw7it7+x9UyIUAEpEK3fETKCqC5F2mVW8S41Xc6gpeH3VcJbPRsg==
   dependencies:
     prop-types "^15.7.2"
 

@@ -1,9 +1,7 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
-// import { differenceInMinutes } from 'date-fns'
 import { DocumentType } from '@typegoose/typegoose'
 
-// eslint-disable-next-line import/order
 import {
   CurrentAccount,
   CurrentOrg,
@@ -11,8 +9,8 @@ import {
   Publication,
   UseAuthGuard,
 } from 'core'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
-// eslint-disable-next-line import/order
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
@@ -23,7 +21,6 @@ import {
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
 } from './classwork.type'
-// import { Classwork } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
 @Resolver((_of) => ClassworkAssignment)

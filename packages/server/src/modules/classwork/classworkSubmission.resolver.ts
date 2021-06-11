@@ -2,8 +2,10 @@ import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
+import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
@@ -65,6 +67,20 @@ export class ClassworkSubmissionResolver {
       account.id,
       org.id,
       classworkAssignmentId,
+    )
+  }
+
+  @Query((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async findClassworkSubmissionById(
+    @Args('classworkSubmissionId', { type: () => ID })
+    classworkSubmissionId: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<ClassworkSubmission>> {
+    return this.classworkService.findClassworkSubmissionById(
+      org.id,
+      classworkSubmissionId,
     )
   }
 }

@@ -2750,6 +2750,38 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject(arrayClassworkSubmissions)
       })
     })
+
+    describe('findClassworkSubmissionById', () => {
+      it('returns a ClassworkSubmission it found', async () => {
+        expect.assertions(1)
+
+        const classworkSubmission = {
+          createdAt: '2021-06-06T10:51:12.280Z',
+          updatedAt: '2021-06-06T10:51:12.280Z',
+          description: 'Description',
+          grade: 0,
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(classworkSubmission as ANY)
+
+        await expect(
+          classworkService.findClassworkSubmissionById(objectId(), objectId()),
+        ).resolves.toMatchObject(classworkSubmission)
+      })
+      it('returns a null it not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          classworkService.findClassworkSubmissionById(objectId(), objectId()),
+        ).resolves.toBeNull()
+      })
+    })
   })
 
   /**
