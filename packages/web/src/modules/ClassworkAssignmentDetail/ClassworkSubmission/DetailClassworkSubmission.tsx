@@ -1,21 +1,23 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import FileComponent from 'components/FileComponent'
+import { format } from 'date-fns'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
+import { ANY } from '@kathena/types'
 import {
+  Button,
   InfoBlock,
-  PageContainer, SectionCard
+  PageContainerSkeleton,
+  Typography,
+  PageContainer,
+  SectionCard,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
-import {
-  useAccountProfileQuery
-} from 'graphql/generated'
+import { useFindClassworkSubmissionByIdQuery } from 'graphql/generated'
 
-
-
-
+import AccountInfoRow from '../../StudyingCourse/Components/AccountInfoRow'
 
 export type DetailClassworkSubmissionProps = {}
 
@@ -26,37 +28,70 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
 
   const params: { id: string } = useParams()
   const idStudent = useMemo(() => params.id, [params.id])
-  const { account } = useAuth()
 
-  const { data, loading } = useAccountProfileQuery({
-    variables: { username: idStudent },
+  const { data, loading } = useFindClassworkSubmissionByIdQuery({
+    variables: { classworkSubmissionId: idStudent },
   })
+  const idSubmission = useMemo(() => data?.findClassworkSubmissionById, [data])
+  if (loading && !data) {
+    return <PageContainerSkeleton maxWidth="md" />
+  }
 
+  if (!idSubmission) {
+    return (
+      <PageContainer maxWidth="md">
+        <Typography align="center">
+          Bài tập không tồn tại hoặc đã bị xoá.
+        </Typography>
+      </PageContainer>
+    )
+  }
   return (
     <PageContainer
       withBackButton
-      maxWidth="sm"
+      maxWidth="md"
       title="Thông tin bài tập"
-    // subtitle={`@${account?.username}`}
-    // actions={[
-    //   <AccountStatusChip status={account.status} variant="contained" />,
-    // ]}
+      actions={[<Button variant="contained">Chấm điểm</Button>]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
-          title="Thông tin tài khoản"
+          title="Nội dung bài tập nộp"
         >
-
-          <CardContent>
-            <Grid container spacing={2}>
-              <InfoBlock gridItem={{ xs: 12 }} label="Mô tả">
-                Bùi Huy Hoàng
-                {account?.id}
+          <CardContent className={classes.root}>
+            <Grid container spacing={1}>
+              <InfoBlock gridItem={{ xs: 5 }} label="Thông tin học viên: ">
+                <AccountInfoRow
+                  key={idSubmission.createdByAccountId}
+                  accountId={idSubmission.createdByAccountId}
+                />
               </InfoBlock>
-              <InfoBlock gridItem={{ xs: 12 }} label="Bài tập nộp">
-                File
+              <InfoBlock
+                gridItem={{ xs: 7 }}
+                label="Thời gian học viên nộp bài tập: "
+              >
+                {format(new Date(idSubmission.createdAt), 'MM/dd/yyyy')}
+              </InfoBlock>
+              <InfoBlock gridItem={{ xs: 12 }} label="Nội dung: ">
+                <div
+                  // eslint-disable-next-line
+                  dangerouslySetInnerHTML={{
+                    __html: idSubmission.description as ANY,
+                  }}
+                />
+              </InfoBlock>
+
+              <InfoBlock gridItem={{ xs: 12 }} label="Bài tập của học viên:">
+                {idSubmission.submissionFileIds.length ? (
+                  idSubmission.submissionFileIds.map((attachment) => (
+                    <FileComponent key={attachment} fileId={attachment} />
+                  ))
+                ) : (
+                  <Typography>
+                    Không có bài tập nào của học viên đã nộp
+                  </Typography>
+                )}
               </InfoBlock>
             </Grid>
           </CardContent>

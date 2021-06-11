@@ -1,0 +1,9 @@
+query FindClassworkSubmissionById($classworkSubmissionId: ID!) {
+  findClassworkSubmissionById(classworkSubmissionId: $classworkSubmissionId) {
+    id
+    createdAt
+    createdByAccountId
+    description
+    submissionFileIds
+  }
+}
