@@ -5,6 +5,7 @@ import { DocumentType } from '@typegoose/typegoose'
 
 // eslint-disable-next-line import/order
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { CommentService } from 'modules/comment/comment.service'
 // eslint-disable-next-line import/order

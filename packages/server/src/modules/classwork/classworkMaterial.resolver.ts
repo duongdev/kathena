@@ -3,6 +3,7 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { CommentService } from 'modules/comment/comment.service'
 import { Org } from 'modules/org/models/Org'
