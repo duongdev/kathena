@@ -322,7 +322,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                   ))}
                   <Button
                     disabled={
-                      comments.length + preComments.current.length ===
+                      comments.length +
+                        preComments.current.length +
+                        nextComments.current.length ===
                       totalComments
                     }
                     onClick={() =>
