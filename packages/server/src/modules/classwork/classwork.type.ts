@@ -105,6 +105,10 @@ export class CreateClassworkSubmissionInput {
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
   submissionFiles?: Promise<FileUpload>[]
+
+  @Field({ nullable: true, defaultValue: null })
+  @IsOptional()
+  description?: string
 }
 
 @InputType()
@@ -114,4 +118,19 @@ export class SetGradeForClassworkSubmissionInput {
 
   @Field((_type) => Number)
   grade: number
+}
+
+@InputType()
+export class AvgGradeOfClassworkByCourseOptionInput {
+  @Field({ nullable: true, defaultValue: 0 })
+  limit: number
+}
+
+@ObjectType()
+export class AvgGradeOfClassworkByCourse {
+  @Field((_type) => String)
+  classworkTitle: string
+
+  @Field((_type) => Number)
+  avgGrade: number
 }

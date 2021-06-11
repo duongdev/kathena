@@ -6,6 +6,10 @@ import { Logger, UseAuthGuard } from 'core'
 import { CurrentAccount, CurrentOrg } from 'core/auth'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import {
+  AvgGradeOfClassworkByCourse,
+  AvgGradeOfClassworkByCourseOptionInput,
+} from 'modules/classwork/classwork.type'
 import { Org } from 'modules/org/models/Org'
 import { PageOptionsInput } from 'types'
 
@@ -147,6 +151,20 @@ export class CourseResolver {
         orgId: org.id,
       },
       lecturerIds,
+    )
+  }
+
+  @Mutation((_returns) => [AvgGradeOfClassworkByCourse])
+  @UseAuthGuard(P.AvgGradeStatisticsOfClassworkInTheCourse)
+  async calculateAvgGradeOfClassworkAssignmentInCourse(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @CurrentOrg() org: Org,
+    @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
+  ): Promise<AvgGradeOfClassworkByCourse[]> {
+    return this.academicService.calculateAvgGradeOfClassworkAssignmentInCourse(
+      courseId,
+      org.id,
+      optionInput,
     )
   }
 }

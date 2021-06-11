@@ -5,6 +5,7 @@ import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
+import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
@@ -22,7 +23,7 @@ export class ClassworkSubmissionResolver {
   @UsePipes(ValidationPipe)
   async createClassworkSubmission(
     @Args('courseId', { type: () => ID }) courseId: string,
-    @Args('CreateClassworkMaterialInput')
+    @Args('createClassworkSubmissionInput')
     createClassworkSubmissionInput: CreateClassworkSubmissionInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
@@ -56,7 +57,7 @@ export class ClassworkSubmissionResolver {
   @Query((_return) => [ClassworkSubmission])
   @UseAuthGuard(P.Classwork_ListClassworkSubmission)
   @UsePipes(ValidationPipe)
-  async listClassworkSubmissionsByClassworkAssignmentId(
+  async classworkSubmissions(
     @Args('classworkAssignmentId', { type: () => ID })
     classworkAssignmentId: string,
     @CurrentAccount() account: Account,
@@ -66,6 +67,20 @@ export class ClassworkSubmissionResolver {
       account.id,
       org.id,
       classworkAssignmentId,
+    )
+  }
+
+  @Query((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async findClassworkSubmissionById(
+    @Args('classworkSubmissionId', { type: () => ID })
+    classworkSubmissionId: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<ClassworkSubmission>> {
+    return this.classworkService.findClassworkSubmissionById(
+      org.id,
+      classworkSubmissionId,
     )
   }
 }

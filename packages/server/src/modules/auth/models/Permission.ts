@@ -52,6 +52,8 @@ export enum Permission {
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
+
+  AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
