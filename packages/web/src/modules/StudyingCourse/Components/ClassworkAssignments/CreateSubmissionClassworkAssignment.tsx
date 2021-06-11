@@ -66,7 +66,7 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
           await createCreateSubmission({
             variables: {
               courseId: classworkAssignment?.courseId ?? '',
-              CreateClassworkMaterialInput: {
+              createClassworkSubmissionInput: {
                 classworkId: classworkAssignment?.id ?? '',
                 description: input.description,
                 submissionFiles: input.submissionFiles as ANY,

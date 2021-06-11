@@ -1,8 +1,9 @@
-import { FC, useMemo, useState, useCallback } from 'react'
+import { FC, useMemo, useState, useCallback, useRef } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
+import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
 import { useSnackbar } from 'notistack'
@@ -29,7 +30,9 @@ import {
   useClassworkAssignmentDetailQuery,
   useRemoveAttachmentsFromClassworkAssignmentMutation,
   useListClassworkSubmissionQuery,
+  useCommentsQuery,
 } from 'graphql/generated'
+import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
 import {
   buildPath,
@@ -65,11 +68,21 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params])
   const [openAddFile, setOpenAddFile] = useState(false)
+  const [lastId, setLastId] = useState<string | null>(null)
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
   const { data: dataSubmissions } = useListClassworkSubmissionQuery({
     variables: { classworkAssignmentId: id },
+  })
+  const { data: dataComments, refetch } = useCommentsQuery({
+    variables: {
+      targetId: id,
+      commentPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
   })
   const [removeAttachmentsFromClassworkAssignment] =
     useRemoveAttachmentsFromClassworkAssignmentMutation({
@@ -90,6 +103,25 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     () => dataSubmissions?.classworkSubmissions,
     [dataSubmissions],
   )
+
+  const comments = useMemo(
+    () => dataComments?.comments.comments ?? [],
+    [dataComments?.comments.comments],
+  )
+
+  const totalComments = useMemo(
+    () => dataComments?.comments.count,
+    [dataComments?.comments.count],
+  )
+
+  const preComments = useRef<ANY[]>(comments)
+  const nextComments = useRef<ANY[]>([])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    preComments.current = [...preComments.current, ...comments]
+    setLastId(lastCommentId)
+    refetch()
+  }
 
   const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
     useDialogState()
@@ -130,6 +162,11 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       classworkAssignment,
     ],
   )
+
+  const addComment = (comment: ANY) => {
+    if (lastId) nextComments.current.push(comment)
+    refetch()
+  }
 
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -247,7 +284,59 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             gridItem={{ xs: 12 }}
             title="Bình luận"
           >
-            <CardContent>Comment here</CardContent>
+            <CardContent>
+              {comments?.length ? (
+                <div
+                  style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                >
+                  {lastId &&
+                    nextComments.current.map((comment) => (
+                      <Comment
+                        comment={{
+                          id: comment.id,
+                          createdByAccountId: comment.createdByAccountId,
+                          createdAt: comment.createdAt,
+                          content: comment.content,
+                        }}
+                      />
+                    ))}
+                  {preComments.current.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
+                    />
+                  ))}
+                  {comments.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
+                    />
+                  ))}
+                  <Button
+                    disabled={
+                      comments.length + preComments.current.length ===
+                      totalComments
+                    }
+                    onClick={() =>
+                      loadMoreComments(comments[comments.length - 1].id)
+                    }
+                  >
+                    Xem thêm
+                  </Button>
+                </div>
+              ) : (
+                'Không có comment'
+              )}
+              <CreateComment onSuccess={addComment} targetId={id} />
+            </CardContent>
           </SectionCard>
         </Grid>
         <SectionCard
