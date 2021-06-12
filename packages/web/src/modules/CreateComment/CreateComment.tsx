@@ -5,7 +5,6 @@ import { useSnackbar } from 'notistack'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { renderApolloError } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { useCreateCommentMutation } from 'graphql/generated'
 
@@ -59,14 +58,13 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
         enqueueSnackbar(`Bạn vừa bình luận`, { variant: 'success' })
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         props.onSuccess && props.onSuccess(comment)
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       } catch (error) {
-        const errorMessage = renderApolloError(error)()
-        enqueueSnackbar(errorMessage, { variant: 'error' })
         // eslint-disable-next-line no-console
         console.error(error)
       }
     },
-    [props, account.id, targetId, createComment, enqueueSnackbar],
+    [account.id, targetId, createComment, enqueueSnackbar, props],
   )
 
   return (

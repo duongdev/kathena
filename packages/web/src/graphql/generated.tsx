@@ -89,6 +89,15 @@ export type AuthenticatePayload = {
   permissions: Array<Permission>
 }
 
+export type AvgGradeOfClassworkByCourse = {
+  classworkTitle: Scalars['String']
+  avgGrade: Scalars['Float']
+}
+
+export type AvgGradeOfClassworkByCourseOptionInput = {
+  limit?: Maybe<Scalars['Float']>
+}
+
 export type BaseModel = {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -108,15 +117,8 @@ export type ClassworkAssignment = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
-  resolveType: Array<Scalars['String']>
-  comments: CommentsPayload
   dueDate?: Maybe<Scalars['DateTime']>
   maxScores: Scalars['Float']
-}
-
-export type ClassworkAssignmentCommentsArgs = {
-  commentPageOptionInput: CommentPageOptionInput
-  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkAssignmentPayload = {
@@ -136,13 +138,6 @@ export type ClassworkMaterial = BaseModel & {
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
   publicationState: Scalars['String']
-  resolveType: Array<Scalars['String']>
-  comments: CommentsPayload
-}
-
-export type ClassworkMaterialCommentsArgs = {
-  commentPageOptionInput: CommentPageOptionInput
-  lastId?: Maybe<Scalars['ID']>
 }
 
 export type ClassworkMaterialPayload = {
@@ -299,6 +294,7 @@ export type Mutation = {
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -379,6 +375,11 @@ export type MutationRemoveStudentsFromCourseArgs = {
 export type MutationRemoveLecturersFromCourseArgs = {
   lecturerIds: Array<Scalars['ID']>
   id: Scalars['ID']
+}
+
+export type MutationCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
+  optionInput: AvgGradeOfClassworkByCourseOptionInput
+  courseId: Scalars['ID']
 }
 
 export type MutationCreateOrgOfficeArgs = {
@@ -534,6 +535,7 @@ export enum Permission {
   Comment_CreateComment = 'Comment_CreateComment',
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
+  AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
   NoPermission = 'NoPermission',
 }
 
@@ -560,6 +562,7 @@ export type Query = {
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
   classworkSubmissions: Array<ClassworkSubmission>
+  comments: CommentsPayload
 }
 
 export type QueryAccountArgs = {
@@ -627,6 +630,12 @@ export type QueryClassworkAssignmentsArgs = {
 
 export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
+}
+
+export type QueryCommentsArgs = {
+  commentPageOptionInput: CommentPageOptionInput
+  lastId?: Maybe<Scalars['ID']>
+  targetId: Scalars['ID']
 }
 
 export type SetGradeForClassworkSubmissionInput = {
@@ -911,6 +920,23 @@ export type ListClassworkSubmissionQuery = {
   >
 }
 
+export type CommentsQueryVariables = Exact<{
+  lastId?: Maybe<Scalars['ID']>
+  targetId: Scalars['ID']
+  commentPageOptionInput: CommentPageOptionInput
+}>
+
+export type CommentsQuery = {
+  comments: Pick<CommentsPayload, 'count'> & {
+    comments: Array<
+      Pick<
+        Comment,
+        'id' | 'createdAt' | 'createdByAccountId' | 'targetId' | 'content'
+      >
+    >
+  }
+}
+
 export type CoursesQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
@@ -1073,7 +1099,7 @@ export type OrgOfficeQuery = {
 }
 
 export type CreateClassworkSubmissionMutationVariables = Exact<{
-  CreateClassworkMaterialInput: CreateClassworkSubmissionInput
+  createClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }>
 
@@ -4105,6 +4131,196 @@ export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
   ListClassworkSubmissionQuery,
   ListClassworkSubmissionQueryVariables
 >
+export const CommentsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Comments' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lastId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'targetId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'commentPageOptionInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CommentPageOptionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'comments' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lastId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lastId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'targetId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'targetId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'commentPageOptionInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'commentPageOptionInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'comments' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'targetId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'content' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CommentsProps<TChildProps = {}, TDataName extends string = 'data'> =
+  {
+    [key in TDataName]: ApolloReactHoc.DataValue<
+      CommentsQuery,
+      CommentsQueryVariables
+    >
+  } &
+    TChildProps
+export function withComments<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CommentsQuery,
+    CommentsQueryVariables,
+    CommentsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CommentsQuery,
+    CommentsQueryVariables,
+    CommentsProps<TChildProps, TDataName>
+  >(CommentsDocument, {
+    alias: 'comments',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCommentsQuery__
+ *
+ * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsQuery({
+ *   variables: {
+ *      lastId: // value for 'lastId'
+ *      targetId: // value for 'targetId'
+ *      commentPageOptionInput: // value for 'commentPageOptionInput'
+ *   },
+ * });
+ */
+export function useCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(
+    CommentsDocument,
+    options,
+  )
+}
+export function useCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CommentsQuery,
+    CommentsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<CommentsQuery, CommentsQueryVariables>(
+    CommentsDocument,
+    options,
+  )
+}
+export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>
+export type CommentsLazyQueryHookResult = ReturnType<
+  typeof useCommentsLazyQuery
+>
+export type CommentsQueryResult = Apollo.QueryResult<
+  CommentsQuery,
+  CommentsQueryVariables
+>
 export const CoursesDocument = {
   kind: 'Document',
   definitions: [
@@ -6187,7 +6403,7 @@ export const CreateClassworkSubmissionDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+            name: { kind: 'Name', value: 'createClassworkSubmissionInput' },
           },
           type: {
             kind: 'NonNullType',
@@ -6218,10 +6434,13 @@ export const CreateClassworkSubmissionDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                name: { kind: 'Name', value: 'createClassworkSubmissionInput' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'CreateClassworkMaterialInput' },
+                  name: {
+                    kind: 'Name',
+                    value: 'createClassworkSubmissionInput',
+                  },
                 },
               },
               {
@@ -6301,7 +6520,7 @@ export function withCreateClassworkSubmission<
  * @example
  * const [createClassworkSubmissionMutation, { data, loading, error }] = useCreateClassworkSubmissionMutation({
  *   variables: {
- *      CreateClassworkMaterialInput: // value for 'CreateClassworkMaterialInput'
+ *      createClassworkSubmissionInput: // value for 'createClassworkSubmissionInput'
  *      courseId: // value for 'courseId'
  *   },
  * });

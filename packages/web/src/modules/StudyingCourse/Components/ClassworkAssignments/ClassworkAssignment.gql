@@ -1,9 +1,9 @@
 mutation CreateClassworkSubmission(
-  $CreateClassworkMaterialInput: CreateClassworkSubmissionInput!
+  $createClassworkSubmissionInput: CreateClassworkSubmissionInput!
   $courseId: ID!
 ) {
   createClassworkSubmission(
-    CreateClassworkMaterialInput: $CreateClassworkMaterialInput
+    createClassworkSubmissionInput: $createClassworkSubmissionInput
     courseId: $courseId
   ) {
     id

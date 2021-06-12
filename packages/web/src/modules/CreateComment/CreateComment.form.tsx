@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik'
 import { PaperPlaneRight } from 'phosphor-react'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { EditorFormField, Button } from '@kathena/ui'
+import { Button, TextFormField } from '@kathena/ui'
 
 import { CommentFormInput } from './CreateComment'
 
@@ -13,7 +13,6 @@ export type CreateCommentFormProps = {}
 
 const CreateCommentForm: FC<CreateCommentFormProps> = () => {
   const formik = useFormikContext<CommentFormInput>()
-
   return (
     <Grid
       style={{ display: 'flex', alignItems: 'center' }}
@@ -21,20 +20,29 @@ const CreateCommentForm: FC<CreateCommentFormProps> = () => {
       spacing={DASHBOARD_SPACING}
     >
       <Grid item xs={11}>
-        <EditorFormField
+        <TextFormField
           fullWidth
-          modulesType="simple"
           required
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              formik.submitForm()
+              setTimeout(() => formik.resetForm(), 500)
+            }
+          }}
           name="content"
         />
       </Grid>
-      <Button
-        onClick={formik.submitForm}
-        gridItem={{ xs: 1 }}
-        endIcon={<PaperPlaneRight weight="duotone" />}
-      >
-        Gửi
-      </Button>
+      <Grid item xs={1} style={{ paddingLeft: 0 }}>
+        <Button
+          onClick={() => {
+            formik.submitForm()
+            setTimeout(() => formik.resetForm(), 500)
+          }}
+          endIcon={<PaperPlaneRight weight="duotone" />}
+        >
+          Gửi
+        </Button>
+      </Grid>
     </Grid>
   )
 }
