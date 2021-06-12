@@ -88,9 +88,7 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
                     <FileComponent key={attachment} fileId={attachment} />
                   ))
                 ) : (
-                  <Typography>
-                    Không có bài tập nào của học viên đã nộp
-                  </Typography>
+                  <Typography>Không có file đính kèm.</Typography>
                 )}
               </InfoBlock>
             </Grid>
