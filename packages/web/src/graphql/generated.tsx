@@ -925,6 +925,23 @@ export type ListClassworkSubmissionQuery = {
   >
 }
 
+export type CommentsQueryVariables = Exact<{
+  lastId?: Maybe<Scalars['ID']>
+  targetId: Scalars['ID']
+  commentPageOptionInput: CommentPageOptionInput
+}>
+
+export type CommentsQuery = {
+  comments: Pick<CommentsPayload, 'count'> & {
+    comments: Array<
+      Pick<
+        Comment,
+        'id' | 'createdAt' | 'createdByAccountId' | 'targetId' | 'content'
+      >
+    >
+  }
+}
+
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
   classworkSubmissionId: Scalars['ID']
 }>
@@ -4135,6 +4152,198 @@ export type ListClassworkSubmissionLazyQueryHookResult = ReturnType<
 export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
   ListClassworkSubmissionQuery,
   ListClassworkSubmissionQueryVariables
+>
+export const CommentsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Comments' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lastId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'targetId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'commentPageOptionInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CommentPageOptionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'comments' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lastId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lastId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'targetId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'targetId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'commentPageOptionInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'commentPageOptionInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'comments' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'targetId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'content' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CommentsProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CommentsQuery,
+    CommentsQueryVariables
+  >
+} &
+  TChildProps
+export function withComments<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CommentsQuery,
+    CommentsQueryVariables,
+    CommentsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    CommentsQuery,
+    CommentsQueryVariables,
+    CommentsProps<TChildProps, TDataName>
+  >(CommentsDocument, {
+    alias: 'comments',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCommentsQuery__
+ *
+ * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentsQuery({
+ *   variables: {
+ *      lastId: // value for 'lastId'
+ *      targetId: // value for 'targetId'
+ *      commentPageOptionInput: // value for 'commentPageOptionInput'
+ *   },
+ * });
+ */
+export function useCommentsQuery(
+  baseOptions: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(
+    CommentsDocument,
+    options,
+  )
+}
+export function useCommentsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CommentsQuery,
+    CommentsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<CommentsQuery, CommentsQueryVariables>(
+    CommentsDocument,
+    options,
+  )
+}
+export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>
+export type CommentsLazyQueryHookResult = ReturnType<
+  typeof useCommentsLazyQuery
+>
+export type CommentsQueryResult = Apollo.QueryResult<
+  CommentsQuery,
+  CommentsQueryVariables
 >
 export const FindClassworkSubmissionByIdDocument = {
   kind: 'Document',

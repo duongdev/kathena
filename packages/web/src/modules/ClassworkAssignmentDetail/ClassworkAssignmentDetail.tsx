@@ -1,8 +1,9 @@
-import { FC, useMemo, useState, useCallback } from 'react'
+import { FC, useMemo, useState, useCallback, useRef } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
+import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
 import { useSnackbar } from 'notistack'
@@ -29,7 +30,9 @@ import {
   useClassworkAssignmentDetailQuery,
   useRemoveAttachmentsFromClassworkAssignmentMutation,
   useListClassworkSubmissionQuery,
+  useCommentsQuery,
 } from 'graphql/generated'
+import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
 import {
   buildPath,
@@ -65,11 +68,21 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params])
   const [openAddFile, setOpenAddFile] = useState(false)
+  const [lastId, setLastId] = useState<string | null>(null)
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
   const { data: dataSubmissions } = useListClassworkSubmissionQuery({
     variables: { classworkAssignmentId: id },
+  })
+  const { data: dataComments, refetch } = useCommentsQuery({
+    variables: {
+      targetId: id,
+      commentPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
   })
   const [removeAttachmentsFromClassworkAssignment] =
     useRemoveAttachmentsFromClassworkAssignmentMutation({
@@ -90,6 +103,25 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     () => dataSubmissions?.classworkSubmissions,
     [dataSubmissions],
   )
+
+  const comments = useMemo(
+    () => dataComments?.comments.comments ?? [],
+    [dataComments?.comments.comments],
+  )
+
+  const totalComments = useMemo(
+    () => dataComments?.comments.count,
+    [dataComments?.comments.count],
+  )
+
+  const preComments = useRef<ANY[]>(comments)
+  const nextComments = useRef<ANY[]>([])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    preComments.current = [...preComments.current, ...comments]
+    setLastId(lastCommentId)
+    refetch()
+  }
 
   const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
     useDialogState()
@@ -131,6 +163,11 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     ],
   )
 
+  const addComment = (comment: ANY) => {
+    if (lastId) nextComments.current.push(comment)
+    refetch()
+  }
+
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -157,90 +194,153 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
-        <SectionCard
-          maxContentHeight={false}
-          gridItem={{ xs: 9 }}
-          title="Thông tin bài tập"
-        >
-          <RequiredPermission
-            permission={Permission.Classwork_UpdateClassworkAssignment}
+        <Grid item xs={9} container spacing={DASHBOARD_SPACING}>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin bài tập"
           >
-            <UpdateClassworkAssignmentDialog
-              open={updateDialogOpen}
-              onClose={handleCloseUpdateDialog}
-              classworkAssignment={classworkAssignment}
-            />
-          </RequiredPermission>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={7}>
-                <Stack spacing={2}>
-                  <InfoBlock label="Tiêu đề">
-                    {classworkAssignment.title}
-                  </InfoBlock>
-                  <InfoBlock label="Khóa học">
-                    <CourseName courseId={classworkAssignment.courseId} />
-                  </InfoBlock>
-                  <InfoBlock label="Mô tả">
-                    <div
-                      // eslint-disable-next-line
-                      dangerouslySetInnerHTML={{
-                        __html: classworkAssignment.description as ANY,
+            <RequiredPermission
+              permission={Permission.Classwork_UpdateClassworkAssignment}
+            >
+              <UpdateClassworkAssignmentDialog
+                open={updateDialogOpen}
+                onClose={handleCloseUpdateDialog}
+                classworkAssignment={classworkAssignment}
+              />
+            </RequiredPermission>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={7}>
+                  <Stack spacing={2}>
+                    <InfoBlock label="Tiêu đề">
+                      {classworkAssignment.title}
+                    </InfoBlock>
+                    <InfoBlock label="Khóa học">
+                      <CourseName courseId={classworkAssignment.courseId} />
+                    </InfoBlock>
+                    <InfoBlock label="Mô tả">
+                      <div
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                          __html: classworkAssignment.description as ANY,
+                        }}
+                      />
+                    </InfoBlock>
+                    <InfoBlock label="Tập tin đính kèm">
+                      {classworkAssignment.attachments.length ? (
+                        classworkAssignment.attachments.map((attachment) => (
+                          <FileComponent
+                            key={attachment}
+                            fileId={attachment}
+                            actions={[
+                              <Trash
+                                onClick={() => removeAttachment(attachment)}
+                                style={{ cursor: 'pointer' }}
+                                size={24}
+                              />,
+                            ]}
+                          />
+                        ))
+                      ) : (
+                        <Typography>Không có tập tin</Typography>
+                      )}
+                    </InfoBlock>
+                    {!openAddFile && (
+                      <Button
+                        onClick={() => setOpenAddFile(true)}
+                        startIcon={<FilePlus />}
+                      >
+                        Thêm tập tin
+                      </Button>
+                    )}
+                    {openAddFile && (
+                      <AddAttachmentsToClassworkAssignment
+                        idClassworkAssignment={classworkAssignment.id}
+                        setOpen={setOpenAddFile}
+                      />
+                    )}
+                  </Stack>
+                </Grid>
+                <Grid
+                  item
+                  xs={5}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography>Tỷ lệ nộp bài</Typography>
+                  <div>
+                    <Pie data={data1} type="pie" />
+                  </div>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </SectionCard>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Bình luận"
+          >
+            <CardContent>
+              {comments?.length ? (
+                <div
+                  style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                >
+                  {lastId &&
+                    nextComments.current.map((comment) => (
+                      <Comment
+                        comment={{
+                          id: comment.id,
+                          createdByAccountId: comment.createdByAccountId,
+                          createdAt: comment.createdAt,
+                          content: comment.content,
+                        }}
+                      />
+                    ))}
+                  {preComments.current.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
                       }}
                     />
-                  </InfoBlock>
-                  <InfoBlock label="Tập tin đính kèm">
-                    {classworkAssignment.attachments.length ? (
-                      classworkAssignment.attachments.map((attachment) => (
-                        <FileComponent
-                          key={attachment}
-                          fileId={attachment}
-                          actions={[
-                            <Trash
-                              onClick={() => removeAttachment(attachment)}
-                              style={{ cursor: 'pointer' }}
-                              size={24}
-                            />,
-                          ]}
-                        />
-                      ))
-                    ) : (
-                      <Typography>Không có tập tin</Typography>
-                    )}
-                  </InfoBlock>
-                  {!openAddFile && (
-                    <Button
-                      onClick={() => setOpenAddFile(true)}
-                      startIcon={<FilePlus />}
-                    >
-                      Thêm tập tin
-                    </Button>
-                  )}
-                  {openAddFile && (
-                    <AddAttachmentsToClassworkAssignment
-                      idClassworkAssignment={classworkAssignment.id}
-                      setOpen={setOpenAddFile}
+                  ))}
+                  {comments.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
                     />
-                  )}
-                </Stack>
-              </Grid>
-              <Grid
-                item
-                xs={5}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography>Tỷ lệ nộp bài</Typography>
-                <div>
-                  <Pie data={data1} type="pie" />
+                  ))}
+                  <Button
+                    disabled={
+                      comments.length +
+                        preComments.current.length +
+                        nextComments.current.length ===
+                      totalComments
+                    }
+                    onClick={() =>
+                      loadMoreComments(comments[comments.length - 1].id)
+                    }
+                  >
+                    Xem thêm
+                  </Button>
                 </div>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </SectionCard>
+              ) : (
+                'Không có comment'
+              )}
+              <CreateComment onSuccess={addComment} targetId={id} />
+            </CardContent>
+          </SectionCard>
+        </Grid>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 3 }}
