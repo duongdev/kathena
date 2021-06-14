@@ -1,6 +1,7 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState, useRef } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
+import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
 
@@ -19,7 +20,9 @@ import { WithAuth } from 'common/auth'
 import {
   Permission,
   useClassworkAssignmentDetailQuery,
+  useCommentsQuery,
 } from 'graphql/generated'
+import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
@@ -35,6 +38,41 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       variables: { id },
     })
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
+    // Comment
+    const addComment = (comment: ANY) => {
+      if (lastId) nextComments.current.push(comment)
+      refetch()
+    }
+
+    const [lastId, setLastId] = useState<string | null>(null)
+
+    const { data: dataComments, refetch } = useCommentsQuery({
+      variables: {
+        targetId: id,
+        commentPageOptionInput: {
+          limit: 5,
+        },
+        lastId,
+      },
+    })
+    const comments = useMemo(
+      () => dataComments?.comments.comments ?? [],
+      [dataComments?.comments.comments],
+    )
+
+    const totalComments = useMemo(
+      () => dataComments?.comments.count,
+      [dataComments?.comments.count],
+    )
+
+    const preComments = useRef<ANY[]>(comments)
+    const nextComments = useRef<ANY[]>([])
+
+    const loadMoreComments = (lastCommentId: string) => {
+      preComments.current = [...preComments.current, ...comments]
+      setLastId(lastCommentId)
+      refetch()
+    }
     if (loading && !data) {
       return <PageContainerSkeleton maxWidth="md" />
     }
@@ -48,7 +86,6 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
         </PageContainer>
       )
     }
-
     return (
       <PageContainer
         title={classworkAssignment.title}
@@ -99,6 +136,67 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                   </Stack>
                 </Grid>
               </Grid>
+            </CardContent>
+          </SectionCard>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Bình luận"
+          >
+            <CardContent>
+              {comments?.length ? (
+                <div
+                  style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                >
+                  {lastId &&
+                    nextComments.current.map((comment) => (
+                      <Comment
+                        comment={{
+                          id: comment.id,
+                          createdByAccountId: comment.createdByAccountId,
+                          createdAt: comment.createdAt,
+                          content: comment.content,
+                        }}
+                      />
+                    ))}
+                  {preComments.current.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
+                    />
+                  ))}
+                  {comments.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
+                    />
+                  ))}
+                  <Button
+                    disabled={
+                      comments.length +
+                        preComments.current.length +
+                        nextComments.current.length ===
+                      totalComments
+                    }
+                    onClick={() =>
+                      loadMoreComments(comments[comments.length - 1].id)
+                    }
+                  >
+                    Xem thêm
+                  </Button>
+                </div>
+              ) : (
+                'Không có comment'
+              )}
+              <CreateComment onSuccess={addComment} targetId={id} />
             </CardContent>
           </SectionCard>
         </Grid>
