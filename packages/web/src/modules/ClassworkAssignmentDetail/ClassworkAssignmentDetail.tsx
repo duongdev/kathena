@@ -335,7 +335,15 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                   </Button>
                 </div>
               ) : (
-                'Không có comment'
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '10px',
+                  }}
+                >
+                  <Typography>Không có comment</Typography>
+                </div>
               )}
               <CreateComment onSuccess={addComment} targetId={id} />
             </CardContent>
