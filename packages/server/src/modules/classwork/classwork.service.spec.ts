@@ -2391,6 +2391,31 @@ describe('classwork.service', () => {
         ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
       })
 
+      it(`throws error if account isn't a student submitted`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce({ name: `not null` } as ANY)
+
+        await expect(
+          classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+            createClassWorkSubmissionInput,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_SUBMITTED`)
+      })
+
       it(`returns the created classworkSubmission haven't files`, async () => {
         expect.assertions(2)
 
