@@ -50,53 +50,59 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     }
 
     return (
-      <Grid container spacing={DASHBOARD_SPACING}>
-        <SectionCard
-          maxContentHeight={false}
-          gridItem={{ xs: 12 }}
-          title={classworkAssignment.title}
-          action={[
-            <>
-              <Link
-                to={buildPath(
-                  STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
-                  {
-                    id: classworkAssignment.id,
-                  },
-                )}
-              >
-                <Button variant="contained">Nộp bài</Button>
-              </Link>
-            </>,
-          ]}
-        >
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Stack spacing={2}>
-                  <InfoBlock label="Nội dung: ">
-                    <div
-                      // eslint-disable-next-line
-                      dangerouslySetInnerHTML={{
-                        __html: classworkAssignment.description as ANY,
-                      }}
-                    />
-                  </InfoBlock>
-                  <InfoBlock label="Bài tập:">
-                    {classworkAssignment.attachments.length ? (
-                      classworkAssignment.attachments.map((attachment) => (
-                        <FileComponent key={attachment} fileId={attachment} />
-                      ))
-                    ) : (
-                      <Typography>Không có file bài tập</Typography>
-                    )}
-                  </InfoBlock>
-                </Stack>
+      <PageContainer
+        title={classworkAssignment.title}
+        withBackButton
+        maxWidth="md"
+        actions={[
+          <>
+            <Link
+              to={buildPath(
+                STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                {
+                  id: classworkAssignment.id,
+                },
+              )}
+            >
+              <Button variant="contained">Nộp bài</Button>
+            </Link>
+          </>,
+        ]}
+      >
+        <Grid container spacing={DASHBOARD_SPACING}>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin chi tiết bài tập"
+          >
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Stack spacing={2}>
+                    <InfoBlock label="Nội dung: ">
+                      <div
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                          __html: classworkAssignment.description as ANY,
+                        }}
+                      />
+                    </InfoBlock>
+                    <InfoBlock label="Bài tập:">
+                      {classworkAssignment.attachments.length ? (
+                        classworkAssignment.attachments.map((attachment) => (
+                          <FileComponent key={attachment} fileId={attachment} />
+                        ))
+                      ) : (
+                        <Typography>Không có file bài tập</Typography>
+                      )}
+                    </InfoBlock>
+                  </Stack>
+                </Grid>
               </Grid>
-            </Grid>
-          </CardContent>
-        </SectionCard>
-      </Grid>
+            </CardContent>
+          </SectionCard>
+        </Grid>
+      </PageContainer>
     )
   }
 
