@@ -1,6 +1,8 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import { useAccountDisplayName } from 'components/AccountDisplayName'
+import { useClassworkAssignmentTitle } from 'components/ClassworkAssignmentTitle'
 import FileComponent from 'components/FileComponent'
 import { format } from 'date-fns'
 import { useParams } from 'react-router-dom'
@@ -17,11 +19,9 @@ import {
 } from '@kathena/ui'
 import { useFindClassworkSubmissionByIdQuery } from 'graphql/generated'
 
-import AccountInfoRow from '../../StudyingCourse/Components/AccountInfoRow'
+export type ClassworkSubmissionDetailProps = {}
 
-export type DetailClassworkSubmissionProps = {}
-
-const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
+const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
   props,
 ) => {
   const classes = useStyles(props)
@@ -32,12 +32,22 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
   const { data, loading } = useFindClassworkSubmissionByIdQuery({
     variables: { classworkSubmissionId: idStudent },
   })
-  const idSubmission = useMemo(() => data?.findClassworkSubmissionById, [data])
+  const classworkSubmission = useMemo(
+    () => data?.findClassworkSubmissionById,
+    [data],
+  )
+  const creatorName = useAccountDisplayName(
+    classworkSubmission ? classworkSubmission?.createdByAccountId : '',
+  )
+  const classworkTitle = useClassworkAssignmentTitle(
+    classworkSubmission ? classworkSubmission.classworkId : '',
+  )
+
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
 
-  if (!idSubmission) {
+  if (!classworkSubmission) {
     return (
       <PageContainer maxWidth="md">
         <Typography align="center">
@@ -46,45 +56,40 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
       </PageContainer>
     )
   }
+
   return (
     <PageContainer
       withBackButton
       maxWidth="md"
-      title="Thông tin bài tập"
+      title={`${classworkTitle}`}
       actions={[<Button variant="contained">Chấm điểm</Button>]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
-          title="Nội dung bài tập nộp"
+          title={`Thông tin nộp bài của học viên: ${creatorName}`}
         >
           <CardContent className={classes.root}>
             <Grid container spacing={1}>
-              <InfoBlock gridItem={{ xs: 5 }} label="Thông tin học viên: ">
-                <AccountInfoRow
-                  key={idSubmission.createdByAccountId}
-                  accountId={idSubmission.createdByAccountId}
-                />
-              </InfoBlock>
-              <InfoBlock
-                gridItem={{ xs: 7 }}
-                label="Thời gian học viên nộp bài tập: "
-              >
-                {format(new Date(idSubmission.createdAt), 'MM/dd/yyyy')}
-              </InfoBlock>
               <InfoBlock gridItem={{ xs: 12 }} label="Nội dung: ">
-                <div
-                  // eslint-disable-next-line
-                  dangerouslySetInnerHTML={{
-                    __html: idSubmission.description as ANY,
-                  }}
-                />
+                {classworkSubmission.description ? (
+                  <div
+                    // eslint-disable-next-line
+                    dangerouslySetInnerHTML={{
+                      __html: classworkSubmission.description as ANY,
+                    }}
+                  />
+                ) : (
+                  <Typography>Không có nội dung</Typography>
+                )}
               </InfoBlock>
-
+              <InfoBlock gridItem={{ xs: 12 }} label="Thời gian nộp bài tập: ">
+                {format(new Date(classworkSubmission.createdAt), 'MM/dd/yyyy')}
+              </InfoBlock>
               <InfoBlock gridItem={{ xs: 12 }} label="Bài tập của học viên:">
-                {idSubmission.submissionFileIds.length ? (
-                  idSubmission.submissionFileIds.map((attachment) => (
+                {classworkSubmission.submissionFileIds.length ? (
+                  classworkSubmission.submissionFileIds.map((attachment) => (
                     <FileComponent key={attachment} fileId={attachment} />
                   ))
                 ) : (
@@ -103,4 +108,4 @@ const useStyles = makeStyles(() => ({
   root: {},
 }))
 
-export default DetailClassworkSubmission
+export default ClassworkSubmissionDetail

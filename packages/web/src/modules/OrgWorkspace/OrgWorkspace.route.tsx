@@ -147,8 +147,8 @@ const CreateSubmissionClassworkAssignment = lazy(
 const DetailClassworkSubmission = lazy(
   () =>
     import(
-      'modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission'
-    ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission" */,
+      'modules/TeachingCourse/Components/ClassworkSubmissionDetail'
+    ) /* webpackChunkName: "modules/TeachingCourse/Components/ClassworkSubmissionDetail" */,
 )
 
 export type OrgWorkspaceRouteProps = {}
