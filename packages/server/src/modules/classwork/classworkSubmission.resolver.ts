@@ -48,7 +48,6 @@ export class ClassworkSubmissionResolver {
   ): Promise<ClassworkSubmission> {
     return this.classworkService.setGradeForClassworkSubmission(
       org.id,
-      courseId,
       account.id,
       setGradeForClassworkSubmissionInput,
     )
