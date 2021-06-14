@@ -266,6 +266,7 @@ type Query {
   academicSubject(id: ID!): AcademicSubject!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
+  calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File
@@ -301,6 +302,10 @@ input CoursesFilterInput {
   studentIds: [ID!]
 }
 
+input AvgGradeOfClassworkByCourseOptionInput {
+  limit: Float = 0
+}
+
 input CommentPageOptionInput {
   limit: Int!
 }
@@ -325,7 +330,6 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
-  calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -390,10 +394,6 @@ input UpdateCourseInput {
   tuitionFee: Float
   startDate: String
   lecturerIds: [ID!]
-}
-
-input AvgGradeOfClassworkByCourseOptionInput {
-  limit: Float = 0
 }
 
 input CreateOrgOfficeInput {
