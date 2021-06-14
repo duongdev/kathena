@@ -34,7 +34,7 @@ export const TEACHING_COURSE_CLASSWORK_ASSIGNMENT = `${TEACHING_COURSES}/classwo
 export const TEACHING_COURSE_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/detail/classwork-materials`
 export const TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/classwork-materials/create`
 export const TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/classwork-materials/detail`
-export const TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS = `${TEACHING_COURSES}/:id/classwork-submisions/detail`
+export const TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS = `${TEACHING_COURSES}/:id/classwork-submissions/detail`
 
 export const STUDYING_MODULE = `${ORG_WORKSPACE}/studying`
 export const STUDYING_COURSES = `${STUDYING_MODULE}/courses`

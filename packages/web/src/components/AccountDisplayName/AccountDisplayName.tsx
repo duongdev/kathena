@@ -31,14 +31,14 @@ const AccountDisplayName: FC<AccountDisplayNameProps> = (props) => {
     skip: !!accountProp,
   })
 
-  const account = useMemo(() => accountProp || data?.account, [
-    accountProp,
-    data?.account,
-  ])
-  const displayName = useMemo(() => (account ? getDisplayName(account) : ''), [
-    account,
-    getDisplayName,
-  ])
+  const account = useMemo(
+    () => accountProp || data?.account,
+    [accountProp, data?.account],
+  )
+  const displayName = useMemo(
+    () => (account ? getDisplayName(account) : ''),
+    [account, getDisplayName],
+  )
 
   if (loading) return <Skeleton variant="text" className={classes.skeleton} />
 
@@ -52,6 +52,21 @@ const AccountDisplayName: FC<AccountDisplayNameProps> = (props) => {
       {displayName}
     </Typography>
   )
+}
+
+export const useAccountDisplayName = (accountId: string) => {
+  const { getDisplayName } = useAccountUtils()
+  const { data } = useAccountDisplayNameQuery({
+    variables: { id: accountId },
+  })
+
+  const account = useMemo(() => data?.account, [data?.account])
+  const displayName = useMemo(
+    () => (account ? getDisplayName(account) : ''),
+    [account, getDisplayName],
+  )
+
+  return displayName
 }
 
 const useStyles = makeStyles(() => ({

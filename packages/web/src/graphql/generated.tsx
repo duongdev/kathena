@@ -562,6 +562,7 @@ export type Query = {
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
   classworkSubmissions: Array<ClassworkSubmission>
+  findClassworkSubmissionById: ClassworkSubmission
   comments: CommentsPayload
 }
 
@@ -630,6 +631,10 @@ export type QueryClassworkAssignmentsArgs = {
 
 export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
+}
+
+export type QueryFindClassworkSubmissionByIdArgs = {
+  classworkSubmissionId: Scalars['ID']
 }
 
 export type QueryCommentsArgs = {
@@ -1099,7 +1104,7 @@ export type OrgOfficeQuery = {
 }
 
 export type CreateClassworkSubmissionMutationVariables = Exact<{
-  createClassworkSubmissionInput: CreateClassworkSubmissionInput
+  CreateClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }>
 
@@ -1249,6 +1254,22 @@ export type RemoveAttachmentsFromClassworkMaterialMutation = {
   removeAttachmentsFromClassworkMaterial: Pick<
     ClassworkMaterial,
     'id' | 'orgId' | 'title' | 'attachments'
+  >
+}
+
+export type FindClassworkSubmissionByIdQueryVariables = Exact<{
+  classworkSubmissionId: Scalars['ID']
+}>
+
+export type FindClassworkSubmissionByIdQuery = {
+  findClassworkSubmissionById: Pick<
+    ClassworkSubmission,
+    | 'id'
+    | 'createdAt'
+    | 'createdByAccountId'
+    | 'description'
+    | 'submissionFileIds'
+    | 'classworkId'
   >
 }
 
@@ -6403,7 +6424,7 @@ export const CreateClassworkSubmissionDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'createClassworkSubmissionInput' },
+            name: { kind: 'Name', value: 'CreateClassworkSubmissionInput' },
           },
           type: {
             kind: 'NonNullType',
@@ -6439,7 +6460,7 @@ export const CreateClassworkSubmissionDocument = {
                   kind: 'Variable',
                   name: {
                     kind: 'Name',
-                    value: 'createClassworkSubmissionInput',
+                    value: 'CreateClassworkSubmissionInput',
                   },
                 },
               },
@@ -6520,7 +6541,7 @@ export function withCreateClassworkSubmission<
  * @example
  * const [createClassworkSubmissionMutation, { data, loading, error }] = useCreateClassworkSubmissionMutation({
  *   variables: {
- *      createClassworkSubmissionInput: // value for 'createClassworkSubmissionInput'
+ *      CreateClassworkSubmissionInput: // value for 'CreateClassworkSubmissionInput'
  *      courseId: // value for 'courseId'
  *   },
  * });
@@ -7965,6 +7986,148 @@ export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
   >
+export const FindClassworkSubmissionByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindClassworkSubmissionById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkSubmissionId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findClassworkSubmissionById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkSubmissionId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkSubmissionId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'submissionFileIds' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'classworkId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindClassworkSubmissionByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindClassworkSubmissionById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables,
+    FindClassworkSubmissionByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables,
+    FindClassworkSubmissionByIdProps<TChildProps, TDataName>
+  >(FindClassworkSubmissionByIdDocument, {
+    alias: 'findClassworkSubmissionById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindClassworkSubmissionByIdQuery__
+ *
+ * To run a query within a React component, call `useFindClassworkSubmissionByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindClassworkSubmissionByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindClassworkSubmissionByIdQuery({
+ *   variables: {
+ *      classworkSubmissionId: // value for 'classworkSubmissionId'
+ *   },
+ * });
+ */
+export function useFindClassworkSubmissionByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >(FindClassworkSubmissionByIdDocument, options)
+}
+export function useFindClassworkSubmissionByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >(FindClassworkSubmissionByIdDocument, options)
+}
+export type FindClassworkSubmissionByIdQueryHookResult = ReturnType<
+  typeof useFindClassworkSubmissionByIdQuery
+>
+export type FindClassworkSubmissionByIdLazyQueryHookResult = ReturnType<
+  typeof useFindClassworkSubmissionByIdLazyQuery
+>
+export type FindClassworkSubmissionByIdQueryResult = Apollo.QueryResult<
+  FindClassworkSubmissionByIdQuery,
+  FindClassworkSubmissionByIdQueryVariables
+>
 export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
