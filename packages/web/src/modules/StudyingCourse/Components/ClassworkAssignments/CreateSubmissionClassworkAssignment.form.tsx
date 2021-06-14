@@ -26,7 +26,7 @@ const CreateSubmissionClassworkAssignmentForm: FC<CreateSubmissionClassworkAssig
 
     const handleMaterialSelect = useCallback(
       (files: File[]) => {
-        formik.setFieldValue('attachments', files ?? null)
+        formik.setFieldValue('submissionFiles', files ?? null)
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [],

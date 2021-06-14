@@ -58,7 +58,9 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
     const { enqueueSnackbar } = useSnackbar()
     const history = useHistory()
-    const [createCreateSubmission] = useCreateClassworkSubmissionMutation()
+    const [createCreateSubmission] = useCreateClassworkSubmissionMutation({
+      context: { hasFileUpload: true },
+    })
 
     const handleCreateAcademicSubject = useCallback(
       async (input: CreateSubmissionFormInput) => {
@@ -73,7 +75,6 @@ const CreateSubmissionClassworkAssignment: FC<CreateSubmissionClassworkAssignmen
               },
             },
           })
-
           enqueueSnackbar('Nộp bài tập thành công', { variant: 'success' })
           history.push(
             buildPath(STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS, {
