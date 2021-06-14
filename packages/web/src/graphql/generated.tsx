@@ -452,7 +452,6 @@ export type MutationCreateClassworkSubmissionArgs = {
 
 export type MutationSetGradeForClassworkSubmissionArgs = {
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
-  courseId: Scalars['ID']
 }
 
 export type MutationCreateCommentArgs = {
@@ -1270,7 +1269,16 @@ export type FindClassworkSubmissionByIdQuery = {
     | 'description'
     | 'submissionFileIds'
     | 'classworkId'
+    | 'grade'
   >
+}
+
+export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
+  setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
+}>
+
+export type SetGradeForClassworkSubmissionMutation = {
+  setGradeForClassworkSubmission: Pick<ClassworkSubmission, 'id' | 'grade'>
 }
 
 export type CourseDetailQueryVariables = Exact<{
@@ -8048,6 +8056,7 @@ export const FindClassworkSubmissionByIdDocument = {
                   name: { kind: 'Name', value: 'submissionFileIds' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'classworkId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'grade' } },
               ],
             },
           },
@@ -8139,6 +8148,146 @@ export type FindClassworkSubmissionByIdQueryResult = Apollo.QueryResult<
   FindClassworkSubmissionByIdQuery,
   FindClassworkSubmissionByIdQueryVariables
 >
+export const SetGradeForClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SetGradeForClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {
+              kind: 'Name',
+              value: 'setGradeForClassworkSubmissionInput',
+            },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'SetGradeForClassworkSubmissionInput',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'setGradeForClassworkSubmission' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {
+                  kind: 'Name',
+                  value: 'setGradeForClassworkSubmissionInput',
+                },
+                value: {
+                  kind: 'Variable',
+                  name: {
+                    kind: 'Name',
+                    value: 'setGradeForClassworkSubmissionInput',
+                  },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'grade' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type SetGradeForClassworkSubmissionMutationFn = Apollo.MutationFunction<
+  SetGradeForClassworkSubmissionMutation,
+  SetGradeForClassworkSubmissionMutationVariables
+>
+export type SetGradeForClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >
+} &
+  TChildProps
+export function withSetGradeForClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables,
+    SetGradeForClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables,
+    SetGradeForClassworkSubmissionProps<TChildProps, TDataName>
+  >(SetGradeForClassworkSubmissionDocument, {
+    alias: 'setGradeForClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useSetGradeForClassworkSubmissionMutation__
+ *
+ * To run a mutation, you first call `useSetGradeForClassworkSubmissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetGradeForClassworkSubmissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setGradeForClassworkSubmissionMutation, { data, loading, error }] = useSetGradeForClassworkSubmissionMutation({
+ *   variables: {
+ *      setGradeForClassworkSubmissionInput: // value for 'setGradeForClassworkSubmissionInput'
+ *   },
+ * });
+ */
+export function useSetGradeForClassworkSubmissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >(SetGradeForClassworkSubmissionDocument, options)
+}
+export type SetGradeForClassworkSubmissionMutationHookResult = ReturnType<
+  typeof useSetGradeForClassworkSubmissionMutation
+>
+export type SetGradeForClassworkSubmissionMutationResult =
+  Apollo.MutationResult<SetGradeForClassworkSubmissionMutation>
+export type SetGradeForClassworkSubmissionMutationOptions =
+  Apollo.BaseMutationOptions<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >
 export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
