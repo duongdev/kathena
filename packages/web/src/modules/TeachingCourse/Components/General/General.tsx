@@ -15,37 +15,16 @@ import {
   Typography,
   Button,
 } from '@kathena/ui'
-import { useCommentsQuery, useCourseDetailQuery } from 'graphql/generated'
+import {
+  useCommentsQuery,
+  useCourseDetailQuery,
+  useAvgGradeOfClassworkAssignmentInCourseQuery,
+} from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
 import AccountInfoRow from '../AccountInfoRow'
 
 export type GeneralProps = {}
-
-const data1 = {
-  labels: ['Bài 1', 'Bài 2', 'Bài 3', 'Bài 4', 'Bài 5', 'Bài 6'],
-  datasets: [
-    {
-      label: 'Điểm trung bình',
-      data: [99, 59, 30, 50, 20, 30],
-      backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-      borderColor: ['rgba(255, 99, 132, 1)'],
-      borderWidth: 1,
-    },
-  ],
-}
-
-const option1s = {
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    ],
-  },
-}
 
 const General: FC<GeneralProps> = () => {
   const params: { id: string } = useParams()
@@ -53,7 +32,40 @@ const General: FC<GeneralProps> = () => {
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
+
+  const { data: dataAvgGrade } = useAvgGradeOfClassworkAssignmentInCourseQuery({
+    variables: {
+      courseId,
+      optionInput: {
+        limit: 6,
+      },
+    },
+  })
+
   const course = useMemo(() => data?.findCourseById, [data])
+
+  const listAvgGrade = useMemo(
+    () => dataAvgGrade?.calculateAvgGradeOfClassworkAssignmentInCourse,
+    [dataAvgGrade?.calculateAvgGradeOfClassworkAssignmentInCourse],
+  )
+
+  const mappedData = useMemo(() => {
+    const listLabel: string[] =
+      listAvgGrade?.map((item) => `${item.classworkTitle.slice(0, 9)}...`) ?? []
+    const listData: number[] = listAvgGrade?.map((item) => item.avgGrade) ?? []
+    return {
+      labels: listLabel,
+      datasets: [
+        {
+          label: 'Điểm trung bình',
+          data: listData,
+          backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+          borderColor: ['rgba(255, 99, 132, 1)'],
+          borderWidth: 1,
+        },
+      ],
+    }
+  }, [listAvgGrade])
 
   const [lastId, setLastId] = useState<string | null>(null)
 
@@ -144,7 +156,21 @@ const General: FC<GeneralProps> = () => {
                   Biểu đồ điểm trung bình các bài tập trong khóa
                 </Typography>
                 <div style={{ width: '100%' }}>
-                  <Bar type="bar" data={data1} options={option1s} />
+                  <Bar
+                    type="bar"
+                    data={mappedData}
+                    options={{
+                      scales: {
+                        yAxes: [
+                          {
+                            ticks: {
+                              beginAtZero: true,
+                            },
+                          },
+                        ],
+                      },
+                    }}
+                  />
                 </div>
               </Grid>
               <InfoBlock gridItem={{ xs: 12 }} label="Giảng viên đảm nhận">
