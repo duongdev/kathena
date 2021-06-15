@@ -2543,7 +2543,6 @@ describe('classwork.service', () => {
           classworkService.setGradeForClassworkSubmission(
             objectId(),
             objectId(),
-            objectId(),
             {
               submissionId: objectId(),
               grade: 70,
@@ -2555,17 +2554,49 @@ describe('classwork.service', () => {
       it('throws error if the account is not a course lecturer', async () => {
         expect.assertions(1)
 
+        const orgId = objectId()
+        const courseId = objectId()
+        const gradeByAccountId = objectId()
+
+        const classworkAssignment: ANY = {
+          id: objectId(),
+          courseId,
+          title: 'Thi HK1',
+        }
+
+        const classworkSubmissionInput: ANY = {
+          classworkId: classworkAssignment.id,
+        }
+
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
           .mockResolvedValueOnce(true as ANY)
+          .mockResolvedValueOnce(true as ANY)
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkSubmission =
+          await classworkService.createClassworkSubmission(
+            orgId,
+            courseId,
+            gradeByAccountId,
+            classworkSubmissionInput,
+          )
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findById')
+          .mockResolvedValueOnce(classworkSubmission)
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
+          .mockResolvedValueOnce(classworkAssignment)
 
         await expect(
           classworkService.setGradeForClassworkSubmission(
             objectId(),
             objectId(),
-            objectId(),
             {
-              submissionId: objectId(),
+              submissionId: classworkSubmission.id,
               grade: 70,
             },
           ),
@@ -2586,13 +2617,45 @@ describe('classwork.service', () => {
           classworkService.setGradeForClassworkSubmission(
             objectId(),
             objectId(),
-            objectId(),
             {
               submissionId: objectId(),
               grade: 70,
             },
           ),
         ).rejects.toThrowError(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+      })
+
+      it('throws error if classwork not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const classworkSubmission: ANY = {
+          createdByAccountId: objectId(),
+          classworkId: objectId(),
+          grade: 0,
+          submissionFileIds: [],
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findById')
+          .mockResolvedValueOnce(classworkSubmission)
+
+        await expect(
+          classworkService.setGradeForClassworkSubmission(
+            objectId(),
+            objectId(),
+            {
+              submissionId: objectId(),
+              grade: -1,
+            },
+          ),
+        ).rejects.toThrowError(`CLASSWORK_NOT_FOUND`)
       })
 
       it('throws error if grade is not valid', async () => {
@@ -2607,6 +2670,14 @@ describe('classwork.service', () => {
           .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
 
+        const courseId = objectId()
+
+        const classworkAssignment: ANY = {
+          id: objectId(),
+          courseId,
+          title: 'Thi HK1',
+        }
+
         const classworkSubmission: ANY = {
           createdByAccountId: objectId(),
           classworkId: objectId(),
@@ -2618,10 +2689,13 @@ describe('classwork.service', () => {
           .spyOn(classworkService['classworkSubmissionModel'], 'findById')
           .mockResolvedValueOnce(classworkSubmission)
           .mockResolvedValueOnce(classworkSubmission)
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
+          .mockResolvedValueOnce(classworkAssignment)
+          .mockResolvedValueOnce(classworkAssignment)
 
         await expect(
           classworkService.setGradeForClassworkSubmission(
-            objectId(),
             objectId(),
             objectId(),
             {
@@ -2633,7 +2707,6 @@ describe('classwork.service', () => {
 
         await expect(
           classworkService.setGradeForClassworkSubmission(
-            objectId(),
             objectId(),
             objectId(),
             {
@@ -2664,6 +2737,12 @@ describe('classwork.service', () => {
           classworkId: objectId(),
         }
 
+        const classworkAssignment: ANY = {
+          id: objectId(),
+          courseId,
+          title: 'Thi HK1',
+        }
+
         jest
           .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
           .mockResolvedValueOnce(true as ANY)
@@ -2680,11 +2759,14 @@ describe('classwork.service', () => {
           .spyOn(classworkService['classworkSubmissionModel'], 'findById')
           .mockResolvedValueOnce(classworkSubmission)
           .mockResolvedValueOnce(classworkSubmission)
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
+          .mockResolvedValueOnce(classworkAssignment)
+          .mockResolvedValueOnce(classworkAssignment)
 
         await expect(
           classworkService.setGradeForClassworkSubmission(
             orgId,
-            courseId,
             gradeByAccountId,
             {
               submissionId: classworkSubmission.id,

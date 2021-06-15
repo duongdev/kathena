@@ -1,12 +1,21 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState, useRef } from 'react'
 
 import { CardContent, Grid } from '@material-ui/core'
+import Comment from 'components/Comment/Comment'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { InfoBlock, SectionCardSkeleton, SectionCard } from '@kathena/ui'
-import { useCourseDetailQuery } from 'graphql/generated'
+import { ANY } from '@kathena/types'
+import {
+  InfoBlock,
+  SectionCardSkeleton,
+  SectionCard,
+  Typography,
+  Button,
+} from '@kathena/ui'
+import { useCommentsQuery, useCourseDetailQuery } from 'graphql/generated'
+import CreateComment from 'modules/CreateComment'
 
 import AccountInfoRow from '../AccountInfoRow'
 
@@ -19,6 +28,42 @@ const General: FC<GeneralProps> = () => {
     variables: { id: courseId },
   })
   const course = useMemo(() => data?.findCourseById, [data])
+
+  const [lastId, setLastId] = useState<string | null>(null)
+
+  const { data: dataComments, refetch } = useCommentsQuery({
+    variables: {
+      targetId: courseId,
+      commentPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
+  })
+
+  const comments = useMemo(
+    () => dataComments?.comments.comments ?? [],
+    [dataComments?.comments.comments],
+  )
+
+  const totalComments = useMemo(
+    () => dataComments?.comments.count,
+    [dataComments?.comments.count],
+  )
+
+  const preComments = useRef<ANY[]>(comments)
+  const nextComments = useRef<ANY[]>([])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    preComments.current = [...preComments.current, ...comments]
+    setLastId(lastCommentId)
+    refetch()
+  }
+
+  const addComment = (comment: ANY) => {
+    if (lastId) nextComments.current.push(comment)
+    refetch()
+  }
 
   if (loading) {
     return (
@@ -69,6 +114,73 @@ const General: FC<GeneralProps> = () => {
               </Grid>
             </InfoBlock>
           </Grid>
+        </CardContent>
+      </SectionCard>
+      <SectionCard
+        maxContentHeight={false}
+        gridItem={{ xs: 12 }}
+        title="Bình luận"
+      >
+        <CardContent>
+          {comments?.length ? (
+            <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+              {lastId &&
+                nextComments.current.map((comment) => (
+                  <Comment
+                    comment={{
+                      id: comment.id,
+                      createdByAccountId: comment.createdByAccountId,
+                      createdAt: comment.createdAt,
+                      content: comment.content,
+                    }}
+                  />
+                ))}
+              {preComments.current.map((comment) => (
+                <Comment
+                  comment={{
+                    id: comment.id,
+                    createdByAccountId: comment.createdByAccountId,
+                    createdAt: comment.createdAt,
+                    content: comment.content,
+                  }}
+                />
+              ))}
+              {comments.map((comment) => (
+                <Comment
+                  comment={{
+                    id: comment.id,
+                    createdByAccountId: comment.createdByAccountId,
+                    createdAt: comment.createdAt,
+                    content: comment.content,
+                  }}
+                />
+              ))}
+              <Button
+                disabled={
+                  comments.length +
+                    preComments.current.length +
+                    nextComments.current.length ===
+                  totalComments
+                }
+                onClick={() =>
+                  loadMoreComments(comments[comments.length - 1].id)
+                }
+              >
+                Xem thêm
+              </Button>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '10px',
+              }}
+            >
+              <Typography>Không có comment</Typography>
+            </div>
+          )}
+          <CreateComment onSuccess={addComment} targetId={courseId} />
         </CardContent>
       </SectionCard>
     </Grid>

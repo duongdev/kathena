@@ -154,7 +154,7 @@ export class CourseResolver {
     )
   }
 
-  @Mutation((_returns) => [AvgGradeOfClassworkByCourse])
+  @Query((_returns) => [AvgGradeOfClassworkByCourse])
   @UseAuthGuard(P.AvgGradeStatisticsOfClassworkInTheCourse)
   async calculateAvgGradeOfClassworkAssignmentInCourse(
     @Args('courseId', { type: () => ID }) courseId: string,

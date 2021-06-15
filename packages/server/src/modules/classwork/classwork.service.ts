@@ -953,7 +953,6 @@ export class ClassworkService {
 
   async setGradeForClassworkSubmission(
     orgId: string,
-    courseId: string,
     gradeByAccountId: string,
     setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
   ): Promise<DocumentType<ClassworkSubmission>> {
@@ -962,20 +961,28 @@ export class ClassworkService {
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
 
-    if (
-      !(await this.authService.canAccountManageCourse(
-        gradeByAccountId,
-        courseId,
-      ))
-    ) {
-      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
-    }
-
     const classworkSubmissionBefore =
       await this.classworkSubmissionModel.findById(submissionId)
 
     if (!classworkSubmissionBefore) {
       throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+    }
+
+    const classwork = await this.classworkAssignmentsModel.findById(
+      classworkSubmissionBefore.classworkId,
+    )
+
+    if (!classwork) {
+      throw new Error(`CLASSWORK_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        gradeByAccountId,
+        classwork.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
     }
 
     if (grade < GRADE_MIN || grade > GRADE_MAX) {

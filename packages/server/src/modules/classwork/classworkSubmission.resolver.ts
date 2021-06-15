@@ -40,7 +40,6 @@ export class ClassworkSubmissionResolver {
   @UseAuthGuard(P.Classwork_SetGradeForClassworkSubmission)
   @UsePipes(ValidationPipe)
   async setGradeForClassworkSubmission(
-    @Args('courseId', { type: () => ID }) courseId: string,
     @Args('setGradeForClassworkSubmissionInput')
     setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
     @CurrentOrg() org: Org,
@@ -48,7 +47,6 @@ export class ClassworkSubmissionResolver {
   ): Promise<ClassworkSubmission> {
     return this.classworkService.setGradeForClassworkSubmission(
       org.id,
-      courseId,
       account.id,
       setGradeForClassworkSubmissionInput,
     )
