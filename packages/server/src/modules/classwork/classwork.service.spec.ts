@@ -2391,7 +2391,7 @@ describe('classwork.service', () => {
         ).rejects.toThrowError(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
       })
 
-      it(`throws error if account isn't a student submitted`, async () => {
+      it(`throws error if student submitted`, async () => {
         expect.assertions(1)
 
         jest
@@ -2413,7 +2413,7 @@ describe('classwork.service', () => {
             objectId(),
             createClassWorkSubmissionInput,
           ),
-        ).rejects.toThrowError(`ACCOUNT_SUBMITTED`)
+        ).rejects.toThrowError(`STUDENT_SUBMITTED_ASSIGNMENTS`)
       })
 
       it(`returns the created classworkSubmission haven't files`, async () => {
