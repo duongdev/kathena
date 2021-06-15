@@ -1,9 +1,9 @@
-import { FC, useMemo, useState, useCallback } from 'react'
+import { FC, useMemo, useState, useCallback, useRef } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import PublicationChip from 'components/PublicationChip'
-import format from 'date-fns/format'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
@@ -19,13 +19,14 @@ import {
   SectionCardSkeleton,
   Typography,
 } from '@kathena/ui'
-import { useAuth, RequiredPermission } from 'common/auth'
+import { RequiredPermission } from 'common/auth'
 import {
   useDetailClassworkMaterialQuery,
   Permission,
   useRemoveAttachmentsFromClassworkMaterialMutation,
+  useCommentsQuery,
 } from 'graphql/generated'
-import AccountInfoRow from 'modules/StudyingCourse/Components/AccountInfoRow'
+import CreateComment from 'modules/CreateComment'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
@@ -39,10 +40,18 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params.id])
   const [openAddFile, setOpenAddFile] = useState(false)
-  const { account } = useAuth()
-
+  const [lastId, setLastId] = useState<string | null>(null)
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
+  })
+  const { data: dataComments, refetch } = useCommentsQuery({
+    variables: {
+      targetId: id,
+      commentPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
   })
   const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
   const [removeAttachmentsFromClassworkMaterial] =
@@ -86,6 +95,30 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
     ],
   )
 
+  const comments = useMemo(
+    () => dataComments?.comments.comments ?? [],
+    [dataComments?.comments.comments],
+  )
+
+  const totalComments = useMemo(
+    () => dataComments?.comments.count,
+    [dataComments?.comments.count],
+  )
+
+  const preComments = useRef<ANY[]>(comments)
+  const nextComments = useRef<ANY[]>([])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    preComments.current = [...preComments.current, ...comments]
+    setLastId(lastCommentId)
+    refetch()
+  }
+
+  const addComment = (comment: ANY) => {
+    if (lastId) nextComments.current.push(comment)
+    refetch()
+  }
+
   if (loading) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -103,25 +136,6 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       withBackButton
       maxWidth="md"
       title={`${classworkMaterial?.title}`}
-      subtitle={[
-        <>
-          <Grid container spacing={2} className={classes.root}>
-            <InfoBlock gridItem={{ xs: 2 }} label="Ngày đăng:">
-              {`${format(
-                new Date(classworkMaterial?.createdAt),
-                'dd/MM/yyyy',
-              )}`}
-            </InfoBlock>
-            <InfoBlock gridItem={{ xs: 10 }} label="Người đăng:">
-              <AccountInfoRow
-                gridItem={{ xs: 4 }}
-                key={`${account?.id}`}
-                accountId={`${account?.id}`}
-              />
-            </InfoBlock>
-          </Grid>
-        </>,
-      ]}
       actions={[
         <PublicationChip
           publication={classworkMaterial?.publicationState as ANY}
@@ -207,6 +221,73 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                 </Grid>
               </Grid>
             </Grid>
+          </CardContent>
+        </SectionCard>
+        <SectionCard
+          maxContentHeight={false}
+          gridItem={{ xs: 12 }}
+          title="Bình luận"
+        >
+          <CardContent>
+            {comments?.length ? (
+              <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+                {lastId &&
+                  nextComments.current.map((comment) => (
+                    <Comment
+                      comment={{
+                        id: comment.id,
+                        createdByAccountId: comment.createdByAccountId,
+                        createdAt: comment.createdAt,
+                        content: comment.content,
+                      }}
+                    />
+                  ))}
+                {preComments.current.map((comment) => (
+                  <Comment
+                    comment={{
+                      id: comment.id,
+                      createdByAccountId: comment.createdByAccountId,
+                      createdAt: comment.createdAt,
+                      content: comment.content,
+                    }}
+                  />
+                ))}
+                {comments.map((comment) => (
+                  <Comment
+                    comment={{
+                      id: comment.id,
+                      createdByAccountId: comment.createdByAccountId,
+                      createdAt: comment.createdAt,
+                      content: comment.content,
+                    }}
+                  />
+                ))}
+                <Button
+                  disabled={
+                    comments.length +
+                      preComments.current.length +
+                      nextComments.current.length ===
+                    totalComments
+                  }
+                  onClick={() =>
+                    loadMoreComments(comments[comments.length - 1].id)
+                  }
+                >
+                  Xem thêm
+                </Button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: '10px',
+                }}
+              >
+                <Typography>Không có comment</Typography>
+              </div>
+            )}
+            <CreateComment onSuccess={addComment} targetId={id} />
           </CardContent>
         </SectionCard>
       </Grid>
