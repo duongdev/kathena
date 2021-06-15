@@ -294,7 +294,6 @@ export type Mutation = {
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
-  calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -375,11 +374,6 @@ export type MutationRemoveStudentsFromCourseArgs = {
 export type MutationRemoveLecturersFromCourseArgs = {
   lecturerIds: Array<Scalars['ID']>
   id: Scalars['ID']
-}
-
-export type MutationCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
-  optionInput: AvgGradeOfClassworkByCourseOptionInput
-  courseId: Scalars['ID']
 }
 
 export type MutationCreateOrgOfficeArgs = {
@@ -554,6 +548,7 @@ export type Query = {
   academicSubject: AcademicSubject
   findCourseById: Course
   courses: CoursesPayload
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
   file?: Maybe<File>
@@ -562,6 +557,7 @@ export type Query = {
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
   classworkSubmissions: Array<ClassworkSubmission>
+  findClassworkSubmissionById: ClassworkSubmission
   comments: CommentsPayload
 }
 
@@ -600,6 +596,11 @@ export type QueryCoursesArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
+  optionInput: AvgGradeOfClassworkByCourseOptionInput
+  courseId: Scalars['ID']
+}
+
 export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
@@ -630,6 +631,10 @@ export type QueryClassworkAssignmentsArgs = {
 
 export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
+}
+
+export type QueryFindClassworkSubmissionByIdArgs = {
+  classworkSubmissionId: Scalars['ID']
 }
 
 export type QueryCommentsArgs = {
@@ -1099,7 +1104,7 @@ export type OrgOfficeQuery = {
 }
 
 export type CreateClassworkSubmissionMutationVariables = Exact<{
-  createClassworkSubmissionInput: CreateClassworkSubmissionInput
+  CreateClassworkSubmissionInput: CreateClassworkSubmissionInput
   courseId: Scalars['ID']
 }>
 
@@ -1252,6 +1257,22 @@ export type RemoveAttachmentsFromClassworkMaterialMutation = {
   >
 }
 
+export type FindClassworkSubmissionByIdQueryVariables = Exact<{
+  classworkSubmissionId: Scalars['ID']
+}>
+
+export type FindClassworkSubmissionByIdQuery = {
+  findClassworkSubmissionById: Pick<
+    ClassworkSubmission,
+    | 'id'
+    | 'createdAt'
+    | 'createdByAccountId'
+    | 'description'
+    | 'submissionFileIds'
+    | 'classworkId'
+  >
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -1268,6 +1289,17 @@ export type CourseDetailQuery = {
     | 'lecturerIds'
     | 'studentIds'
     | 'publicationState'
+  >
+}
+
+export type AvgGradeOfClassworkAssignmentInCourseQueryVariables = Exact<{
+  courseId: Scalars['ID']
+  optionInput: AvgGradeOfClassworkByCourseOptionInput
+}>
+
+export type AvgGradeOfClassworkAssignmentInCourseQuery = {
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<
+    Pick<AvgGradeOfClassworkByCourse, 'classworkTitle' | 'avgGrade'>
   >
 }
 
@@ -6403,7 +6435,7 @@ export const CreateClassworkSubmissionDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'createClassworkSubmissionInput' },
+            name: { kind: 'Name', value: 'CreateClassworkSubmissionInput' },
           },
           type: {
             kind: 'NonNullType',
@@ -6439,7 +6471,7 @@ export const CreateClassworkSubmissionDocument = {
                   kind: 'Variable',
                   name: {
                     kind: 'Name',
-                    value: 'createClassworkSubmissionInput',
+                    value: 'CreateClassworkSubmissionInput',
                   },
                 },
               },
@@ -6520,7 +6552,7 @@ export function withCreateClassworkSubmission<
  * @example
  * const [createClassworkSubmissionMutation, { data, loading, error }] = useCreateClassworkSubmissionMutation({
  *   variables: {
- *      createClassworkSubmissionInput: // value for 'createClassworkSubmissionInput'
+ *      CreateClassworkSubmissionInput: // value for 'CreateClassworkSubmissionInput'
  *      courseId: // value for 'courseId'
  *   },
  * });
@@ -7965,6 +7997,148 @@ export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
   >
+export const FindClassworkSubmissionByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindClassworkSubmissionById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkSubmissionId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findClassworkSubmissionById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkSubmissionId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkSubmissionId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'submissionFileIds' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'classworkId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindClassworkSubmissionByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindClassworkSubmissionById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables,
+    FindClassworkSubmissionByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables,
+    FindClassworkSubmissionByIdProps<TChildProps, TDataName>
+  >(FindClassworkSubmissionByIdDocument, {
+    alias: 'findClassworkSubmissionById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindClassworkSubmissionByIdQuery__
+ *
+ * To run a query within a React component, call `useFindClassworkSubmissionByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindClassworkSubmissionByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindClassworkSubmissionByIdQuery({
+ *   variables: {
+ *      classworkSubmissionId: // value for 'classworkSubmissionId'
+ *   },
+ * });
+ */
+export function useFindClassworkSubmissionByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >(FindClassworkSubmissionByIdDocument, options)
+}
+export function useFindClassworkSubmissionByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    FindClassworkSubmissionByIdQuery,
+    FindClassworkSubmissionByIdQueryVariables
+  >(FindClassworkSubmissionByIdDocument, options)
+}
+export type FindClassworkSubmissionByIdQueryHookResult = ReturnType<
+  typeof useFindClassworkSubmissionByIdQuery
+>
+export type FindClassworkSubmissionByIdLazyQueryHookResult = ReturnType<
+  typeof useFindClassworkSubmissionByIdLazyQuery
+>
+export type FindClassworkSubmissionByIdQueryResult = Apollo.QueryResult<
+  FindClassworkSubmissionByIdQuery,
+  FindClassworkSubmissionByIdQueryVariables
+>
 export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
@@ -8104,6 +8278,170 @@ export type CourseDetailQueryResult = Apollo.QueryResult<
   CourseDetailQuery,
   CourseDetailQueryVariables
 >
+export const AvgGradeOfClassworkAssignmentInCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AvgGradeOfClassworkAssignmentInCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'optionInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'AvgGradeOfClassworkByCourseOptionInput',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'calculateAvgGradeOfClassworkAssignmentInCourse',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'optionInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'optionInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'classworkTitle' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'avgGrade' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AvgGradeOfClassworkAssignmentInCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >
+} &
+  TChildProps
+export function withAvgGradeOfClassworkAssignmentInCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables,
+    AvgGradeOfClassworkAssignmentInCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables,
+    AvgGradeOfClassworkAssignmentInCourseProps<TChildProps, TDataName>
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, {
+    alias: 'avgGradeOfClassworkAssignmentInCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAvgGradeOfClassworkAssignmentInCourseQuery__
+ *
+ * To run a query within a React component, call `useAvgGradeOfClassworkAssignmentInCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvgGradeOfClassworkAssignmentInCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvgGradeOfClassworkAssignmentInCourseQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      optionInput: // value for 'optionInput'
+ *   },
+ * });
+ */
+export function useAvgGradeOfClassworkAssignmentInCourseQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, options)
+}
+export function useAvgGradeOfClassworkAssignmentInCourseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, options)
+}
+export type AvgGradeOfClassworkAssignmentInCourseQueryHookResult = ReturnType<
+  typeof useAvgGradeOfClassworkAssignmentInCourseQuery
+>
+export type AvgGradeOfClassworkAssignmentInCourseLazyQueryHookResult =
+  ReturnType<typeof useAvgGradeOfClassworkAssignmentInCourseLazyQuery>
+export type AvgGradeOfClassworkAssignmentInCourseQueryResult =
+  Apollo.QueryResult<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >
 export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [
