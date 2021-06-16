@@ -906,7 +906,7 @@ export class ClassworkService {
         accountId,
       })
     ) {
-      throw new Error(`ACCOUNT_SUBMITTED`)
+      throw new Error(`STUDENT_SUBMITTED_ASSIGNMENTS`)
     }
 
     const classworkSubmission = await this.classworkSubmissionModel.create({
