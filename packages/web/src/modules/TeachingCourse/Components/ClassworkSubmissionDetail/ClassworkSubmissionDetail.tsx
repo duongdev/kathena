@@ -17,12 +17,16 @@ import {
   Typography,
   PageContainer,
   SectionCard,
+  useDialogState,
+  StatusChip,
 } from '@kathena/ui'
 import {
   useCommentsQuery,
   useFindClassworkSubmissionByIdQuery,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
+
+import GradeDialog from './GradeDialog'
 
 export type ClassworkSubmissionDetailProps = {}
 
@@ -32,11 +36,12 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
   const classes = useStyles(props)
 
   const params: { id: string } = useParams()
-  const idStudent = useMemo(() => params.id, [params.id])
+  const idSubmission = useMemo(() => params.id, [params.id])
   const [lastId, setLastId] = useState<string | null>(null)
-
+  const [gradeDialogOpen, handleOpenGradeDialog, handleCloseGradeDialog] =
+    useDialogState()
   const { data, loading } = useFindClassworkSubmissionByIdQuery({
-    variables: { classworkSubmissionId: idStudent },
+    variables: { classworkSubmissionId: idSubmission },
   })
   const classworkSubmission = useMemo(
     () => data?.findClassworkSubmissionById,
@@ -102,13 +107,27 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
       withBackButton
       maxWidth="md"
       title={`${classworkTitle}`}
-      actions={[<Button variant="contained">Chấm điểm</Button>]}
+      actions={[
+        <Button onClick={handleOpenGradeDialog} variant="contained">
+          {classworkSubmission.grade > 0 ? 'Chấm lại' : 'Chấm điểm'}
+        </Button>,
+      ]}
     >
+      <GradeDialog
+        submissionId={classworkSubmission.id}
+        open={gradeDialogOpen}
+        onClose={handleCloseGradeDialog}
+      />
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title={`Thông tin nộp bài của học viên: ${creatorName}`}
+          action={
+            <StatusChip variant="contained">
+              Điểm: {classworkSubmission.grade}
+            </StatusChip>
+          }
         >
           <CardContent className={classes.root}>
             <Grid container spacing={1}>
