@@ -19,7 +19,7 @@ import {
   SectionCardSkeleton,
   Typography,
 } from '@kathena/ui'
-import { RequiredPermission } from 'common/auth'
+import { WithAuth, RequiredPermission } from 'common/auth'
 import {
   useDetailClassworkMaterialQuery,
   Permission,
@@ -298,5 +298,9 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
 const useStyles = makeStyles(() => ({
   root: {},
 }))
-
-export default DetailClassworkMaterials
+const WithPermissionDetailContentClassworkMaterial = () => (
+  <WithAuth permission={Permission.Teaching_Course_Access}>
+    <DetailClassworkMaterials />
+  </WithAuth>
+)
+export default WithPermissionDetailContentClassworkMaterial
