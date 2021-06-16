@@ -18,7 +18,7 @@ import {
   STUDYING_COURSE_LIST,
   STUDYING_COURSE,
   TEACHING_COURSE,
-  UPDATE_ACADEMIC_COURSE,
+  ACADEMIC_COURSE,
   TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS,
   TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
   TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
@@ -96,11 +96,11 @@ const TeachingCourse = lazy(
       'modules/TeachingCourse'
     ) /* webpackChunkName: "modules/TeachingCourse" */,
 )
-const UpdateCourse = lazy(
+const DetailCourse = lazy(
   () =>
     import(
-      'modules/UpdateCourses'
-    ) /* webpackChunkName: "modules/UpdateCourse" */,
+      'modules/DetailCourse'
+    ) /* webpackChunkName: "modules/DetailCourse" */,
 )
 
 const CreateClassworkMaterial = lazy(
@@ -189,7 +189,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       <Route path={STUDYING_COURSE_LIST} exact component={StudyingCourseList} />
       <Route path={STUDYING_COURSE} component={StudyingCourse} />
       <Route path={TEACHING_COURSE} component={TeachingCourse} />
-      <Route path={UPDATE_ACADEMIC_COURSE} exact component={UpdateCourse} />
+      <Route path={ACADEMIC_COURSE} exact component={DetailCourse} />
       <Route
         path={TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS}
         exact
