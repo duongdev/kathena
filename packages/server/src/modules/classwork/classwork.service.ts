@@ -899,6 +899,16 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
     }
 
+    if (
+      await this.classworkSubmissionModel.findOne({
+        orgId,
+        courseId,
+        accountId,
+      })
+    ) {
+      throw new Error(`STUDENT_SUBMITTED_ASSIGNMENTS`)
+    }
+
     const classworkSubmission = await this.classworkSubmissionModel.create({
       createdByAccountId: accountId,
       classworkId,
