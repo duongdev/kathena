@@ -10,13 +10,16 @@ import {
 } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
+import PublicationChip from 'components/PublicationChip'
+import { format } from 'date-fns'
 import { useSnackbar } from 'notistack'
-import { Trash, UserPlus } from 'phosphor-react'
+import { Pencil, Trash, UserPlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import {
   Button,
+  InfoBlock,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
@@ -34,9 +37,9 @@ import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
 import AddStudent from './AddStudent'
 
-export type UpdateCourseProps = {}
+export type DetailCourseProps = {}
 
-const UpdateCourse: FC<UpdateCourseProps> = () => {
+const DetailCourse: FC<DetailCourseProps> = () => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const params: { id: string } = useParams()
@@ -162,9 +165,40 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
       maxWidth="lg"
       subtitle={course.code}
       title={course.name}
+      actions={[
+        <PublicationChip
+          variant="contained"
+          publication={course.publicationState}
+        />,
+      ]}
     >
-      {/* Giảng viên  start */}
       <Grid container spacing={DASHBOARD_SPACING}>
+        <SectionCard
+          maxContentHeight={false}
+          gridItem={{ xs: 12 }}
+          title="Thông tin khóa học"
+          action={<Button endIcon={<Pencil />}>Sửa khóa học</Button>}
+        >
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Stack spacing={2}>
+                  <InfoBlock label="Mã môn học">{course.code}</InfoBlock>
+                  <InfoBlock label="Tên khóa học">{course.name}</InfoBlock>
+                  <InfoBlock label="Ngày bắt đầu">
+                    {format(new Date(course.startDate), 'MM/dd/yyyy')}
+                  </InfoBlock>
+                  <InfoBlock label="Học phí">
+                    {new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(course.tuitionFee)}
+                  </InfoBlock>
+                </Stack>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </SectionCard>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
@@ -235,88 +269,78 @@ const UpdateCourse: FC<UpdateCourseProps> = () => {
             )}
           </CardContent>
         </SectionCard>
-      </Grid>
-      {/* Giảng viên  end */}
-      <Stack mt={2}>
-        {/* Học viên  start */}
-        <Grid container spacing={DASHBOARD_SPACING}>
-          <SectionCard
-            maxContentHeight={false}
-            gridItem={{ xs: 12 }}
-            title="Thông tin học viên"
-            action={
+        <SectionCard
+          maxContentHeight={false}
+          gridItem={{ xs: 12 }}
+          title="Thông tin học viên"
+          action={
+            <>
+              <Button endIcon={<UserPlus />} onClick={handleOpenCreateStudent}>
+                Thêm học sinh
+              </Button>
+              <Popover
+                style={{ width: '89%' }}
+                id={idOpenStudent}
+                open={openStu}
+                anchorEl={openStudent}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <AddStudent onClose={handleClose} />
+              </Popover>
+            </>
+          }
+        >
+          <CardContent>
+            {course.studentIds.length === 0 ? (
+              <>Không có học viên</>
+            ) : (
               <>
-                <Button
-                  endIcon={<UserPlus />}
-                  onClick={handleOpenCreateStudent}
-                >
-                  Thêm học sinh
-                </Button>
-                <Popover
-                  style={{ width: '89%' }}
-                  id={idOpenStudent}
-                  open={openStu}
-                  anchorEl={openStudent}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                >
-                  <AddStudent onClose={handleClose} />
-                </Popover>
-              </>
-            }
-          >
-            <CardContent>
-              {course.studentIds.length === 0 ? (
-                <>Không có học viên</>
-              ) : (
-                <>
-                  {course.studentIds.map((studentId) => (
-                    <Grid
-                      container
-                      spacing={2}
-                      className={classes.displayName}
-                      key={studentId}
-                    >
-                      <Grid item md={1}>
-                        <AccountAvatar accountId={studentId} />
-                      </Grid>
-                      <Grid item md={10}>
-                        <AccountDisplayName
-                          accountId={studentId}
-                          variant="body1"
-                        />
-
-                        <AccountUserName
-                          variant="body2"
-                          color="textSecondary"
-                          accountId={studentId}
-                        />
-                      </Grid>
-                      <Grid item md={1}>
-                        <IconButton
-                          onClick={() => {
-                            handelDeleteStudent(studentId, course.id)
-                          }}
-                        >
-                          <Trash />
-                        </IconButton>
-                      </Grid>
+                {course.studentIds.map((studentId) => (
+                  <Grid
+                    container
+                    spacing={2}
+                    className={classes.displayName}
+                    key={studentId}
+                  >
+                    <Grid item md={1}>
+                      <AccountAvatar accountId={studentId} />
                     </Grid>
-                  ))}
-                </>
-              )}
-            </CardContent>
-          </SectionCard>
-        </Grid>
-        {/* Học viên  end */}
-      </Stack>
+                    <Grid item md={10}>
+                      <AccountDisplayName
+                        accountId={studentId}
+                        variant="body1"
+                      />
+
+                      <AccountUserName
+                        variant="body2"
+                        color="textSecondary"
+                        accountId={studentId}
+                      />
+                    </Grid>
+                    <Grid item md={1}>
+                      <IconButton
+                        onClick={() => {
+                          handelDeleteStudent(studentId, course.id)
+                        }}
+                      >
+                        <Trash />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            )}
+          </CardContent>
+        </SectionCard>
+      </Grid>
     </PageContainer>
   )
 }
@@ -329,10 +353,10 @@ const useStyles = makeStyles({
   },
 })
 
-const WithPermissionUpdateCourse = () => (
-  <WithAuth permission={Permission.Academic_UpdateCourse}>
-    <UpdateCourse />
+const WithPermissionDetailCourse = () => (
+  <WithAuth permission={Permission.Academic_Course_Access}>
+    <DetailCourse />
   </WithAuth>
 )
 
-export default WithPermissionUpdateCourse
+export default WithPermissionDetailCourse
