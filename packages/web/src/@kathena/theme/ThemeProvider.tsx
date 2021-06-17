@@ -33,7 +33,7 @@ const GlobalStyles = () => {
 const useGlobalStyles = makeStyles(() => ({
   '@global': {
     body: {
-      // transition: transitions.create('background-color', {
+      // transition: transitions.create('background-color',{
       //   duration: transitions.duration.standard,
       //   easing: transitions.easing.easeInOut,
       // }),
