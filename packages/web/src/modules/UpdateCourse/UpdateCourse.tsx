@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useCallback, useMemo } from 'react'
 
 import { CardContent, makeStyles, Stack } from '@material-ui/core'
 import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
 import { Formik } from 'formik'
+import { useSnackbar } from 'notistack'
 import { Pencil } from 'phosphor-react'
 import { useHistory, useParams } from 'react-router-dom'
 
@@ -17,8 +16,11 @@ import {
   SectionCard,
   TextFormField,
 } from '@kathena/ui'
-import { useFindCourseByIdQuery } from 'graphql/generated'
-import { ACADEMIC_COURSE } from 'utils/path-builder'
+import {
+  useFindCourseByIdQuery,
+  useUpdateCourseMutation,
+} from 'graphql/generated'
+import { ACADEMIC_COURSE, buildPath } from 'utils/path-builder'
 
 export type UpdateCourseProps = {}
 export type CourseFormInput = {
@@ -43,35 +45,56 @@ const validationSchema = yup.object({
 const UpdateCourse: FC<UpdateCourseProps> = (props) => {
   const classes = useStyles(props)
   const params: { id: string } = useParams()
+  const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar()
   const idCourse = useMemo(() => params.id, [params])
-  const { data, loading } = useFindCourseByIdQuery({
+  const { data } = useFindCourseByIdQuery({
     variables: { id: idCourse },
   })
+  const [updateCourse] = useUpdateCourseMutation()
 
   const idCourseDetail = useMemo(() => data?.findCourseById, [data])
   const initialValues: ANY = useMemo(
     () => ({
       name: idCourseDetail?.name,
       tuitionFee: idCourseDetail?.tuitionFee,
-      lecturerIds: idCourseDetail?.lecturerIds,
-      startDate: idCourseDetail?.startDate,
     }),
-    [
-      idCourseDetail?.name,
-      idCourseDetail?.tuitionFee,
-      idCourseDetail?.lecturerIds,
-      idCourseDetail?.startDate,
-    ],
+    [idCourseDetail?.name, idCourseDetail?.tuitionFee],
   )
 
-  const handleSubmitForm = useCallback(async (input: CourseFormInput) => {
-    try {
-      console.error('hoang')
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error)
-    }
-  }, [])
+  const handleSubmitForm = useCallback(
+    async (input: CourseFormInput) => {
+      try {
+        const lecturerIds: string[] = []
+        if (input.lecturerIds.length) {
+          input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
+        }
+        await updateCourse({
+          variables: {
+            id: idCourse,
+            updateInput: {
+              name: input.name,
+              tuitionFee: input.tuitionFee,
+              lecturerIds,
+              startDate: input.startDate,
+            },
+          },
+        })
+
+        enqueueSnackbar('Sửa khóa học thành công', { variant: 'success' })
+
+        history.push(
+          buildPath(ACADEMIC_COURSE, {
+            id: idCourse,
+          }),
+        )
+      } catch (err) {
+        // console.log(err)
+        enqueueSnackbar('Sửa khóa học thất bại', { variant: 'error' })
+      }
+    },
+    [enqueueSnackbar, updateCourse, idCourse, history],
+  )
   return (
     <div className={classes.root}>
       <Formik
