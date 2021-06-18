@@ -14,7 +14,7 @@ import {
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useCoursesQuery } from 'graphql/generated'
-import { buildPath, ACADEMIC_COURSE } from 'utils/path-builder'
+import { buildPath, UPDATE_ACADEMIC_COURSE } from 'utils/path-builder'
 
 export type CourseListProps = {}
 
@@ -52,8 +52,8 @@ const CourseList: FC<CourseListProps> = (props) => {
                   <>
                     <Typography variant="body1" fontWeight="bold">
                       <Link
-                        to={buildPath(ACADEMIC_COURSE, {
-                          id: course.id,
+                        to={buildPath(UPDATE_ACADEMIC_COURSE, {
+                          idSubject: course.id,
                         })}
                       >
                         {course.name}
