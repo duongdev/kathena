@@ -2889,6 +2889,40 @@ describe('classwork.service', () => {
         ).resolves.toBeNull()
       })
     })
+
+    describe('findOneClassworkSubmission', () => {
+      it('returns a ClassworkSubmission if found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'not null' } as ANY)
+
+        await expect(
+          classworkService.findOneClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject({ name: 'not null' })
+      })
+
+      it('returns null if not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(null)
+
+        await expect(
+          classworkService.findOneClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toBeNull()
+      })
+    })
   })
 
   /**

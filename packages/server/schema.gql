@@ -276,6 +276,7 @@ type Query {
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
+  findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
 }
 
