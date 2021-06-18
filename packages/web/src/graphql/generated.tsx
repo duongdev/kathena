@@ -1071,7 +1071,13 @@ export type FindCourseByIdQueryVariables = Exact<{
 export type FindCourseByIdQuery = {
   findCourseById: Pick<
     Course,
-    'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
+    | 'id'
+    | 'code'
+    | 'name'
+    | 'lecturerIds'
+    | 'studentIds'
+    | 'startDate'
+    | 'tuitionFee'
   >
 }
 
@@ -6040,6 +6046,8 @@ export const FindCourseByIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tuitionFee' } },
               ],
             },
           },

@@ -183,7 +183,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
           action={
             <Link
               to={buildPath(UPDATE_ACADEMIC_COURSE, {
-                idSubject: course.id,
+                id: course.id,
               })}
             >
               {' '}

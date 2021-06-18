@@ -1,3 +1,4 @@
+# Cập nhật khóa học
 mutation UpdateCourse($id: ID!, $updateInput: UpdateCourseInput!) {
   updateCourse(id: $id, updateInput: $updateInput) {
     id

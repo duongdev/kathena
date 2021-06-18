@@ -20,6 +20,8 @@ query FindCourseById($id: ID!) {
     name
     lecturerIds
     studentIds
+    startDate
+    tuitionFee
   }
 }
 mutation RemoveLecturersFromCourse($lecturerIds: [ID!]!, $id: ID!) {

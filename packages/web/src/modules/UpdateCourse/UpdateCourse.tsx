@@ -1,11 +1,15 @@
-import { FC, useCallback } from 'react'
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { FC, useCallback, useMemo } from 'react'
 
 import { CardContent, makeStyles, Stack } from '@material-ui/core'
 import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
 import { Formik } from 'formik'
-import { Check } from 'phosphor-react'
+import { Pencil } from 'phosphor-react'
+import { useHistory, useParams } from 'react-router-dom'
 
 import yup from '@kathena/libs/yup'
+import { ANY } from '@kathena/types'
 import {
   Button,
   CurrencyFormField,
@@ -13,6 +17,7 @@ import {
   SectionCard,
   TextFormField,
 } from '@kathena/ui'
+import { useFindCourseByIdQuery } from 'graphql/generated'
 import { ACADEMIC_COURSE } from 'utils/path-builder'
 
 export type UpdateCourseProps = {}
@@ -37,12 +42,28 @@ const validationSchema = yup.object({
 
 const UpdateCourse: FC<UpdateCourseProps> = (props) => {
   const classes = useStyles(props)
-  const initialValues: CourseFormInput = {
-    name: '',
-    tuitionFee: 0,
-    lecturerIds: [],
-    startDate: '',
-  }
+  const params: { id: string } = useParams()
+  const idCourse = useMemo(() => params.id, [params])
+  const { data, loading } = useFindCourseByIdQuery({
+    variables: { id: idCourse },
+  })
+
+  const idCourseDetail = useMemo(() => data?.findCourseById, [data])
+  const initialValues: ANY = useMemo(
+    () => ({
+      name: idCourseDetail?.name,
+      tuitionFee: idCourseDetail?.tuitionFee,
+      lecturerIds: idCourseDetail?.lecturerIds,
+      startDate: idCourseDetail?.startDate,
+    }),
+    [
+      idCourseDetail?.name,
+      idCourseDetail?.tuitionFee,
+      idCourseDetail?.lecturerIds,
+      idCourseDetail?.startDate,
+    ],
+  )
+
   const handleSubmitForm = useCallback(async (input: CourseFormInput) => {
     try {
       console.error('hoang')
@@ -62,7 +83,7 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
           <PageContainer
             title="Sửa khóa học"
             backButtonLabel="Chi tiết khóa học"
-            withBackButton={ACADEMIC_COURSE}
+            withBackButton
             maxWidth="md"
             className={classes.root}
             actions={[
@@ -70,7 +91,7 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
                 variant="contained"
                 color="primary"
                 size="large"
-                startIcon={<Check />}
+                startIcon={<Pencil />}
                 onClick={formik.submitForm}
                 loading={formik.isSubmitting}
               >
