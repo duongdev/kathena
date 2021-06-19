@@ -1,7 +1,6 @@
 import { FC, useCallback, useMemo } from 'react'
 
 import { CardContent, makeStyles, Stack } from '@material-ui/core'
-import AccountAssignerFormField from 'components/AccountAssigner/AccountAssignerFormField'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 import { Pencil } from 'phosphor-react'
@@ -26,19 +25,16 @@ export type UpdateCourseProps = {}
 export type CourseFormInput = {
   name: string
   tuitionFee: number
-  lecturerIds: Array<Account>
   startDate: string
 }
 const labels: { [k in keyof CourseFormInput]: string } = {
   name: 'Tên khóa học',
   tuitionFee: 'Học phí',
-  lecturerIds: 'Giảng viên',
   startDate: 'Ngày bắt đầu',
 }
 const validationSchema = yup.object({
   name: yup.string().label(labels.name).trim().required(),
   tuitionFee: yup.number().label(labels.tuitionFee).min(0).required(),
-  lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
 })
 
@@ -65,17 +61,12 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
   const handleSubmitForm = useCallback(
     async (input: CourseFormInput) => {
       try {
-        const lecturerIds: string[] = []
-        if (input.lecturerIds.length) {
-          input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
-        }
         await updateCourse({
           variables: {
             id: idCourse,
             updateInput: {
               name: input.name,
               tuitionFee: input.tuitionFee,
-              lecturerIds,
               startDate: input.startDate,
             },
           },
@@ -139,12 +130,6 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
                     required
                     name="tuitionFee"
                     label={labels.tuitionFee}
-                  />
-                  <AccountAssignerFormField
-                    name="lecturerIds"
-                    label={labels.lecturerIds}
-                    roles={['lecturer']}
-                    multiple
                   />
                   <TextFormField
                     type="date"
