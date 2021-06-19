@@ -81,4 +81,20 @@ export class ClassworkSubmissionResolver {
       classworkSubmissionId,
     )
   }
+
+  @Query((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async findOneClassworkSubmission(
+    @Args('ClassworkAssignment', { type: () => ID })
+    ClassworkAssignment: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<Nullable<ClassworkSubmission>> {
+    return this.classworkService.findOneClassworkSubmission(
+      org.id,
+      account.id,
+      ClassworkAssignment,
+    )
+  }
 }

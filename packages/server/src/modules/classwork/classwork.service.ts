@@ -1088,6 +1088,20 @@ export class ClassworkService {
 
     return classworkSubmission
   }
+
+  async findOneClassworkSubmission(
+    orgId: string,
+    accountId: string,
+    classworkAssignmentId: string,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const classworkSubmission = await this.classworkSubmissionModel.findOne({
+      createdByAccountId: accountId,
+      classworkId: classworkAssignmentId,
+      orgId,
+    })
+
+    return classworkSubmission
+  }
   /**
    * END CLASSWORK SUBMISSION
    */
