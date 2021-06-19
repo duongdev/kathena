@@ -788,10 +788,10 @@ export class ClassworkService {
     },
     publicationState: Publication,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const classworkAssignment = await this.classworkAssignmentsModel.findById(
-      query.id,
-      query.orgId,
-    )
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
 
     if (!classworkAssignment) {
       throw new Error(

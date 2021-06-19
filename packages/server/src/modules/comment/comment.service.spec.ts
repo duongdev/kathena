@@ -115,9 +115,6 @@ describe('comment.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -208,9 +205,6 @@ describe('comment.service', () => {
         },
       )
 
-      jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
       jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
