@@ -14,22 +14,26 @@ export class MailService {
     account: Account,
     courseName: string,
     classWorkId: string,
-  ) {
+  ): Promise<boolean> {
     const { mailerService } = this
 
     const url = `${config.APP_DOMAIN}/app/studying/courses/${classWorkId}/classwork-assignments/detail`
 
-    this.logger.log(url)
+    await mailerService
+      .sendMail({
+        to: `leminhnhat1133@gmail.com, huynhthanhcanh.top@gmail.com`,
+        subject: 'Bài tập mới',
+        template: './newClassworkAssignment',
+        context: {
+          name: account.username,
+          courseName,
+          url,
+        },
+      })
+      .catch(() => {
+        return false
+      })
 
-    await mailerService.sendMail({
-      to: `leminhnhat1133@gmail.com, huynhthanhcanh.top@gmail.com`,
-      subject: 'Bài tập mới',
-      template: './newClassworkAssignment',
-      context: {
-        name: account.username,
-        courseName,
-        url,
-      },
-    })
+    return true
   }
 }
