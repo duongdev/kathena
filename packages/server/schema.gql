@@ -37,6 +37,32 @@ enum Publication {
   Published
 }
 
+type Account implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  username: String!
+  email: String!
+  displayName: String
+  status: AccountStatus!
+  roles: [String!]!
+  availability: AccountAvailability!
+}
+
+"""Status of an account."""
+enum AccountStatus {
+  Pending
+  Active
+  Deactivated
+}
+
+enum AccountAvailability {
+  Online
+  Offline
+  Away
+}
+
 type File implements BaseModel {
   id: ID!
   orgId: ID!
@@ -140,32 +166,6 @@ type AcademicSubject implements BaseModel {
   description: String!
   publication: Publication!
   imageFileId: String!
-}
-
-type Account implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  username: String!
-  email: String!
-  displayName: String
-  status: AccountStatus!
-  roles: [String!]!
-  availability: AccountAvailability!
-}
-
-"""Status of an account."""
-enum AccountStatus {
-  Pending
-  Active
-  Deactivated
-}
-
-enum AccountAvailability {
-  Online
-  Offline
-  Away
 }
 
 type AuthenticatePayload {

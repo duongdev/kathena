@@ -29,6 +29,10 @@ const config = {
   APP_DOMAIN: env.APP_DOMAIN || `0.0.0.0:${PORT}`,
   FILE_SERVE_PREFIX:
     env.FILE_SERVE_PREFIX || env.APP_DOMAIN || `0.0.0.0:${PORT}`,
+  MAIL_HOST: env.MAIL_HOST,
+  MAIL_USER: env.MAIL_USER,
+  MAIL_PASSWORD: env.MAIL_PASSWORD,
+  MAIL_FROM: env.MAIL_FROM,
 }
 
 export default config
