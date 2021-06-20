@@ -5,5 +5,7 @@ query FindClassworkSubmissionById($classworkSubmissionId: ID!) {
     createdByAccountId
     description
     submissionFileIds
+    classworkId
+    grade
   }
 }

@@ -899,6 +899,16 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_ISN'T_A_STUDENT_FORM_COURSE`)
     }
 
+    if (
+      await this.classworkSubmissionModel.findOne({
+        orgId,
+        courseId,
+        accountId,
+      })
+    ) {
+      throw new Error(`STUDENT_SUBMITTED_ASSIGNMENTS`)
+    }
+
     const classworkSubmission = await this.classworkSubmissionModel.create({
       createdByAccountId: accountId,
       classworkId,
@@ -943,7 +953,6 @@ export class ClassworkService {
 
   async setGradeForClassworkSubmission(
     orgId: string,
-    courseId: string,
     gradeByAccountId: string,
     setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
   ): Promise<DocumentType<ClassworkSubmission>> {
@@ -952,20 +961,28 @@ export class ClassworkService {
     if (!(await this.orgService.validateOrgId(orgId)))
       throw new Error('ORG_ID_INVALID')
 
-    if (
-      !(await this.authService.canAccountManageCourse(
-        gradeByAccountId,
-        courseId,
-      ))
-    ) {
-      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
-    }
-
     const classworkSubmissionBefore =
       await this.classworkSubmissionModel.findById(submissionId)
 
     if (!classworkSubmissionBefore) {
       throw new Error(`CLASSWORK_SUBMISSION_NOT_FOUND`)
+    }
+
+    const classwork = await this.classworkAssignmentsModel.findById(
+      classworkSubmissionBefore.classworkId,
+    )
+
+    if (!classwork) {
+      throw new Error(`CLASSWORK_NOT_FOUND`)
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        gradeByAccountId,
+        classwork.courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_ISN'T_A_LECTURER_FORM_COURSE`)
     }
 
     if (grade < GRADE_MIN || grade > GRADE_MAX) {
@@ -1033,6 +1050,20 @@ export class ClassworkService {
   ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
     const classworkSubmission = await this.classworkSubmissionModel.findOne({
       _id: classworkSubmissionId,
+      orgId,
+    })
+
+    return classworkSubmission
+  }
+
+  async findOneClassworkSubmission(
+    orgId: string,
+    accountId: string,
+    classworkAssignmentId: string,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const classworkSubmission = await this.classworkSubmissionModel.findOne({
+      createdByAccountId: accountId,
+      classworkId: classworkAssignmentId,
       orgId,
     })
 

@@ -21,7 +21,7 @@ export const UPDATE_ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/update`
 export const ACADEMIC_COURSES = `${ACADEMIC_MODULE}/courses`
 export const ACADEMIC_COURSE_LIST = `${ACADEMIC_COURSES}`
 export const CREATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:idSubject/create`
-export const UPDATE_ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:id/update`
+export const ACADEMIC_COURSE = `${ACADEMIC_COURSES}/:id/detail`
 export const ACADEMIC_SUBJECT = `${ACADEMIC_SUBJECTS}/:id/detail`
 
 export const TEACHING_MODULE = `${ORG_WORKSPACE}/teaching`
@@ -43,6 +43,7 @@ export const STUDYING_COURSE = `${STUDYING_COURSES}/:id/detail`
 export const STUDYING_COURSE_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/detail/classwork-assignments`
 export const STUDYING_COURSE_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/detail/classwork-materials`
 export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/detail-content`
+export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/classwork-material/detail-content`
 export const STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/Submission`
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 

@@ -18,7 +18,7 @@ import {
   STUDYING_COURSE_LIST,
   STUDYING_COURSE,
   TEACHING_COURSE,
-  UPDATE_ACADEMIC_COURSE,
+  ACADEMIC_COURSE,
   TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS,
   TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
   TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
@@ -26,6 +26,7 @@ import {
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
   TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
 
 const AccountSettings = lazy(
@@ -94,11 +95,11 @@ const TeachingCourse = lazy(
       'modules/TeachingCourse'
     ) /* webpackChunkName: "modules/TeachingCourse" */,
 )
-const UpdateCourse = lazy(
+const DetailCourse = lazy(
   () =>
     import(
-      'modules/UpdateCourses'
-    ) /* webpackChunkName: "modules/UpdateCourse" */,
+      'modules/DetailCourse'
+    ) /* webpackChunkName: "modules/DetailCourse" */,
 )
 
 const CreateClassworkMaterial = lazy(
@@ -144,7 +145,12 @@ const DetailContentClassworkAssignment = lazy(
       'modules/StudyingCourse/Components/ClassworkAssignments/DetailContentClassworkAssignment'
     ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission" */,
 )
-
+const DetailContentClassworkMaterial = lazy(
+  () =>
+    import(
+      'modules/StudyingCourse/Components/ClassworkMaterials/DetailContentClassworkMaterial'
+    ) /* webpackChunkName: "modules/StudyingCourse/Components/ClassworkMaterials/DetailContentClassworkMaterial" */,
+)
 export type OrgWorkspaceRouteProps = {}
 
 const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
@@ -176,7 +182,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       <Route path={STUDYING_COURSE_LIST} exact component={StudyingCourseList} />
       <Route path={STUDYING_COURSE} component={StudyingCourse} />
       <Route path={TEACHING_COURSE} component={TeachingCourse} />
-      <Route path={UPDATE_ACADEMIC_COURSE} exact component={UpdateCourse} />
+      <Route path={ACADEMIC_COURSE} exact component={DetailCourse} />
       <Route
         path={TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS}
         exact
@@ -211,6 +217,16 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         path={STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS}
         exact
         component={DetailContentClassworkAssignment}
+      />
+      <Route
+        path={TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS}
+        exact
+        component={DetailClassworkSubmission}
+      />
+      <Route
+        path={STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS}
+        exact
+        component={DetailContentClassworkMaterial}
       />
     </Switch>
   </Suspense>

@@ -1,0 +1,22 @@
+# query FindClassworkSubmissionById($classworkSubmissionId: ID!) {
+#   findClassworkSubmissionById(classworkSubmissionId: $classworkSubmissionId) {
+#     id
+#     createdAt
+#     createdByAccountId
+#     description
+#     submissionFileIds
+#     classworkId
+#     grade
+#   }
+# }
+
+mutation SetGradeForClassworkSubmission(
+  $setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!
+) {
+  setGradeForClassworkSubmission(
+    setGradeForClassworkSubmissionInput: $setGradeForClassworkSubmissionInput
+  ) {
+    id
+    grade
+  }
+}

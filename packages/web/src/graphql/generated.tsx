@@ -294,7 +294,6 @@ export type Mutation = {
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
-  calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -377,11 +376,6 @@ export type MutationRemoveLecturersFromCourseArgs = {
   id: Scalars['ID']
 }
 
-export type MutationCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
-  optionInput: AvgGradeOfClassworkByCourseOptionInput
-  courseId: Scalars['ID']
-}
-
 export type MutationCreateOrgOfficeArgs = {
   input: CreateOrgOfficeInput
 }
@@ -458,7 +452,6 @@ export type MutationCreateClassworkSubmissionArgs = {
 
 export type MutationSetGradeForClassworkSubmissionArgs = {
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
-  courseId: Scalars['ID']
 }
 
 export type MutationCreateCommentArgs = {
@@ -554,6 +547,7 @@ export type Query = {
   academicSubject: AcademicSubject
   findCourseById: Course
   courses: CoursesPayload
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
   file?: Maybe<File>
@@ -563,6 +557,7 @@ export type Query = {
   classworkAssignments: ClassworkAssignmentPayload
   classworkSubmissions: Array<ClassworkSubmission>
   findClassworkSubmissionById: ClassworkSubmission
+  findOneClassworkSubmission: ClassworkSubmission
   comments: CommentsPayload
 }
 
@@ -601,6 +596,11 @@ export type QueryCoursesArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
+  optionInput: AvgGradeOfClassworkByCourseOptionInput
+  courseId: Scalars['ID']
+}
+
 export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
@@ -635,6 +635,10 @@ export type QueryClassworkSubmissionsArgs = {
 
 export type QueryFindClassworkSubmissionByIdArgs = {
   classworkSubmissionId: Scalars['ID']
+}
+
+export type QueryFindOneClassworkSubmissionArgs = {
+  ClassworkAssignment: Scalars['ID']
 }
 
 export type QueryCommentsArgs = {
@@ -954,6 +958,8 @@ export type FindClassworkSubmissionByIdQuery = {
     | 'createdByAccountId'
     | 'description'
     | 'submissionFileIds'
+    | 'classworkId'
+    | 'grade'
   >
 }
 
@@ -1060,6 +1066,53 @@ export type CreateAccountMutationVariables = Exact<{
 
 export type CreateAccountMutation = {
   createOrgAccount: Pick<Account, 'id' | 'displayName' | 'username' | 'email'>
+}
+
+export type AddLecturesToCourseMutationVariables = Exact<{
+  lecturerIds: Array<Scalars['ID']> | Scalars['ID']
+  courseId: Scalars['ID']
+}>
+
+export type AddLecturesToCourseMutation = {
+  addLecturesToCourse: Pick<Course, 'id' | 'name' | 'lecturerIds'>
+}
+
+export type AddStudentToCourseMutationVariables = Exact<{
+  studentIds: Array<Scalars['ID']> | Scalars['ID']
+  courseId: Scalars['ID']
+}>
+
+export type AddStudentToCourseMutation = {
+  addStudentsToCourse: Pick<Course, 'id' | 'name' | 'studentIds'>
+}
+
+export type FindCourseByIdQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type FindCourseByIdQuery = {
+  findCourseById: Pick<
+    Course,
+    'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
+  >
+}
+
+export type RemoveLecturersFromCourseMutationVariables = Exact<{
+  lecturerIds: Array<Scalars['ID']> | Scalars['ID']
+  id: Scalars['ID']
+}>
+
+export type RemoveLecturersFromCourseMutation = {
+  removeLecturersFromCourse: Pick<Course, 'id' | 'code' | 'name'>
+}
+
+export type RemoveStudentsFromCourseMutationVariables = Exact<{
+  studentIds: Array<Scalars['ID']> | Scalars['ID']
+  id: Scalars['ID']
+}>
+
+export type RemoveStudentsFromCourseMutation = {
+  removeStudentsFromCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -1272,6 +1325,14 @@ export type RemoveAttachmentsFromClassworkMaterialMutation = {
   >
 }
 
+export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
+  setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
+}>
+
+export type SetGradeForClassworkSubmissionMutation = {
+  setGradeForClassworkSubmission: Pick<ClassworkSubmission, 'id' | 'grade'>
+}
+
 export type CourseDetailQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -1288,6 +1349,17 @@ export type CourseDetailQuery = {
     | 'lecturerIds'
     | 'studentIds'
     | 'publicationState'
+  >
+}
+
+export type AvgGradeOfClassworkAssignmentInCourseQueryVariables = Exact<{
+  courseId: Scalars['ID']
+  optionInput: AvgGradeOfClassworkByCourseOptionInput
+}>
+
+export type AvgGradeOfClassworkAssignmentInCourseQuery = {
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<
+    Pick<AvgGradeOfClassworkByCourse, 'classworkTitle' | 'avgGrade'>
   >
 }
 
@@ -1326,53 +1398,6 @@ export type UpdateClassworkAssignmentMutation = {
     ClassworkAssignment,
     'id' | 'courseId' | 'title' | 'description' | 'dueDate'
   >
-}
-
-export type AddLecturesToCourseMutationVariables = Exact<{
-  lecturerIds: Array<Scalars['ID']> | Scalars['ID']
-  courseId: Scalars['ID']
-}>
-
-export type AddLecturesToCourseMutation = {
-  addLecturesToCourse: Pick<Course, 'id' | 'name' | 'lecturerIds'>
-}
-
-export type AddStudentToCourseMutationVariables = Exact<{
-  studentIds: Array<Scalars['ID']> | Scalars['ID']
-  courseId: Scalars['ID']
-}>
-
-export type AddStudentToCourseMutation = {
-  addStudentsToCourse: Pick<Course, 'id' | 'name' | 'studentIds'>
-}
-
-export type FindCourseByIdQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type FindCourseByIdQuery = {
-  findCourseById: Pick<
-    Course,
-    'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
-  >
-}
-
-export type RemoveLecturersFromCourseMutationVariables = Exact<{
-  lecturerIds: Array<Scalars['ID']> | Scalars['ID']
-  id: Scalars['ID']
-}>
-
-export type RemoveLecturersFromCourseMutation = {
-  removeLecturersFromCourse: Pick<Course, 'id' | 'code' | 'name'>
-}
-
-export type RemoveStudentsFromCourseMutationVariables = Exact<{
-  studentIds: Array<Scalars['ID']> | Scalars['ID']
-  id: Scalars['ID']
-}>
-
-export type RemoveStudentsFromCourseMutation = {
-  removeStudentsFromCourse: Pick<Course, 'id' | 'code' | 'name'>
 }
 
 export const AuthAccountFragmentDoc = {
@@ -4395,6 +4420,8 @@ export const FindClassworkSubmissionByIdDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'submissionFileIds' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'classworkId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'grade' } },
               ],
             },
           },
@@ -5794,6 +5821,750 @@ export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<
   CreateAccountMutation,
   CreateAccountMutationVariables
 >
+export const AddLecturesToCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddLecturesToCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lecturerIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addLecturesToCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lecturerIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lecturerIds' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddLecturesToCourseMutationFn = Apollo.MutationFunction<
+  AddLecturesToCourseMutation,
+  AddLecturesToCourseMutationVariables
+>
+export type AddLecturesToCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddLecturesToCourseMutation,
+    AddLecturesToCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withAddLecturesToCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddLecturesToCourseMutation,
+    AddLecturesToCourseMutationVariables,
+    AddLecturesToCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddLecturesToCourseMutation,
+    AddLecturesToCourseMutationVariables,
+    AddLecturesToCourseProps<TChildProps, TDataName>
+  >(AddLecturesToCourseDocument, {
+    alias: 'addLecturesToCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddLecturesToCourseMutation__
+ *
+ * To run a mutation, you first call `useAddLecturesToCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLecturesToCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLecturesToCourseMutation, { data, loading, error }] = useAddLecturesToCourseMutation({
+ *   variables: {
+ *      lecturerIds: // value for 'lecturerIds'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useAddLecturesToCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddLecturesToCourseMutation,
+    AddLecturesToCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddLecturesToCourseMutation,
+    AddLecturesToCourseMutationVariables
+  >(AddLecturesToCourseDocument, options)
+}
+export type AddLecturesToCourseMutationHookResult = ReturnType<
+  typeof useAddLecturesToCourseMutation
+>
+export type AddLecturesToCourseMutationResult =
+  Apollo.MutationResult<AddLecturesToCourseMutation>
+export type AddLecturesToCourseMutationOptions = Apollo.BaseMutationOptions<
+  AddLecturesToCourseMutation,
+  AddLecturesToCourseMutationVariables
+>
+export const AddStudentToCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddStudentToCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'studentIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addStudentsToCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'studentIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'studentIds' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddStudentToCourseMutationFn = Apollo.MutationFunction<
+  AddStudentToCourseMutation,
+  AddStudentToCourseMutationVariables
+>
+export type AddStudentToCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddStudentToCourseMutation,
+    AddStudentToCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withAddStudentToCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddStudentToCourseMutation,
+    AddStudentToCourseMutationVariables,
+    AddStudentToCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddStudentToCourseMutation,
+    AddStudentToCourseMutationVariables,
+    AddStudentToCourseProps<TChildProps, TDataName>
+  >(AddStudentToCourseDocument, {
+    alias: 'addStudentToCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddStudentToCourseMutation__
+ *
+ * To run a mutation, you first call `useAddStudentToCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddStudentToCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addStudentToCourseMutation, { data, loading, error }] = useAddStudentToCourseMutation({
+ *   variables: {
+ *      studentIds: // value for 'studentIds'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useAddStudentToCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddStudentToCourseMutation,
+    AddStudentToCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddStudentToCourseMutation,
+    AddStudentToCourseMutationVariables
+  >(AddStudentToCourseDocument, options)
+}
+export type AddStudentToCourseMutationHookResult = ReturnType<
+  typeof useAddStudentToCourseMutation
+>
+export type AddStudentToCourseMutationResult =
+  Apollo.MutationResult<AddStudentToCourseMutation>
+export type AddStudentToCourseMutationOptions = Apollo.BaseMutationOptions<
+  AddStudentToCourseMutation,
+  AddStudentToCourseMutationVariables
+>
+export const FindCourseByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindCourseById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findCourseById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindCourseByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindCourseByIdQuery,
+    FindCourseByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindCourseById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindCourseByIdQuery,
+    FindCourseByIdQueryVariables,
+    FindCourseByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindCourseByIdQuery,
+    FindCourseByIdQueryVariables,
+    FindCourseByIdProps<TChildProps, TDataName>
+  >(FindCourseByIdDocument, {
+    alias: 'findCourseById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindCourseByIdQuery__
+ *
+ * To run a query within a React component, call `useFindCourseByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindCourseByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindCourseByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindCourseByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindCourseByIdQuery,
+    FindCourseByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FindCourseByIdQuery, FindCourseByIdQueryVariables>(
+    FindCourseByIdDocument,
+    options,
+  )
+}
+export function useFindCourseByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindCourseByIdQuery,
+    FindCourseByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FindCourseByIdQuery, FindCourseByIdQueryVariables>(
+    FindCourseByIdDocument,
+    options,
+  )
+}
+export type FindCourseByIdQueryHookResult = ReturnType<
+  typeof useFindCourseByIdQuery
+>
+export type FindCourseByIdLazyQueryHookResult = ReturnType<
+  typeof useFindCourseByIdLazyQuery
+>
+export type FindCourseByIdQueryResult = Apollo.QueryResult<
+  FindCourseByIdQuery,
+  FindCourseByIdQueryVariables
+>
+export const RemoveLecturersFromCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveLecturersFromCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lecturerIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'removeLecturersFromCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lecturerIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lecturerIds' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
+  RemoveLecturersFromCourseMutation,
+  RemoveLecturersFromCourseMutationVariables
+>
+export type RemoveLecturersFromCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveLecturersFromCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables,
+    RemoveLecturersFromCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables,
+    RemoveLecturersFromCourseProps<TChildProps, TDataName>
+  >(RemoveLecturersFromCourseDocument, {
+    alias: 'removeLecturersFromCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveLecturersFromCourseMutation__
+ *
+ * To run a mutation, you first call `useRemoveLecturersFromCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveLecturersFromCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeLecturersFromCourseMutation, { data, loading, error }] = useRemoveLecturersFromCourseMutation({
+ *   variables: {
+ *      lecturerIds: // value for 'lecturerIds'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveLecturersFromCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >(RemoveLecturersFromCourseDocument, options)
+}
+export type RemoveLecturersFromCourseMutationHookResult = ReturnType<
+  typeof useRemoveLecturersFromCourseMutation
+>
+export type RemoveLecturersFromCourseMutationResult =
+  Apollo.MutationResult<RemoveLecturersFromCourseMutation>
+export type RemoveLecturersFromCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveLecturersFromCourseMutation,
+    RemoveLecturersFromCourseMutationVariables
+  >
+export const RemoveStudentsFromCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveStudentsFromCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'studentIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'removeStudentsFromCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'studentIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'studentIds' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveStudentsFromCourseMutationFn = Apollo.MutationFunction<
+  RemoveStudentsFromCourseMutation,
+  RemoveStudentsFromCourseMutationVariables
+>
+export type RemoveStudentsFromCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withRemoveStudentsFromCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables,
+    RemoveStudentsFromCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables,
+    RemoveStudentsFromCourseProps<TChildProps, TDataName>
+  >(RemoveStudentsFromCourseDocument, {
+    alias: 'removeStudentsFromCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveStudentsFromCourseMutation__
+ *
+ * To run a mutation, you first call `useRemoveStudentsFromCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveStudentsFromCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeStudentsFromCourseMutation, { data, loading, error }] = useRemoveStudentsFromCourseMutation({
+ *   variables: {
+ *      studentIds: // value for 'studentIds'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveStudentsFromCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables
+  >(RemoveStudentsFromCourseDocument, options)
+}
+export type RemoveStudentsFromCourseMutationHookResult = ReturnType<
+  typeof useRemoveStudentsFromCourseMutation
+>
+export type RemoveStudentsFromCourseMutationResult =
+  Apollo.MutationResult<RemoveStudentsFromCourseMutation>
+export type RemoveStudentsFromCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveStudentsFromCourseMutation,
+    RemoveStudentsFromCourseMutationVariables
+  >
 export const OrgAccountListDocument = {
   kind: 'Document',
   definitions: [
@@ -8132,6 +8903,146 @@ export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
   >
+export const SetGradeForClassworkSubmissionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SetGradeForClassworkSubmission' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: {
+              kind: 'Name',
+              value: 'setGradeForClassworkSubmissionInput',
+            },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'SetGradeForClassworkSubmissionInput',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'setGradeForClassworkSubmission' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: {
+                  kind: 'Name',
+                  value: 'setGradeForClassworkSubmissionInput',
+                },
+                value: {
+                  kind: 'Variable',
+                  name: {
+                    kind: 'Name',
+                    value: 'setGradeForClassworkSubmissionInput',
+                  },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'grade' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type SetGradeForClassworkSubmissionMutationFn = Apollo.MutationFunction<
+  SetGradeForClassworkSubmissionMutation,
+  SetGradeForClassworkSubmissionMutationVariables
+>
+export type SetGradeForClassworkSubmissionProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >
+} &
+  TChildProps
+export function withSetGradeForClassworkSubmission<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables,
+    SetGradeForClassworkSubmissionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables,
+    SetGradeForClassworkSubmissionProps<TChildProps, TDataName>
+  >(SetGradeForClassworkSubmissionDocument, {
+    alias: 'setGradeForClassworkSubmission',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useSetGradeForClassworkSubmissionMutation__
+ *
+ * To run a mutation, you first call `useSetGradeForClassworkSubmissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetGradeForClassworkSubmissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setGradeForClassworkSubmissionMutation, { data, loading, error }] = useSetGradeForClassworkSubmissionMutation({
+ *   variables: {
+ *      setGradeForClassworkSubmissionInput: // value for 'setGradeForClassworkSubmissionInput'
+ *   },
+ * });
+ */
+export function useSetGradeForClassworkSubmissionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >(SetGradeForClassworkSubmissionDocument, options)
+}
+export type SetGradeForClassworkSubmissionMutationHookResult = ReturnType<
+  typeof useSetGradeForClassworkSubmissionMutation
+>
+export type SetGradeForClassworkSubmissionMutationResult =
+  Apollo.MutationResult<SetGradeForClassworkSubmissionMutation>
+export type SetGradeForClassworkSubmissionMutationOptions =
+  Apollo.BaseMutationOptions<
+    SetGradeForClassworkSubmissionMutation,
+    SetGradeForClassworkSubmissionMutationVariables
+  >
 export const CourseDetailDocument = {
   kind: 'Document',
   definitions: [
@@ -8271,6 +9182,170 @@ export type CourseDetailQueryResult = Apollo.QueryResult<
   CourseDetailQuery,
   CourseDetailQueryVariables
 >
+export const AvgGradeOfClassworkAssignmentInCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AvgGradeOfClassworkAssignmentInCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'optionInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'AvgGradeOfClassworkByCourseOptionInput',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'calculateAvgGradeOfClassworkAssignmentInCourse',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'optionInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'optionInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'classworkTitle' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'avgGrade' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AvgGradeOfClassworkAssignmentInCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >
+} &
+  TChildProps
+export function withAvgGradeOfClassworkAssignmentInCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables,
+    AvgGradeOfClassworkAssignmentInCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables,
+    AvgGradeOfClassworkAssignmentInCourseProps<TChildProps, TDataName>
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, {
+    alias: 'avgGradeOfClassworkAssignmentInCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAvgGradeOfClassworkAssignmentInCourseQuery__
+ *
+ * To run a query within a React component, call `useAvgGradeOfClassworkAssignmentInCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvgGradeOfClassworkAssignmentInCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvgGradeOfClassworkAssignmentInCourseQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      optionInput: // value for 'optionInput'
+ *   },
+ * });
+ */
+export function useAvgGradeOfClassworkAssignmentInCourseQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, options)
+}
+export function useAvgGradeOfClassworkAssignmentInCourseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >(AvgGradeOfClassworkAssignmentInCourseDocument, options)
+}
+export type AvgGradeOfClassworkAssignmentInCourseQueryHookResult = ReturnType<
+  typeof useAvgGradeOfClassworkAssignmentInCourseQuery
+>
+export type AvgGradeOfClassworkAssignmentInCourseLazyQueryHookResult =
+  ReturnType<typeof useAvgGradeOfClassworkAssignmentInCourseLazyQuery>
+export type AvgGradeOfClassworkAssignmentInCourseQueryResult =
+  Apollo.QueryResult<
+    AvgGradeOfClassworkAssignmentInCourseQuery,
+    AvgGradeOfClassworkAssignmentInCourseQueryVariables
+  >
 export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [
@@ -8656,748 +9731,4 @@ export type UpdateClassworkAssignmentMutationOptions =
   Apollo.BaseMutationOptions<
     UpdateClassworkAssignmentMutation,
     UpdateClassworkAssignmentMutationVariables
-  >
-export const AddLecturesToCourseDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'AddLecturesToCourse' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'lecturerIds' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'ListType',
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: { kind: 'Name', value: 'ID' },
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'courseId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'addLecturesToCourse' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'courseId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'courseId' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'lecturerIds' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'lecturerIds' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type AddLecturesToCourseMutationFn = Apollo.MutationFunction<
-  AddLecturesToCourseMutation,
-  AddLecturesToCourseMutationVariables
->
-export type AddLecturesToCourseProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    AddLecturesToCourseMutation,
-    AddLecturesToCourseMutationVariables
-  >
-} &
-  TChildProps
-export function withAddLecturesToCourse<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'mutate',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    AddLecturesToCourseMutation,
-    AddLecturesToCourseMutationVariables,
-    AddLecturesToCourseProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    AddLecturesToCourseMutation,
-    AddLecturesToCourseMutationVariables,
-    AddLecturesToCourseProps<TChildProps, TDataName>
-  >(AddLecturesToCourseDocument, {
-    alias: 'addLecturesToCourse',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useAddLecturesToCourseMutation__
- *
- * To run a mutation, you first call `useAddLecturesToCourseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddLecturesToCourseMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addLecturesToCourseMutation, { data, loading, error }] = useAddLecturesToCourseMutation({
- *   variables: {
- *      lecturerIds: // value for 'lecturerIds'
- *      courseId: // value for 'courseId'
- *   },
- * });
- */
-export function useAddLecturesToCourseMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddLecturesToCourseMutation,
-    AddLecturesToCourseMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddLecturesToCourseMutation,
-    AddLecturesToCourseMutationVariables
-  >(AddLecturesToCourseDocument, options)
-}
-export type AddLecturesToCourseMutationHookResult = ReturnType<
-  typeof useAddLecturesToCourseMutation
->
-export type AddLecturesToCourseMutationResult =
-  Apollo.MutationResult<AddLecturesToCourseMutation>
-export type AddLecturesToCourseMutationOptions = Apollo.BaseMutationOptions<
-  AddLecturesToCourseMutation,
-  AddLecturesToCourseMutationVariables
->
-export const AddStudentToCourseDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'AddStudentToCourse' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'studentIds' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'ListType',
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: { kind: 'Name', value: 'ID' },
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'courseId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'addStudentsToCourse' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'courseId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'courseId' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'studentIds' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'studentIds' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type AddStudentToCourseMutationFn = Apollo.MutationFunction<
-  AddStudentToCourseMutation,
-  AddStudentToCourseMutationVariables
->
-export type AddStudentToCourseProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    AddStudentToCourseMutation,
-    AddStudentToCourseMutationVariables
-  >
-} &
-  TChildProps
-export function withAddStudentToCourse<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'mutate',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    AddStudentToCourseMutation,
-    AddStudentToCourseMutationVariables,
-    AddStudentToCourseProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    AddStudentToCourseMutation,
-    AddStudentToCourseMutationVariables,
-    AddStudentToCourseProps<TChildProps, TDataName>
-  >(AddStudentToCourseDocument, {
-    alias: 'addStudentToCourse',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useAddStudentToCourseMutation__
- *
- * To run a mutation, you first call `useAddStudentToCourseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddStudentToCourseMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addStudentToCourseMutation, { data, loading, error }] = useAddStudentToCourseMutation({
- *   variables: {
- *      studentIds: // value for 'studentIds'
- *      courseId: // value for 'courseId'
- *   },
- * });
- */
-export function useAddStudentToCourseMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    AddStudentToCourseMutation,
-    AddStudentToCourseMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    AddStudentToCourseMutation,
-    AddStudentToCourseMutationVariables
-  >(AddStudentToCourseDocument, options)
-}
-export type AddStudentToCourseMutationHookResult = ReturnType<
-  typeof useAddStudentToCourseMutation
->
-export type AddStudentToCourseMutationResult =
-  Apollo.MutationResult<AddStudentToCourseMutation>
-export type AddStudentToCourseMutationOptions = Apollo.BaseMutationOptions<
-  AddStudentToCourseMutation,
-  AddStudentToCourseMutationVariables
->
-export const FindCourseByIdDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FindCourseById' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'findCourseById' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type FindCourseByIdProps<
-  TChildProps = {},
-  TDataName extends string = 'data',
-> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    FindCourseByIdQuery,
-    FindCourseByIdQueryVariables
-  >
-} &
-  TChildProps
-export function withFindCourseById<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'data',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    FindCourseByIdQuery,
-    FindCourseByIdQueryVariables,
-    FindCourseByIdProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    FindCourseByIdQuery,
-    FindCourseByIdQueryVariables,
-    FindCourseByIdProps<TChildProps, TDataName>
-  >(FindCourseByIdDocument, {
-    alias: 'findCourseById',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useFindCourseByIdQuery__
- *
- * To run a query within a React component, call `useFindCourseByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindCourseByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindCourseByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useFindCourseByIdQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    FindCourseByIdQuery,
-    FindCourseByIdQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<FindCourseByIdQuery, FindCourseByIdQueryVariables>(
-    FindCourseByIdDocument,
-    options,
-  )
-}
-export function useFindCourseByIdLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    FindCourseByIdQuery,
-    FindCourseByIdQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<FindCourseByIdQuery, FindCourseByIdQueryVariables>(
-    FindCourseByIdDocument,
-    options,
-  )
-}
-export type FindCourseByIdQueryHookResult = ReturnType<
-  typeof useFindCourseByIdQuery
->
-export type FindCourseByIdLazyQueryHookResult = ReturnType<
-  typeof useFindCourseByIdLazyQuery
->
-export type FindCourseByIdQueryResult = Apollo.QueryResult<
-  FindCourseByIdQuery,
-  FindCourseByIdQueryVariables
->
-export const RemoveLecturersFromCourseDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'RemoveLecturersFromCourse' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'lecturerIds' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'ListType',
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: { kind: 'Name', value: 'ID' },
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'removeLecturersFromCourse' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'lecturerIds' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'lecturerIds' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type RemoveLecturersFromCourseMutationFn = Apollo.MutationFunction<
-  RemoveLecturersFromCourseMutation,
-  RemoveLecturersFromCourseMutationVariables
->
-export type RemoveLecturersFromCourseProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables
-  >
-} &
-  TChildProps
-export function withRemoveLecturersFromCourse<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'mutate',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables,
-    RemoveLecturersFromCourseProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables,
-    RemoveLecturersFromCourseProps<TChildProps, TDataName>
-  >(RemoveLecturersFromCourseDocument, {
-    alias: 'removeLecturersFromCourse',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useRemoveLecturersFromCourseMutation__
- *
- * To run a mutation, you first call `useRemoveLecturersFromCourseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveLecturersFromCourseMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeLecturersFromCourseMutation, { data, loading, error }] = useRemoveLecturersFromCourseMutation({
- *   variables: {
- *      lecturerIds: // value for 'lecturerIds'
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRemoveLecturersFromCourseMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables
-  >(RemoveLecturersFromCourseDocument, options)
-}
-export type RemoveLecturersFromCourseMutationHookResult = ReturnType<
-  typeof useRemoveLecturersFromCourseMutation
->
-export type RemoveLecturersFromCourseMutationResult =
-  Apollo.MutationResult<RemoveLecturersFromCourseMutation>
-export type RemoveLecturersFromCourseMutationOptions =
-  Apollo.BaseMutationOptions<
-    RemoveLecturersFromCourseMutation,
-    RemoveLecturersFromCourseMutationVariables
-  >
-export const RemoveStudentsFromCourseDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'RemoveStudentsFromCourse' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'studentIds' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'ListType',
-              type: {
-                kind: 'NonNullType',
-                type: {
-                  kind: 'NamedType',
-                  name: { kind: 'Name', value: 'ID' },
-                },
-              },
-            },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'removeStudentsFromCourse' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'studentIds' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'studentIds' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type RemoveStudentsFromCourseMutationFn = Apollo.MutationFunction<
-  RemoveStudentsFromCourseMutation,
-  RemoveStudentsFromCourseMutationVariables
->
-export type RemoveStudentsFromCourseProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables
-  >
-} &
-  TChildProps
-export function withRemoveStudentsFromCourse<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'mutate',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables,
-    RemoveStudentsFromCourseProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables,
-    RemoveStudentsFromCourseProps<TChildProps, TDataName>
-  >(RemoveStudentsFromCourseDocument, {
-    alias: 'removeStudentsFromCourse',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useRemoveStudentsFromCourseMutation__
- *
- * To run a mutation, you first call `useRemoveStudentsFromCourseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRemoveStudentsFromCourseMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [removeStudentsFromCourseMutation, { data, loading, error }] = useRemoveStudentsFromCourseMutation({
- *   variables: {
- *      studentIds: // value for 'studentIds'
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useRemoveStudentsFromCourseMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables
-  >(RemoveStudentsFromCourseDocument, options)
-}
-export type RemoveStudentsFromCourseMutationHookResult = ReturnType<
-  typeof useRemoveStudentsFromCourseMutation
->
-export type RemoveStudentsFromCourseMutationResult =
-  Apollo.MutationResult<RemoveStudentsFromCourseMutation>
-export type RemoveStudentsFromCourseMutationOptions =
-  Apollo.BaseMutationOptions<
-    RemoveStudentsFromCourseMutation,
-    RemoveStudentsFromCourseMutationVariables
   >

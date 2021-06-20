@@ -40,7 +40,6 @@ export class ClassworkSubmissionResolver {
   @UseAuthGuard(P.Classwork_SetGradeForClassworkSubmission)
   @UsePipes(ValidationPipe)
   async setGradeForClassworkSubmission(
-    @Args('courseId', { type: () => ID }) courseId: string,
     @Args('setGradeForClassworkSubmissionInput')
     setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput,
     @CurrentOrg() org: Org,
@@ -48,7 +47,6 @@ export class ClassworkSubmissionResolver {
   ): Promise<ClassworkSubmission> {
     return this.classworkService.setGradeForClassworkSubmission(
       org.id,
-      courseId,
       account.id,
       setGradeForClassworkSubmissionInput,
     )
@@ -81,6 +79,22 @@ export class ClassworkSubmissionResolver {
     return this.classworkService.findClassworkSubmissionById(
       org.id,
       classworkSubmissionId,
+    )
+  }
+
+  @Query((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async findOneClassworkSubmission(
+    @Args('ClassworkAssignment', { type: () => ID })
+    ClassworkAssignment: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<Nullable<ClassworkSubmission>> {
+    return this.classworkService.findOneClassworkSubmission(
+      org.id,
+      account.id,
+      ClassworkAssignment,
     )
   }
 }
