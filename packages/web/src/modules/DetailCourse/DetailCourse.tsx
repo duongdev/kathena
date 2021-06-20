@@ -23,6 +23,7 @@ import {
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
+  Link,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import {
@@ -32,6 +33,7 @@ import {
   FindCourseByIdDocument,
   Permission,
 } from 'graphql/generated'
+import { buildPath, UPDATE_ACADEMIC_COURSE } from 'utils/path-builder'
 
 import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
@@ -134,8 +136,9 @@ const DetailCourse: FC<DetailCourseProps> = () => {
   }, [])
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
-  const [openLecturer, setOpenLecturer] =
-    useState<HTMLButtonElement | null>(null)
+  const [openLecturer, setOpenLecturer] = useState<HTMLButtonElement | null>(
+    null,
+  )
   const [openStudent, setOpenStudent] = useState<HTMLButtonElement | null>(null)
   // Mở chi tiết Lecturer :
   const open = useMemo(() => Boolean(anchorEl), [anchorEl])
@@ -177,7 +180,16 @@ const DetailCourse: FC<DetailCourseProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin khóa học"
-          action={<Button endIcon={<Pencil />}>Sửa khóa học</Button>}
+          action={
+            <Link
+              to={buildPath(UPDATE_ACADEMIC_COURSE, {
+                id: course.id,
+              })}
+            >
+              {' '}
+              <Button endIcon={<Pencil />}>Sửa khóa học</Button>
+            </Link>
+          }
         >
           <CardContent>
             <Grid container spacing={2}>
