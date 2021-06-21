@@ -3,6 +3,8 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { config } from 'core'
 import { Account } from 'modules/account/models/Account'
+import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
+import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 
 @Injectable()
 export class MailService {
@@ -10,18 +12,18 @@ export class MailService {
 
   constructor(private mailerService: MailerService) {}
 
-  async sendNewClassworkNotification(
+  async sendNewClassworkAssignmentNotification(
     account: Account,
     courseName: string,
     classWorkId: string,
   ): Promise<boolean> {
     const { mailerService } = this
 
-    const url = `${config.APP_DOMAIN}/app/studying/courses/${classWorkId}/classwork-assignments/detail`
+    const url = `${config.MAIL_DOMAIN}/app/studying/courses/${classWorkId}/classwork-assignments/detail`
 
     await mailerService
       .sendMail({
-        to: `leminhnhat1133@gmail.com, huynhthanhcanh.top@gmail.com`,
+        to: account.email,
         subject: 'Bài tập mới',
         template: './newClassworkAssignment',
         context: {

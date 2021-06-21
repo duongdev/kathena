@@ -701,7 +701,7 @@ export class ClassworkService {
         const account = await this.accountModel.findById(id)
 
         if (account) {
-          this.mailService.sendNewClassworkNotification(
+          this.mailService.sendNewClassworkAssignmentNotification(
             account,
             course.name,
             classworkAssignment.id,
