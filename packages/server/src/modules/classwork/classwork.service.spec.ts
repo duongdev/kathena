@@ -2144,7 +2144,7 @@ describe('classwork.service', () => {
 
       const accStudent = await accountService.createAccount({
         orgId: org.id,
-        email: 'huynhthanhcanh.top@gmail.com',
+        email: 'huynhthanhcanhcanh.top@gmail.com',
         password: '123456',
         username: 'thanhthanh',
         roles: ['student'],

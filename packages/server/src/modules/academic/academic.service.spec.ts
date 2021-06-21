@@ -1615,7 +1615,7 @@ describe('academic.service', () => {
 
         const account: ANY = {
           orgId: objectId(),
-          email: 'huynhthanhcanh.top@gmail.com',
+          email: 'huynhthanhcanhcanh.top@gmail.com',
           password: '123456',
           username: 'thanhcanh',
           roles: ['owner', 'admin'],
@@ -1649,7 +1649,7 @@ describe('academic.service', () => {
         const account: ANY = {
           id: objectId(),
           orgId: objectId(),
-          email: 'huynhthanhcanh.top@gmail.com',
+          email: 'huynhthanhcanhcanh.top@gmail.com',
           password: '123456',
           username: 'thanhcanh',
           roles: ['lecturer'],
@@ -2224,7 +2224,7 @@ describe('academic.service', () => {
 
         const accStudent = await accountService.createAccount({
           orgId: org.id,
-          email: 'huynhthanhcanh.top@gmail.com',
+          email: 'huynhthanhcanhcanh.top@gmail.com',
           password: '123456',
           username: 'thanhthanh',
           roles: ['student'],
