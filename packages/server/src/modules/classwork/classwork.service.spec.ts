@@ -1,7 +1,8 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
-import { objectId, Publication } from 'core'
+import { Publication } from 'core'
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { CreateCourseInput } from 'modules/academic/academic.type'
