@@ -3,8 +3,6 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { config } from 'core'
 import { Account } from 'modules/account/models/Account'
-import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
-import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 
 @Injectable()
 export class MailService {
