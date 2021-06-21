@@ -133,6 +133,7 @@ Array [
       "Classwork_ListClassworkMaterial",
       "Comment_CreateComment",
       "Classwork_CreateClassworkSubmission",
+      "Classwork_ListClassworkSubmission",
     ],
     "priority": 4,
   },

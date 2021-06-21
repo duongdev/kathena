@@ -1,0 +1,12 @@
+# Cập nhật khóa học
+mutation UpdateCourse($id: ID!, $updateInput: UpdateCourseInput!) {
+  updateCourse(id: $id, updateInput: $updateInput) {
+    id
+    createdAt
+    updatedAt
+    name
+    startDate
+    lecturerIds
+    tuitionFee
+  }
+}
