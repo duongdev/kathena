@@ -1093,7 +1093,13 @@ export type FindCourseByIdQueryVariables = Exact<{
 export type FindCourseByIdQuery = {
   findCourseById: Pick<
     Course,
-    'id' | 'code' | 'name' | 'lecturerIds' | 'studentIds'
+    | 'id'
+    | 'code'
+    | 'name'
+    | 'lecturerIds'
+    | 'studentIds'
+    | 'startDate'
+    | 'tuitionFee'
   >
 }
 
@@ -1397,6 +1403,24 @@ export type UpdateClassworkAssignmentMutation = {
   updateClassworkAssignment: Pick<
     ClassworkAssignment,
     'id' | 'courseId' | 'title' | 'description' | 'dueDate'
+  >
+}
+
+export type UpdateCourseMutationVariables = Exact<{
+  id: Scalars['ID']
+  updateInput: UpdateCourseInput
+}>
+
+export type UpdateCourseMutation = {
+  updateCourse: Pick<
+    Course,
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'name'
+    | 'startDate'
+    | 'lecturerIds'
+    | 'tuitionFee'
   >
 }
 
@@ -6170,6 +6194,8 @@ export const FindCourseByIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'studentIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tuitionFee' } },
               ],
             },
           },
@@ -9732,3 +9758,152 @@ export type UpdateClassworkAssignmentMutationOptions =
     UpdateClassworkAssignmentMutation,
     UpdateClassworkAssignmentMutationVariables
   >
+export const UpdateCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updateInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateCourseInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updateInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lecturerIds' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tuitionFee' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateCourseMutationFn = Apollo.MutationFunction<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
+>
+export type UpdateCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables,
+    UpdateCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables,
+    UpdateCourseProps<TChildProps, TDataName>
+  >(UpdateCourseDocument, {
+    alias: 'updateCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateCourseMutation__
+ *
+ * To run a mutation, you first call `useUpdateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCourseMutation, { data, loading, error }] = useUpdateCourseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >(UpdateCourseDocument, options)
+}
+export type UpdateCourseMutationHookResult = ReturnType<
+  typeof useUpdateCourseMutation
+>
+export type UpdateCourseMutationResult =
+  Apollo.MutationResult<UpdateCourseMutation>
+export type UpdateCourseMutationOptions = Apollo.BaseMutationOptions<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
+>
