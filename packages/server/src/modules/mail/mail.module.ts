@@ -29,6 +29,14 @@ import { MailService } from './mail.service'
           strict: true,
         },
       },
+      options: {
+        partials: {
+          dir: join(__dirname, 'templates/partials'),
+          options: {
+            strict: true,
+          },
+        },
+      },
     }),
   ],
   providers: [MailService],

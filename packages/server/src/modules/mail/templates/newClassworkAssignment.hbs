@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    a,
+    .redirect-btn a,
     a:link,
     a:visited {
       background-color: #103955;
@@ -15,7 +15,7 @@
       display: inline-block;
     }
 
-    a:hover,
+    .redirect-btn a:hover,
     a:active {
       background-color: #154565;
     }
@@ -25,8 +25,11 @@
 <body>
   <p>Xin chào <b>{{name}},</b></p>
   <p>Giảng viên của bạn vừa mới tải lên bài tập mới trong khóa học <b>{{courseName}}</b></p>
-  <a href="{{url}}">Nhấn vào đây để xem bài tập mới nè</a>
+  <div class="redirect-btn">
+    <a href="{{url}}">Nhấn vào đây để xem bài tập mới nè</a>
+  </div>
   <p>Trân trọng</p>
+  {{>signature}}
 </body>
 
 </html>
