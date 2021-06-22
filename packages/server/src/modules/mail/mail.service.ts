@@ -22,7 +22,7 @@ export class MailService {
     await mailerService
       .sendMail({
         to: account.email,
-        subject: 'Bài tập mới',
+        subject: '[THÔNG BÁO] - Bài tập mới',
         template: './newClassworkAssignment',
         context: {
           name: account.username,

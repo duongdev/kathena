@@ -20,7 +20,7 @@ import { MailService } from './mail.service'
         },
       },
       defaults: {
-        from: `"Kmin Academy" <${config.MAIL_FROM}>`,
+        from: `"Kmin Assistant" <${config.MAIL_FROM}>`,
       },
       template: {
         dir: join(__dirname, 'templates'),
