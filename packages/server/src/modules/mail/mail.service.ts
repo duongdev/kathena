@@ -30,8 +30,8 @@ export class MailService {
           url,
         },
       })
-      .catch(() => {
-        return false
+      .catch((err) => {
+        throw new Error(err)
       })
 
     return true
