@@ -22,9 +22,10 @@ const useAuthHook = () => {
     skip: !jwt,
   })
 
-  const authData = useMemo(() => authenticateData?.authenticate ?? null, [
-    authenticateData?.authenticate,
-  ])
+  const authData = useMemo(
+    () => authenticateData?.authenticate ?? null,
+    [authenticateData?.authenticate],
+  )
 
   const signIn = useCallback(
     async ({
@@ -63,12 +64,27 @@ const useAuthHook = () => {
     window.location.reload()
   }, [removeJwt])
 
+  const resetPassword = useCallback(
+    async ({
+      identity,
+      orgNamespace = DEFAULT_ORG_NS,
+    }: {
+      identity: string
+      orgNamespace?: string
+    }) => {
+      // eslint-disable-next-line
+      console.log(identity, orgNamespace)
+    },
+    [],
+  )
+
   return {
     account: authData?.account ?? null,
     org: authData?.org ?? null,
     permissions: authData?.permissions ?? [],
     signIn,
     signOut,
+    resetPassword,
     loading,
     /* eslint-disable @typescript-eslint/no-non-null-assertion  */
     /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
