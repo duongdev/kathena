@@ -8,6 +8,8 @@ import { Account } from 'modules/account/models/Account'
 export class MailService {
   private readonly logger = new Logger(MailService.name)
 
+  private readonly signatureImgUrl = `${__dirname}/templates/assets`
+
   constructor(private mailerService: MailerService) {}
 
   async sendNewClassworkAssignmentNotification(
@@ -18,7 +20,7 @@ export class MailService {
     const { mailerService } = this
 
     const url = `${config.MAIL_DOMAIN}/app/studying/courses/${classWorkId}/classwork-assignments/detail`
-
+    this.logger.log(this.signatureImgUrl)
     await mailerService
       .sendMail({
         to: account.email,
@@ -30,8 +32,8 @@ export class MailService {
           url,
         },
       })
-      .catch((err) => {
-        throw new Error(err)
+      .catch(() => {
+        return false
       })
 
     return true
