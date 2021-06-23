@@ -20,6 +20,7 @@ import { WithAuth } from 'common/auth'
 import {
   Permission,
   useClassworkAssignmentDetailQuery,
+  useFindOneClassworkSubmissionQuery,
   useCommentsQuery,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
@@ -44,6 +45,19 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       refetch()
     }
 
+    const { data: submit } = useFindOneClassworkSubmissionQuery({
+      variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
+    })
+    const classworkAssignmentSubmit = useMemo(
+      () => submit?.findOneClassworkSubmission,
+      [submit],
+    )
+
+    // if (!classworkAssignmentSubmit?.id) {
+    //   console.log('Chưa nộp bài');
+    // } else {
+    //   console.log('Đã nộp bài');
+    // }
     const [lastId, setLastId] = useState<string | null>(null)
 
     const { data: dataComments, refetch } = useCommentsQuery({
@@ -93,16 +107,22 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
         maxWidth="md"
         actions={[
           <>
-            <Link
-              to={buildPath(
-                STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
-                {
-                  id: classworkAssignment.id,
-                },
-              )}
-            >
-              <Button variant="contained">Nộp bài</Button>
-            </Link>
+            {!classworkAssignmentSubmit?.id ? (
+              <Link
+                to={buildPath(
+                  STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                  {
+                    id: classworkAssignment.id,
+                  },
+                )}
+              >
+                <Button variant="contained">Nộp bài</Button>
+              </Link>
+            ) : (
+              <Button color="primary" variant="outlined">
+                Đã nộp bài
+              </Button>
+            )}
           </>,
         ]}
       >

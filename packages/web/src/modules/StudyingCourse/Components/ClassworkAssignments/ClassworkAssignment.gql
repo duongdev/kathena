@@ -12,3 +12,13 @@ mutation CreateClassworkSubmission(
     description
   }
 }
+
+query FindOneClassworkSubmission($ClassworkAssignment: ID!) {
+  findOneClassworkSubmission(ClassworkAssignment: $ClassworkAssignment) {
+    id
+    createdAt
+    classworkId
+    createdByAccountId
+    description
+  }
+}
