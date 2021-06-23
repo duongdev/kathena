@@ -23,10 +23,9 @@ import {
   TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
   TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
-  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
-  STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
   TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
   UPDATE_ACADEMIC_COURSE,
 } from 'utils/path-builder'
@@ -128,18 +127,7 @@ const ClassworkAssignmentDetail = lazy(
       'modules/ClassworkAssignmentDetail'
     ) /* webpackChunkName: "modules/ClassworkAssignmentDetail" */,
 )
-const DetailContentClassworkAssignmentStudyingCourse = lazy(
-  () =>
-    import(
-      'modules/StudyingCourse/Components/ClassworkAssignments/DetailTab'
-    ) /* webpackChunkName: "modules/StudyingCourse/Components/ClassworkAssignments/DetailTab" */,
-)
-const DetailCommentClassworkAssignmentStudyingCourse = lazy(
-  () =>
-    import(
-      'modules/StudyingCourse/Components/ClassworkAssignments/DetailTab'
-    ) /* webpackChunkName: "modules/StudyingCourse/Components/ClassworkAssignments/DetailTab" */,
-)
+
 const CreateSubmissionClassworkAssignment = lazy(
   () =>
     import(
@@ -149,8 +137,14 @@ const CreateSubmissionClassworkAssignment = lazy(
 const DetailClassworkSubmission = lazy(
   () =>
     import(
-      'modules/TeachingCourse/Components/ClassworkSubmissionDetail'
-    ) /* webpackChunkName: "modules/TeachingCourse/Components/ClassworkSubmissionDetail" */,
+      'modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission'
+    ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission" */,
+)
+const DetailContentClassworkAssignment = lazy(
+  () =>
+    import(
+      'modules/StudyingCourse/Components/ClassworkAssignments/DetailContentClassworkAssignment'
+    ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission" */,
 )
 const DetailContentClassworkMaterial = lazy(
   () =>
@@ -217,19 +211,19 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         component={ClassworkAssignmentDetail}
       />
       <Route
-        path={STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS}
-        exact
-        component={DetailContentClassworkAssignmentStudyingCourse}
-      />
-      <Route
-        path={STUDYING_COURSE_DETAIL_COMMENT_CLASSWORK_ASSIGNMENTS}
-        exact
-        component={DetailCommentClassworkAssignmentStudyingCourse}
-      />
-      <Route
         path={STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS}
         exact
         component={CreateSubmissionClassworkAssignment}
+      />
+      <Route
+        path={TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS}
+        exact
+        component={DetailClassworkSubmission}
+      />
+      <Route
+        path={STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS}
+        exact
+        component={DetailContentClassworkAssignment}
       />
       <Route
         path={TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS}

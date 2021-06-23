@@ -12,8 +12,14 @@ query CourseDetail($id: ID!) {
   }
 }
 
-query AvgGradeOfClassworkAssignmentInCourse($courseId: ID!,$optionInput: AvgGradeOfClassworkByCourseOptionInput!) {
-  calculateAvgGradeOfClassworkAssignmentInCourse(courseId: $courseId,optionInput: $optionInput){
+query AvgGradeOfClassworkAssignmentInCourse(
+  $courseId: ID!
+  $optionInput: AvgGradeOfClassworkByCourseOptionInput!
+) {
+  calculateAvgGradeOfClassworkAssignmentInCourse(
+    courseId: $courseId
+    optionInput: $optionInput
+  ) {
     classworkTitle
     avgGrade
   }
