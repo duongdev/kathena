@@ -4,11 +4,11 @@ import { Injectable, Logger } from '@nestjs/common'
 import { config } from 'core'
 import { Account } from 'modules/account/models/Account'
 
+import { signatureImgUrl } from './mail.const'
+
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name)
-
-  private readonly signatureImgUrl = `${__dirname}/templates/assets`
 
   constructor(private mailerService: MailerService) {}
 
@@ -20,7 +20,7 @@ export class MailService {
     const { mailerService } = this
 
     const url = `${config.MAIL_DOMAIN}/app/studying/courses/${classWorkId}/classwork-assignments/detail`
-    this.logger.log(this.signatureImgUrl)
+
     await mailerService
       .sendMail({
         to: account.email,
@@ -30,6 +30,7 @@ export class MailService {
           name: account.username,
           courseName,
           url,
+          signatureImg: `${signatureImgUrl}/kmin-signature.png`,
         },
       })
       .catch(() => {
