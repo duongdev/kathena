@@ -1,7 +1,8 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
-import { objectId, Publication } from 'core'
+import { Publication } from 'core'
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { CreateCourseInput } from 'modules/academic/academic.type'
@@ -968,9 +969,6 @@ describe('classwork.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -1094,9 +1092,6 @@ describe('classwork.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -1177,9 +1172,6 @@ describe('classwork.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -1193,10 +1185,6 @@ describe('classwork.service', () => {
             description: '',
           },
         )
-
-      jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
-        .mockResolvedValueOnce(classworkAssignmentUpdate)
 
       await expect(
         classworkService.updateClassworkAssignment(
@@ -1261,9 +1249,6 @@ describe('classwork.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -1277,10 +1262,6 @@ describe('classwork.service', () => {
             description: '',
           },
         )
-
-      jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findOne')
-        .mockResolvedValueOnce(classworkAssignmentUpdate)
 
       await expect(
         classworkService.updateClassworkAssignment(
@@ -1345,9 +1326,6 @@ describe('classwork.service', () => {
         },
       )
 
-      jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
       jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
@@ -1432,9 +1410,6 @@ describe('classwork.service', () => {
         },
       )
 
-      jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
       jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
@@ -1933,9 +1908,6 @@ describe('classwork.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -1949,10 +1921,6 @@ describe('classwork.service', () => {
             description: '',
           },
         )
-
-      jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
-        .mockResolvedValueOnce(classworkAssignmentTest)
 
       await expect(
         classworkService.updateClassworkAssignmentPublication(
@@ -2001,22 +1969,16 @@ describe('classwork.service', () => {
       jest
         .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
+
       const courseTest = await academicService.createCourse(
         objectId(),
-        accountLecturer.orgId,
+        org.id,
         {
           ...createCourseInput,
           startDate: Date.now(),
           lecturerIds: [accountLecturer.id],
         },
       )
-
-      jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
-        .spyOn(authService, 'canAccountManageCourse')
-        .mockResolvedValueOnce(true as never)
 
       const classworkAssignmentTest =
         await classworkService.createClassworkAssignment(
@@ -2028,10 +1990,6 @@ describe('classwork.service', () => {
             description: '',
           },
         )
-
-      jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
-        .mockResolvedValueOnce(classworkAssignmentTest)
 
       await expect(
         classworkService.updateClassworkAssignmentPublication(
@@ -2186,7 +2144,7 @@ describe('classwork.service', () => {
 
       const accStudent = await accountService.createAccount({
         orgId: org.id,
-        email: 'huynhthanhcanh.top@gmail.com',
+        email: 'huynhthanhcanhcanh.top@gmail.com',
         password: '123456',
         username: 'thanhthanh',
         roles: ['student'],

@@ -1,6 +1,7 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
@@ -9,8 +10,6 @@ import { ClassworkService } from 'modules/classwork/classwork.service'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
-
-import { objectId } from '../../core/utils/db'
 
 import { CommentService } from './comment.service'
 
@@ -115,9 +114,6 @@ describe('comment.service', () => {
       )
 
       jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
-      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)
 
@@ -208,9 +204,6 @@ describe('comment.service', () => {
         },
       )
 
-      jest
-        .spyOn(academicService['courseModel'], 'findOne')
-        .mockResolvedValueOnce(courseTest)
       jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true as never)

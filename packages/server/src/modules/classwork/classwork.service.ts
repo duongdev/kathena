@@ -11,8 +11,10 @@ import {
 } from 'core'
 import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
+import { Account } from 'modules/account/models/Account'
 import { AuthService } from 'modules/auth/auth.service'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
+import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
@@ -53,6 +55,9 @@ export class ClassworkService {
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
 
+    @InjectModel(Account)
+    private readonly accountModel: ReturnModelType<typeof Account>,
+
     @Inject(forwardRef(() => FileStorageService))
     private readonly fileStorageService: FileStorageService,
 
@@ -64,6 +69,9 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
+
+    @Inject(forwardRef(() => MailService))
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -680,6 +688,31 @@ export class ClassworkService {
       )) as ANY
     }
 
+    // Send mail
+    const course = await this.courseModel
+      .findOne({
+        _id: courseId,
+        orgId,
+      })
+      .select({ studentIds: 1, name: 1 })
+
+    if (course) {
+      const sendMail = course.studentIds.map(async (id) => {
+        const account = await this.accountModel.findById(id)
+
+        if (account) {
+          this.mailService.sendNewClassworkAssignmentNotification(
+            account,
+            course.name,
+            classworkAssignment.id,
+          )
+        }
+      })
+
+      Promise.all(sendMail).then(() => {
+        this.logger.log('Send mail success!')
+      })
+    }
     return classworkAssignment
   }
 
@@ -755,10 +788,10 @@ export class ClassworkService {
     },
     publicationState: Publication,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const classworkAssignment = await this.classworkAssignmentsModel.findById(
-      query.id,
-      query.orgId,
-    )
+    const classworkAssignment = await this.classworkAssignmentsModel.findOne({
+      _id: query.id,
+      orgId: query.orgId,
+    })
 
     if (!classworkAssignment) {
       throw new Error(

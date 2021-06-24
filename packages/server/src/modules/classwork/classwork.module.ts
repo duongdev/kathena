@@ -3,8 +3,10 @@ import { TypegooseModule } from 'nestjs-typegoose'
 
 import { Course } from 'modules/academic/models/Course'
 import { AccountModule } from 'modules/account/account.module'
+import { Account } from 'modules/account/models/Account'
 import { AuthModule } from 'modules/auth/auth.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
+import { MailModule } from 'modules/mail/mail.module'
 import { OrgModule } from 'modules/org/org.module'
 
 import { ClassworkService } from './classwork.service'
@@ -22,11 +24,13 @@ import { ClassworkSubmission } from './models/ClassworkSubmission'
     AccountModule,
     FileStorageModule,
     OrgModule,
+    MailModule,
     TypegooseModule.forFeature([
       ClassworkAssignment,
       ClassworkMaterial,
       ClassworkSubmission,
       Course,
+      Account,
     ]),
   ],
   providers: [
