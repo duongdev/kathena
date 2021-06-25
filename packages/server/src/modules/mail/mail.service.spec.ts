@@ -63,4 +63,21 @@ describe('MailService', () => {
       ).toBeTruthy()
     })
   })
+  describe('sendOTP', () => {
+    it('returns true if email is sent successfully', async () => {
+      expect.assertions(2)
+
+      const account: ANY = {
+        id: objectId(),
+        displayName: 'Minh Nhật',
+        email: 'leminhnhat1133@gmail.com',
+        otp: '123',
+        otpExpired: new Date(),
+      }
+
+      expect(mailService.sendOTP(account, 'ACTIVE_ACCOUNT')).toBeTruthy()
+
+      expect(mailService.sendOTP(account, 'RESET_PASSWORD')).toBeTruthy()
+    })
+  })
 })
