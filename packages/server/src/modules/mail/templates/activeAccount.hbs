@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    .redirect-btn a,
+    a:link,
+    a:visited {
+      background-color: #103955;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .redirect-btn a:hover,
+    a:active {
+      background-color: #154565;
+    }
+  </style>
+</head>
+
+<body>
+  <p>Xin chào <b>{{name}},</b></p>
+  <p>
+    Chào mừng bạn đến với hệ thống của chúng tôi.
+    Dưới đây là link kích hoạt tài khoản của bạn.
+    Link kích hoạt của bạn sẽ hết hạn vào lúc {{otpExpiredTime}}.
+  </p>
+  <div class="redirect-btn">
+    <a href="{{url}}">Nhấn vào đây để đặt mật khẩu và kích hoạt tài khoản</a>
+  </div>
+  <p>Trân trọng</p>
+  {{>signature}}
+</body>
+
+</html>

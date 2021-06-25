@@ -7,14 +7,17 @@ import { ForbiddenError } from 'type-graphql'
 import { Service, InjectModel, Logger } from 'core'
 import { isObjectId } from 'core/utils/db'
 import {
+  generateString,
   removeExtraSpaces,
   stringWithoutSpecialCharacters,
 } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgRoleName, Permission } from 'modules/auth/models'
+import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY, Nullable } from 'types'
 
+import { OTP_TIME } from './account.const'
 import { CreateAccountServiceInput } from './account.type'
 import { Account, AccountStatus } from './models/Account'
 
@@ -29,6 +32,8 @@ export class AccountService {
     private readonly authService: AuthService,
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+    @Inject(forwardRef(() => MailService))
+    private readonly mailService: MailService,
   ) {}
 
   async createAccount(
@@ -62,19 +67,27 @@ export class AccountService {
       throw new Error('displayName contains invalid characters')
     }
 
+    const otp = generateString(20)
+
+    const otpExpired = new Date()
+    otpExpired.setMinutes(otpExpired.getMinutes() + OTP_TIME)
+
     const account = await this.accountModel.create({
       username: accountInput.username,
       email: accountInput.email,
-      password: bcrypt.hashSync(
-        accountInput.password || accountInput.email,
-        10,
-      ),
+      password: bcrypt.hashSync(accountInput.password || '', 10),
+      otp,
+      otpExpired,
       orgId: accountInput.orgId,
       createdBy: accountInput.createdByAccountId,
       status: accountInput.status,
       roles: uniq(accountInput.roles),
       displayName: removeExtraSpaces(accountInput.displayName),
     })
+
+    this.mailService
+      .sendOTP(account, 'ACTIVE_ACCOUNT')
+      .then(() => this.logger.log('Send mail success!'))
 
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
     this.logger.verbose(account.toObject())
@@ -365,5 +378,39 @@ export class AccountService {
     const updateAccount = await targetAccount.save()
 
     return updateAccount
+  }
+
+  async setPassword(
+    usernameOrEmail: string,
+    password: string,
+    otp: string,
+  ): Promise<DocumentType<Account>> {
+    const account = await this.accountModel.findOne({
+      $or: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+    })
+
+    if (!account) {
+      throw new Error('Account not found')
+    }
+    const current = new Date()
+    if (account.status === AccountStatus.Deactivated) {
+      throw new Error('Account has been deactivated')
+    }
+    if (account.otp !== otp) {
+      throw new Error('OTP invalid')
+    }
+    if (account.otpExpired.getTime() < current.getTime()) {
+      throw new Error('OTP expired')
+    }
+
+    if (account.status === AccountStatus.Pending) {
+      account.status = AccountStatus.Active
+    }
+    const randomString = generateString(20)
+    account.otp = randomString
+    account.password = bcrypt.hashSync(password, 10)
+    const afterAccount = await account.save()
+
+    return afterAccount
   }
 }

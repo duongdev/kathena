@@ -4,6 +4,7 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { AccountStatus } from 'modules/account/models/Account'
 import { ClassworkService } from 'modules/classwork/classwork.service'
 import { AvgGradeOfClassworkByCourseOptionInput } from 'modules/classwork/classwork.type'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
@@ -2229,6 +2230,7 @@ describe('academic.service', () => {
           username: 'thanhthanh',
           roles: ['student'],
           displayName: 'Huynh Thanh Thanh',
+          status: AccountStatus.Active,
         })
 
         const accStudent2 = await accountService.createAccount({
@@ -2238,22 +2240,27 @@ describe('academic.service', () => {
           username: 'thanhthanh2',
           roles: ['student'],
           displayName: 'Huynh Thanh Thanh',
+          status: AccountStatus.Active,
         })
 
         const accLecturer = await accountService.createAccount({
           roles: ['lecturer'],
           email: 'huynhthanhcanh1.top@gmail.com',
+          password: '123456',
           username: 'thanhcanh',
           orgId: org.id,
           displayName: 'Huynh Thanh Canh',
+          status: AccountStatus.Active,
         })
 
         const accAdmin = await accountService.createAccount({
           roles: ['admin'],
           username: 'thanhcanh123',
+          password: '123456',
           orgId: org.id,
           email: 'huynhthanhcanh3.top@gmail.com',
           displayName: 'Huynh Thanh Canh Thanh',
+          status: AccountStatus.Active,
         })
 
         const academicSubject = await academicService.createAcademicSubject({
@@ -2322,7 +2329,7 @@ describe('academic.service', () => {
         )
 
         await authService.signIn({
-          password: 'huynhthanhcanh1.top@gmail.com',
+          password: '123456',
           usernameOrEmail: 'huynhthanhcanh1.top@gmail.com',
           orgNamespace: 'kmin-edu',
         })
