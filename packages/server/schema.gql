@@ -45,6 +45,8 @@ type Account implements BaseModel {
   username: String!
   email: String!
   displayName: String
+  otp: String
+  otpExpired: DateTime
   status: AccountStatus!
   roles: [String!]!
   availability: AccountAvailability!
@@ -316,6 +318,7 @@ type Mutation {
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
   updateAccountStatus(status: String!, id: ID!): Account!
   setPassword(otp: String!, password: String!, usernameOrEmail: String!): Account!
+  resetPassword(usernameOrEmail: String!): Account!
   signIn(
     password: String!
 

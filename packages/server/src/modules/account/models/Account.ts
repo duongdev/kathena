@@ -50,9 +50,11 @@ export class Account extends BaseModel {
   @prop({ required: true })
   password: string
 
+  @Field({ nullable: true })
   @prop({ nullable: true })
   otp: string
 
+  @Field({ nullable: true })
   @prop({ nullable: true })
   otpExpired: Date
 

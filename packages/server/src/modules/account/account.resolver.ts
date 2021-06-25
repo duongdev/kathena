@@ -131,6 +131,14 @@ export class AccountResolver {
     return this.accountService.setPassword(usernameOrEmail, password, otp)
   }
 
+  @Mutation((_returns) => Account)
+  @UsePipes(ValidationPipe)
+  async resetPassword(
+    @Args('usernameOrEmail', { type: () => String }) usernameOrEmail: string,
+  ): Promise<Account> {
+    return this.accountService.resetPassword(usernameOrEmail)
+  }
+
   @ResolveField((_returns) => AccountAvailability)
   availability(@Parent() account: Account): AccountAvailability {
     if (!account.lastActivityAt) {

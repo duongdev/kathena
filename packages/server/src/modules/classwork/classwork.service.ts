@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
@@ -689,29 +690,31 @@ export class ClassworkService {
     }
 
     // Send mail
-    const course = await this.courseModel
-      .findOne({
-        _id: courseId,
-        orgId,
-      })
-      .select({ studentIds: 1, name: 1 })
+    if (process.env.NODE_ENV !== 'test') {
+      const course = await this.courseModel
+        .findOne({
+          _id: courseId,
+          orgId,
+        })
+        .select({ studentIds: 1, name: 1 })
 
-    if (course) {
-      const sendMail = course.studentIds.map(async (id) => {
-        const account = await this.accountModel.findById(id)
+      if (course) {
+        const sendMail = course.studentIds.map(async (id) => {
+          const account = await this.accountModel.findById(id)
 
-        if (account) {
-          this.mailService.sendNewClassworkAssignmentNotification(
-            account,
-            course.name,
-            classworkAssignment.id,
-          )
-        }
-      })
+          if (account) {
+            this.mailService.sendNewClassworkAssignmentNotification(
+              account,
+              course.name,
+              classworkAssignment.id,
+            )
+          }
+        })
 
-      Promise.all(sendMail).then(() => {
-        this.logger.log('Send mail success!')
-      })
+        Promise.all(sendMail).then(() => {
+          this.logger.log('Send mail success!')
+        })
+      }
     }
     return classworkAssignment
   }

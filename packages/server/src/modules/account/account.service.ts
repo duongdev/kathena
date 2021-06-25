@@ -1,3 +1,4 @@
+/* eslint-disable no-process-env */
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as bcrypt from 'bcrypt'
@@ -85,10 +86,11 @@ export class AccountService {
       displayName: removeExtraSpaces(accountInput.displayName),
     })
 
-    this.mailService
-      .sendOTP(account, 'ACTIVE_ACCOUNT')
-      .then(() => this.logger.log('Send mail success!'))
-
+    if (process.env.NODE_ENV !== 'test') {
+      this.mailService
+        .sendOTP(account, 'ACTIVE_ACCOUNT')
+        .then(() => this.logger.log('Send mail success!'))
+    }
     this.logger.log(`[${this.createAccount.name}] Created account successfully`)
     this.logger.verbose(account.toObject())
 
@@ -410,6 +412,40 @@ export class AccountService {
     account.otp = randomString
     account.password = bcrypt.hashSync(password, 10)
     const afterAccount = await account.save()
+
+    return afterAccount
+  }
+
+  async resetPassword(usernameOrEmail: string): Promise<DocumentType<Account>> {
+    const account = await this.accountModel.findOne({
+      $or: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+    })
+
+    if (!account) {
+      throw new Error('Account not found')
+    }
+    if (account.status === AccountStatus.Deactivated) {
+      throw new Error('Account has been deactivated')
+    }
+    const current = new Date()
+    if (account.otpExpired.getTime() > current.getTime()) {
+      throw new Error(
+        `Don't spam, please try again after ${account.otpExpired.getHours()}:${account.otpExpired.getMinutes()}`,
+      )
+    }
+    const otp = generateString(20)
+    const otpExpired = new Date()
+    otpExpired.setMinutes(otpExpired.getMinutes() + OTP_TIME)
+    account.otp = otp
+    account.otpExpired = otpExpired
+
+    const afterAccount = await account.save()
+
+    if (process.env.NODE_ENV !== 'test') {
+      this.mailService
+        .sendOTP(afterAccount, 'RESET_PASSWORD')
+        .then(() => this.logger.log('Send mail success!'))
+    }
 
     return afterAccount
   }
