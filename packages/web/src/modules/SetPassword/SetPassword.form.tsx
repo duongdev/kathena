@@ -2,59 +2,81 @@ import { FC, useCallback, useState } from 'react'
 
 import { ApolloError } from '@apollo/client'
 import { Grid, makeStyles } from '@material-ui/core'
-import { Form, Formik } from 'formik'
+import { Form, Formik, FormikHelpers } from 'formik'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router-dom'
 
-import { object, SchemaOf, string } from '@kathena/libs/yup'
+import yup from '@kathena/libs/yup'
 import { ApolloErrorList, Button, Link, TextFormField } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { SIGN_IN } from 'utils/path-builder'
 
 export type ResetPasswordInput = {
-  identity: string
+  password: string
+  verifyPassword: string
 }
 
-export type ResetPasswordFormProps = {}
+export type ResetPasswordFormProps = {
+  type: string
+  email: string
+  otp: string
+}
 
 const initialValues: ResetPasswordInput = {
-  identity: '',
+  password: '',
+  verifyPassword: '',
 }
 
-const labels = {
-  identity: 'Email hoặc tên đăng nhập',
-}
-
-const validationSchema: SchemaOf<ResetPasswordInput> = object({
-  identity: string().label(labels.identity).trim().required(),
+const validationSchema = yup.object({
+  password: yup.string().label('Mật khẩu').min(6),
+  verifyPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Mật khẩu không khớp'),
 })
 
 const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
   const classes = useStyles(props)
-  const { resetPassword } = useAuth()
-  const { enqueueSnackbar } = useSnackbar()
+  const { email, type, otp } = props
+  const { setPassword } = useAuth()
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar()
   const [error, setError] = useState<ApolloError>()
 
   const handleResetPassword = useCallback(
-    async (input: ResetPasswordInput) => {
+    async (
+      input: ResetPasswordInput,
+      formikHelpers: FormikHelpers<ResetPasswordInput>,
+    ) => {
+      if (input.password && input.password !== input.verifyPassword) {
+        formikHelpers.setFieldError('verifyPassword', 'Mật khẩu không khớp')
+        return
+      }
       try {
         setError(undefined)
-        const account = await resetPassword({
-          identity: input.identity,
+        const account = await setPassword({
+          usernameOrEmail: email,
+          otp,
+          password: input.password,
         })
         if (account) {
-          enqueueSnackbar(
-            `OTP đã được gửi cho bạn tại email ${account.email}. Vui lòng kiểm tra mail.`,
-            { variant: 'success' },
-          )
+          if (type === 'ACTIVE_ACCOUNT') {
+            enqueueSnackbar(
+              `Bạn vừa kích hoạt tài khoản ${account.username}.`,
+              { variant: 'success' },
+            )
+          } else if (type === 'RESET_PASSWORD') {
+            enqueueSnackbar(
+              `Bạn vừa đặt lại mật khẩu tài khoản ${account.username}`,
+              { variant: 'success' },
+            )
+          }
           history.push(SIGN_IN)
         }
       } catch (resetPasswordError) {
         setError(resetPasswordError)
       }
     },
-    [resetPassword, enqueueSnackbar, history],
+    [setPassword, email, enqueueSnackbar, history, otp, type],
   )
 
   return (
@@ -68,9 +90,17 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
           <Grid container spacing={3} justifyContent="center">
             <TextFormField
               gridItem={{ xs: 12 }}
-              name="identity"
+              name="password"
+              type="password"
               disabled={formik.isSubmitting}
-              label={labels.identity}
+              label="Mật khẩu"
+            />
+            <TextFormField
+              gridItem={{ xs: 12 }}
+              name="verifyPassword"
+              type="password"
+              disabled={formik.isSubmitting}
+              label="Nhập lại mật khẩu"
             />
 
             {error && <ApolloErrorList gridItem={{ xs: 12 }} error={error} />}

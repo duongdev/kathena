@@ -3,6 +3,8 @@ fragment AuthAccount on Account {
   orgId
   status
   email
+  otp
+  otpExpired
   username
   displayName
 }
@@ -47,4 +49,24 @@ query Authenticate {
 
 query CanAccountManageRoles($roles: [String!]!) {
   canAccountManageRoles(roles: $roles)
+}
+
+mutation ResetPassword($identity: String!) {
+  resetPassword(usernameOrEmail: $identity) {
+    ...AuthAccount
+  }
+}
+
+mutation SetPassword(
+  $usernameOrEmail: String!
+  $password: String!
+  $otp: String!
+) {
+  setPassword(
+    usernameOrEmail: $usernameOrEmail
+    password: $password
+    otp: $otp
+  ) {
+    ...AuthAccount
+  }
 }

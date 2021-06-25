@@ -408,8 +408,8 @@ export class AccountService {
     if (account.status === AccountStatus.Pending) {
       account.status = AccountStatus.Active
     }
-    const randomString = generateString(20)
-    account.otp = randomString
+    account.otp = ''
+    account.otpExpired = new Date(current.setHours(current.getHours() - 1))
     account.password = bcrypt.hashSync(password, 10)
     const afterAccount = await account.save()
 

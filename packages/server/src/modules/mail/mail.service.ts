@@ -47,7 +47,7 @@ export class MailService {
     const { mailerService } = this
     const { email, username, otp, otpExpired } = account
 
-    const url = `${config.MAIL_DOMAIN}/auth/set-password?otp=${otp}`
+    const url = `${config.MAIL_DOMAIN}/auth/set-password?otp=${otp}&email=${email}&type=${type}`
 
     const subject =
       type === 'ACTIVE_ACCOUNT'

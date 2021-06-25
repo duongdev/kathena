@@ -5,6 +5,7 @@ export const LANDING_PAGE = `/`
 
 export const SIGN_IN = `/auth/sign-in`
 export const RESET_PWD = `/auth/reset-password`
+export const SET_PWD = `/auth/set-password`
 
 export const ORG_WORKSPACE = `/app`
 
