@@ -287,7 +287,7 @@ export type Mutation = {
   updateAccount: Account
   updateAccountStatus: Account
   setPassword: Account
-  resetPassword: Account
+  callOTP: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
   updateAcademicSubjectPublication: AcademicSubject
@@ -337,7 +337,8 @@ export type MutationSetPasswordArgs = {
   usernameOrEmail: Scalars['String']
 }
 
-export type MutationResetPasswordArgs = {
+export type MutationCallOtpArgs = {
+  type: Scalars['String']
   usernameOrEmail: Scalars['String']
 }
 
@@ -752,11 +753,12 @@ export type CanAccountManageRolesQueryVariables = Exact<{
 
 export type CanAccountManageRolesQuery = Pick<Query, 'canAccountManageRoles'>
 
-export type ResetPasswordMutationVariables = Exact<{
+export type CallOtpMutationVariables = Exact<{
   identity: Scalars['String']
+  type: Scalars['String']
 }>
 
-export type ResetPasswordMutation = { resetPassword: AuthAccountFragment }
+export type CallOtpMutation = { callOTP: AuthAccountFragment }
 
 export type SetPasswordMutationVariables = Exact<{
   usernameOrEmail: Scalars['String']
@@ -2053,13 +2055,13 @@ export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
   CanAccountManageRolesQuery,
   CanAccountManageRolesQueryVariables
 >
-export const ResetPasswordDocument = {
+export const CallOtpDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'mutation',
-      name: { kind: 'Name', value: 'ResetPassword' },
+      name: { kind: 'Name', value: 'CallOTP' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -2075,13 +2077,24 @@ export const ResetPasswordDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'resetPassword' },
+            name: { kind: 'Name', value: 'callOTP' },
             arguments: [
               {
                 kind: 'Argument',
@@ -2089,6 +2102,14 @@ export const ResetPasswordDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'identity' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'type' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
                 },
               },
             ],
@@ -2128,80 +2149,78 @@ export const ResetPasswordDocument = {
     },
   ],
 } as unknown as DocumentNode
-export type ResetPasswordMutationFn = Apollo.MutationFunction<
-  ResetPasswordMutation,
-  ResetPasswordMutationVariables
+export type CallOtpMutationFn = Apollo.MutationFunction<
+  CallOtpMutation,
+  CallOtpMutationVariables
 >
-export type ResetPasswordProps<
+export type CallOtpProps<
   TChildProps = {},
   TDataName extends string = 'mutate',
 > = {
   [key in TDataName]: Apollo.MutationFunction<
-    ResetPasswordMutation,
-    ResetPasswordMutationVariables
+    CallOtpMutation,
+    CallOtpMutationVariables
   >
 } &
   TChildProps
-export function withResetPassword<
+export function withCallOtp<
   TProps,
   TChildProps = {},
   TDataName extends string = 'mutate',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
-    ResetPasswordMutation,
-    ResetPasswordMutationVariables,
-    ResetPasswordProps<TChildProps, TDataName>
+    CallOtpMutation,
+    CallOtpMutationVariables,
+    CallOtpProps<TChildProps, TDataName>
   >,
 ) {
   return ApolloReactHoc.withMutation<
     TProps,
-    ResetPasswordMutation,
-    ResetPasswordMutationVariables,
-    ResetPasswordProps<TChildProps, TDataName>
-  >(ResetPasswordDocument, {
-    alias: 'resetPassword',
+    CallOtpMutation,
+    CallOtpMutationVariables,
+    CallOtpProps<TChildProps, TDataName>
+  >(CallOtpDocument, {
+    alias: 'callOtp',
     ...operationOptions,
   })
 }
 
 /**
- * __useResetPasswordMutation__
+ * __useCallOtpMutation__
  *
- * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCallOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCallOtpMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ * const [callOtpMutation, { data, loading, error }] = useCallOtpMutation({
  *   variables: {
  *      identity: // value for 'identity'
+ *      type: // value for 'type'
  *   },
  * });
  */
-export function useResetPasswordMutation(
+export function useCallOtpMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    ResetPasswordMutation,
-    ResetPasswordMutationVariables
+    CallOtpMutation,
+    CallOtpMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    ResetPasswordMutation,
-    ResetPasswordMutationVariables
-  >(ResetPasswordDocument, options)
+  return Apollo.useMutation<CallOtpMutation, CallOtpMutationVariables>(
+    CallOtpDocument,
+    options,
+  )
 }
-export type ResetPasswordMutationHookResult = ReturnType<
-  typeof useResetPasswordMutation
->
-export type ResetPasswordMutationResult =
-  Apollo.MutationResult<ResetPasswordMutation>
-export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<
-  ResetPasswordMutation,
-  ResetPasswordMutationVariables
+export type CallOtpMutationHookResult = ReturnType<typeof useCallOtpMutation>
+export type CallOtpMutationResult = Apollo.MutationResult<CallOtpMutation>
+export type CallOtpMutationOptions = Apollo.BaseMutationOptions<
+  CallOtpMutation,
+  CallOtpMutationVariables
 >
 export const SetPasswordDocument = {
   kind: 'Document',

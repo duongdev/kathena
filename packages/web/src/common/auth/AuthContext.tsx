@@ -10,7 +10,7 @@ import {
   AuthenticateQuery,
   useAuthenticateQuery,
   useSignInMutation,
-  useResetPasswordMutation,
+  useCallOtpMutation,
   useSetPasswordMutation,
 } from 'graphql/generated'
 import { buildPath, ORG_WORKSPACE } from 'utils/path-builder'
@@ -19,7 +19,7 @@ export type AuthAccount = AuthenticateQuery['authenticate']['account']
 
 const useAuthHook = () => {
   const [mutateSignIn] = useSignInMutation()
-  const [mutateResetPassword] = useResetPasswordMutation()
+  const [mutateCallOTP] = useCallOtpMutation()
   const [mutateSetPassword] = useSetPasswordMutation()
   const [jwt, setJwt, removeJwt] = useLocalStorage<string>(LOCAL_STORAGE_JWT)
   const { data: authenticateData, loading } = useAuthenticateQuery({
@@ -68,15 +68,21 @@ const useAuthHook = () => {
     window.location.reload()
   }, [removeJwt])
 
-  const resetPassword = useCallback(
-    async ({ identity }: { identity: string }): Promise<AuthAccount | null> => {
-      const { data } = await mutateResetPassword({
-        variables: { identity },
+  const callOTP = useCallback(
+    async ({
+      identity,
+      type,
+    }: {
+      identity: string
+      type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD'
+    }): Promise<AuthAccount | null> => {
+      const { data } = await mutateCallOTP({
+        variables: { identity, type },
       })
       if (!data) return null
-      return data.resetPassword
+      return data.callOTP
     },
-    [mutateResetPassword],
+    [mutateCallOTP],
   )
 
   const setPassword = useCallback(
@@ -104,7 +110,7 @@ const useAuthHook = () => {
     permissions: authData?.permissions ?? [],
     signIn,
     signOut,
-    resetPassword,
+    callOTP,
     setPassword,
     loading,
     /* eslint-disable @typescript-eslint/no-non-null-assertion  */

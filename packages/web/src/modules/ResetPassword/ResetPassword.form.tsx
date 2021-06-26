@@ -31,7 +31,7 @@ const validationSchema: SchemaOf<ResetPasswordInput> = object({
 
 const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
   const classes = useStyles(props)
-  const { resetPassword } = useAuth()
+  const { callOTP } = useAuth()
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const [error, setError] = useState<ApolloError>()
@@ -40,8 +40,9 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
     async (input: ResetPasswordInput) => {
       try {
         setError(undefined)
-        const account = await resetPassword({
+        const account = await callOTP({
           identity: input.identity,
+          type: 'RESET_PASSWORD',
         })
         if (account) {
           enqueueSnackbar(
@@ -50,11 +51,11 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
           )
           history.push(SIGN_IN)
         }
-      } catch (resetPasswordError) {
-        setError(resetPasswordError)
+      } catch (callOTPError) {
+        setError(callOTPError)
       }
     },
-    [resetPassword, enqueueSnackbar, history],
+    [callOTP, enqueueSnackbar, history],
   )
 
   return (

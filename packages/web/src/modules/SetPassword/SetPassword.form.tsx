@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router-dom'
 
 import yup from '@kathena/libs/yup'
-import { ApolloErrorList, Button, Link, TextFormField } from '@kathena/ui'
+import { ApolloErrorList, Button, TextFormField } from '@kathena/ui'
 import { useAuth } from 'common/auth'
 import { SIGN_IN } from 'utils/path-builder'
 
@@ -17,7 +17,7 @@ export type ResetPasswordInput = {
 }
 
 export type ResetPasswordFormProps = {
-  type: string
+  type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD'
   email: string
   otp: string
 }
@@ -37,12 +37,32 @@ const validationSchema = yup.object({
 const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
   const classes = useStyles(props)
   const { email, type, otp } = props
-  const { setPassword } = useAuth()
+  const [otpExpired, setOTPExpired] = useState(false)
+  const { setPassword, callOTP } = useAuth()
   const history = useHistory()
   const { enqueueSnackbar } = useSnackbar()
   const [error, setError] = useState<ApolloError>()
 
-  const handleResetPassword = useCallback(
+  const handleCallNewOTP = useCallback(async () => {
+    try {
+      setError(undefined)
+      const account = await callOTP({
+        identity: email,
+        type,
+      })
+      if (account) {
+        enqueueSnackbar(
+          `OTP đã được gửi cho bạn tại email ${account.email}. Vui lòng kiểm tra mail.`,
+          { variant: 'success' },
+        )
+        history.push(SIGN_IN)
+      }
+    } catch (callOTPError) {
+      setError(callOTPError)
+    }
+  }, [callOTP, enqueueSnackbar, history, email, type])
+
+  const handleSetPassword = useCallback(
     async (
       input: ResetPasswordInput,
       formikHelpers: FormikHelpers<ResetPasswordInput>,
@@ -72,8 +92,12 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
           }
           history.push(SIGN_IN)
         }
-      } catch (resetPasswordError) {
-        setError(resetPasswordError)
+      } catch (setPasswordError) {
+        // Handle tạm thời cần fix trong tương lai :)))
+        if (setPasswordError.message === 'OTP expired') {
+          setOTPExpired(true)
+        }
+        setError(setPasswordError)
       }
     },
     [setPassword, email, enqueueSnackbar, history, otp, type],
@@ -83,7 +107,7 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={handleResetPassword}
+      onSubmit={handleSetPassword}
     >
       {(formik) => (
         <Form className={classes.root}>
@@ -104,21 +128,30 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
             />
 
             {error && <ApolloErrorList gridItem={{ xs: 12 }} error={error} />}
-
-            <Button
-              gridItem={{ xs: 12 }}
-              fullWidth
-              variant="contained"
-              color="primary"
-              size="large"
-              loading={formik.isSubmitting}
-              type="submit"
-            >
-              Xác nhận
-            </Button>
-            <Link gridItem to={SIGN_IN}>
-              Trở về trang đăng nhập
-            </Link>
+            {otpExpired ? (
+              <Button
+                gridItem={{ xs: 12 }}
+                fullWidth
+                onClick={handleCallNewOTP}
+                variant="contained"
+                color="primary"
+                size="large"
+              >
+                Gủi OTP mới
+              </Button>
+            ) : (
+              <Button
+                gridItem={{ xs: 12 }}
+                fullWidth
+                variant="contained"
+                color="primary"
+                size="large"
+                loading={formik.isSubmitting}
+                type="submit"
+              >
+                Xác nhận
+              </Button>
+            )}
           </Grid>
         </Form>
       )}

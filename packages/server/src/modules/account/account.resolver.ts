@@ -133,10 +133,12 @@ export class AccountResolver {
 
   @Mutation((_returns) => Account)
   @UsePipes(ValidationPipe)
-  async resetPassword(
+  async callOTP(
     @Args('usernameOrEmail', { type: () => String }) usernameOrEmail: string,
+    @Args('type', { type: () => String })
+    type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD',
   ): Promise<Account> {
-    return this.accountService.resetPassword(usernameOrEmail)
+    return this.accountService.callOTP(usernameOrEmail, type)
   }
 
   @ResolveField((_returns) => AccountAvailability)

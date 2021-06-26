@@ -416,7 +416,10 @@ export class AccountService {
     return afterAccount
   }
 
-  async resetPassword(usernameOrEmail: string): Promise<DocumentType<Account>> {
+  async callOTP(
+    usernameOrEmail: string,
+    type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD',
+  ): Promise<DocumentType<Account>> {
     const account = await this.accountModel.findOne({
       $or: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
     })
@@ -443,7 +446,7 @@ export class AccountService {
 
     if (process.env.NODE_ENV !== 'test') {
       this.mailService
-        .sendOTP(afterAccount, 'RESET_PASSWORD')
+        .sendOTP(afterAccount, type)
         .then(() => this.logger.log('Send mail success!'))
     }
 

@@ -51,8 +51,8 @@ query CanAccountManageRoles($roles: [String!]!) {
   canAccountManageRoles(roles: $roles)
 }
 
-mutation ResetPassword($identity: String!) {
-  resetPassword(usernameOrEmail: $identity) {
+mutation CallOTP($identity: String!, $type: String!) {
+  callOTP(usernameOrEmail: $identity, type: $type) {
     ...AuthAccount
   }
 }
