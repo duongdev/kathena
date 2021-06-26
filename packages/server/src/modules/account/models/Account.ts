@@ -50,12 +50,20 @@ export class Account extends BaseModel {
   @prop({ required: true })
   password: string
 
+  @Field({ nullable: true })
+  @prop({ nullable: true })
+  otp: string
+
+  @Field({ nullable: true })
+  @prop({ nullable: true })
+  otpExpired: Date
+
   @Field((_type) => AccountStatus)
   @prop({
     enum: AccountStatus,
     type: String,
     index: true,
-    default: AccountStatus.Active,
+    default: AccountStatus.Pending,
   })
   status: AccountStatus
 

@@ -3,11 +3,12 @@ import { FC, useCallback, useState } from 'react'
 import { ApolloError } from '@apollo/client'
 import { Grid, makeStyles } from '@material-ui/core'
 import { Form, Formik } from 'formik'
+import { useSnackbar } from 'notistack'
+import { useHistory } from 'react-router-dom'
 
 import { object, SchemaOf, string } from '@kathena/libs/yup'
 import { ApolloErrorList, Button, Link, TextFormField } from '@kathena/ui'
 import { useAuth } from 'common/auth'
-import { DEFAULT_ORG_NS } from 'common/constants'
 import { SIGN_IN } from 'utils/path-builder'
 
 export type ResetPasswordInput = {
@@ -30,22 +31,31 @@ const validationSchema: SchemaOf<ResetPasswordInput> = object({
 
 const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
   const classes = useStyles(props)
-  const { resetPassword } = useAuth()
+  const { callOTP } = useAuth()
+  const { enqueueSnackbar } = useSnackbar()
+  const history = useHistory()
   const [error, setError] = useState<ApolloError>()
 
   const handleResetPassword = useCallback(
     async (input: ResetPasswordInput) => {
       try {
         setError(undefined)
-        await resetPassword({
-          orgNamespace: DEFAULT_ORG_NS,
+        const account = await callOTP({
           identity: input.identity,
+          type: 'RESET_PASSWORD',
         })
-      } catch (resetPasswordError) {
-        setError(resetPasswordError)
+        if (account) {
+          enqueueSnackbar(
+            `OTP đã được gửi cho bạn tại email ${account.email}. Vui lòng kiểm tra mail.`,
+            { variant: 'success' },
+          )
+          history.push(SIGN_IN)
+        }
+      } catch (callOTPError) {
+        setError(callOTPError)
       }
     },
-    [resetPassword],
+    [callOTP, enqueueSnackbar, history],
   )
 
   return (
@@ -64,7 +74,7 @@ const ResetPasswordForm: FC<ResetPasswordFormProps> = (props) => {
               label={labels.identity}
             />
 
-            {error && <ApolloErrorList gridItem error={error} />}
+            {error && <ApolloErrorList gridItem={{ xs: 12 }} error={error} />}
 
             <Button
               gridItem={{ xs: 12 }}

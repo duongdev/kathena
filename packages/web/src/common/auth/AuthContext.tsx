@@ -10,6 +10,8 @@ import {
   AuthenticateQuery,
   useAuthenticateQuery,
   useSignInMutation,
+  useCallOtpMutation,
+  useSetPasswordMutation,
 } from 'graphql/generated'
 import { buildPath, ORG_WORKSPACE } from 'utils/path-builder'
 
@@ -17,6 +19,8 @@ export type AuthAccount = AuthenticateQuery['authenticate']['account']
 
 const useAuthHook = () => {
   const [mutateSignIn] = useSignInMutation()
+  const [mutateCallOTP] = useCallOtpMutation()
+  const [mutateSetPassword] = useSetPasswordMutation()
   const [jwt, setJwt, removeJwt] = useLocalStorage<string>(LOCAL_STORAGE_JWT)
   const { data: authenticateData, loading } = useAuthenticateQuery({
     skip: !jwt,
@@ -64,18 +68,40 @@ const useAuthHook = () => {
     window.location.reload()
   }, [removeJwt])
 
-  const resetPassword = useCallback(
+  const callOTP = useCallback(
     async ({
       identity,
-      orgNamespace = DEFAULT_ORG_NS,
+      type,
     }: {
       identity: string
-      orgNamespace?: string
-    }) => {
-      // eslint-disable-next-line
-      console.log(identity, orgNamespace)
+      type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD'
+    }): Promise<AuthAccount | null> => {
+      const { data } = await mutateCallOTP({
+        variables: { identity, type },
+      })
+      if (!data) return null
+      return data.callOTP
     },
-    [],
+    [mutateCallOTP],
+  )
+
+  const setPassword = useCallback(
+    async ({
+      usernameOrEmail,
+      password,
+      otp,
+    }: {
+      usernameOrEmail: string
+      password: string
+      otp: string
+    }): Promise<AuthAccount | null> => {
+      const { data } = await mutateSetPassword({
+        variables: { usernameOrEmail, password, otp },
+      })
+      if (!data) return null
+      return data.setPassword
+    },
+    [mutateSetPassword],
   )
 
   return {
@@ -84,7 +110,8 @@ const useAuthHook = () => {
     permissions: authData?.permissions ?? [],
     signIn,
     signOut,
-    resetPassword,
+    callOTP,
+    setPassword,
     loading,
     /* eslint-disable @typescript-eslint/no-non-null-assertion  */
     /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */

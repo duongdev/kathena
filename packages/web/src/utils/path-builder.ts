@@ -5,6 +5,7 @@ export const LANDING_PAGE = `/`
 
 export const SIGN_IN = `/auth/sign-in`
 export const RESET_PWD = `/auth/reset-password`
+export const SET_PWD = `/auth/set-password`
 
 export const ORG_WORKSPACE = `/app`
 
@@ -43,8 +44,8 @@ export const STUDYING_COURSE_LIST = `${STUDYING_COURSES}`
 export const STUDYING_COURSE = `${STUDYING_COURSES}/:id/detail`
 export const STUDYING_COURSE_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/detail/classwork-assignments`
 export const STUDYING_COURSE_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/detail/classwork-materials`
-export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/detail-content`
-export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/classwork-material/detail-content`
+export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/detail`
+export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/classwork-material/detail`
 export const STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/Submission`
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 

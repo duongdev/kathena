@@ -116,28 +116,7 @@ describe('account.service', () => {
       ).rejects.toThrow('Org ID is invalid')
     })
 
-    it(`sets default password as email`, async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(accountService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-
-      const testCreateAccountServiceInput: CreateAccountServiceInput = {
-        ...createAccountServiceInput,
-        password: '',
-      }
-
-      const testAccount = await accountService.createAccount(
-        testCreateAccountServiceInput,
-      )
-
-      await expect(
-        compareSync(testCreateAccountServiceInput.email, testAccount.password),
-      ).toBe(true)
-    })
-
-    it(`sets default status as ACTIVE`, async () => {
+    it(`sets default status as Pending`, async () => {
       expect.assertions(1)
 
       jest
@@ -148,7 +127,7 @@ describe('account.service', () => {
         createAccountServiceInput,
       )
 
-      await expect(testAccount.status).toBe(AccountStatus.Active)
+      await expect(testAccount.status).toBe(AccountStatus.Pending)
     })
 
     it(`replaces duplicated spaces in displayName by single spaces`, async () => {
@@ -220,7 +199,7 @@ describe('account.service', () => {
       expect(account).toMatchObject({
         email: 'dustin.do95@gmail.com',
         lastActivityAt: null,
-        status: 'Active',
+        status: 'Pending',
         username: 'duongdev',
       })
       expect(account.orgId).toBeDefined()

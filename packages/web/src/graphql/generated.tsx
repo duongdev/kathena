@@ -55,6 +55,8 @@ export type Account = BaseModel & {
   username: Scalars['String']
   email: Scalars['String']
   displayName?: Maybe<Scalars['String']>
+  otp?: Maybe<Scalars['String']>
+  otpExpired?: Maybe<Scalars['DateTime']>
   status: AccountStatus
   roles: Array<Scalars['String']>
   availability: AccountAvailability
@@ -284,6 +286,8 @@ export type Mutation = {
   createOrgAccount: Account
   updateAccount: Account
   updateAccountStatus: Account
+  setPassword: Account
+  callOTP: Account
   signIn: SignInPayload
   createAcademicSubject: AcademicSubject
   updateAcademicSubjectPublication: AcademicSubject
@@ -325,6 +329,17 @@ export type MutationUpdateAccountArgs = {
 export type MutationUpdateAccountStatusArgs = {
   status: Scalars['String']
   id: Scalars['ID']
+}
+
+export type MutationSetPasswordArgs = {
+  otp: Scalars['String']
+  password: Scalars['String']
+  usernameOrEmail: Scalars['String']
+}
+
+export type MutationCallOtpArgs = {
+  type: Scalars['String']
+  usernameOrEmail: Scalars['String']
 }
 
 export type MutationSignInArgs = {
@@ -698,7 +713,14 @@ export type UpdateOrgOfficeInput = {
 
 export type AuthAccountFragment = Pick<
   Account,
-  'id' | 'orgId' | 'status' | 'email' | 'username' | 'displayName'
+  | 'id'
+  | 'orgId'
+  | 'status'
+  | 'email'
+  | 'otp'
+  | 'otpExpired'
+  | 'username'
+  | 'displayName'
 >
 
 export type AuthOrgFragment = Pick<Org, 'id' | 'name' | 'namespace'>
@@ -730,6 +752,21 @@ export type CanAccountManageRolesQueryVariables = Exact<{
 }>
 
 export type CanAccountManageRolesQuery = Pick<Query, 'canAccountManageRoles'>
+
+export type CallOtpMutationVariables = Exact<{
+  identity: Scalars['String']
+  type: Scalars['String']
+}>
+
+export type CallOtpMutation = { callOTP: AuthAccountFragment }
+
+export type SetPasswordMutationVariables = Exact<{
+  usernameOrEmail: Scalars['String']
+  password: Scalars['String']
+  otp: Scalars['String']
+}>
+
+export type SetPasswordMutation = { setPassword: AuthAccountFragment }
 
 export type AccountAvatarQueryVariables = Exact<{
   id: Scalars['ID']
@@ -1452,6 +1489,8 @@ export const AuthAccountFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otpExpired' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
@@ -1613,6 +1652,8 @@ export const SignInDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otpExpired' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
@@ -1773,6 +1814,8 @@ export const AuthenticateDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otpExpired' } },
           { kind: 'Field', name: { kind: 'Name', value: 'username' } },
           { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
         ],
@@ -2011,6 +2054,366 @@ export type CanAccountManageRolesLazyQueryHookResult = ReturnType<
 export type CanAccountManageRolesQueryResult = Apollo.QueryResult<
   CanAccountManageRolesQuery,
   CanAccountManageRolesQueryVariables
+>
+export const CallOtpDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CallOTP' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'identity' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'callOTP' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'usernameOrEmail' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'identity' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'type' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AuthAccount' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AuthAccount' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Account' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otpExpired' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CallOtpMutationFn = Apollo.MutationFunction<
+  CallOtpMutation,
+  CallOtpMutationVariables
+>
+export type CallOtpProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CallOtpMutation,
+    CallOtpMutationVariables
+  >
+} &
+  TChildProps
+export function withCallOtp<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CallOtpMutation,
+    CallOtpMutationVariables,
+    CallOtpProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CallOtpMutation,
+    CallOtpMutationVariables,
+    CallOtpProps<TChildProps, TDataName>
+  >(CallOtpDocument, {
+    alias: 'callOtp',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCallOtpMutation__
+ *
+ * To run a mutation, you first call `useCallOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCallOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [callOtpMutation, { data, loading, error }] = useCallOtpMutation({
+ *   variables: {
+ *      identity: // value for 'identity'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useCallOtpMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CallOtpMutation,
+    CallOtpMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CallOtpMutation, CallOtpMutationVariables>(
+    CallOtpDocument,
+    options,
+  )
+}
+export type CallOtpMutationHookResult = ReturnType<typeof useCallOtpMutation>
+export type CallOtpMutationResult = Apollo.MutationResult<CallOtpMutation>
+export type CallOtpMutationOptions = Apollo.BaseMutationOptions<
+  CallOtpMutation,
+  CallOtpMutationVariables
+>
+export const SetPasswordDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SetPassword' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'usernameOrEmail' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'password' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'otp' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'setPassword' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'usernameOrEmail' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'usernameOrEmail' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'password' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'password' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'otp' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'otp' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AuthAccount' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AuthAccount' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Account' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'otpExpired' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type SetPasswordMutationFn = Apollo.MutationFunction<
+  SetPasswordMutation,
+  SetPasswordMutationVariables
+>
+export type SetPasswordProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    SetPasswordMutation,
+    SetPasswordMutationVariables
+  >
+} &
+  TChildProps
+export function withSetPassword<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    SetPasswordMutation,
+    SetPasswordMutationVariables,
+    SetPasswordProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    SetPasswordMutation,
+    SetPasswordMutationVariables,
+    SetPasswordProps<TChildProps, TDataName>
+  >(SetPasswordDocument, {
+    alias: 'setPassword',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useSetPasswordMutation__
+ *
+ * To run a mutation, you first call `useSetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setPasswordMutation, { data, loading, error }] = useSetPasswordMutation({
+ *   variables: {
+ *      usernameOrEmail: // value for 'usernameOrEmail'
+ *      password: // value for 'password'
+ *      otp: // value for 'otp'
+ *   },
+ * });
+ */
+export function useSetPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SetPasswordMutation,
+    SetPasswordMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<SetPasswordMutation, SetPasswordMutationVariables>(
+    SetPasswordDocument,
+    options,
+  )
+}
+export type SetPasswordMutationHookResult = ReturnType<
+  typeof useSetPasswordMutation
+>
+export type SetPasswordMutationResult =
+  Apollo.MutationResult<SetPasswordMutation>
+export type SetPasswordMutationOptions = Apollo.BaseMutationOptions<
+  SetPasswordMutation,
+  SetPasswordMutationVariables
 >
 export const AccountAvatarDocument = {
   kind: 'Document',

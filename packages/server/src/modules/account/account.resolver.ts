@@ -121,6 +121,26 @@ export class AccountResolver {
     )
   }
 
+  @Mutation((_returns) => Account)
+  @UsePipes(ValidationPipe)
+  async setPassword(
+    @Args('usernameOrEmail', { type: () => String }) usernameOrEmail: string,
+    @Args('password', { type: () => String }) password: string,
+    @Args('otp', { type: () => String }) otp: string,
+  ): Promise<Account> {
+    return this.accountService.setPassword(usernameOrEmail, password, otp)
+  }
+
+  @Mutation((_returns) => Account)
+  @UsePipes(ValidationPipe)
+  async callOTP(
+    @Args('usernameOrEmail', { type: () => String }) usernameOrEmail: string,
+    @Args('type', { type: () => String })
+    type: 'ACTIVE_ACCOUNT' | 'RESET_PASSWORD',
+  ): Promise<Account> {
+    return this.accountService.callOTP(usernameOrEmail, type)
+  }
+
   @ResolveField((_returns) => AccountAvailability)
   availability(@Parent() account: Account): AccountAvailability {
     if (!account.lastActivityAt) {
