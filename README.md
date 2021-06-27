@@ -18,7 +18,7 @@
  -   Rename  `packages/server/.env.example`  to  `packages/server/.env`
  - Fill in your environment information same to `.env.example`
 
-> Các biến môi trường
+> Environment variables
 > 
 >  -   `PORT`: Your config port server (default: 4000).
 > -   `MONGODB_URI`: Database connection string URI format.
