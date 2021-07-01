@@ -44,6 +44,7 @@ export class GraphQLWithUploadModule implements NestModule {
                   },
                 }
               : { req },
+          installSubscriptionHandlers: true,
         }),
       ],
     }
