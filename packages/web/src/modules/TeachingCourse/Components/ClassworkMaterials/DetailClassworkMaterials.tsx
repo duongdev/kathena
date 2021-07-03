@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, useCallback, useRef } from 'react'
+import { FC, useMemo, useState, useCallback, useEffect } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
@@ -25,6 +25,8 @@ import {
   Permission,
   useRemoveAttachmentsFromClassworkMaterialMutation,
   useCommentsQuery,
+  Comment as CommentModel,
+  useCommentCreatedSubscription,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -41,6 +43,8 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const id = useMemo(() => params.id, [params.id])
   const [openAddFile, setOpenAddFile] = useState(false)
   const [lastId, setLastId] = useState<string | null>(null)
+  const [comments, setComments] = useState<CommentModel[]>([])
+  const [totalComment, setTotalComment] = useState(0)
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
@@ -52,6 +56,10 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       },
       lastId,
     },
+  })
+
+  const { data: dataCommentCreated } = useCommentCreatedSubscription({
+    variables: { targetId: id },
   })
   const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
   const [removeAttachmentsFromClassworkMaterial] =
@@ -95,27 +103,29 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
     ],
   )
 
-  const comments = useMemo(
-    () => dataComments?.comments.comments ?? [],
-    [dataComments?.comments.comments],
-  )
+  useEffect(() => {
+    const newListComment = dataComments?.comments.comments ?? []
+    const listComment = [...comments, ...newListComment]
+    setComments(listComment as ANY)
+    if (dataComments?.comments.count) {
+      setTotalComment(dataComments?.comments.count)
+    }
 
-  const totalComments = useMemo(
-    () => dataComments?.comments.count,
-    [dataComments?.comments.count],
-  )
+    // eslint-disable-next-line
+  }, [dataComments])
 
-  const preComments = useRef<ANY[]>(comments)
-  const nextComments = useRef<ANY[]>([])
+  useEffect(() => {
+    const newComment = dataCommentCreated?.commentCreated
+    if (newComment) {
+      const listComment = [newComment, ...comments]
+      setComments(listComment as ANY)
+      setTotalComment(totalComment + 1)
+    }
+    // eslint-disable-next-line
+  }, [dataCommentCreated])
 
   const loadMoreComments = (lastCommentId: string) => {
-    preComments.current = [...preComments.current, ...comments]
     setLastId(lastCommentId)
-    refetch()
-  }
-
-  const addComment = (comment: ANY) => {
-    if (lastId) nextComments.current.push(comment)
     refetch()
   }
 
@@ -231,27 +241,6 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           <CardContent>
             {comments?.length ? (
               <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
-                {lastId &&
-                  nextComments.current.map((comment) => (
-                    <Comment
-                      comment={{
-                        id: comment.id,
-                        createdByAccountId: comment.createdByAccountId,
-                        createdAt: comment.createdAt,
-                        content: comment.content,
-                      }}
-                    />
-                  ))}
-                {preComments.current.map((comment) => (
-                  <Comment
-                    comment={{
-                      id: comment.id,
-                      createdByAccountId: comment.createdByAccountId,
-                      createdAt: comment.createdAt,
-                      content: comment.content,
-                    }}
-                  />
-                ))}
                 {comments.map((comment) => (
                   <Comment
                     comment={{
@@ -263,12 +252,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                   />
                 ))}
                 <Button
-                  disabled={
-                    comments.length +
-                      preComments.current.length +
-                      nextComments.current.length ===
-                    totalComments
-                  }
+                  disabled={comments.length === totalComment}
                   onClick={() =>
                     loadMoreComments(comments[comments.length - 1].id)
                   }
@@ -287,7 +271,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment onSuccess={addComment} targetId={id} />
+            <CreateComment targetId={id} />
           </CardContent>
         </SectionCard>
       </Grid>

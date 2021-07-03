@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, useRef } from 'react'
+import { FC, useMemo, useState, useEffect } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { useAccountDisplayName } from 'components/AccountDisplayName'
@@ -23,6 +23,8 @@ import {
 import {
   useCommentsQuery,
   useFindClassworkSubmissionByIdQuery,
+  Comment as CommentModel,
+  useCommentCreatedSubscription,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -38,6 +40,8 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
   const params: { id: string } = useParams()
   const idSubmission = useMemo(() => params.id, [params.id])
   const [lastId, setLastId] = useState<string | null>(null)
+  const [comments, setComments] = useState<CommentModel[]>([])
+  const [totalComment, setTotalComment] = useState(0)
   const [gradeDialogOpen, handleOpenGradeDialog, handleCloseGradeDialog] =
     useDialogState()
   const { data, loading } = useFindClassworkSubmissionByIdQuery({
@@ -64,27 +68,33 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
     },
   })
 
-  const comments = useMemo(
-    () => dataComments?.comments.comments ?? [],
-    [dataComments?.comments.comments],
-  )
+  const { data: dataCommentCreated } = useCommentCreatedSubscription({
+    variables: { targetId: classworkSubmission?.id ?? '' },
+  })
 
-  const totalComments = useMemo(
-    () => dataComments?.comments.count,
-    [dataComments?.comments.count],
-  )
+  useEffect(() => {
+    const newListComment = dataComments?.comments.comments ?? []
+    const listComment = [...comments, ...newListComment]
+    setComments(listComment as ANY)
+    if (dataComments?.comments.count) {
+      setTotalComment(dataComments?.comments.count)
+    }
 
-  const preComments = useRef<ANY[]>(comments)
-  const nextComments = useRef<ANY[]>([])
+    // eslint-disable-next-line
+  }, [dataComments])
+
+  useEffect(() => {
+    const newComment = dataCommentCreated?.commentCreated
+    if (newComment) {
+      const listComment = [newComment, ...comments]
+      setComments(listComment as ANY)
+      setTotalComment(totalComment + 1)
+    }
+    // eslint-disable-next-line
+  }, [dataCommentCreated])
 
   const loadMoreComments = (lastCommentId: string) => {
-    preComments.current = [...preComments.current, ...comments]
     setLastId(lastCommentId)
-    refetch()
-  }
-
-  const addComment = (comment: ANY) => {
-    if (lastId) nextComments.current.push(comment)
     refetch()
   }
 
@@ -166,27 +176,6 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
           <CardContent>
             {comments?.length ? (
               <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
-                {lastId &&
-                  nextComments.current.map((comment) => (
-                    <Comment
-                      comment={{
-                        id: comment.id,
-                        createdByAccountId: comment.createdByAccountId,
-                        createdAt: comment.createdAt,
-                        content: comment.content,
-                      }}
-                    />
-                  ))}
-                {preComments.current.map((comment) => (
-                  <Comment
-                    comment={{
-                      id: comment.id,
-                      createdByAccountId: comment.createdByAccountId,
-                      createdAt: comment.createdAt,
-                      content: comment.content,
-                    }}
-                  />
-                ))}
                 {comments.map((comment) => (
                   <Comment
                     comment={{
@@ -198,12 +187,7 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
                   />
                 ))}
                 <Button
-                  disabled={
-                    comments.length +
-                      preComments.current.length +
-                      nextComments.current.length ===
-                    totalComments
-                  }
+                  disabled={comments.length === totalComment}
                   onClick={() =>
                     loadMoreComments(comments[comments.length - 1].id)
                   }
@@ -222,10 +206,7 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment
-              onSuccess={addComment}
-              targetId={classworkSubmission.id}
-            />
+            <CreateComment targetId={classworkSubmission.id} />
           </CardContent>
         </SectionCard>
       </Grid>

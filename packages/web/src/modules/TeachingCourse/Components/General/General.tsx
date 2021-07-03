@@ -35,19 +35,10 @@ const General: FC<GeneralProps> = () => {
   const [comments, setComments] = useState<CommentModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
 
-  // const comments = useMemo(
-  //   () => dataComments?.comments.comments ?? [],
-  //   [dataComments?.comments.comments],
-  // )
-
-  // const totalComments = useMemo(
-  //   () => dataComments?.comments.count,
-  //   [dataComments?.comments.count],
-  // )
-
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
+
   const { data: dataAvgGrade } = useAvgGradeOfClassworkAssignmentInCourseQuery({
     variables: {
       courseId,
@@ -56,6 +47,7 @@ const General: FC<GeneralProps> = () => {
       },
     },
   })
+
   const { data: dataCommentCreated } = useCommentCreatedSubscription({
     variables: { targetId: courseId },
   })
@@ -78,9 +70,23 @@ const General: FC<GeneralProps> = () => {
       setTotalComment(dataComments?.comments.count)
     }
 
-    console.log(dataCommentCreated)
     // eslint-disable-next-line
-  }, [dataComments, dataCommentCreated])
+  }, [dataComments])
+
+  useEffect(() => {
+    const newComment = dataCommentCreated?.commentCreated
+    if (newComment) {
+      const listComment = [newComment, ...comments]
+      setComments(listComment as ANY)
+      setTotalComment(totalComment + 1)
+    }
+    // eslint-disable-next-line
+  }, [dataCommentCreated])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    setLastId(lastCommentId)
+    refetch()
+  }
 
   const course = useMemo(() => data?.findCourseById, [data])
 
@@ -105,11 +111,6 @@ const General: FC<GeneralProps> = () => {
       ],
     }
   }, [listAvgGrade])
-
-  const loadMoreComments = (lastCommentId: string) => {
-    setLastId(lastCommentId)
-    refetch()
-  }
 
   if (loading) {
     return (
