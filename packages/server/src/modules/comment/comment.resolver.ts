@@ -13,6 +13,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
+import { ANY } from 'types'
 
 import { CommentService } from './comment.service'
 import {
@@ -46,7 +47,9 @@ export class CommentResolver {
     filter: (payload, variables) =>
       payload.commentCreated.targetId === variables.targetId,
   })
-  commentCreated(@Args('targetId') _targetId: string) {
+  commentCreated(
+    @Args('targetId') _targetId: string,
+  ): AsyncIterator<unknown, ANY, undefined> {
     return pubSub.asyncIterator('commentCreated')
   }
 
