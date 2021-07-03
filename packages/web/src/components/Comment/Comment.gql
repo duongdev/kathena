@@ -1,0 +1,9 @@
+subscription CommentCreated($targetId: String!){
+  commentCreated(targetId: $targetId){
+    id
+    targetId
+    content
+    createdAt
+    createdByAccountId
+  }
+}

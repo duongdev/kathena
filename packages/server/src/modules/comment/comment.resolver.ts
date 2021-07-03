@@ -1,6 +1,14 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
+import { PubSub } from 'graphql-subscriptions'
 
 import { CurrentOrg, UseAuthGuard } from 'core'
 import { P } from 'modules/auth/models'
@@ -14,6 +22,7 @@ import {
 } from './comment.type'
 import { Comment } from './model/Comment'
 
+const pubSub = new PubSub()
 @Resolver((_of) => Comment)
 export class CommentResolver {
   constructor(private readonly commentService: CommentService) {}
@@ -25,7 +34,20 @@ export class CommentResolver {
     @CurrentOrg() org: Org,
     @Args('commentInput') commentInput: CreateCommentInput,
   ): Promise<DocumentType<Comment>> {
-    return this.commentService.createComment(org.id, commentInput)
+    const comment = await this.commentService.createComment(
+      org.id,
+      commentInput,
+    )
+    pubSub.publish('commentCreated', { commentCreated: comment })
+    return comment
+  }
+
+  @Subscription((_returns) => Comment, {
+    filter: (payload, variables) =>
+      payload.commentCreated.targetId === variables.targetId,
+  })
+  commentCreated(@Args('targetId') _targetId: string) {
+    return pubSub.asyncIterator('commentCreated')
   }
 
   @Query((_returns) => CommentsPayload)
