@@ -28,7 +28,9 @@ const uri = process.env.REACT_APP_GRAPHQL_URI || `/graphql`
 const httpLink = new BatchHttpLink({ uri })
 
 const wsLink = new WebSocketLink({
-  uri: process.env.REACT_APP_WEB_SOCKET_URI || 'ws://localhost:4000/graphql',
+  uri:
+    process.env.REACT_APP_WEB_SOCKET_URI ||
+    `wss://${window.location.host}/graphql`,
   options: {
     reconnect: true,
   },
