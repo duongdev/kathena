@@ -1023,6 +1023,7 @@ export type CoursesQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
 }>
 
 export type CoursesQuery = {
@@ -5132,6 +5133,14 @@ export const CoursesDocument = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -5177,6 +5186,14 @@ export const CoursesDocument = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -5280,6 +5297,7 @@ export function withCourses<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */

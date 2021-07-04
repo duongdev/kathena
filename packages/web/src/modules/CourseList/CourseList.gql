@@ -1,7 +1,7 @@
-query Courses($orgId: ID!, $skip: Int!, $limit: Int!) {
+query Courses($orgId: ID!, $skip: Int!, $limit: Int!, $searchText: String) {
   courses(
     pageOptions: { skip: $skip, limit: $limit }
-    filter: { orgId: $orgId }
+    filter: { orgId: $orgId, searchText: $searchText }
   ) {
     courses {
       id
