@@ -459,3 +459,7 @@ input CreateCommentInput {
   targetId: ID!
   content: String!
 }
+
+type Subscription {
+  commentCreated(targetId: String!): Comment!
+}
