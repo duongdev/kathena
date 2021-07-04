@@ -30,6 +30,8 @@ import {
   UPDATE_ACADEMIC_COURSE,
 } from 'utils/path-builder'
 
+import Conversation from './components/Conversation'
+
 const AccountSettings = lazy(
   () =>
     import(
@@ -237,6 +239,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       />
       <Route path={UPDATE_ACADEMIC_COURSE} exact component={UpdateCourse} />
     </Switch>
+    <Conversation />
   </Suspense>
 )
 

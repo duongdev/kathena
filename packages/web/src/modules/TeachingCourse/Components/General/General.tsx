@@ -15,6 +15,7 @@ import {
   Typography,
   Button,
 } from '@kathena/ui'
+import { listRoomChatVar } from 'common/cache'
 import {
   useCommentsQuery,
   useCourseDetailQuery,
@@ -199,7 +200,20 @@ const General: FC<GeneralProps> = () => {
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
-          title="Bình luận"
+          title={
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
+                Bình luận
+              </Typography>
+              <Button
+                onClick={() =>
+                  listRoomChatVar([...listRoomChatVar(), courseId])
+                }
+              >
+                Ghim
+              </Button>
+            </div>
+          }
         >
           <CardContent>
             {comments?.length ? (
