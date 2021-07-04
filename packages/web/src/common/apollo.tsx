@@ -11,6 +11,8 @@ import {
 import { BatchHttpLink } from '@apollo/client/link/batch-http'
 import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
+import { WebSocketLink } from '@apollo/client/link/ws'
+import { getMainDefinition } from '@apollo/client/utilities'
 import { createUploadLink } from 'apollo-upload-client'
 
 import { ANY } from '@kathena/types'
@@ -24,6 +26,15 @@ const TOKEN_EXPIRED = 'TOKEN_EXPIRED'
 const uri = process.env.REACT_APP_GRAPHQL_URI || `/graphql`
 
 const httpLink = new BatchHttpLink({ uri })
+
+const wsLink = new WebSocketLink({
+  uri:
+    process.env.REACT_APP_WEB_SOCKET_URI ||
+    `wss://${window.location.host}/graphql`,
+  options: {
+    reconnect: true,
+  },
+})
 
 const uploadLink = createUploadLink({
   uri,
@@ -82,13 +93,21 @@ const isUpload = ({ variables, getContext }: Operation) => {
   return Object.values(variables).some(isFile)
 }
 
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  httpLink,
+)
+
 const client = new ApolloClient({
   // link: authLink.concat(errorLink).concat(httpLink),
-  link: from([
-    authLink,
-    errorLink,
-    split(isUpload, uploadLink as ANY, httpLink),
-  ]),
+  link: from([authLink, errorLink, split(isUpload, uploadLink as ANY, link)]),
   cache: new InMemoryCache(),
   // defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
 })
