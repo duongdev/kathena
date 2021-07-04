@@ -31,15 +31,12 @@ import {
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
+const pubSub = new PubSub()
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
   private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
 
-  private readonly pubSub: PubSub
-
-  constructor(private readonly classworkService: ClassworkService) {
-    this.pubSub = new PubSub()
-  }
+  constructor(private readonly classworkService: ClassworkService) {}
 
   /**
    *START ASSIGNMENTS RESOLVER
@@ -80,10 +77,12 @@ export class ClassworkAssignmentsResolver {
 
   @Subscription((_returns) => ClassworkAssignment, {
     filter: (payload, variables) =>
-      payload.createdClassworkAssignment.title === variables.title,
+      payload.classworkAssignmentCreated.courseId === variables.courseId,
   })
-  createdClassworkAssignment(): AsyncIterator<unknown, ANY, undefined> {
-    return this.pubSub.asyncIterator('createdClassworkAssignment')
+  classworkAssignmentCreated(
+    @Args('courseId', { type: () => ID }) _courseId: string,
+  ): AsyncIterator<unknown, ANY, undefined> {
+    return pubSub.asyncIterator('classworkAssignmentCreated')
   }
 
   @Mutation((_returns) => ClassworkAssignment)
@@ -103,9 +102,11 @@ export class ClassworkAssignmentsResolver {
         org.id,
         createClassworkAssignmentInput,
       )
-    this.pubSub.publish('createdClassworkAssignment', {
-      classworkAssignment,
+
+    pubSub.publish('classworkAssignmentCreated', {
+      classworkAssignmentCreated: classworkAssignment,
     })
+
     return classworkAssignment
   }
 

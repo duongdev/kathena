@@ -461,5 +461,5 @@ input CreateCommentInput {
 }
 
 type Subscription {
-  createdClassworkAssignment: ClassworkAssignment!
+  classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
 }
