@@ -674,6 +674,14 @@ export type SignInPayload = {
   permissions: Array<Permission>
 }
 
+export type Subscription = {
+  commentCreated: Comment
+}
+
+export type SubscriptionCommentCreatedArgs = {
+  targetId: Scalars['String']
+}
+
 export type UpdateAcademicSubjectInput = {
   name?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
@@ -784,6 +792,17 @@ export type AccountDisplayNameQueryVariables = Exact<{
 
 export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
+}
+
+export type CommentCreatedSubscriptionVariables = Exact<{
+  targetId: Scalars['String']
+}>
+
+export type CommentCreatedSubscription = {
+  commentCreated: Pick<
+    Comment,
+    'id' | 'targetId' | 'content' | 'createdAt' | 'createdByAccountId'
+  >
 }
 
 export type FileQueryVariables = Exact<{
@@ -2680,6 +2699,130 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
+export const CommentCreatedDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'CommentCreated' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'targetId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'commentCreated' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'targetId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'targetId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CommentCreatedProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    CommentCreatedSubscription,
+    CommentCreatedSubscriptionVariables
+  >
+} &
+  TChildProps
+export function withCommentCreated<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CommentCreatedSubscription,
+    CommentCreatedSubscriptionVariables,
+    CommentCreatedProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withSubscription<
+    TProps,
+    CommentCreatedSubscription,
+    CommentCreatedSubscriptionVariables,
+    CommentCreatedProps<TChildProps, TDataName>
+  >(CommentCreatedDocument, {
+    alias: 'commentCreated',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCommentCreatedSubscription__
+ *
+ * To run a query within a React component, call `useCommentCreatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCommentCreatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentCreatedSubscription({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *   },
+ * });
+ */
+export function useCommentCreatedSubscription(
+  baseOptions: Apollo.SubscriptionHookOptions<
+    CommentCreatedSubscription,
+    CommentCreatedSubscriptionVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useSubscription<
+    CommentCreatedSubscription,
+    CommentCreatedSubscriptionVariables
+  >(CommentCreatedDocument, options)
+}
+export type CommentCreatedSubscriptionHookResult = ReturnType<
+  typeof useCommentCreatedSubscription
+>
+export type CommentCreatedSubscriptionResult =
+  Apollo.SubscriptionResult<CommentCreatedSubscription>
 export const FileDocument = {
   kind: 'Document',
   definitions: [

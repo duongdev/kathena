@@ -4,7 +4,6 @@ import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
-import { ANY } from '@kathena/types'
 import { useAuth } from 'common/auth'
 import { useCreateCommentMutation } from 'graphql/generated'
 
@@ -12,7 +11,6 @@ import CreateCommentForm from './CreateComment.form'
 
 export type CreateCommentProps = {
   targetId: string
-  onSuccess?: (comment: ANY) => void
 }
 
 export type CommentFormInput = {
@@ -56,15 +54,14 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
           return
         }
         enqueueSnackbar(`Bạn vừa bình luận`, { variant: 'success' })
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        props.onSuccess && props.onSuccess(comment)
+
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
       }
     },
-    [account.id, targetId, createComment, enqueueSnackbar, props],
+    [account.id, targetId, createComment, enqueueSnackbar],
   )
 
   return (

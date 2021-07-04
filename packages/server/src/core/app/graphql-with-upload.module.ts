@@ -26,6 +26,7 @@ export class GraphQLWithUploadModule implements NestModule {
           playground: true,
           uploads: false,
           path: '/graphql',
+          installSubscriptionHandlers: true,
           formatError: (error: GraphQLError) => {
             const graphQLFormattedError: GraphQLFormattedError = {
               message:
@@ -44,7 +45,6 @@ export class GraphQLWithUploadModule implements NestModule {
                   },
                 }
               : { req },
-          installSubscriptionHandlers: true,
         }),
       ],
     }

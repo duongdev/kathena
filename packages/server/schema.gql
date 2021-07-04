@@ -82,15 +82,6 @@ enum FileLocation {
   LocalStorage
 }
 
-type Org implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  namespace: String!
-  name: String!
-}
-
 type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -105,6 +96,15 @@ type ClassworkAssignment implements BaseModel {
   publicationState: String!
   dueDate: DateTime
   maxScores: Float!
+}
+
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -462,4 +462,5 @@ input CreateCommentInput {
 
 type Subscription {
   classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
+  commentCreated(targetId: String!): Comment!
 }
