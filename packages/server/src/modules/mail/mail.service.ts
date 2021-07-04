@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common'
 
 import { config } from 'core'
 import { Account } from 'modules/account/models/Account'
+import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
 
 import { signatureImgUrl } from './mail.const'
 
@@ -68,6 +69,35 @@ export class MailService {
           name: username,
           url,
           otpExpiredTime,
+          signatureImg: `${signatureImgUrl}/kmin-signature.png`,
+        },
+      })
+      .catch(() => {
+        return false
+      })
+
+    return true
+  }
+
+  async gradedAssignment(
+    accountStudent: Account,
+    classworkAssignment: ClassworkAssignment,
+    courseName: string,
+  ): Promise<boolean> {
+    const { mailerService } = this
+
+    const url = `${config.MAIL_DOMAIN}/app/studying/courses/${classworkAssignment.id}/classwork-assignments/detail`
+
+    await mailerService
+      .sendMail({
+        to: accountStudent.email,
+        subject: '[THÔNG BÁO] - Bài tập đã được chấm điểm',
+        template: './gradedAssignment',
+        context: {
+          name: accountStudent.username,
+          classworkAssignmentName: classworkAssignment.title,
+          courseName,
+          url,
           signatureImg: `${signatureImgUrl}/kmin-signature.png`,
         },
       })

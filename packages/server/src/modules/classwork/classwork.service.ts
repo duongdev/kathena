@@ -1028,6 +1028,35 @@ export class ClassworkService {
     classworkSubmissionBefore.grade = grade
     const classworkSubmissionAfter = await classworkSubmissionBefore.save()
 
+    if (process.env.NODE_ENV !== 'test') {
+      const classworkSubmission: ClassworkSubmission = classworkSubmissionAfter
+      const accountStudent = await this.accountModel.findById(
+        classworkSubmission.createdByAccountId,
+      )
+      const classworkAssignmentDoc =
+        await this.classworkAssignmentsModel.findById(
+          classworkSubmission.classworkId,
+        )
+
+      if (accountStudent && classworkAssignmentDoc) {
+        const { courseId } = classworkAssignmentDoc
+
+        const course = await this.courseModel.findById(courseId)
+
+        if (course) {
+          const { name } = course
+          const send: boolean = await this.mailService.gradedAssignment(
+            accountStudent,
+            classworkAssignmentDoc,
+            name,
+          )
+
+          if (send) {
+            this.logger.log('Send mail success!')
+          }
+        }
+      }
+    }
     return classworkSubmissionAfter
   }
 
