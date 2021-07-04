@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, useRef } from 'react'
+import { FC, useMemo, useState, useEffect } from 'react'
 
 import { CardContent, Grid } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
@@ -19,6 +19,8 @@ import {
   useCommentsQuery,
   useCourseDetailQuery,
   useAvgGradeOfClassworkAssignmentInCourseQuery,
+  useCommentCreatedSubscription,
+  Comment as CommentModel,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -29,6 +31,10 @@ export type GeneralProps = {}
 const General: FC<GeneralProps> = () => {
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
+  const [lastId, setLastId] = useState<string | null>(null)
+  const [comments, setComments] = useState<CommentModel[]>([])
+  const [totalComment, setTotalComment] = useState(0)
+
   const { data, loading } = useCourseDetailQuery({
     variables: { id: courseId },
   })
@@ -42,13 +48,52 @@ const General: FC<GeneralProps> = () => {
     },
   })
 
+  const { data: dataCommentCreated } = useCommentCreatedSubscription({
+    variables: { targetId: courseId },
+  })
+
+  const { data: dataComments, refetch } = useCommentsQuery({
+    variables: {
+      targetId: courseId,
+      commentPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
+  })
+
+  useEffect(() => {
+    const newListComment = dataComments?.comments.comments ?? []
+    const listComment = [...comments, ...newListComment]
+    setComments(listComment as ANY)
+    if (dataComments?.comments.count) {
+      setTotalComment(dataComments?.comments.count)
+    }
+
+    // eslint-disable-next-line
+  }, [dataComments])
+
+  useEffect(() => {
+    const newComment = dataCommentCreated?.commentCreated
+    if (newComment) {
+      const listComment = [newComment, ...comments]
+      setComments(listComment as ANY)
+      setTotalComment(totalComment + 1)
+    }
+    // eslint-disable-next-line
+  }, [dataCommentCreated])
+
+  const loadMoreComments = (lastCommentId: string) => {
+    setLastId(lastCommentId)
+    refetch()
+  }
+
   const course = useMemo(() => data?.findCourseById, [data])
 
   const listAvgGrade = useMemo(
     () => dataAvgGrade?.calculateAvgGradeOfClassworkAssignmentInCourse,
     [dataAvgGrade?.calculateAvgGradeOfClassworkAssignmentInCourse],
   )
-
   const mappedData = useMemo(() => {
     const listLabel: string[] =
       listAvgGrade?.map((item) => `${item.classworkTitle.slice(0, 9)}...`) ?? []
@@ -66,42 +111,6 @@ const General: FC<GeneralProps> = () => {
       ],
     }
   }, [listAvgGrade])
-
-  const [lastId, setLastId] = useState<string | null>(null)
-
-  const { data: dataComments, refetch } = useCommentsQuery({
-    variables: {
-      targetId: courseId,
-      commentPageOptionInput: {
-        limit: 5,
-      },
-      lastId,
-    },
-  })
-
-  const comments = useMemo(
-    () => dataComments?.comments.comments ?? [],
-    [dataComments?.comments.comments],
-  )
-
-  const totalComments = useMemo(
-    () => dataComments?.comments.count,
-    [dataComments?.comments.count],
-  )
-
-  const preComments = useRef<ANY[]>(comments)
-  const nextComments = useRef<ANY[]>([])
-
-  const loadMoreComments = (lastCommentId: string) => {
-    preComments.current = [...preComments.current, ...comments]
-    setLastId(lastCommentId)
-    refetch()
-  }
-
-  const addComment = (comment: ANY) => {
-    if (lastId) nextComments.current.push(comment)
-    refetch()
-  }
 
   if (loading) {
     return (
@@ -195,29 +204,9 @@ const General: FC<GeneralProps> = () => {
           <CardContent>
             {comments?.length ? (
               <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
-                {lastId &&
-                  nextComments.current.map((comment) => (
-                    <Comment
-                      comment={{
-                        id: comment.id,
-                        createdByAccountId: comment.createdByAccountId,
-                        createdAt: comment.createdAt,
-                        content: comment.content,
-                      }}
-                    />
-                  ))}
-                {preComments.current.map((comment) => (
+                {comments.map((comment: CommentModel) => (
                   <Comment
-                    comment={{
-                      id: comment.id,
-                      createdByAccountId: comment.createdByAccountId,
-                      createdAt: comment.createdAt,
-                      content: comment.content,
-                    }}
-                  />
-                ))}
-                {comments.map((comment) => (
-                  <Comment
+                    key={comment.id}
                     comment={{
                       id: comment.id,
                       createdByAccountId: comment.createdByAccountId,
@@ -227,12 +216,7 @@ const General: FC<GeneralProps> = () => {
                   />
                 ))}
                 <Button
-                  disabled={
-                    comments.length +
-                      preComments.current.length +
-                      nextComments.current.length ===
-                    totalComments
-                  }
+                  disabled={comments.length === totalComment}
                   onClick={() =>
                     loadMoreComments(comments[comments.length - 1].id)
                   }
@@ -251,7 +235,7 @@ const General: FC<GeneralProps> = () => {
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment onSuccess={addComment} targetId={courseId} />
+            <CreateComment targetId={courseId} />
           </CardContent>
         </SectionCard>
       </Grid>
