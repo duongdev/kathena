@@ -2,12 +2,15 @@ import { FC, useMemo } from 'react'
 
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import AccountDisplayName from 'components/AccountDisplayName'
+import Search from 'components/Search'
 import format from 'date-fns/format'
 
+import { ANY } from '@kathena/types'
 import {
   DataTable,
   Link,
   PageContainer,
+  useLocationQuery,
   Typography,
   usePagination,
 } from '@kathena/ui'
@@ -20,6 +23,8 @@ export type StudyingCourseListProps = {}
 const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org, $account: account } = useAuth()
+  const { query } = useLocationQuery()
+
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data, loading } = useStudyingCourseListQuery({
     variables: {
@@ -27,19 +32,26 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
       limit: perPage,
       skip: page * perPage,
       studentIds: account.id,
+      searchText: query.searchText as ANY,
     },
   })
 
-  const courses = useMemo(() => data?.courses.courses ?? [], [
-    data?.courses.courses,
-  ])
+  const courses = useMemo(
+    () => data?.courses.courses ?? [],
+    [data?.courses.courses],
+  )
 
-  const totalCount = useMemo(() => data?.courses.count ?? 0, [
-    data?.courses.count,
-  ])
+  const totalCount = useMemo(
+    () => data?.courses.count ?? 0,
+    [data?.courses.count],
+  )
 
   return (
-    <PageContainer className={classes.root} title="Danh sách khóa học đang học">
+    <PageContainer
+      className={classes.root}
+      title="Danh sách khóa học đang học"
+      actions={[<Search />]}
+    >
       <Paper>
         <DataTable
           data={courses}
