@@ -1023,6 +1023,7 @@ export type CoursesQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
 }>
 
 export type CoursesQuery = {
@@ -1260,6 +1261,7 @@ export type StudyingCourseListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
   studentIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
 }>
 
@@ -1441,6 +1443,7 @@ export type TeachingCourseListQueryVariables = Exact<{
   skip: Scalars['Int']
   limit: Scalars['Int']
   lecturerIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
+  searchText?: Maybe<Scalars['String']>
 }>
 
 export type TeachingCourseListQuery = {
@@ -5132,6 +5135,14 @@ export const CoursesDocument = {
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -5177,6 +5188,14 @@ export const CoursesDocument = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'orgId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -5280,6 +5299,7 @@ export function withCourses<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */
@@ -8248,6 +8268,14 @@ export const StudyingCourseListDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'studentIds' },
           },
           type: {
@@ -8311,6 +8339,14 @@ export const StudyingCourseListDocument = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'studentIds' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -8410,6 +8446,7 @@ export function withStudyingCourseList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *      studentIds: // value for 'studentIds'
  *   },
  * });
@@ -10119,6 +10156,14 @@ export const TeachingCourseListDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -10172,6 +10217,14 @@ export const TeachingCourseListDocument = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'lecturerIds' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -10268,6 +10321,7 @@ export function withTeachingCourseList<
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
  *      lecturerIds: // value for 'lecturerIds'
+ *      searchText: // value for 'searchText'
  *   },
  * });
  */
