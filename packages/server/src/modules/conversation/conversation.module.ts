@@ -7,9 +7,9 @@ import { AuthModule } from 'modules/auth/auth.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 
-import { CommentResolver } from './comment.resolver'
-import { CommentService } from './comment.service'
-import { Comment } from './model/Comment'
+import { ConversationResolver } from './conversation.resolver'
+import { ConversationService } from './conversation.service'
+import { Conversation } from './model/Conversation'
 
 @Global()
 @Module({
@@ -18,9 +18,9 @@ import { Comment } from './model/Comment'
     AccountModule,
     FileStorageModule,
     OrgModule,
-    TypegooseModule.forFeature([Comment, Course]),
+    TypegooseModule.forFeature([Conversation, Course]),
   ],
-  providers: [CommentService, CommentResolver],
-  exports: [CommentService],
+  providers: [ConversationService, ConversationResolver],
+  exports: [ConversationService],
 })
-export class CommentModule {}
+export class ConversationModule {}

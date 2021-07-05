@@ -16,12 +16,14 @@ import {
   Typography,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
+import { listRoomChatVar } from 'common/cache'
 import {
   Permission,
-  useCommentsQuery,
+  useConversationsQuery,
   useDetailClassworkMaterialQuery,
-  Comment as CommentModel,
-  useCommentCreatedSubscription,
+  Conversation as ConversationModel,
+  useConversationCreatedSubscription,
+  ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -33,23 +35,23 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
     const params: { id: string } = useParams()
     const id = useMemo(() => params.id, [params.id])
     const [lastId, setLastId] = useState<string | null>(null)
-    const [comments, setComments] = useState<CommentModel[]>([])
+    const [comments, setComments] = useState<ConversationModel[]>([])
     const [totalComment, setTotalComment] = useState(0)
     const { data, loading } = useDetailClassworkMaterialQuery({
       variables: { Id: id },
     })
-    const { data: dataComments, refetch } = useCommentsQuery({
+    const { data: dataComments, refetch } = useConversationsQuery({
       variables: {
-        targetId: id,
-        commentPageOptionInput: {
+        roomId: id,
+        conversationPageOptionInput: {
           limit: 5,
         },
         lastId,
       },
     })
 
-    const { data: dataCommentCreated } = useCommentCreatedSubscription({
-      variables: { targetId: id },
+    const { data: dataCommentCreated } = useConversationCreatedSubscription({
+      variables: { roomId: id },
     })
 
     const loadMoreComments = (lastCommentId: string) => {
@@ -58,18 +60,18 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
     }
 
     useEffect(() => {
-      const newListComment = dataComments?.comments.comments ?? []
+      const newListComment = dataComments?.conversations.conversations ?? []
       const listComment = [...comments, ...newListComment]
       setComments(listComment as ANY)
-      if (dataComments?.comments.count) {
-        setTotalComment(dataComments?.comments.count)
+      if (dataComments?.conversations.count) {
+        setTotalComment(dataComments?.conversations.count)
       }
 
       // eslint-disable-next-line
     }, [dataComments])
 
     useEffect(() => {
-      const newComment = dataCommentCreated?.commentCreated
+      const newComment = dataCommentCreated?.conversationCreated
       if (newComment) {
         const listComment = [newComment, ...comments]
         setComments(listComment as ANY)
@@ -77,6 +79,18 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
       }
       // eslint-disable-next-line
     }, [dataCommentCreated])
+
+    const pinRoomChat = () => {
+      if (listRoomChatVar().findIndex((item) => item.roomId === id) === -1) {
+        listRoomChatVar([
+          ...listRoomChatVar(),
+          {
+            roomId: id,
+            type: ConversationType.Group,
+          },
+        ])
+      }
+    }
 
     const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
 
@@ -136,7 +150,14 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
-            title="Bình luận"
+            title={
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
+                  Bình luận
+                </Typography>
+                <Button onClick={pinRoomChat}>Ghim</Button>
+              </div>
+            }
           >
             <CardContent>
               {comments?.length ? (
@@ -173,7 +194,7 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
                   <Typography>Không có comment</Typography>
                 </div>
               )}
-              <CreateComment targetId={id} />
+              <CreateComment roomId={id} />
             </CardContent>
           </SectionCard>
         </Grid>

@@ -1,6 +1,14 @@
 import { InMemoryCache, makeVar } from '@apollo/client'
 
-export const listRoomChatVar = makeVar<string[]>([])
+import { ConversationType } from 'graphql/generated'
+
+export type RoomChat = {
+  roomId: string
+  type: ConversationType
+}
+
+export const listRoomChatVar = makeVar<RoomChat[]>([])
+export const roomChatPopupVar = makeVar<RoomChat | null>(null)
 
 const cache: InMemoryCache = new InMemoryCache({
   typePolicies: {
@@ -9,6 +17,11 @@ const cache: InMemoryCache = new InMemoryCache({
         listRoomChat: {
           read() {
             return listRoomChatVar()
+          },
+        },
+        roomChatPopup: {
+          read() {
+            return roomChatPopupVar()
           },
         },
       },

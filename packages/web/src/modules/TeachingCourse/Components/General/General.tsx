@@ -17,11 +17,12 @@ import {
 } from '@kathena/ui'
 import { listRoomChatVar } from 'common/cache'
 import {
-  useCommentsQuery,
+  useConversationsQuery,
   useCourseDetailQuery,
   useAvgGradeOfClassworkAssignmentInCourseQuery,
-  useCommentCreatedSubscription,
-  Comment as CommentModel,
+  useConversationCreatedSubscription,
+  Conversation as CommentModel,
+  ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -49,14 +50,14 @@ const General: FC<GeneralProps> = () => {
     },
   })
 
-  const { data: dataCommentCreated } = useCommentCreatedSubscription({
-    variables: { targetId: courseId },
+  const { data: dataCommentCreated } = useConversationCreatedSubscription({
+    variables: { roomId: courseId },
   })
 
-  const { data: dataComments, refetch } = useCommentsQuery({
+  const { data: dataComments, refetch } = useConversationsQuery({
     variables: {
-      targetId: courseId,
-      commentPageOptionInput: {
+      roomId: courseId,
+      conversationPageOptionInput: {
         limit: 5,
       },
       lastId,
@@ -64,18 +65,18 @@ const General: FC<GeneralProps> = () => {
   })
 
   useEffect(() => {
-    const newListComment = dataComments?.comments.comments ?? []
+    const newListComment = dataComments?.conversations.conversations ?? []
     const listComment = [...comments, ...newListComment]
     setComments(listComment as ANY)
-    if (dataComments?.comments.count) {
-      setTotalComment(dataComments?.comments.count)
+    if (dataComments?.conversations.count) {
+      setTotalComment(dataComments?.conversations.count)
     }
 
     // eslint-disable-next-line
   }, [dataComments])
 
   useEffect(() => {
-    const newComment = dataCommentCreated?.commentCreated
+    const newComment = dataCommentCreated?.conversationCreated
     if (newComment) {
       const listComment = [newComment, ...comments]
       setComments(listComment as ANY)
@@ -87,6 +88,20 @@ const General: FC<GeneralProps> = () => {
   const loadMoreComments = (lastCommentId: string) => {
     setLastId(lastCommentId)
     refetch()
+  }
+
+  const pinRoomChat = () => {
+    if (
+      listRoomChatVar().findIndex((item) => item.roomId === courseId) === -1
+    ) {
+      listRoomChatVar([
+        ...listRoomChatVar(),
+        {
+          roomId: courseId,
+          type: ConversationType.Group,
+        },
+      ])
+    }
   }
 
   const course = useMemo(() => data?.findCourseById, [data])
@@ -205,13 +220,7 @@ const General: FC<GeneralProps> = () => {
               <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                 Bình luận
               </Typography>
-              <Button
-                onClick={() =>
-                  listRoomChatVar([...listRoomChatVar(), courseId])
-                }
-              >
-                Ghim
-              </Button>
+              <Button onClick={pinRoomChat}>Ghim</Button>
             </div>
           }
         >
@@ -249,7 +258,7 @@ const General: FC<GeneralProps> = () => {
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment targetId={courseId} />
+            <CreateComment roomId={courseId} />
           </CardContent>
         </SectionCard>
       </Grid>
