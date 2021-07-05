@@ -1,5 +1,14 @@
-query StudyingCourseList($orgId: ID!, $skip: Int!, $limit: Int!, $studentIds: [ID!]) {
-  courses(pageOptions: { skip: $skip, limit: $limit }, filter: { orgId: $orgId, studentIds: $studentIds }) {
+query StudyingCourseList(
+  $orgId: ID!
+  $skip: Int!
+  $limit: Int!
+  $searchText: String
+  $studentIds: [ID!]
+) {
+  courses(
+    pageOptions: { skip: $skip, limit: $limit }
+    filter: { orgId: $orgId, studentIds: $studentIds, searchText: $searchText }
+  ) {
     courses {
       id
       orgId

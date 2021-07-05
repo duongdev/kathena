@@ -1260,6 +1260,7 @@ export type StudyingCourseListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
   limit: Scalars['Int']
+  searchText?: Maybe<Scalars['String']>
   studentIds?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
 }>
 
@@ -8249,6 +8250,14 @@ export const StudyingCourseListDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'searchText' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'studentIds' },
           },
           type: {
@@ -8312,6 +8321,14 @@ export const StudyingCourseListDocument = {
                       value: {
                         kind: 'Variable',
                         name: { kind: 'Name', value: 'studentIds' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'searchText' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'searchText' },
                       },
                     },
                   ],
@@ -8411,6 +8428,7 @@ export function withStudyingCourseList<
  *      orgId: // value for 'orgId'
  *      skip: // value for 'skip'
  *      limit: // value for 'limit'
+ *      searchText: // value for 'searchText'
  *      studentIds: // value for 'studentIds'
  *   },
  * });
