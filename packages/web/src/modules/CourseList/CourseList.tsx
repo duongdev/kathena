@@ -3,12 +3,15 @@ import { FC, useMemo } from 'react'
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import AccountDisplayName from 'components/AccountDisplayName'
 import OrgOfficeName from 'components/OrgOfficeName'
+import Search from 'components/Search'
 import { format } from 'date-fns'
 
+import { ANY } from '@kathena/types'
 import {
   DataTable,
   Link,
   PageContainer,
+  useLocationQuery,
   Typography,
   usePagination,
 } from '@kathena/ui'
@@ -21,9 +24,16 @@ export type CourseListProps = {}
 const CourseList: FC<CourseListProps> = (props) => {
   const classes = useStyles(props)
   const { $org: org } = useAuth()
+  const { query } = useLocationQuery()
+
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data, loading } = useCoursesQuery({
-    variables: { orgId: org.id, limit: perPage, skip: page * perPage },
+    variables: {
+      orgId: org.id,
+      limit: perPage,
+      skip: page * perPage,
+      searchText: query.searchText as ANY,
+    },
   })
 
   const courseList = useMemo(
@@ -38,7 +48,11 @@ const CourseList: FC<CourseListProps> = (props) => {
 
   return (
     <>
-      <PageContainer className={classes.root} title="Danh sách khóa học">
+      <PageContainer
+        className={classes.root}
+        title="Danh sách khóa học"
+        actions={[<Search />]}
+      >
         <Paper>
           <DataTable
             data={courseList}
