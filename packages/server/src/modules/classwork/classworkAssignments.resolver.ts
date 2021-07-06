@@ -1,6 +1,14 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
+import { PubSub } from 'graphql-subscriptions'
 
 import {
   CurrentAccount,
@@ -12,7 +20,7 @@ import {
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
-import { Nullable, PageOptionsInput } from 'types'
+import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
@@ -23,6 +31,7 @@ import {
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
+const pubSub = new PubSub()
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
   private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
@@ -66,6 +75,16 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Subscription((_returns) => ClassworkAssignment, {
+    filter: (payload, variables) =>
+      payload.classworkAssignmentCreated.courseId === variables.courseId,
+  })
+  classworkAssignmentCreated(
+    @Args('courseId', { type: () => ID }) _courseId: string,
+  ): AsyncIterator<unknown, ANY, undefined> {
+    return pubSub.asyncIterator('classworkAssignmentCreated')
+  }
+
   @Mutation((_returns) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_CreateClassworkAssignment)
   @UsePipes(ValidationPipe)
@@ -76,12 +95,19 @@ export class ClassworkAssignmentsResolver {
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<ClassworkAssignment> {
-    return this.classworkService.createClassworkAssignment(
-      account.id,
-      courseId,
-      org.id,
-      createClassworkAssignmentInput,
-    )
+    const classworkAssignment =
+      await this.classworkService.createClassworkAssignment(
+        account.id,
+        courseId,
+        org.id,
+        createClassworkAssignmentInput,
+      )
+
+    pubSub.publish('classworkAssignmentCreated', {
+      classworkAssignmentCreated: classworkAssignment,
+    })
+
+    return classworkAssignment
   }
 
   @Mutation((_returns) => ClassworkAssignment)

@@ -461,5 +461,6 @@ input CreateCommentInput {
 }
 
 type Subscription {
+  classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
   commentCreated(targetId: String!): Comment!
 }
