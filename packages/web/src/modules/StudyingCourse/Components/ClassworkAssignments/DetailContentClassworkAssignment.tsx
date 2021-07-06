@@ -29,6 +29,7 @@ import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 export type DetailContentClassworkAssignmentProps = {}
@@ -51,6 +52,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     const { data: submit } = useFindOneClassworkSubmissionQuery({
       variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
     })
+
     const classworkAssignmentSubmit = useMemo(
       () => submit?.findOneClassworkSubmission,
       [submit],
@@ -136,9 +138,18 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                 <Button variant="contained">Nộp bài</Button>
               </Link>
             ) : (
-              <Button color="primary" variant="outlined">
-                Xem chi tiết bài tập
-              </Button>
+              <Link
+                to={buildPath(
+                  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                  {
+                    id: classworkAssignmentSubmit.id,
+                  },
+                )}
+              >
+                <Button variant="outlined" color="primary">
+                  Xem chi tiết bài tập
+                </Button>
+              </Link>
             )}
           </>,
         ]}
