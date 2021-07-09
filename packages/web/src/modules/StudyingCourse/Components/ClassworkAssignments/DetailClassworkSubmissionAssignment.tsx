@@ -8,20 +8,17 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
-  Button,
   InfoBlock,
-  PageContainerSkeleton,
-  Typography,
   PageContainer,
+  PageContainerSkeleton,
   SectionCard,
+  Typography,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import {
-  useFindClassworkSubmissionByIdQuery,
   Permission,
+  useFindClassworkSubmissionByIdQuery,
 } from 'graphql/generated'
-
-import AccountInfoRow from '../../StudyingCourse/Components/AccountInfoRow'
 
 export type DetailClassworkSubmissionProps = {}
 
@@ -51,12 +48,7 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
     )
   }
   return (
-    <PageContainer
-      withBackButton
-      maxWidth="md"
-      title="Thông tin bài tập"
-      actions={[<Button variant="contained">Chấm điểm</Button>]}
-    >
+    <PageContainer withBackButton maxWidth="md" title="Thông tin bài tập nộp">
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
@@ -65,16 +57,7 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
         >
           <CardContent className={classes.root}>
             <Grid container spacing={1}>
-              <InfoBlock gridItem={{ xs: 5 }} label="Thông tin học viên: ">
-                <AccountInfoRow
-                  key={idSubmission.createdByAccountId}
-                  accountId={idSubmission.createdByAccountId}
-                />
-              </InfoBlock>
-              <InfoBlock
-                gridItem={{ xs: 7 }}
-                label="Thời gian học viên nộp bài tập: "
-              >
+              <InfoBlock gridItem={{ xs: 7 }} label="Thời gian nộp bài tập: ">
                 {format(new Date(idSubmission.createdAt), 'MM/dd/yyyy')}
               </InfoBlock>
               <InfoBlock gridItem={{ xs: 12 }} label="Nội dung: ">
@@ -86,7 +69,7 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
                 />
               </InfoBlock>
 
-              <InfoBlock gridItem={{ xs: 12 }} label="Bài tập của học viên:">
+              <InfoBlock gridItem={{ xs: 12 }} label="File bài tập của bạn:">
                 {idSubmission.submissionFileIds.length ? (
                   idSubmission.submissionFileIds.map((attachment) => (
                     <FileComponent key={attachment} fileId={attachment} />
@@ -106,10 +89,10 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
 const useStyles = makeStyles(() => ({
   root: {},
 }))
+
 const WithPermissionDetailClassworkSubmission = () => (
-  <WithAuth permission={Permission.Teaching_Course_Access}>
+  <WithAuth permission={Permission.Studying_Course_Access}>
     <DetailClassworkSubmission />
   </WithAuth>
 )
-
 export default WithPermissionDetailClassworkSubmission
