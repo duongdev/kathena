@@ -48,23 +48,16 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
     )
   }
   return (
-    <PageContainer
-      withBackButton
-      maxWidth="md"
-      title="Thông tin bài tập của bạn"
-    >
+    <PageContainer withBackButton maxWidth="md" title="Thông tin bài tập nộp">
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
-          title="Nội dung bài tập đã nộp"
+          title="Nội dung bài tập nộp"
         >
           <CardContent className={classes.root}>
             <Grid container spacing={1}>
-              <InfoBlock
-                gridItem={{ xs: 7 }}
-                label="Thời gian đã nộp bài tập: "
-              >
+              <InfoBlock gridItem={{ xs: 7 }} label="Thời gian nộp bài tập: ">
                 {format(new Date(idSubmission.createdAt), 'MM/dd/yyyy')}
               </InfoBlock>
               <InfoBlock gridItem={{ xs: 12 }} label="Nội dung: ">
