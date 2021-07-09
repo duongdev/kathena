@@ -128,6 +128,7 @@ type ClassworkSubmission implements BaseModel {
   updatedAt: DateTime!
   createdByAccountId: String!
   classworkId: ID!
+  courseId: ID!
   grade: Float!
   submissionFileIds: [String!]!
   description: String!
@@ -143,9 +144,19 @@ type ClassworkMaterialPayload {
   count: Int!
 }
 
+type ClassworkSubmissionStatusPayload {
+  classworkSubmissions: [ClassworkSubmission!]!
+  count: Int!
+}
+
 type AvgGradeOfClassworkByCourse {
   classworkTitle: String!
   avgGrade: Float!
+}
+
+type SubmissionStatusStatistics {
+  label: String!
+  number: Float!
 }
 
 type OrgOffice implements BaseModel {
@@ -217,6 +228,7 @@ enum Permission {
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
+  Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
   NoPermission
 }
@@ -279,6 +291,8 @@ type Query {
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
+  getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
+  submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
 }
 

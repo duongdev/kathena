@@ -9,10 +9,15 @@ import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  ClassworkSubmissionStatusPayload,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
+  SubmissionStatusStatistics,
 } from './classwork.type'
-import { ClassworkSubmission } from './models/ClassworkSubmission'
+import {
+  ClassworkSubmission,
+  ClassworkSubmissionStatus,
+} from './models/ClassworkSubmission'
 
 @Resolver((_of) => ClassworkSubmission)
 export class ClassworkSubmissionResolver {
@@ -95,6 +100,33 @@ export class ClassworkSubmissionResolver {
       org.id,
       account.id,
       ClassworkAssignment,
+    )
+  }
+
+  @Query((_return) => ClassworkSubmissionStatusPayload)
+  @UseAuthGuard(P.Classwork_ShowSubmissionStatusList)
+  async getListOfStudentsSubmitAssignmentsByStatus(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('classworkSubmissionStatus', {
+      type: () => String,
+    })
+    classworkSubmissionStatus: ClassworkSubmissionStatus,
+  ): Promise<ClassworkSubmissionStatusPayload> {
+    return this.classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+      classworkAssignmentId,
+      classworkSubmissionStatus,
+    )
+  }
+
+  @Query((_return) => [SubmissionStatusStatistics])
+  @UseAuthGuard(P.Classwork_ShowSubmissionStatusList)
+  async submissionStatusStatistics(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+  ): Promise<SubmissionStatusStatistics[]> {
+    return this.classworkService.submissionStatusStatistics(
+      classworkAssignmentId,
     )
   }
 }

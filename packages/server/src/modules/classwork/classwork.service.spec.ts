@@ -18,6 +18,7 @@ import {
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
 } from './classwork.type'
+import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -2260,7 +2261,7 @@ describe('classwork.service', () => {
         await classworkService.createClassworkSubmission(
           org.id,
           course.id,
-          accStudent.id,
+          accStudent2.id,
           createInputWithFile,
         )
 
@@ -2879,6 +2880,58 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toBeNull()
+      })
+    })
+
+    describe('getListOfStudentsSubmitAssignmentsOnTime', () => {
+      it('throws error if classworkAssignment is not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            objectId(),
+            ClassworkSubmissionStatus.OnTime,
+          ),
+        ).rejects.toThrowError('CLASSWORK_ASSIGNMENT_NOT_FOUND')
+      })
+
+      it('throws error if course is not found', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accLecturer = await accountService.createAccount({
+          roles: ['lecturer'],
+          email: 'huynhthanhcanh1.top@gmail.com',
+          username: 'thanhcanh',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        const classworkAssignment =
+          await classworkService.createClassworkAssignment(
+            accLecturer.id,
+            objectId(),
+            org.id,
+            {
+              title: 'Bai tap 1',
+              description: 'Day la bai tap 2',
+            },
+          )
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classworkAssignment.id,
+            ClassworkSubmissionStatus.OnTime,
+          ),
+        ).rejects.toThrowError('COURSE_NOT_FOUND')
       })
     })
   })
