@@ -144,25 +144,34 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
         </div>
       </div>
       <div className={classes.middle}>
-        {conversations.map((conversation: ConversationModel) => (
-          <Conversation
-            key={conversation.id}
-            conversation={{
-              id: conversation.id,
-              createdByAccountId: conversation.createdByAccountId,
-              createdAt: conversation.createdAt,
-              content: conversation.content,
-            }}
-          />
-        ))}
-        <Button
-          disabled={conversations.length === totalConversation}
-          onClick={() =>
-            loadMoreConversations(conversations[conversations.length - 1].id)
-          }
-        >
-          Xem thêm
-        </Button>
+        {conversations.length ? (
+          <>
+            {' '}
+            {conversations.map((conversation: ConversationModel) => (
+              <Conversation
+                key={conversation.id}
+                conversation={{
+                  id: conversation.id,
+                  createdByAccountId: conversation.createdByAccountId,
+                  createdAt: conversation.createdAt,
+                  content: conversation.content,
+                }}
+              />
+            ))}
+            <Button
+              disabled={conversations.length === totalConversation}
+              onClick={() =>
+                loadMoreConversations(
+                  conversations[conversations.length - 1].id,
+                )
+              }
+            >
+              Xem thêm
+            </Button>
+          </>
+        ) : (
+          ''
+        )}
       </div>
       <div className={classes.bottom}>
         <InputField

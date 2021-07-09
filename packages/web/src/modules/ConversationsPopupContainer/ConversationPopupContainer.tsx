@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { makeStyles } from '@material-ui/core'
 import ConversationAvatar from 'components/ConversationAvatar/ConversationAvatar'
+import { NotePencil } from 'phosphor-react'
 
 import { RoomChat, roomChatPopupVar } from 'common/cache'
 import ConversationPopup from 'modules/ConversationPopup'
@@ -55,6 +56,20 @@ const ConversationPopupContainer: FC<ConversationPopupContainerProps> = (
             />
           ),
       )}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '50px',
+          height: '50px',
+          borderRadius: '50%',
+          background: '#d9d9d9',
+          marginTop: '5px',
+        }}
+      >
+        <NotePencil size={30} />
+      </div>
       {roomChat && <ConversationPopup room={roomChat} />}
     </div>
   )
