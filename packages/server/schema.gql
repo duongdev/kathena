@@ -469,6 +469,6 @@ input CreateConversationInput {
 }
 
 type Subscription {
-  conversationCreated(roomId: String!): Conversation!
   classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
+  conversationCreated(roomId: String!): Conversation!
 }

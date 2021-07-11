@@ -38,7 +38,7 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
     variables: {
       roomId: room.roomId,
       conversationPageOptionInput: {
-        limit: 5,
+        limit: 10,
       },
       lastId,
     },

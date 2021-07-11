@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { makeStyles } from '@material-ui/core'
 import ConversationAvatar from 'components/ConversationAvatar/ConversationAvatar'
-import { NotePencil } from 'phosphor-react'
+// import { NotePencil } from 'phosphor-react'
 
 import { RoomChat, roomChatPopupVar } from 'common/cache'
 import ConversationPopup from 'modules/ConversationPopup'
@@ -56,7 +56,8 @@ const ConversationPopupContainer: FC<ConversationPopupContainerProps> = (
             />
           ),
       )}
-      <div
+      {/* Sẽ bổ sung single conversation sai khi xong các tính năng chính */}
+      {/* <div
         style={{
           display: 'flex',
           justifyContent: 'center',
@@ -69,7 +70,7 @@ const ConversationPopupContainer: FC<ConversationPopupContainerProps> = (
         }}
       >
         <NotePencil size={30} />
-      </div>
+      </div> */}
       {roomChat && <ConversationPopup room={roomChat} />}
     </div>
   )
