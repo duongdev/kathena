@@ -1,6 +1,6 @@
-import { FC, useMemo, useState, useEffect } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
-import { CardContent, Grid, Stack } from '@material-ui/core'
+import { CardContent, Chip, Grid, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
@@ -31,6 +31,7 @@ import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 export type DetailContentClassworkAssignmentProps = {}
@@ -53,6 +54,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     const { data: submit } = useFindOneClassworkSubmissionQuery({
       variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
     })
+
     const classworkAssignmentSubmit = useMemo(
       () => submit?.findOneClassworkSubmission,
       [submit],
@@ -127,6 +129,15 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       <PageContainer
         title={classworkAssignment.title}
         withBackButton
+        subtitle={[
+          <>
+            {!classworkAssignmentSubmit?.id ? (
+              <Chip label="Chưa nộp bài" />
+            ) : (
+              <Chip color="primary" label="Đã nộp bài" />
+            )}
+          </>,
+        ]}
         maxWidth="md"
         actions={[
           <>
@@ -142,9 +153,18 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                 <Button variant="contained">Nộp bài</Button>
               </Link>
             ) : (
-              <Button color="primary" variant="outlined">
-                Đã nộp bài
-              </Button>
+              <Link
+                to={buildPath(
+                  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                  {
+                    id: classworkAssignmentSubmit.id,
+                  },
+                )}
+              >
+                <Button variant="outlined" color="primary">
+                  Xem chi tiết bài tập
+                </Button>
+              </Link>
             )}
           </>,
         ]}
