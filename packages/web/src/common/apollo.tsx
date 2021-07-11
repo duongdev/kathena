@@ -4,7 +4,6 @@ import {
   ApolloClient,
   ApolloProvider as Provider,
   from,
-  InMemoryCache,
   Operation,
   split,
 } from '@apollo/client'
@@ -19,6 +18,8 @@ import { ANY } from '@kathena/types'
 import { LOCAL_STORAGE_JWT } from 'common/constants'
 
 import { buildPath, SIGN_IN } from '../utils/path-builder'
+
+import cache from './cache'
 
 const SKIP_AUTH_OPS = ['SignIn']
 const TOKEN_EXPIRED = 'TOKEN_EXPIRED'
@@ -108,7 +109,7 @@ const link = split(
 const client = new ApolloClient({
   // link: authLink.concat(errorLink).concat(httpLink),
   link: from([authLink, errorLink, split(isUpload, uploadLink as ANY, link)]),
-  cache: new InMemoryCache(),
+  cache,
   // defaultOptions: { watchQuery: { fetchPolicy: 'cache-and-network' } },
 })
 

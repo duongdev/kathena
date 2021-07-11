@@ -243,18 +243,25 @@ type CoursesPayload {
   count: Int!
 }
 
-type Comment implements BaseModel {
+type Conversation implements BaseModel {
   id: ID!
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
   createdByAccountId: String!
-  targetId: ID!
+  roomId: String!
   content: String!
+  type: ConversationType!
 }
 
-type CommentsPayload {
-  comments: [Comment!]!
+"""Type of an conversation."""
+enum ConversationType {
+  Group
+  Single
+}
+
+type ConversationsPayload {
+  conversations: [Conversation!]!
   count: Int!
 }
 
@@ -279,7 +286,7 @@ type Query {
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
-  comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
+  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
 }
 
 input AccountsFilterInput {
@@ -309,7 +316,7 @@ input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
 }
 
-input CommentPageOptionInput {
+input ConversationPageOptionInput {
   limit: Int!
 }
 
@@ -351,7 +358,7 @@ type Mutation {
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
-  createComment(commentInput: CreateCommentInput!): Comment!
+  createConversation(conversationInput: CreateConversationInput!): Conversation!
 }
 
 input CreateAccountInput {
@@ -454,13 +461,14 @@ input SetGradeForClassworkSubmissionInput {
   grade: Float!
 }
 
-input CreateCommentInput {
+input CreateConversationInput {
   createdByAccountId: ID!
-  targetId: ID!
+  roomId: ID!
   content: String!
+  type: String
 }
 
 type Subscription {
   classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
-  commentCreated(targetId: String!): Comment!
+  conversationCreated(roomId: String!): Conversation!
 }

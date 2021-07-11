@@ -31,6 +31,8 @@ import {
   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
+import ConversationPopupContainer from '../ConversationsPopupContainer/ConversationPopupContainer'
+
 const AccountSettings = lazy(
   () =>
     import(
@@ -138,7 +140,7 @@ const CreateSubmissionClassworkAssignment = lazy(
 const DetailClassworkSubmission = lazy(
   () =>
     import(
-      'modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission'
+      'modules/TeachingCourse/Components/ClassworkSubmissionDetail'
     ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmission" */,
 )
 const DetailContentClassworkAssignment = lazy(
@@ -249,6 +251,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         component={DetailSubmissionClassworkAssignment}
       />
     </Switch>
+    <ConversationPopupContainer />
   </Suspense>
 )
 

@@ -1,9 +1,0 @@
-mutation CreateComment($input: CreateCommentInput!) {
-  createComment(commentInput: $input) {
-    id
-    targetId
-    content
-    createdAt
-    createdByAccountId
-  }
-}
