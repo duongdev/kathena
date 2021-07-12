@@ -12,6 +12,7 @@ import { ClassworkModule } from 'modules/classwork/classwork.module'
 import { ConversationModule } from 'modules/conversation/conversation.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
+import { MailModule } from 'modules/mail/mail.module'
 import { OrgModule } from 'modules/org/org.module'
 import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
 
@@ -27,6 +28,7 @@ export const appModules = [
   OrgOfficeModule,
   ClassworkModule,
   ConversationModule,
+  MailModule,
 ]
 
 @Module({
