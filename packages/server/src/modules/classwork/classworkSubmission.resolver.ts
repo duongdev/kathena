@@ -9,7 +9,11 @@ import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  ClassworkSubmittedByStudentIdInCourseResponse,
+  // ClassworkSubmittedByStudentIdInCourseResponse,
   CreateClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
+  // ListClassworkSubmittedsByStudentIdInCourseInput,
   SetGradeForClassworkSubmissionInput,
 } from './classwork.type'
 import { ClassworkSubmission } from './models/ClassworkSubmission'
@@ -95,6 +99,22 @@ export class ClassworkSubmissionResolver {
       org.id,
       account.id,
       ClassworkAssignment,
+    )
+  }
+
+  @Query((_return) => [ClassworkSubmittedByStudentIdInCourseResponse])
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async listClassworkSubmittedsByStudentIdInCourse(
+    @Args('Input')
+    input: ListClassworkSubmittedsByStudentIdInCourseInput,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[]> {
+    return this.classworkService.listClassworkSubmittedsByStudentIdInCourse(
+      input,
+      org.id,
+      account.id,
     )
   }
 }

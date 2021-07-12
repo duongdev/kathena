@@ -121,18 +121,6 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
 }
 
-type ClassworkSubmission implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: String!
-  classworkId: ID!
-  grade: Float!
-  submissionFileIds: [String!]!
-  description: String!
-}
-
 type ClassworkAssignmentPayload {
   classworkAssignments: [ClassworkAssignment!]!
   count: Int!
@@ -146,6 +134,27 @@ type ClassworkMaterialPayload {
 type AvgGradeOfClassworkByCourse {
   classworkTitle: String!
   avgGrade: Float!
+}
+
+type ClassworkSubmittedByStudentIdInCourseResponse {
+  classworkAssignmentId: ID
+  classworkAssignmentsTitle: ID
+  dueDate: DateTime
+  grade: Float
+  updatedAt: DateTime
+  description: String
+}
+
+type ClassworkSubmission implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  classworkId: ID!
+  grade: Float!
+  submissionFileIds: [String!]!
+  description: String!
 }
 
 type OrgOffice implements BaseModel {
@@ -279,6 +288,7 @@ type Query {
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
+  listClassworkSubmittedsByStudentIdInCourse(Input: ListClassworkSubmittedsByStudentIdInCourseInput!): [ClassworkSubmittedByStudentIdInCourseResponse!]!
   comments(commentPageOptionInput: CommentPageOptionInput!, lastId: ID, targetId: ID!): CommentsPayload!
 }
 
@@ -307,6 +317,12 @@ input CoursesFilterInput {
 
 input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
+}
+
+input ListClassworkSubmittedsByStudentIdInCourseInput {
+  courseId: String!
+  skip: Float!
+  limit: Float!
 }
 
 input CommentPageOptionInput {

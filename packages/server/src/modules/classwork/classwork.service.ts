@@ -1,7 +1,8 @@
 /* eslint-disable no-process-env */
 import { forwardRef, Inject } from '@nestjs/common'
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
+import { skipLast } from 'rxjs/operators'
 
 import {
   Service,
@@ -27,6 +28,8 @@ import {
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
+  ClassworkSubmittedByStudentIdInCourseResponse,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -1133,6 +1136,91 @@ export class ClassworkService {
     })
 
     return classworkSubmission
+  }
+
+  async listClassworkSubmittedsByStudentIdInCourse(
+    query: ListClassworkSubmittedsByStudentIdInCourseInput,
+    orgId: string,
+    accountId: string,
+  ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[]> {
+    const { courseId, skip, limit } = query
+
+    this.logger.log(
+      `[${this.listClassworkSubmittedsByStudentIdInCourse.name}] List ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      orgId,
+      courseId,
+      accountId,
+      skip,
+      limit,
+    })
+
+    const listClassworkAssignment = await this.classworkAssignmentsModel
+      .find({
+        courseId,
+        orgId,
+        publicationState: Publication.Published,
+      })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip)
+
+    const res: Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[] =
+      await Promise.all(
+        listClassworkAssignment.map(
+          async (
+            value,
+          ): Promise<
+            Nullable<ClassworkSubmittedByStudentIdInCourseResponse>
+          > => {
+            const classworkSubmission =
+              await this.classworkSubmissionModel.findOne({
+                createdByAccountId: accountId,
+                classworkId: value.id,
+                orgId,
+              })
+
+            console.log({
+              createdByAccountId: accountId,
+              classworkId: value.id,
+              orgId,
+            })
+
+            let response: ClassworkSubmittedByStudentIdInCourseResponse =
+              new ClassworkSubmittedByStudentIdInCourseResponse()
+            if (!classworkSubmission) {
+              response.classworkAssignmentId = value.id
+              response.classworkAssignmentsTitle = value.title
+              response.dueDate = value.dueDate
+            } else {
+              response = {
+                classworkAssignmentId: value.id,
+                classworkAssignmentsTitle: value.title,
+                dueDate: value.dueDate,
+                grade: classworkSubmission.grade,
+                updatedAt: classworkSubmission.updatedAt,
+                description: classworkSubmission.description
+                  ? classworkSubmission.description
+                  : '',
+              }
+            }
+            return response
+          },
+        ),
+      )
+    this.logger.log(
+      `[${this.listClassworkSubmittedsByStudentIdInCourse.name}] listed ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      orgId,
+      courseId,
+      accountId,
+      skip,
+      limit,
+    })
+
+    return res
   }
   /**
    * END CLASSWORK SUBMISSION
