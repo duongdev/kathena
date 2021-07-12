@@ -24,15 +24,17 @@ import {
   useDialogState,
 } from '@kathena/ui'
 import { RequiredPermission, WithAuth } from 'common/auth'
+import { listRoomChatVar } from 'common/cache'
 import {
   ClassworkAssignmentDetailDocument,
   Permission,
   useClassworkAssignmentDetailQuery,
   useRemoveAttachmentsFromClassworkAssignmentMutation,
   useListClassworkSubmissionQuery,
-  useCommentsQuery,
-  useCommentCreatedSubscription,
-  Comment as CommentModel,
+  useConversationsQuery,
+  useConversationCreatedSubscription,
+  Conversation as CommentModel,
+  ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
@@ -79,17 +81,17 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const { data: dataSubmissions } = useListClassworkSubmissionQuery({
     variables: { classworkAssignmentId: id },
   })
-  const { data: dataComments, refetch } = useCommentsQuery({
+  const { data: dataComments, refetch } = useConversationsQuery({
     variables: {
-      targetId: id,
-      commentPageOptionInput: {
+      roomId: id,
+      conversationPageOptionInput: {
         limit: 5,
       },
       lastId,
     },
   })
-  const { data: dataCommentCreated } = useCommentCreatedSubscription({
-    variables: { targetId: id },
+  const { data: dataCommentCreated } = useConversationCreatedSubscription({
+    variables: { roomId: id },
   })
 
   const [removeAttachmentsFromClassworkAssignment] =
@@ -113,18 +115,18 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   )
 
   useEffect(() => {
-    const newListComment = dataComments?.comments.comments ?? []
+    const newListComment = dataComments?.conversations.conversations ?? []
     const listComment = [...comments, ...newListComment]
     setComments(listComment as ANY)
-    if (dataComments?.comments.count) {
-      setTotalComment(dataComments?.comments.count)
+    if (dataComments?.conversations.count) {
+      setTotalComment(dataComments?.conversations.count)
     }
 
     // eslint-disable-next-line
   }, [dataComments])
 
   useEffect(() => {
-    const newComment = dataCommentCreated?.commentCreated
+    const newComment = dataCommentCreated?.conversationCreated
     if (newComment) {
       const listComment = [newComment, ...comments]
       setComments(listComment as ANY)
@@ -177,6 +179,18 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       classworkAssignment,
     ],
   )
+
+  const pinRoomChat = () => {
+    if (listRoomChatVar().findIndex((item) => item.roomId === id) === -1) {
+      listRoomChatVar([
+        ...listRoomChatVar(),
+        {
+          roomId: id,
+          type: ConversationType.Group,
+        },
+      ])
+    }
+  }
 
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -292,7 +306,14 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
-            title="Bình luận"
+            title={
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
+                  Bình luận
+                </Typography>
+                <Button onClick={pinRoomChat}>Ghim</Button>
+              </div>
+            }
           >
             <CardContent>
               {comments?.length ? (
@@ -329,7 +350,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                   <Typography>Không có comment</Typography>
                 </div>
               )}
-              <CreateComment targetId={id} />
+              <CreateComment roomId={id} />
             </CardContent>
           </SectionCard>
         </Grid>

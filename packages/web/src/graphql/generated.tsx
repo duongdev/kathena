@@ -159,22 +159,29 @@ export type ClassworkSubmission = BaseModel & {
   description: Scalars['String']
 }
 
-export type Comment = BaseModel & {
+export type Conversation = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   createdByAccountId: Scalars['String']
-  targetId: Scalars['ID']
+  roomId: Scalars['String']
   content: Scalars['String']
+  type: ConversationType
 }
 
-export type CommentPageOptionInput = {
+export type ConversationPageOptionInput = {
   limit: Scalars['Int']
 }
 
-export type CommentsPayload = {
-  comments: Array<Comment>
+/** Type of an conversation. */
+export enum ConversationType {
+  Group = 'Group',
+  Single = 'Single',
+}
+
+export type ConversationsPayload = {
+  conversations: Array<Conversation>
   count: Scalars['Int']
 }
 
@@ -243,10 +250,11 @@ export type CreateClassworkSubmissionInput = {
   description?: Maybe<Scalars['String']>
 }
 
-export type CreateCommentInput = {
+export type CreateConversationInput = {
   createdByAccountId: Scalars['ID']
-  targetId: Scalars['ID']
+  roomId: Scalars['ID']
   content: Scalars['String']
+  type?: Maybe<Scalars['String']>
 }
 
 export type CreateCourseInput = {
@@ -314,7 +322,7 @@ export type Mutation = {
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
   createClassworkSubmission: ClassworkSubmission
   setGradeForClassworkSubmission: ClassworkSubmission
-  createComment: Comment
+  createConversation: Conversation
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -469,8 +477,8 @@ export type MutationSetGradeForClassworkSubmissionArgs = {
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
 }
 
-export type MutationCreateCommentArgs = {
-  commentInput: CreateCommentInput
+export type MutationCreateConversationArgs = {
+  conversationInput: CreateConversationInput
 }
 
 export type Org = BaseModel & {
@@ -573,7 +581,7 @@ export type Query = {
   classworkSubmissions: Array<ClassworkSubmission>
   findClassworkSubmissionById: ClassworkSubmission
   findOneClassworkSubmission: ClassworkSubmission
-  comments: CommentsPayload
+  conversations: ConversationsPayload
 }
 
 export type QueryAccountArgs = {
@@ -656,10 +664,10 @@ export type QueryFindOneClassworkSubmissionArgs = {
   ClassworkAssignment: Scalars['ID']
 }
 
-export type QueryCommentsArgs = {
-  commentPageOptionInput: CommentPageOptionInput
+export type QueryConversationsArgs = {
+  conversationPageOptionInput: ConversationPageOptionInput
   lastId?: Maybe<Scalars['ID']>
-  targetId: Scalars['ID']
+  roomId: Scalars['String']
 }
 
 export type SetGradeForClassworkSubmissionInput = {
@@ -675,11 +683,11 @@ export type SignInPayload = {
 }
 
 export type Subscription = {
-  commentCreated: Comment
+  conversationCreated: Conversation
 }
 
-export type SubscriptionCommentCreatedArgs = {
-  targetId: Scalars['String']
+export type SubscriptionConversationCreatedArgs = {
+  roomId: Scalars['String']
 }
 
 export type UpdateAcademicSubjectInput = {
@@ -794,14 +802,47 @@ export type AccountDisplayNameQuery = {
   account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
 }
 
-export type CommentCreatedSubscriptionVariables = Exact<{
-  targetId: Scalars['String']
+export type ConversationCreatedSubscriptionVariables = Exact<{
+  roomId: Scalars['String']
 }>
 
-export type CommentCreatedSubscription = {
-  commentCreated: Pick<
-    Comment,
-    'id' | 'targetId' | 'content' | 'createdAt' | 'createdByAccountId'
+export type ConversationCreatedSubscription = {
+  conversationCreated: Pick<
+    Conversation,
+    'id' | 'roomId' | 'content' | 'createdAt' | 'createdByAccountId' | 'type'
+  >
+}
+
+export type ConversationsQueryVariables = Exact<{
+  lastId?: Maybe<Scalars['ID']>
+  roomId: Scalars['String']
+  conversationPageOptionInput: ConversationPageOptionInput
+}>
+
+export type ConversationsQuery = {
+  conversations: Pick<ConversationsPayload, 'count'> & {
+    conversations: Array<
+      Pick<
+        Conversation,
+        | 'id'
+        | 'createdAt'
+        | 'createdByAccountId'
+        | 'roomId'
+        | 'content'
+        | 'type'
+      >
+    >
+  }
+}
+
+export type CreateConversationMutationVariables = Exact<{
+  input: CreateConversationInput
+}>
+
+export type CreateConversationMutation = {
+  createConversation: Pick<
+    Conversation,
+    'id' | 'roomId' | 'content' | 'createdAt' | 'createdByAccountId' | 'type'
   >
 }
 
@@ -985,23 +1026,6 @@ export type ListClassworkSubmissionQuery = {
   >
 }
 
-export type CommentsQueryVariables = Exact<{
-  lastId?: Maybe<Scalars['ID']>
-  targetId: Scalars['ID']
-  commentPageOptionInput: CommentPageOptionInput
-}>
-
-export type CommentsQuery = {
-  comments: Pick<CommentsPayload, 'count'> & {
-    comments: Array<
-      Pick<
-        Comment,
-        'id' | 'createdAt' | 'createdByAccountId' | 'targetId' | 'content'
-      >
-    >
-  }
-}
-
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
   classworkSubmissionId: Scalars['ID']
 }>
@@ -1055,17 +1079,6 @@ export type CreateClassworkAssignmentMutation = {
   createClassworkAssignment: Pick<
     ClassworkAssignment,
     'id' | 'title' | 'description'
-  >
-}
-
-export type CreateCommentMutationVariables = Exact<{
-  input: CreateCommentInput
-}>
-
-export type CreateCommentMutation = {
-  createComment: Pick<
-    Comment,
-    'id' | 'targetId' | 'content' | 'createdAt' | 'createdByAccountId'
   >
 }
 
@@ -2702,19 +2715,19 @@ export type AccountDisplayNameQueryResult = Apollo.QueryResult<
   AccountDisplayNameQuery,
   AccountDisplayNameQueryVariables
 >
-export const CommentCreatedDocument = {
+export const ConversationCreatedDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'subscription',
-      name: { kind: 'Name', value: 'CommentCreated' },
+      name: { kind: 'Name', value: 'ConversationCreated' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'targetId' },
+            name: { kind: 'Name', value: 'roomId' },
           },
           type: {
             kind: 'NonNullType',
@@ -2730,14 +2743,14 @@ export const CommentCreatedDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'commentCreated' },
+            name: { kind: 'Name', value: 'conversationCreated' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'targetId' },
+                name: { kind: 'Name', value: 'roomId' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'targetId' },
+                  name: { kind: 'Name', value: 'roomId' },
                 },
               },
             ],
@@ -2745,13 +2758,14 @@ export const CommentCreatedDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roomId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'content' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'createdByAccountId' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
               ],
             },
           },
@@ -2760,72 +2774,407 @@ export const CommentCreatedDocument = {
     },
   ],
 } as unknown as DocumentNode
-export type CommentCreatedProps<
+export type ConversationCreatedProps<
   TChildProps = {},
   TDataName extends string = 'data',
 > = {
   [key in TDataName]: ApolloReactHoc.DataValue<
-    CommentCreatedSubscription,
-    CommentCreatedSubscriptionVariables
+    ConversationCreatedSubscription,
+    ConversationCreatedSubscriptionVariables
   >
 } &
   TChildProps
-export function withCommentCreated<
+export function withConversationCreated<
   TProps,
   TChildProps = {},
   TDataName extends string = 'data',
 >(
   operationOptions?: ApolloReactHoc.OperationOption<
     TProps,
-    CommentCreatedSubscription,
-    CommentCreatedSubscriptionVariables,
-    CommentCreatedProps<TChildProps, TDataName>
+    ConversationCreatedSubscription,
+    ConversationCreatedSubscriptionVariables,
+    ConversationCreatedProps<TChildProps, TDataName>
   >,
 ) {
   return ApolloReactHoc.withSubscription<
     TProps,
-    CommentCreatedSubscription,
-    CommentCreatedSubscriptionVariables,
-    CommentCreatedProps<TChildProps, TDataName>
-  >(CommentCreatedDocument, {
-    alias: 'commentCreated',
+    ConversationCreatedSubscription,
+    ConversationCreatedSubscriptionVariables,
+    ConversationCreatedProps<TChildProps, TDataName>
+  >(ConversationCreatedDocument, {
+    alias: 'conversationCreated',
     ...operationOptions,
   })
 }
 
 /**
- * __useCommentCreatedSubscription__
+ * __useConversationCreatedSubscription__
  *
- * To run a query within a React component, call `useCommentCreatedSubscription` and pass it any options that fit your needs.
- * When your component renders, `useCommentCreatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useConversationCreatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useConversationCreatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCommentCreatedSubscription({
+ * const { data, loading, error } = useConversationCreatedSubscription({
  *   variables: {
- *      targetId: // value for 'targetId'
+ *      roomId: // value for 'roomId'
  *   },
  * });
  */
-export function useCommentCreatedSubscription(
+export function useConversationCreatedSubscription(
   baseOptions: Apollo.SubscriptionHookOptions<
-    CommentCreatedSubscription,
-    CommentCreatedSubscriptionVariables
+    ConversationCreatedSubscription,
+    ConversationCreatedSubscriptionVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useSubscription<
-    CommentCreatedSubscription,
-    CommentCreatedSubscriptionVariables
-  >(CommentCreatedDocument, options)
+    ConversationCreatedSubscription,
+    ConversationCreatedSubscriptionVariables
+  >(ConversationCreatedDocument, options)
 }
-export type CommentCreatedSubscriptionHookResult = ReturnType<
-  typeof useCommentCreatedSubscription
+export type ConversationCreatedSubscriptionHookResult = ReturnType<
+  typeof useConversationCreatedSubscription
 >
-export type CommentCreatedSubscriptionResult =
-  Apollo.SubscriptionResult<CommentCreatedSubscription>
+export type ConversationCreatedSubscriptionResult =
+  Apollo.SubscriptionResult<ConversationCreatedSubscription>
+export const ConversationsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Conversations' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lastId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'roomId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'conversationPageOptionInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ConversationPageOptionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'conversations' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lastId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lastId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'roomId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'roomId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'conversationPageOptionInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'conversationPageOptionInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'conversations' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'roomId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'content' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ConversationsProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ConversationsQuery,
+    ConversationsQueryVariables
+  >
+} &
+  TChildProps
+export function withConversations<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ConversationsQuery,
+    ConversationsQueryVariables,
+    ConversationsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ConversationsQuery,
+    ConversationsQueryVariables,
+    ConversationsProps<TChildProps, TDataName>
+  >(ConversationsDocument, {
+    alias: 'conversations',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useConversationsQuery__
+ *
+ * To run a query within a React component, call `useConversationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useConversationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useConversationsQuery({
+ *   variables: {
+ *      lastId: // value for 'lastId'
+ *      roomId: // value for 'roomId'
+ *      conversationPageOptionInput: // value for 'conversationPageOptionInput'
+ *   },
+ * });
+ */
+export function useConversationsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ConversationsQuery,
+    ConversationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ConversationsQuery, ConversationsQueryVariables>(
+    ConversationsDocument,
+    options,
+  )
+}
+export function useConversationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ConversationsQuery,
+    ConversationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ConversationsQuery, ConversationsQueryVariables>(
+    ConversationsDocument,
+    options,
+  )
+}
+export type ConversationsQueryHookResult = ReturnType<
+  typeof useConversationsQuery
+>
+export type ConversationsLazyQueryHookResult = ReturnType<
+  typeof useConversationsLazyQuery
+>
+export type ConversationsQueryResult = Apollo.QueryResult<
+  ConversationsQuery,
+  ConversationsQueryVariables
+>
+export const CreateConversationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateConversation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateConversationInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createConversation' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'conversationInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'roomId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateConversationMutationFn = Apollo.MutationFunction<
+  CreateConversationMutation,
+  CreateConversationMutationVariables
+>
+export type CreateConversationProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateConversationMutation,
+    CreateConversationMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateConversation<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateConversationMutation,
+    CreateConversationMutationVariables,
+    CreateConversationProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateConversationMutation,
+    CreateConversationMutationVariables,
+    CreateConversationProps<TChildProps, TDataName>
+  >(CreateConversationDocument, {
+    alias: 'createConversation',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateConversationMutation__
+ *
+ * To run a mutation, you first call `useCreateConversationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateConversationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createConversationMutation, { data, loading, error }] = useCreateConversationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateConversationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateConversationMutation,
+    CreateConversationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateConversationMutation,
+    CreateConversationMutationVariables
+  >(CreateConversationDocument, options)
+}
+export type CreateConversationMutationHookResult = ReturnType<
+  typeof useCreateConversationMutation
+>
+export type CreateConversationMutationResult =
+  Apollo.MutationResult<CreateConversationMutation>
+export type CreateConversationMutationOptions = Apollo.BaseMutationOptions<
+  CreateConversationMutation,
+  CreateConversationMutationVariables
+>
 export const FileDocument = {
   kind: 'Document',
   definitions: [
@@ -4762,198 +5111,6 @@ export type ListClassworkSubmissionQueryResult = Apollo.QueryResult<
   ListClassworkSubmissionQuery,
   ListClassworkSubmissionQueryVariables
 >
-export const CommentsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Comments' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'lastId' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'targetId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'commentPageOptionInput' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CommentPageOptionInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'comments' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'lastId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'lastId' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'targetId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'targetId' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'commentPageOptionInput' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'commentPageOptionInput' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'comments' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdAt' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdByAccountId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'targetId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'content' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type CommentsProps<
-  TChildProps = {},
-  TDataName extends string = 'data',
-> = {
-  [key in TDataName]: ApolloReactHoc.DataValue<
-    CommentsQuery,
-    CommentsQueryVariables
-  >
-} &
-  TChildProps
-export function withComments<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'data',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CommentsQuery,
-    CommentsQueryVariables,
-    CommentsProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withQuery<
-    TProps,
-    CommentsQuery,
-    CommentsQueryVariables,
-    CommentsProps<TChildProps, TDataName>
-  >(CommentsDocument, {
-    alias: 'comments',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useCommentsQuery__
- *
- * To run a query within a React component, call `useCommentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCommentsQuery({
- *   variables: {
- *      lastId: // value for 'lastId'
- *      targetId: // value for 'targetId'
- *      commentPageOptionInput: // value for 'commentPageOptionInput'
- *   },
- * });
- */
-export function useCommentsQuery(
-  baseOptions: Apollo.QueryHookOptions<CommentsQuery, CommentsQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<CommentsQuery, CommentsQueryVariables>(
-    CommentsDocument,
-    options,
-  )
-}
-export function useCommentsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    CommentsQuery,
-    CommentsQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<CommentsQuery, CommentsQueryVariables>(
-    CommentsDocument,
-    options,
-  )
-}
-export type CommentsQueryHookResult = ReturnType<typeof useCommentsQuery>
-export type CommentsLazyQueryHookResult = ReturnType<
-  typeof useCommentsLazyQuery
->
-export type CommentsQueryResult = Apollo.QueryResult<
-  CommentsQuery,
-  CommentsQueryVariables
->
 export const FindClassworkSubmissionByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -5479,139 +5636,6 @@ export type CreateClassworkAssignmentMutationOptions =
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
-export const CreateCommentDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateComment' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'input' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CreateCommentInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createComment' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'commentInput' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'input' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'createdByAccountId' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export type CreateCommentMutationFn = Apollo.MutationFunction<
-  CreateCommentMutation,
-  CreateCommentMutationVariables
->
-export type CreateCommentProps<
-  TChildProps = {},
-  TDataName extends string = 'mutate',
-> = {
-  [key in TDataName]: Apollo.MutationFunction<
-    CreateCommentMutation,
-    CreateCommentMutationVariables
-  >
-} &
-  TChildProps
-export function withCreateComment<
-  TProps,
-  TChildProps = {},
-  TDataName extends string = 'mutate',
->(
-  operationOptions?: ApolloReactHoc.OperationOption<
-    TProps,
-    CreateCommentMutation,
-    CreateCommentMutationVariables,
-    CreateCommentProps<TChildProps, TDataName>
-  >,
-) {
-  return ApolloReactHoc.withMutation<
-    TProps,
-    CreateCommentMutation,
-    CreateCommentMutationVariables,
-    CreateCommentProps<TChildProps, TDataName>
-  >(CreateCommentDocument, {
-    alias: 'createComment',
-    ...operationOptions,
-  })
-}
-
-/**
- * __useCreateCommentMutation__
- *
- * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateCommentMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateCommentMutation,
-    CreateCommentMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    CreateCommentMutation,
-    CreateCommentMutationVariables
-  >(CreateCommentDocument, options)
-}
-export type CreateCommentMutationHookResult = ReturnType<
-  typeof useCreateCommentMutation
->
-export type CreateCommentMutationResult =
-  Apollo.MutationResult<CreateCommentMutation>
-export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<
-  CreateCommentMutation,
-  CreateCommentMutationVariables
->
 export const CreateCourseDocument = {
   kind: 'Document',
   definitions: [

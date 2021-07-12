@@ -1,9 +1,36 @@
-subscription CommentCreated($targetId: String!){
-  commentCreated(targetId: $targetId){
+subscription ConversationCreated($roomId: String!){
+  conversationCreated(roomId: $roomId){
     id
-    targetId
+    roomId
     content
     createdAt
     createdByAccountId
+    type
   }
 }
+
+query Conversations($lastId: ID, $roomId: String!, $conversationPageOptionInput: ConversationPageOptionInput!){
+  conversations(lastId: $lastId, roomId: $roomId, conversationPageOptionInput: $conversationPageOptionInput){
+    conversations{
+      id
+      createdAt
+      createdByAccountId
+      roomId
+      content
+      type
+    }
+    count
+  }
+}
+
+mutation CreateConversation($input: CreateConversationInput!) {
+  createConversation(conversationInput: $input) {
+    id
+    roomId
+    content
+    createdAt
+    createdByAccountId
+    type
+  }
+}
+

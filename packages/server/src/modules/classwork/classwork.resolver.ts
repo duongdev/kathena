@@ -1,11 +1,11 @@
 import { Args, ID, ResolveField, Resolver, Root } from '@nestjs/graphql'
 
 import { CurrentOrg } from 'core'
-import { CommentService } from 'modules/comment/comment.service'
+import { ConversationService } from 'modules/conversation/conversation.service'
 import {
-  CommentPageOptionInput,
-  CommentsPayload,
-} from 'modules/comment/comment.type'
+  ConversationPageOptionInput,
+  ConversationsPayload,
+} from 'modules/conversation/conversation.type'
 import { Org } from 'modules/org/models/Org'
 import { ANY } from 'types'
 
@@ -13,7 +13,7 @@ import { Classwork, ClassworkType } from './models/Classwork'
 
 @Resolver((_of) => Classwork)
 export class ClassworkResolver {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(private readonly conversationService: ConversationService) {}
 
   /**
    *START CLASSWORK RESOLVER
@@ -33,19 +33,22 @@ export class ClassworkResolver {
     return ['ClassworkMaterial', 'ClassworkAssignment']
   }
 
-  @ResolveField((_returns) => CommentsPayload)
+  @ResolveField((_returns) => ConversationsPayload)
   comments(
     @Root() { id },
     @CurrentOrg() org: Org,
     @Args('lastId', { type: () => ID, nullable: true }) lastId: string,
-    @Args('commentPageOptionInput')
-    commentPageOptionInput: CommentPageOptionInput,
-  ): Promise<CommentsPayload> {
-    return this.commentService.listCommentByTargetId(commentPageOptionInput, {
-      orgId: org.id,
-      lastId,
-      targetId: id,
-    })
+    @Args('conversationPageOptionInput')
+    conversationPageOptionInput: ConversationPageOptionInput,
+  ): Promise<ConversationsPayload> {
+    return this.conversationService.listConversationByTargetId(
+      conversationPageOptionInput,
+      {
+        orgId: org.id,
+        lastId,
+        roomId: id,
+      },
+    )
   }
 
   /**

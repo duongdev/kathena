@@ -5,12 +5,12 @@ import { useSnackbar } from 'notistack'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { useAuth } from 'common/auth'
-import { useCreateCommentMutation } from 'graphql/generated'
+import { useCreateConversationMutation } from 'graphql/generated'
 
 import CreateCommentForm from './CreateComment.form'
 
 export type CreateCommentProps = {
-  targetId: string
+  roomId: string
 }
 
 export type CommentFormInput = {
@@ -30,10 +30,10 @@ const initialValues = {
 }
 
 const CreateComment: FC<CreateCommentProps> = (props) => {
-  const { targetId } = props
+  const { roomId } = props
   const { enqueueSnackbar } = useSnackbar()
   const { $account: account } = useAuth()
-  const [createComment] = useCreateCommentMutation()
+  const [createComment] = useCreateConversationMutation()
 
   const handleSubmitForm = useCallback(
     async (input: CommentFormInput) => {
@@ -43,12 +43,12 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
             input: {
               content: input.content,
               createdByAccountId: account.id,
-              targetId,
+              roomId,
             },
           },
         })
 
-        const comment = dataCreated?.createComment
+        const comment = dataCreated?.createConversation
 
         if (!comment) {
           return
@@ -61,7 +61,7 @@ const CreateComment: FC<CreateCommentProps> = (props) => {
         console.error(error)
       }
     },
-    [account.id, targetId, createComment, enqueueSnackbar],
+    [account.id, roomId, createComment, enqueueSnackbar],
   )
 
   return (
