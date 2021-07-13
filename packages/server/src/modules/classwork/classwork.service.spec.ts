@@ -2883,7 +2883,7 @@ describe('classwork.service', () => {
       })
     })
 
-    describe('getListOfStudentsSubmitAssignmentsOnTime', () => {
+    describe('getListOfStudentsSubmitAssignmentsByStatus', () => {
       it('throws error if classworkAssignment is not found', async () => {
         expect.assertions(1)
 
@@ -3020,6 +3020,9 @@ describe('classwork.service', () => {
         course.studentIds = [accStudent1.id, accStudent2.id, accStudent3.id]
         course.save()
 
+        const date = new Date()
+        const updated = new Date()
+
         const classwork = await classworkService.createClassworkAssignment(
           accLecturer.id,
           course.id,
@@ -3027,7 +3030,7 @@ describe('classwork.service', () => {
           {
             title: 'Bai tap 1',
             description: 'Day la bai tap 1',
-            dueDate: new Date('2021-07-12'),
+            dueDate: date,
           },
         )
 
@@ -3038,7 +3041,7 @@ describe('classwork.service', () => {
             classworkId: classwork.id,
             courseId: course.id,
             orgId: org.id,
-            updatedAt: new Date('2021-07-08'),
+            updatedAt: new Date(updated.setDate(date.getDate() - 3)),
           },
           {
             createdByAccountId: accStudent2.id,
@@ -3046,7 +3049,7 @@ describe('classwork.service', () => {
             classworkId: classwork.id,
             courseId: course.id,
             orgId: org.id,
-            updatedAt: new Date('2021-07-15'),
+            updatedAt: new Date(updated.setDate(date.getDate() + 3)),
           },
         ]
 
@@ -3175,6 +3178,9 @@ describe('classwork.service', () => {
         course.studentIds = [accStudent1.id, accStudent2.id, accStudent3.id]
         course.save()
 
+        const date = new Date()
+        const updated = new Date()
+
         const classwork = await classworkService.createClassworkAssignment(
           accLecturer.id,
           course.id,
@@ -3182,7 +3188,7 @@ describe('classwork.service', () => {
           {
             title: 'Bai tap 1',
             description: 'Day la bai tap 1',
-            dueDate: new Date('2021-07-12'),
+            dueDate: date,
           },
         )
 
@@ -3193,7 +3199,7 @@ describe('classwork.service', () => {
             classworkId: classwork.id,
             courseId: course.id,
             orgId: org.id,
-            updatedAt: new Date('2021-07-08'),
+            updatedAt: new Date(updated.setDate(date.getDate() - 3)),
           },
           {
             createdByAccountId: accStudent2.id,
@@ -3201,7 +3207,7 @@ describe('classwork.service', () => {
             classworkId: classwork.id,
             courseId: course.id,
             orgId: org.id,
-            updatedAt: new Date('2021-07-15'),
+            updatedAt: new Date(updated.setDate(date.getDate() + 3)),
           },
         ]
 
