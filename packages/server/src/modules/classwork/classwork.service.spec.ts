@@ -17,6 +17,7 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
 } from './classwork.type'
 
 describe('classwork.service', () => {
@@ -2848,45 +2849,141 @@ describe('classwork.service', () => {
       })
     })
 
-    // describe('findOneClassworkSubmission', () => {
-    //   it('returns a ClassworkSubmission if found', async () => {
-    //     expect.assertions(1)
+    describe('findOneClassworkSubmission', () => {
+      it('returns a ClassworkSubmission if found', async () => {
+        expect.assertions(1)
 
-    //     jest
-    //       .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
-    //       .mockResolvedValueOnce({ name: 'not null' } as ANY)
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce({ name: 'not null' } as ANY)
 
-    //     await expect(
-    //       classworkService.findOneClassworkSubmission(
-    //         objectId(),
-    //         objectId(),
-    //         objectId(),
-    //       ),
-    //     ).resolves.toMatchObject({ name: 'not null' })
-    //   })
+        await expect(
+          classworkService.findOneClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject({ name: 'not null' })
+      })
 
-    //   it('returns null if not found', async () => {
-    //     expect.assertions(1)
+      it('returns null if not found', async () => {
+        expect.assertions(1)
 
-    //     jest
-    //       .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
-    //       .mockResolvedValueOnce(null)
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(null)
 
-    //     await expect(
-    //       classworkService.findOneClassworkSubmission(
-    //         objectId(),
-    //         objectId(),
-    //         objectId(),
-    //       ),
-    //     ).resolves.toBeNull()
-    //   })
-    // })
+        await expect(
+          classworkService.findOneClassworkSubmission(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toBeNull()
+      })
+    })
 
-    // describe('listClassworkSubmittedsByStudentIdInCourse', () => {
-    //   it('returns list ClassworkSubmittedByStudentIdInCourseResponse if found', async () => {})
+    describe('listClassworkSubmittedsByStudentIdInCourse', () => {
+      it('returns list ClassworkSubmittedByStudentIdInCourseResponse if found', async () => {
+        expect.assertions(1)
+        const listClassworkAssignment = [
+          {
+            id: '507f191e810c19729de860ea',
+            title: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+          },
+          {
+            id: '507f191e810c19729de81233',
+            title: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+          },
+          {
+            id: '507f191e810c19729de81244',
+            title: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+          },
+        ]
 
-    //   it('returns null if not found', async () => {})
-    // })
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'find')
+          .mockResolvedValueOnce(listClassworkAssignment as ANY)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce({
+            grade: 100,
+            updatedAt: Date.parse('2021-7-13'),
+            description: 'bài tập 1 đã xong',
+          } as ANY)
+          .mockResolvedValueOnce({
+            grade: null,
+            updatedAt: null,
+            description: '',
+          } as ANY)
+          .mockResolvedValueOnce({
+            grade: 80,
+            updatedAt: Date.parse('2021-7-11'),
+            description: 'bài tập 3 đã xong',
+          } as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmittedsByStudentIdInCourse(
+            {
+              courseId: objectId(),
+              limit: 3,
+              skip: 0,
+            } as ListClassworkSubmittedsByStudentIdInCourseInput,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([
+          {
+            classworkAssignmentId: '507f191e810c19729de860ea',
+            classworkAssignmentsTitle: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+            grade: 100,
+            updatedAt: Date.parse('2021-7-13'),
+            description: 'bài tập 1 đã xong',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81233',
+            classworkAssignmentsTitle: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+            grade: null,
+            updatedAt: null,
+            description: '',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81244',
+            classworkAssignmentsTitle: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+            grade: 80,
+            updatedAt: Date.parse('2021-7-11'),
+            description: 'bài tập 3 đã xong',
+          },
+        ])
+      })
+
+      it('returns null if not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'find')
+          .mockResolvedValueOnce([] as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmittedsByStudentIdInCourse(
+            {
+              courseId: objectId(),
+              limit: 3,
+              skip: 0,
+            } as ListClassworkSubmittedsByStudentIdInCourseInput,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([])
+      })
+    })
   })
 
   /**

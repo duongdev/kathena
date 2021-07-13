@@ -6,7 +6,6 @@ import { Publication } from 'core'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @InputType()
 export class UpdateClassworkMaterialInput {

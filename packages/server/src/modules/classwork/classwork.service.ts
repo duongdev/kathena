@@ -1,8 +1,7 @@
 /* eslint-disable no-process-env */
 import { forwardRef, Inject } from '@nestjs/common'
-import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
-import { skipLast } from 'rxjs/operators'
 
 import {
   Service,
@@ -1156,15 +1155,19 @@ export class ClassworkService {
       limit,
     })
 
-    const listClassworkAssignment = await this.classworkAssignmentsModel
-      .find({
+    const listClassworkAssignment = await this.classworkAssignmentsModel.find(
+      {
         courseId,
         orgId,
         publicationState: Publication.Published,
-      })
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .skip(skip)
+      },
+      null,
+      {
+        limit,
+        skip,
+        sort: { createdAt: -1 },
+      },
+    )
 
     const res: Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[] =
       await Promise.all(
