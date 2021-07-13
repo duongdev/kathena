@@ -65,6 +65,7 @@ export const lecturer: Role = {
     P.Classwork_RemoveAttachmentsFromClassworkAssignment,
     P.Classwork_RemoveAttachmentsFromClassworkMaterial,
     P.Classwork_SetGradeForClassworkSubmission,
+    P.Classwork_ShowSubmissionStatusList,
     P.Comment_CreateComment,
     P.Classwork_ListClassworkSubmission,
     P.AvgGradeStatisticsOfClassworkInTheCourse,

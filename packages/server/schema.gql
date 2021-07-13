@@ -121,6 +121,19 @@ type ClassworkMaterial implements BaseModel {
   publicationState: String!
 }
 
+type ClassworkSubmission implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  classworkId: ID!
+  courseId: ID!
+  grade: Float!
+  submissionFileIds: [String!]!
+  description: String!
+}
+
 type ClassworkAssignmentPayload {
   classworkAssignments: [ClassworkAssignment!]!
   count: Int!
@@ -128,6 +141,11 @@ type ClassworkAssignmentPayload {
 
 type ClassworkMaterialPayload {
   classworkMaterials: [ClassworkMaterial!]!
+  count: Int!
+}
+
+type ClassworkSubmissionStatusPayload {
+  classworkSubmissions: [ClassworkSubmission!]!
   count: Int!
 }
 
@@ -145,16 +163,9 @@ type ClassworkSubmittedByStudentIdInCourseResponse {
   description: String
 }
 
-type ClassworkSubmission implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: String!
-  classworkId: ID!
-  grade: Float!
-  submissionFileIds: [String!]!
-  description: String!
+type SubmissionStatusStatistics {
+  label: String!
+  number: Float!
 }
 
 type OrgOffice implements BaseModel {
@@ -226,6 +237,7 @@ enum Permission {
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
+  Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
   NoPermission
 }
@@ -296,6 +308,8 @@ type Query {
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
   listClassworkSubmittedsByStudentIdInCourse(Input: ListClassworkSubmittedsByStudentIdInCourseInput!): [ClassworkSubmittedByStudentIdInCourseResponse!]!
+  getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
+  submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
 }
 
