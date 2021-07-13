@@ -1181,12 +1181,6 @@ export class ClassworkService {
                 orgId,
               })
 
-            console.log({
-              createdByAccountId: accountId,
-              classworkId: value.id,
-              orgId,
-            })
-
             let response: ClassworkSubmittedByStudentIdInCourseResponse =
               new ClassworkSubmittedByStudentIdInCourseResponse()
             if (!classworkSubmission) {
