@@ -1169,43 +1169,44 @@ export class ClassworkService {
       },
     )
 
-    const res: Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[] =
-      await Promise.all(
-        listClassworkAssignment.map(
-          async (
-            value,
-          ): Promise<
-            Nullable<ClassworkSubmittedByStudentIdInCourseResponse>
-          > => {
-            const classworkSubmission =
-              await this.classworkSubmissionModel.findOne({
-                createdByAccountId: accountId,
-                classworkId: value.id,
-                orgId,
-              })
-
-            let response: ClassworkSubmittedByStudentIdInCourseResponse =
-              new ClassworkSubmittedByStudentIdInCourseResponse()
-            if (!classworkSubmission) {
-              response.classworkAssignmentId = value.id
-              response.classworkAssignmentsTitle = value.title
-              response.dueDate = value.dueDate
-            } else {
-              response = {
-                classworkAssignmentId: value.id,
-                classworkAssignmentsTitle: value.title,
-                dueDate: value.dueDate,
-                grade: classworkSubmission.grade,
-                updatedAt: classworkSubmission.updatedAt,
-                description: classworkSubmission.description
-                  ? classworkSubmission.description
-                  : '',
-              }
-            }
-            return response
+    const promisePending: ANY = listClassworkAssignment.map(
+      async (
+        value,
+      ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>> => {
+        const classworkSubmission = await this.classworkSubmissionModel.findOne(
+          {
+            createdByAccountId: accountId,
+            classworkId: value.id,
+            orgId,
           },
-        ),
-      )
+        )
+
+        let response: ClassworkSubmittedByStudentIdInCourseResponse =
+          new ClassworkSubmittedByStudentIdInCourseResponse()
+
+        if (!classworkSubmission) {
+          response.classworkAssignmentId = value.id
+          response.classworkAssignmentsTitle = value.title
+          response.dueDate = value.dueDate
+        } else {
+          response = {
+            classworkAssignmentId: value.id,
+            classworkAssignmentsTitle: value.title,
+            dueDate: value.dueDate,
+            grade: classworkSubmission.grade,
+            updatedAt: classworkSubmission.updatedAt,
+            description: classworkSubmission.description
+              ? classworkSubmission.description
+              : '',
+          }
+        }
+        return response
+      },
+    )
+
+    const res: Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[] =
+      await Promise.all(promisePending)
+
     this.logger.log(
       `[${this.listClassworkSubmittedsByStudentIdInCourse.name}] listed ClassworkSubmissions`,
     )
