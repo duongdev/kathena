@@ -118,6 +118,7 @@ Array [
       "Classwork_RemoveAttachmentsFromClassworkAssignment",
       "Classwork_RemoveAttachmentsFromClassworkMaterial",
       "Classwork_SetGradeForClassworkSubmission",
+      "Classwork_ShowSubmissionStatusList",
       "Comment_CreateComment",
       "Classwork_ListClassworkSubmission",
       "AvgGradeStatisticsOfClassworkInTheCourse",
