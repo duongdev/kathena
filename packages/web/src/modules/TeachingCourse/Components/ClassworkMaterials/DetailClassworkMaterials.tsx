@@ -20,13 +20,15 @@ import {
   Typography,
 } from '@kathena/ui'
 import { WithAuth, RequiredPermission } from 'common/auth'
+import { listRoomChatVar } from 'common/cache'
 import {
   useDetailClassworkMaterialQuery,
   Permission,
   useRemoveAttachmentsFromClassworkMaterialMutation,
-  useCommentsQuery,
-  Comment as CommentModel,
-  useCommentCreatedSubscription,
+  useConversationsQuery,
+  Conversation as ConversationModel,
+  useConversationCreatedSubscription,
+  ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -43,23 +45,23 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const id = useMemo(() => params.id, [params.id])
   const [openAddFile, setOpenAddFile] = useState(false)
   const [lastId, setLastId] = useState<string | null>(null)
-  const [comments, setComments] = useState<CommentModel[]>([])
+  const [comments, setComments] = useState<ConversationModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
-  const { data: dataComments, refetch } = useCommentsQuery({
+  const { data: dataComments, refetch } = useConversationsQuery({
     variables: {
-      targetId: id,
-      commentPageOptionInput: {
+      roomId: id,
+      conversationPageOptionInput: {
         limit: 5,
       },
       lastId,
     },
   })
 
-  const { data: dataCommentCreated } = useCommentCreatedSubscription({
-    variables: { targetId: id },
+  const { data: dataCommentCreated } = useConversationCreatedSubscription({
+    variables: { roomId: id },
   })
   const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
   const [removeAttachmentsFromClassworkMaterial] =
@@ -104,18 +106,18 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   )
 
   useEffect(() => {
-    const newListComment = dataComments?.comments.comments ?? []
+    const newListComment = dataComments?.conversations.conversations ?? []
     const listComment = [...comments, ...newListComment]
     setComments(listComment as ANY)
-    if (dataComments?.comments.count) {
-      setTotalComment(dataComments?.comments.count)
+    if (dataComments?.conversations.count) {
+      setTotalComment(dataComments?.conversations.count)
     }
 
     // eslint-disable-next-line
   }, [dataComments])
 
   useEffect(() => {
-    const newComment = dataCommentCreated?.commentCreated
+    const newComment = dataCommentCreated?.conversationCreated
     if (newComment) {
       const listComment = [newComment, ...comments]
       setComments(listComment as ANY)
@@ -127,6 +129,18 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const loadMoreComments = (lastCommentId: string) => {
     setLastId(lastCommentId)
     refetch()
+  }
+
+  const pinRoomChat = () => {
+    if (listRoomChatVar().findIndex((item) => item.roomId === id) === -1) {
+      listRoomChatVar([
+        ...listRoomChatVar(),
+        {
+          roomId: id,
+          type: ConversationType.Group,
+        },
+      ])
+    }
   }
 
   if (loading) {
@@ -236,7 +250,14 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
-          title="Bình luận"
+          title={
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
+                Bình luận
+              </Typography>
+              <Button onClick={pinRoomChat}>Ghim</Button>
+            </div>
+          }
         >
           <CardContent>
             {comments?.length ? (
@@ -271,7 +292,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment targetId={id} />
+            <CreateComment roomId={id} />
           </CardContent>
         </SectionCard>
       </Grid>

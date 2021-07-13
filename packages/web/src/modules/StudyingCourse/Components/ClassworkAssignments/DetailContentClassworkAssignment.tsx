@@ -1,6 +1,6 @@
-import { FC, useMemo, useState, useEffect } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
-import { CardContent, Grid, Stack } from '@material-ui/core'
+import { CardContent, Chip, Grid, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
@@ -17,18 +17,21 @@ import {
   Typography,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
+import { listRoomChatVar } from 'common/cache'
 import {
   Permission,
   useClassworkAssignmentDetailQuery,
   useFindOneClassworkSubmissionQuery,
-  useCommentsQuery,
-  Comment as CommentModel,
-  useCommentCreatedSubscription,
+  useConversationsQuery,
+  Conversation as ConversationModel,
+  useConversationCreatedSubscription,
+  ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 export type DetailContentClassworkAssignmentProps = {}
@@ -37,7 +40,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
   () => {
     const params: { id: string } = useParams()
     const [lastId, setLastId] = useState<string | null>(null)
-    const [comments, setComments] = useState<CommentModel[]>([])
+    const [comments, setComments] = useState<ConversationModel[]>([])
     const [totalComment, setTotalComment] = useState(0)
 
     const id = useMemo(() => params.id, [params])
@@ -51,38 +54,39 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     const { data: submit } = useFindOneClassworkSubmissionQuery({
       variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
     })
+
     const classworkAssignmentSubmit = useMemo(
       () => submit?.findOneClassworkSubmission,
       [submit],
     )
 
-    const { data: dataComments, refetch } = useCommentsQuery({
+    const { data: dataComments, refetch } = useConversationsQuery({
       variables: {
-        targetId: id,
-        commentPageOptionInput: {
+        roomId: id,
+        conversationPageOptionInput: {
           limit: 5,
         },
         lastId,
       },
     })
 
-    const { data: dataCommentCreated } = useCommentCreatedSubscription({
-      variables: { targetId: id },
+    const { data: dataCommentCreated } = useConversationCreatedSubscription({
+      variables: { roomId: id },
     })
 
     useEffect(() => {
-      const newListComment = dataComments?.comments.comments ?? []
+      const newListComment = dataComments?.conversations.conversations ?? []
       const listComment = [...comments, ...newListComment]
       setComments(listComment as ANY)
-      if (dataComments?.comments.count) {
-        setTotalComment(dataComments?.comments.count)
+      if (dataComments?.conversations.count) {
+        setTotalComment(dataComments?.conversations.count)
       }
 
       // eslint-disable-next-line
     }, [dataComments])
 
     useEffect(() => {
-      const newComment = dataCommentCreated?.commentCreated
+      const newComment = dataCommentCreated?.conversationCreated
       if (newComment) {
         const listComment = [newComment, ...comments]
         setComments(listComment as ANY)
@@ -95,6 +99,19 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       setLastId(lastCommentId)
       refetch()
     }
+
+    const pinRoomChat = () => {
+      if (listRoomChatVar().findIndex((item) => item.roomId === id) === -1) {
+        listRoomChatVar([
+          ...listRoomChatVar(),
+          {
+            roomId: id,
+            type: ConversationType.Group,
+          },
+        ])
+      }
+    }
+
     if (loading && !data) {
       return <PageContainerSkeleton maxWidth="md" />
     }
@@ -112,6 +129,15 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       <PageContainer
         title={classworkAssignment.title}
         withBackButton
+        subtitle={[
+          <>
+            {!classworkAssignmentSubmit?.id ? (
+              <Chip label="Chưa nộp bài" />
+            ) : (
+              <Chip color="primary" label="Đã nộp bài" />
+            )}
+          </>,
+        ]}
         maxWidth="md"
         actions={[
           <>
@@ -127,9 +153,18 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                 <Button variant="contained">Nộp bài</Button>
               </Link>
             ) : (
-              <Button color="primary" variant="outlined">
-                Đã nộp bài
-              </Button>
+              <Link
+                to={buildPath(
+                  STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+                  {
+                    id: classworkAssignmentSubmit.id,
+                  },
+                )}
+              >
+                <Button variant="outlined" color="primary">
+                  Xem chi tiết bài tập
+                </Button>
+              </Link>
             )}
           </>,
         ]}
@@ -169,7 +204,14 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
-            title="Bình luận"
+            title={
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
+                  Bình luận
+                </Typography>
+                <Button onClick={pinRoomChat}>Ghim</Button>
+              </div>
+            }
           >
             <CardContent>
               {comments?.length ? (
@@ -198,7 +240,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
               ) : (
                 'Không có comment'
               )}
-              <CreateComment targetId={id} />
+              <CreateComment roomId={id} />
             </CardContent>
           </SectionCard>
         </Grid>

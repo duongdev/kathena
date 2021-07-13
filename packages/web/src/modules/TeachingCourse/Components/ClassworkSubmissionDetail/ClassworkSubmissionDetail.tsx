@@ -21,10 +21,10 @@ import {
   StatusChip,
 } from '@kathena/ui'
 import {
-  useCommentsQuery,
+  useConversationsQuery,
   useFindClassworkSubmissionByIdQuery,
-  Comment as CommentModel,
-  useCommentCreatedSubscription,
+  Conversation as CommentModel,
+  useConversationCreatedSubscription,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 
@@ -58,33 +58,33 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
     classworkSubmission ? classworkSubmission.classworkId : '',
   )
 
-  const { data: dataComments, refetch } = useCommentsQuery({
+  const { data: dataComments, refetch } = useConversationsQuery({
     variables: {
-      targetId: classworkSubmission?.id ?? '',
-      commentPageOptionInput: {
+      roomId: classworkSubmission?.id ?? '',
+      conversationPageOptionInput: {
         limit: 5,
       },
       lastId,
     },
   })
 
-  const { data: dataCommentCreated } = useCommentCreatedSubscription({
-    variables: { targetId: classworkSubmission?.id ?? '' },
+  const { data: dataCommentCreated } = useConversationCreatedSubscription({
+    variables: { roomId: classworkSubmission?.id ?? '' },
   })
 
   useEffect(() => {
-    const newListComment = dataComments?.comments.comments ?? []
+    const newListComment = dataComments?.conversations.conversations ?? []
     const listComment = [...comments, ...newListComment]
     setComments(listComment as ANY)
-    if (dataComments?.comments.count) {
-      setTotalComment(dataComments?.comments.count)
+    if (dataComments?.conversations.count) {
+      setTotalComment(dataComments?.conversations.count)
     }
 
     // eslint-disable-next-line
   }, [dataComments])
 
   useEffect(() => {
-    const newComment = dataCommentCreated?.commentCreated
+    const newComment = dataCommentCreated?.conversationCreated
     if (newComment) {
       const listComment = [newComment, ...comments]
       setComments(listComment as ANY)
@@ -206,7 +206,7 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
                 <Typography>Không có comment</Typography>
               </div>
             )}
-            <CreateComment targetId={classworkSubmission.id} />
+            <CreateComment roomId={classworkSubmission.id} />
           </CardContent>
         </SectionCard>
       </Grid>

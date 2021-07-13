@@ -48,15 +48,3 @@ query ListClassworkSubmission($classworkAssignmentId: ID!){
   }
 }
 
-query Comments($lastId: ID, $targetId: ID!, $commentPageOptionInput: CommentPageOptionInput!){
-  comments(lastId: $lastId, targetId: $targetId, commentPageOptionInput: $commentPageOptionInput){
-    comments{
-      id
-      createdAt
-      createdByAccountId
-      targetId
-      content
-    }
-    count
-  }
-}

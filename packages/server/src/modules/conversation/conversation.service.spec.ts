@@ -11,11 +11,11 @@ import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
-import { CommentService } from './comment.service'
+import { ConversationService } from './conversation.service'
 
-describe('comment.service', () => {
+describe('conversation.service', () => {
   let module: TestingModule
-  let commentService: CommentService
+  let conversationService: ConversationService
   let mongooseConnection: Connection
   let orgService: OrgService
   let accountService: AccountService
@@ -30,7 +30,7 @@ describe('comment.service', () => {
 
     module = await createTestingModule(testDb.uri)
 
-    commentService = module.get<CommentService>(CommentService)
+    conversationService = module.get<ConversationService>(ConversationService)
     orgService = module.get<OrgService>(OrgService)
     accountService = module.get<AccountService>(AccountService)
     authService = module.get<AuthService>(AuthService)
@@ -51,23 +51,23 @@ describe('comment.service', () => {
   })
 
   it('should be defined', () => {
-    expect(commentService).toBeDefined()
+    expect(conversationService).toBeDefined()
   })
 
-  describe('createComment', () => {
+  describe('createConversation', () => {
     it(`throws error "Org ID is invalid" if org id is not valid`, async () => {
       expect.assertions(1)
 
       await expect(
-        commentService.createComment(objectId(), {
+        conversationService.createConversation(objectId(), {
           createdByAccountId: objectId(),
-          targetId: objectId(),
+          roomId: objectId(),
           content: 'Day la mot cai cmt',
         }),
       ).rejects.toThrowError('Org ID is invalid')
     })
 
-    it(`return a comment`, async () => {
+    it(`return a conversation`, async () => {
       expect.assertions(1)
 
       const createCourseInput: ANY = {
@@ -129,9 +129,9 @@ describe('comment.service', () => {
         )
 
       await expect(
-        commentService.createComment(org.id, {
+        conversationService.createConversation(org.id, {
           createdByAccountId: accountLecturer.id,
-          targetId: classWorkAssignmentTest.id,
+          roomId: classWorkAssignmentTest.id,
           content: 'Day la mot cai cmt test',
         }),
       ).resolves.toMatchObject({
@@ -140,25 +140,25 @@ describe('comment.service', () => {
     })
   })
 
-  describe('listCommentByTargetId', () => {
+  describe('listConversationByTargetId', () => {
     it(`throws error if orgId invalid`, async () => {
       expect.assertions(1)
 
       await expect(
-        commentService.listCommentByTargetId(
+        conversationService.listConversationByTargetId(
           {
             limit: 2,
           },
           {
             orgId: 'day_la_org_id',
             lastId: objectId(),
-            targetId: objectId(),
+            roomId: objectId(),
           },
         ),
       ).rejects.toThrowError(`ORG_ID_INVALID`)
     })
 
-    it(`returns an array of comments`, async () => {
+    it(`returns an array of conversations`, async () => {
       expect.assertions(3)
 
       const createCourseInput: ANY = {
@@ -230,88 +230,88 @@ describe('comment.service', () => {
           },
         )
 
-      const comment1 = await commentService.createComment(org.id, {
+      const comment1 = await conversationService.createConversation(org.id, {
         createdByAccountId: accountLecturer.id,
-        targetId: classWorkAssignmentTest1.id,
+        roomId: classWorkAssignmentTest1.id,
         content: 'cmt 1',
       })
 
-      const comment2 = await commentService.createComment(org.id, {
+      const comment2 = await conversationService.createConversation(org.id, {
         createdByAccountId: accountLecturer.id,
-        targetId: classWorkAssignmentTest2.id,
+        roomId: classWorkAssignmentTest2.id,
         content: 'cmt 2',
       })
 
-      const comment3 = await commentService.createComment(org.id, {
+      const comment3 = await conversationService.createConversation(org.id, {
         createdByAccountId: accountLecturer.id,
-        targetId: classWorkAssignmentTest1.id,
+        roomId: classWorkAssignmentTest1.id,
         content: 'cmt 3',
       })
 
-      const comment4 = await commentService.createComment(org.id, {
+      const comment4 = await conversationService.createConversation(org.id, {
         createdByAccountId: accountLecturer.id,
-        targetId: classWorkAssignmentTest2.id,
+        roomId: classWorkAssignmentTest2.id,
         content: 'cmt 4',
       })
 
       await expect(
-        commentService.listCommentByTargetId(
+        conversationService.listConversationByTargetId(
           {
             limit: 2,
           },
           {
             orgId: org.id,
             lastId: comment3.id,
-            targetId: classWorkAssignmentTest1.id,
+            roomId: classWorkAssignmentTest1.id,
           },
         ),
       ).resolves.toMatchObject({
-        comments: [
+        conversations: [
           {
-            targetId: classWorkAssignmentTest1.id,
+            roomId: classWorkAssignmentTest1.id,
             content: comment1.content,
           },
         ],
       })
 
       await expect(
-        commentService.listCommentByTargetId(
+        conversationService.listConversationByTargetId(
           {
             limit: 2,
           },
           {
             orgId: org.id,
             lastId: comment4.id,
-            targetId: classWorkAssignmentTest2.id,
+            roomId: classWorkAssignmentTest2.id,
           },
         ),
       ).resolves.toMatchObject({
-        comments: [
+        conversations: [
           {
-            targetId: classWorkAssignmentTest2.id,
+            roomId: classWorkAssignmentTest2.id,
             content: comment2.content,
           },
         ],
       })
 
       await expect(
-        commentService.listCommentByTargetId(
+        conversationService.listConversationByTargetId(
           {
             limit: 2,
           },
           {
             orgId: org.id,
-            targetId: classWorkAssignmentTest1.id,
+            roomId: classWorkAssignmentTest1.id,
           },
         ),
       ).resolves.toMatchObject({
-        comments: [
+        conversations: [
           {
-            targetId: classWorkAssignmentTest1.id,
+            roomId: classWorkAssignmentTest1.id,
             content: comment3.content,
           },
           {
-            targetId: classWorkAssignmentTest1.id,
+            roomId: classWorkAssignmentTest1.id,
             content: comment1.content,
           },
         ],
