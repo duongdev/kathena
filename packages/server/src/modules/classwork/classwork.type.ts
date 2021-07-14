@@ -145,6 +145,37 @@ export class AvgGradeOfClassworkByCourse {
 }
 
 @ObjectType()
+export class ClassworkSubmittedByStudentIdInCourseResponse {
+  @Field((_type) => ID, { nullable: true })
+  classworkAssignmentId: string
+
+  @Field((_type) => ID, { nullable: true })
+  classworkAssignmentsTitle: string
+
+  @Field({ nullable: true })
+  dueDate: Date
+
+  @Field({ nullable: true })
+  grade: number
+
+  @Field({ nullable: true })
+  updatedAt: Date
+
+  @Field({ nullable: true })
+  description: string
+}
+@InputType()
+export class ListClassworkSubmittedsByStudentIdInCourseInput {
+  @Field()
+  courseId: string
+
+  @Field((_type) => Number)
+  skip: number
+
+  @Field((_type) => Number)
+  limit: number
+}
+@ObjectType()
 export class SubmissionStatusStatistics {
   @Field((_type) => String)
   label: string
