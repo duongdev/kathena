@@ -4,6 +4,12 @@ import { Types } from 'mongoose'
 
 import { BaseModel } from 'core'
 
+export enum ClassworkSubmissionStatus {
+  OnTime = 'OnTime',
+  Late = 'Late',
+  DoNotSubmit = 'DoNotSubmit',
+}
+
 @ObjectType({ implements: [BaseModel] })
 export class ClassworkSubmission extends BaseModel {
   @Field()
@@ -13,6 +19,10 @@ export class ClassworkSubmission extends BaseModel {
   @Field((_type) => ID)
   @prop({ required: true })
   classworkId: string
+
+  @Field((_type) => ID)
+  @prop({ required: true })
+  courseId: string
 
   @Field()
   @prop({ required: true, default: 0 })

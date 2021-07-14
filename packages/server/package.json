@@ -60,8 +60,8 @@
     "type-graphql": "1.1.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "8.0.2",
-    "@nestjs/schematics": "8.0.0",
+    "@nestjs/cli": "7.6.0",
+    "@nestjs/schematics": "8.0.1",
     "@types/bcrypt": "5.0.0",
     "@types/date-fns": "2.6.0",
     "@types/dotenv": "8.2.0",
@@ -74,8 +74,8 @@
     "@types/node": "14.14.37",
     "@types/shortid": "0.0.29",
     "@types/supertest": "2.0.11",
-    "@typescript-eslint/eslint-plugin": "4.28.2",
-    "@typescript-eslint/parser": "4.28.2",
+    "@typescript-eslint/eslint-plugin": "4.28.3",
+    "@typescript-eslint/parser": "4.28.3",
     "eslint": "7.30.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-airbnb-typescript": "12.3.1",

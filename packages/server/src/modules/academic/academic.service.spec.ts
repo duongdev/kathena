@@ -2342,7 +2342,7 @@ describe('academic.service', () => {
           await classworkService.createClassworkSubmission(
             org.id,
             course.id,
-            accStudent.id,
+            accStudent2.id,
             createInputWithFile,
           )
 
