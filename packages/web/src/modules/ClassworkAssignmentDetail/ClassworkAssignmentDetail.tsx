@@ -355,10 +355,19 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           </SectionCard>
         </Grid>
         <SectionCard
-          maxContentHeight={false}
           gridItem={{ xs: 3 }}
-          title="Sinh viên đã nộp"
+          title="Học viên đã nộp"
           fullHeight={false}
+          action={[
+            <>
+              <InfoBlock label="Số lượng nộp:">
+                <Typography align="right">
+                  {' '}
+                  {classworkSubmissions?.length}
+                </Typography>
+              </InfoBlock>
+            </>,
+          ]}
         >
           <CardContent>
             {classworkSubmissions?.length ? (
@@ -381,6 +390,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                     )}
                   >
                     <AccountDisplayName
+                      style={{ cursor: 'pointer' }}
                       accountId={classworkSubmission.createdByAccountId}
                     />
                   </Link>
