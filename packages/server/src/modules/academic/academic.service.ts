@@ -655,8 +655,6 @@ export class AcademicService {
       .sort({ _id: -1 })
       .limit(limit)
 
-    const dataList: AvgGradeOfClassworkByCourse[] = []
-
     const classworkAssignmentsMap = classworkAssignments.map(
       async (classworkAssignment) => {
         const avgGrade =
@@ -672,13 +670,9 @@ export class AcademicService {
         return dataObj
       },
     )
-
-    await Promise.all(classworkAssignmentsMap).then((dataObj) => {
-      dataObj.forEach((data) => {
-        dataList.push(data)
-      })
-    })
-
+    const dataList: AvgGradeOfClassworkByCourse[] = await Promise.all(
+      classworkAssignmentsMap,
+    )
     return dataList
   }
 

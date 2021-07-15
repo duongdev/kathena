@@ -17,7 +17,9 @@ import {
   UpdateClassworkMaterialInput,
   CreateClassworkMaterialInput,
   CreateClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
 } from './classwork.type'
+import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
 describe('classwork.service', () => {
   let module: TestingModule
@@ -2260,7 +2262,7 @@ describe('classwork.service', () => {
         await classworkService.createClassworkSubmission(
           org.id,
           course.id,
-          accStudent.id,
+          accStudent2.id,
           createInputWithFile,
         )
 
@@ -2879,6 +2881,461 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toBeNull()
+      })
+    })
+
+    describe('getListOfStudentsSubmitAssignmentsByStatus', () => {
+      it('throws error if classworkAssignment is not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            objectId(),
+            ClassworkSubmissionStatus.OnTime,
+          ),
+        ).rejects.toThrowError('CLASSWORK_ASSIGNMENT_NOT_FOUND')
+      })
+
+      it('throws error if course is not found', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accLecturer = await accountService.createAccount({
+          roles: ['lecturer'],
+          email: 'huynhthanhcanh1.top@gmail.com',
+          username: 'thanhcanh',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        const classworkAssignment =
+          await classworkService.createClassworkAssignment(
+            accLecturer.id,
+            objectId(),
+            org.id,
+            {
+              title: 'Bai tap 1',
+              description: 'Day la bai tap 2',
+            },
+          )
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classworkAssignment.id,
+            ClassworkSubmissionStatus.OnTime,
+          ),
+        ).rejects.toThrowError('COURSE_NOT_FOUND')
+      })
+
+      it('returns a list of classworkSubmissions and counts by status', async () => {
+        expect.assertions(3)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accStudent1 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhcanh.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accStudent2 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh22.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh2',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accStudent3 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh222.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh22',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accLecturer = await accountService.createAccount({
+          roles: ['lecturer'],
+          email: 'huynhthanhcanh1.top@gmail.com',
+          username: 'thanhcanh',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        const accAdmin = await accountService.createAccount({
+          roles: ['admin'],
+          username: 'thanhcanh123',
+          orgId: org.id,
+          email: 'huynhthanhcanh3.top@gmail.com',
+          displayName: 'Huynh Thanh Canh Thanh',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          orgId: org.id,
+          code: 'NODEJS',
+          name: 'NodeJS',
+          description: 'This is NodeJs',
+          createdByAccountId: accAdmin.id,
+          imageFileId: objectId(),
+        })
+
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          name: 'Kmin Quận 1',
+          address: '25A',
+          createdByAccountId: accAdmin.id,
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
+        const createCourseInput: ANY = {
+          academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
+          code: 'NodeJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+          lecturerIds: [accLecturer.id],
+        }
+
+        const course = await academicService.createCourse(accAdmin.id, org.id, {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accLecturer.id],
+        })
+
+        course.studentIds = [accStudent1.id, accStudent2.id, accStudent3.id]
+        course.save()
+
+        const date = new Date()
+        const updated = new Date()
+
+        const classwork = await classworkService.createClassworkAssignment(
+          accLecturer.id,
+          course.id,
+          org.id,
+          {
+            title: 'Bai tap 1',
+            description: 'Day la bai tap 1',
+            dueDate: date,
+          },
+        )
+
+        const classworkSubmissionData: ANY = [
+          {
+            createdByAccountId: accStudent1.id,
+            description: 'classworkSubmission_1',
+            classworkId: classwork.id,
+            courseId: course.id,
+            orgId: org.id,
+            updatedAt: new Date(updated.setDate(date.getDate() - 3)),
+          },
+          {
+            createdByAccountId: accStudent2.id,
+            description: 'classworkSubmission_2',
+            classworkId: classwork.id,
+            courseId: course.id,
+            orgId: org.id,
+            updatedAt: new Date(updated.setDate(date.getDate() + 3)),
+          },
+        ]
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'find')
+          .mockResolvedValueOnce(classworkSubmissionData)
+          .mockResolvedValueOnce(classworkSubmissionData)
+          .mockResolvedValueOnce(classworkSubmissionData)
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classwork.id,
+            ClassworkSubmissionStatus.OnTime,
+          ),
+        ).resolves.toMatchObject({
+          classworkSubmissions: [classworkSubmissionData[0]],
+          count: 1,
+        })
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classwork.id,
+            ClassworkSubmissionStatus.Late,
+          ),
+        ).resolves.toMatchObject({
+          classworkSubmissions: [classworkSubmissionData[1]],
+          count: 1,
+        })
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classwork.id,
+            ClassworkSubmissionStatus.DoNotSubmit,
+          ),
+        ).resolves.toMatchObject({
+          classworkSubmissions: [],
+          count: 1,
+        })
+      })
+    })
+
+    describe('submissionStatusStatistics', () => {
+      it('returns list of status and counts', async () => {
+        expect.assertions(1)
+
+        const org = await orgService.createOrg({
+          namespace: 'kmin-edu',
+          name: 'Kmin Academy',
+        })
+
+        const accStudent1 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanhcanh.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accStudent2 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh22.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh2',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accStudent3 = await accountService.createAccount({
+          orgId: org.id,
+          email: 'huynhthanhcanh222.top@gmail.com',
+          password: '123456',
+          username: 'thanhthanh22',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Thanh',
+        })
+
+        const accLecturer = await accountService.createAccount({
+          roles: ['lecturer'],
+          email: 'huynhthanhcanh1.top@gmail.com',
+          username: 'thanhcanh',
+          orgId: org.id,
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        const accAdmin = await accountService.createAccount({
+          roles: ['admin'],
+          username: 'thanhcanh123',
+          orgId: org.id,
+          email: 'huynhthanhcanh3.top@gmail.com',
+          displayName: 'Huynh Thanh Canh Thanh',
+        })
+
+        const academicSubject = await academicService.createAcademicSubject({
+          orgId: org.id,
+          code: 'NODEJS',
+          name: 'NodeJS',
+          description: 'This is NodeJs',
+          createdByAccountId: accAdmin.id,
+          imageFileId: objectId(),
+        })
+
+        const orgOffice = await orgOfficeService.createOrgOffice({
+          name: 'Kmin Quận 1',
+          address: '25A',
+          createdByAccountId: accAdmin.id,
+          orgId: org.id,
+          phone: '0704917152',
+        })
+
+        const createCourseInput: ANY = {
+          academicSubjectId: academicSubject.id,
+          orgOfficeId: orgOffice.id,
+          code: 'NodeJS-12',
+          name: 'Node Js Thang 12',
+          tuitionFee: 5000000,
+          lecturerIds: [accLecturer.id],
+        }
+
+        const course = await academicService.createCourse(accAdmin.id, org.id, {
+          ...createCourseInput,
+          startDate: Date.now(),
+          lecturerIds: [accLecturer.id],
+        })
+
+        course.studentIds = [accStudent1.id, accStudent2.id, accStudent3.id]
+        course.save()
+
+        const date = new Date()
+        const updated = new Date()
+
+        const classwork = await classworkService.createClassworkAssignment(
+          accLecturer.id,
+          course.id,
+          org.id,
+          {
+            title: 'Bai tap 1',
+            description: 'Day la bai tap 1',
+            dueDate: date,
+          },
+        )
+
+        const classworkSubmissionData: ANY = [
+          {
+            createdByAccountId: accStudent1.id,
+            description: 'classworkSubmission_1',
+            classworkId: classwork.id,
+            courseId: course.id,
+            orgId: org.id,
+            updatedAt: new Date(updated.setDate(date.getDate() - 3)),
+          },
+          {
+            createdByAccountId: accStudent2.id,
+            description: 'classworkSubmission_2',
+            classworkId: classwork.id,
+            courseId: course.id,
+            orgId: org.id,
+            updatedAt: new Date(updated.setDate(date.getDate() + 3)),
+          },
+        ]
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'find')
+          .mockResolvedValueOnce(classworkSubmissionData)
+          .mockResolvedValueOnce(classworkSubmissionData)
+          .mockResolvedValueOnce(classworkSubmissionData)
+
+        await expect(
+          classworkService.submissionStatusStatistics(classwork.id),
+        ).resolves.toMatchObject([
+          {
+            label: 'On Time',
+            number: 1,
+          },
+          {
+            label: 'Late',
+            number: 1,
+          },
+          {
+            label: 'Do not submit',
+            number: 1,
+          },
+        ])
+      })
+    })
+
+    describe('listClassworkSubmittedsByStudentIdInCourse', () => {
+      it('returns list ClassworkSubmittedByStudentIdInCourseResponse if found', async () => {
+        expect.assertions(1)
+        const listClassworkAssignment = [
+          {
+            id: '507f191e810c19729de860ea',
+            title: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+          },
+          {
+            id: '507f191e810c19729de81233',
+            title: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+          },
+          {
+            id: '507f191e810c19729de81244',
+            title: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+          },
+        ]
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'find')
+          .mockResolvedValueOnce(listClassworkAssignment as ANY)
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce({
+            grade: 100,
+            updatedAt: Date.parse('2021-7-13'),
+            description: 'bài tập 1 đã xong',
+          } as ANY)
+          .mockResolvedValueOnce({
+            grade: null,
+            updatedAt: null,
+            description: '',
+          } as ANY)
+          .mockResolvedValueOnce({
+            grade: 80,
+            updatedAt: Date.parse('2021-7-11'),
+            description: 'bài tập 3 đã xong',
+          } as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmittedsByStudentIdInCourse(
+            {
+              courseId: objectId(),
+              limit: 3,
+              skip: 0,
+            } as ListClassworkSubmittedsByStudentIdInCourseInput,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([
+          {
+            classworkAssignmentId: '507f191e810c19729de860ea',
+            classworkAssignmentsTitle: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+            grade: 100,
+            updatedAt: Date.parse('2021-7-13'),
+            description: 'bài tập 1 đã xong',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81233',
+            classworkAssignmentsTitle: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+            grade: null,
+            updatedAt: null,
+            description: '',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81244',
+            classworkAssignmentsTitle: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+            grade: 80,
+            updatedAt: Date.parse('2021-7-11'),
+            description: 'bài tập 3 đã xong',
+          },
+        ])
+      })
+
+      it('returns null if not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['classworkAssignmentsModel'], 'find')
+          .mockResolvedValueOnce([] as ANY)
+
+        await expect(
+          classworkService.listClassworkSubmittedsByStudentIdInCourse(
+            {
+              courseId: objectId(),
+              limit: 3,
+              skip: 0,
+            } as ListClassworkSubmittedsByStudentIdInCourseInput,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([])
       })
     })
   })

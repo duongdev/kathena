@@ -27,11 +27,17 @@ import {
   AddAttachmentsToClassworkInput,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
+  ClassworkSubmittedByStudentIdInCourseResponse,
+  SubmissionStatusStatistics,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
-import { ClassworkSubmission } from './models/ClassworkSubmission'
+import {
+  ClassworkSubmission,
+  ClassworkSubmissionStatus,
+} from './models/ClassworkSubmission'
 
 @Service()
 export class ClassworkService {
@@ -939,7 +945,7 @@ export class ClassworkService {
       await this.classworkSubmissionModel.findOne({
         orgId,
         courseId,
-        accountId,
+        createdByAccountId: accountId,
       })
     ) {
       throw new Error(`STUDENT_SUBMITTED_ASSIGNMENTS`)
@@ -948,6 +954,7 @@ export class ClassworkService {
     const classworkSubmission = await this.classworkSubmissionModel.create({
       createdByAccountId: accountId,
       classworkId,
+      courseId,
       description,
       orgId,
     })
@@ -1133,6 +1140,204 @@ export class ClassworkService {
     })
 
     return classworkSubmission
+  }
+
+  async listClassworkSubmittedsByStudentIdInCourse(
+    query: ListClassworkSubmittedsByStudentIdInCourseInput,
+    orgId: string,
+    accountId: string,
+  ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[]> {
+    const { courseId, skip, limit } = query
+
+    this.logger.log(
+      `[${this.listClassworkSubmittedsByStudentIdInCourse.name}] List ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      orgId,
+      courseId,
+      accountId,
+      skip,
+      limit,
+    })
+
+    const listClassworkAssignment = await this.classworkAssignmentsModel.find(
+      {
+        courseId,
+        orgId,
+        publicationState: Publication.Published,
+      },
+      null,
+      {
+        limit,
+        skip,
+        sort: { createdAt: -1 },
+      },
+    )
+
+    const promisePending: ANY = listClassworkAssignment.map(
+      async (
+        value,
+      ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>> => {
+        const classworkSubmission = await this.classworkSubmissionModel.findOne(
+          {
+            createdByAccountId: accountId,
+            classworkId: value.id,
+            orgId,
+          },
+        )
+
+        let response: ClassworkSubmittedByStudentIdInCourseResponse =
+          new ClassworkSubmittedByStudentIdInCourseResponse()
+
+        if (!classworkSubmission) {
+          response.classworkAssignmentId = value.id
+          response.classworkAssignmentsTitle = value.title
+          response.dueDate = value.dueDate
+        } else {
+          response = {
+            classworkAssignmentId: value.id,
+            classworkAssignmentsTitle: value.title,
+            dueDate: value.dueDate,
+            grade: classworkSubmission.grade,
+            updatedAt: classworkSubmission.updatedAt,
+            description: classworkSubmission.description
+              ? classworkSubmission.description
+              : '',
+          }
+        }
+        return response
+      },
+    )
+
+    const res: Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[] =
+      await Promise.all(promisePending)
+
+    this.logger.log(
+      `[${this.listClassworkSubmittedsByStudentIdInCourse.name}] listed ClassworkSubmissions`,
+    )
+    this.logger.verbose({
+      orgId,
+      courseId,
+      accountId,
+      skip,
+      limit,
+    })
+
+    return res
+  }
+
+  async getListOfStudentsSubmitAssignmentsByStatus(
+    classworkAssignmentId: string,
+    classworkSubmissionStatus: ClassworkSubmissionStatus,
+  ): Promise<{
+    classworkSubmissions: ClassworkSubmission[]
+    count: number
+  }> {
+    const { classworkSubmissionModel, classworkAssignmentsModel, courseModel } =
+      this
+    const classworkAssignment = await classworkAssignmentsModel.findById(
+      classworkAssignmentId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error('CLASSWORK_ASSIGNMENT_NOT_FOUND')
+    }
+
+    const course = await courseModel.findById(classworkAssignment.courseId)
+
+    if (!course) {
+      throw new Error('COURSE_NOT_FOUND')
+    }
+
+    const listClassworkSubmission = await classworkSubmissionModel.find({
+      classworkId: classworkAssignmentId,
+      courseId: course.id,
+    })
+
+    let listFilter: ClassworkSubmission[] = []
+    const numberOfStudent: number = course.studentIds.length
+    let count: ANY
+
+    if (classworkSubmissionStatus === ClassworkSubmissionStatus.OnTime) {
+      listFilter = listClassworkSubmission.filter((classworkSubmission) => {
+        const dueDate = new Date(classworkAssignment.dueDate).setHours(
+          7,
+          0,
+          0,
+          0,
+        )
+        const updatedAt = new Date(classworkSubmission.updatedAt).setHours(
+          7,
+          0,
+          0,
+          0,
+        )
+        return updatedAt <= dueDate
+      })
+      count = listFilter.length
+    } else if (classworkSubmissionStatus === ClassworkSubmissionStatus.Late) {
+      listFilter = listClassworkSubmission.filter((classworkSubmission) => {
+        const dueDate = new Date(classworkAssignment.dueDate).setHours(
+          7,
+          0,
+          0,
+          0,
+        )
+        const updatedAt = new Date(classworkSubmission.updatedAt).setHours(
+          7,
+          0,
+          0,
+          0,
+        )
+        return updatedAt > dueDate
+      })
+      count = listFilter.length
+    } else if (
+      classworkSubmissionStatus === ClassworkSubmissionStatus.DoNotSubmit
+    ) {
+      count = numberOfStudent - listClassworkSubmission.length
+      return { classworkSubmissions: listFilter, count }
+    }
+    return { classworkSubmissions: listFilter, count }
+  }
+
+  async submissionStatusStatistics(
+    classworkAssignmentId: string,
+  ): Promise<SubmissionStatusStatistics[]> {
+    const studentDataSubmittedOnTime =
+      await this.getListOfStudentsSubmitAssignmentsByStatus(
+        classworkAssignmentId,
+        ClassworkSubmissionStatus.OnTime,
+      )
+
+    const studentDataSubmittedLate =
+      await this.getListOfStudentsSubmitAssignmentsByStatus(
+        classworkAssignmentId,
+        ClassworkSubmissionStatus.Late,
+      )
+
+    const studentDataSubmittedDoNotSubmit =
+      await this.getListOfStudentsSubmitAssignmentsByStatus(
+        classworkAssignmentId,
+        ClassworkSubmissionStatus.DoNotSubmit,
+      )
+
+    const data: SubmissionStatusStatistics[] = [
+      {
+        label: 'On Time',
+        number: studentDataSubmittedOnTime.count,
+      },
+      {
+        label: 'Late',
+        number: studentDataSubmittedLate.count,
+      },
+      {
+        label: 'Do not submit',
+        number: studentDataSubmittedDoNotSubmit.count,
+      },
+    ]
+
+    return data
   }
   /**
    * END CLASSWORK SUBMISSION
