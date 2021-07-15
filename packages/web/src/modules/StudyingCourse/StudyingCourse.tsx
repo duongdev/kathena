@@ -1,13 +1,16 @@
-import { FC, Suspense, lazy } from 'react'
+import { FC, lazy, Suspense, useMemo } from 'react'
 
+import { Grid } from '@material-ui/core'
 import { Route, Switch, useParams } from 'react-router-dom'
 
-import { PageContainer, Spinner } from '@kathena/ui'
+import { DASHBOARD_SPACING } from '@kathena/theme'
+import { PageContainer, SectionCardSkeleton, Spinner } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
-import { Permission } from 'graphql/generated'
+import { Permission, useCourseDetailQuery } from 'graphql/generated'
 import {
   buildPath,
   STUDYING_COURSE,
+  STUDYING_COURSE_LIST,
   STUDYING_COURSE_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
@@ -23,9 +26,31 @@ const ClassworkMaterials = lazy(() => import('./Components/ClassworkMaterials'))
 export type StudyingCourseProps = {}
 
 const StudyingCourse: FC<StudyingCourseProps> = () => {
+  // Lấy thông từ param để nhận dữ liệu
   const params: { id: string } = useParams()
+  const courseId = useMemo(() => params.id, [params])
+  const { data, loading } = useCourseDetailQuery({
+    variables: { id: courseId },
+  })
+  const course = useMemo(() => data?.findCourseById, [data])
+
+  if (loading) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
   return (
-    <PageContainer title="Chi tiết khóa học" withBackButton maxWidth="lg">
+    <PageContainer
+      title={course?.name}
+      backButtonLabel="Danh sách khóa học"
+      withBackButton={STUDYING_COURSE_LIST}
+      maxWidth="lg"
+      subtitle={course?.code}
+    >
       <TabMenu
         items={[
           {

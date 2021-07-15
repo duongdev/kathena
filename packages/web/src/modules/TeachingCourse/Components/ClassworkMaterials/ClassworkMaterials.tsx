@@ -60,6 +60,15 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
     () => dataClasswork?.classworkMaterials.count ?? 0,
     [dataClasswork?.classworkMaterials.count],
   )
+  if (loadingClasswork) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
   if (loading) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -171,7 +180,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               }}
             />
           ) : (
-            'Không có tài liệu'
+            <Typography>Không có tài liệu</Typography>
           )}
         </CardContent>
       </SectionCard>

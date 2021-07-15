@@ -64,6 +64,15 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
       </Grid>
     )
   }
+  if (loadingClasswork) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
 
   if (!course) {
     return <div>Không có khóa học</div>
