@@ -9,10 +9,17 @@ import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  ClassworkSubmittedByStudentIdInCourseResponse,
+  ClassworkSubmissionStatusPayload,
   CreateClassworkSubmissionInput,
+  ListClassworkSubmittedsByStudentIdInCourseInput,
   SetGradeForClassworkSubmissionInput,
+  SubmissionStatusStatistics,
 } from './classwork.type'
-import { ClassworkSubmission } from './models/ClassworkSubmission'
+import {
+  ClassworkSubmission,
+  ClassworkSubmissionStatus,
+} from './models/ClassworkSubmission'
 
 @Resolver((_of) => ClassworkSubmission)
 export class ClassworkSubmissionResolver {
@@ -95,6 +102,49 @@ export class ClassworkSubmissionResolver {
       org.id,
       account.id,
       ClassworkAssignment,
+    )
+  }
+
+  @Query((_return) => [ClassworkSubmittedByStudentIdInCourseResponse])
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async listClassworkSubmittedsByStudentIdInCourse(
+    @Args('Input')
+    input: ListClassworkSubmittedsByStudentIdInCourseInput,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<Nullable<ClassworkSubmittedByStudentIdInCourseResponse>[]> {
+    return this.classworkService.listClassworkSubmittedsByStudentIdInCourse(
+      input,
+      org.id,
+      account.id,
+    )
+  }
+
+  @Query((_return) => ClassworkSubmissionStatusPayload)
+  @UseAuthGuard(P.Classwork_ShowSubmissionStatusList)
+  async getListOfStudentsSubmitAssignmentsByStatus(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('classworkSubmissionStatus', {
+      type: () => String,
+    })
+    classworkSubmissionStatus: ClassworkSubmissionStatus,
+  ): Promise<ClassworkSubmissionStatusPayload> {
+    return this.classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+      classworkAssignmentId,
+      classworkSubmissionStatus,
+    )
+  }
+
+  @Query((_return) => [SubmissionStatusStatistics])
+  @UseAuthGuard(P.Classwork_ShowSubmissionStatusList)
+  async submissionStatusStatistics(
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+  ): Promise<SubmissionStatusStatistics[]> {
+    return this.classworkService.submissionStatusStatistics(
+      classworkAssignmentId,
     )
   }
 }

@@ -128,6 +128,7 @@ type ClassworkSubmission implements BaseModel {
   updatedAt: DateTime!
   createdByAccountId: String!
   classworkId: ID!
+  courseId: ID!
   grade: Float!
   submissionFileIds: [String!]!
   description: String!
@@ -143,9 +144,28 @@ type ClassworkMaterialPayload {
   count: Int!
 }
 
+type ClassworkSubmissionStatusPayload {
+  classworkSubmissions: [ClassworkSubmission!]!
+  count: Int!
+}
+
 type AvgGradeOfClassworkByCourse {
   classworkTitle: String!
   avgGrade: Float!
+}
+
+type ClassworkSubmittedByStudentIdInCourseResponse {
+  classworkAssignmentId: ID
+  classworkAssignmentsTitle: ID
+  dueDate: DateTime
+  grade: Float
+  updatedAt: DateTime
+  description: String
+}
+
+type SubmissionStatusStatistics {
+  label: String!
+  number: Float!
 }
 
 type OrgOffice implements BaseModel {
@@ -217,6 +237,7 @@ enum Permission {
   Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
+  Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
   NoPermission
 }
@@ -286,6 +307,9 @@ type Query {
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
+  listClassworkSubmittedsByStudentIdInCourse(Input: ListClassworkSubmittedsByStudentIdInCourseInput!): [ClassworkSubmittedByStudentIdInCourseResponse!]!
+  getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
+  submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
 }
 
@@ -314,6 +338,12 @@ input CoursesFilterInput {
 
 input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
+}
+
+input ListClassworkSubmittedsByStudentIdInCourseInput {
+  courseId: String!
+  skip: Float!
+  limit: Float!
 }
 
 input ConversationPageOptionInput {

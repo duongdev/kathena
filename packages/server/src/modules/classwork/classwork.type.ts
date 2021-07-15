@@ -6,6 +6,7 @@ import { Publication } from 'core'
 
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
+import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @InputType()
 export class UpdateClassworkMaterialInput {
@@ -49,6 +50,14 @@ export class ClassworkMaterialPayload {
   count: number
 }
 
+@ObjectType()
+export class ClassworkSubmissionStatusPayload {
+  @Field((_type) => [ClassworkSubmission])
+  classworkSubmissions: ClassworkSubmission[]
+
+  @Field((_type) => Int)
+  count: number
+}
 @InputType()
 export class ClassworkFilterInput {
   @Field((_type) => ID)
@@ -133,4 +142,44 @@ export class AvgGradeOfClassworkByCourse {
 
   @Field((_type) => Number)
   avgGrade: number
+}
+
+@ObjectType()
+export class ClassworkSubmittedByStudentIdInCourseResponse {
+  @Field((_type) => ID, { nullable: true })
+  classworkAssignmentId: string
+
+  @Field((_type) => ID, { nullable: true })
+  classworkAssignmentsTitle: string
+
+  @Field({ nullable: true })
+  dueDate: Date
+
+  @Field({ nullable: true })
+  grade: number
+
+  @Field({ nullable: true })
+  updatedAt: Date
+
+  @Field({ nullable: true })
+  description: string
+}
+@InputType()
+export class ListClassworkSubmittedsByStudentIdInCourseInput {
+  @Field()
+  courseId: string
+
+  @Field((_type) => Number)
+  skip: number
+
+  @Field((_type) => Number)
+  limit: number
+}
+@ObjectType()
+export class SubmissionStatusStatistics {
+  @Field((_type) => String)
+  label: string
+
+  @Field((_type) => Number)
+  number: number
 }
