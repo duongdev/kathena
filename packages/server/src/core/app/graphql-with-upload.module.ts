@@ -23,8 +23,8 @@ export class GraphQLWithUploadModule implements NestModule {
         GraphQLModule.forRoot({
           autoSchemaFile: 'schema.gql',
           introspection: true,
-          playground: true,
-          uploads: false,
+          // playground: true,
+          // uploads: false,
           path: '/graphql',
           installSubscriptionHandlers: true,
           formatError: (error: GraphQLError) => {
