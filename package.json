@@ -36,7 +36,6 @@
     "*.{js,jsx,ts,tsx}": "yarn lint --fix"
   },
   "dependencies": {
-    "@apollo/gateway": "0.33.0",
     "@nestjs/common": "8.0.2"
   }
 }
