@@ -620,6 +620,22 @@ export class AcademicService {
    */
 
   /**
+   * START LESSON
+   */
+
+  // TODO: [BE] Implement academicService.createLesson
+
+  // TODO: [BE] Implement academicService.findAndPaginateLesson
+
+  // TODO: [BE] Implement academicService.updateLessonById
+
+  // TODO: [BE] Implement academicService.updateLessonPublicationById
+
+  /**
+   * END LESSON
+   */
+
+  /**
    * START STATISTICAL
    */
 

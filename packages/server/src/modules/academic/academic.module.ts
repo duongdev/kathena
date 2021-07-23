@@ -10,6 +10,7 @@ import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
 import { AcademicService } from './academic.service'
 import { AcademicSubjectResolver } from './academicSubject.resolver'
 import { CourseResolver } from './course.resolver'
+import { LessonResolver } from './lesson.resolver'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
 
@@ -21,7 +22,12 @@ import { Course } from './models/Course'
     forwardRef(() => AccountModule),
     forwardRef(() => FileStorageModule),
   ],
-  providers: [AcademicSubjectResolver, AcademicService, CourseResolver],
+  providers: [
+    AcademicSubjectResolver,
+    AcademicService,
+    CourseResolver,
+    LessonResolver,
+  ],
   exports: [AcademicService],
 })
 export class AcademicModule {}
