@@ -1,15 +1,14 @@
 import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
-import { Course } from 'modules/academic/models/Course'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 
-import { ConversationResolver } from './conversation.resolver'
-import { ConversationService } from './conversation.service'
-import { Conversation } from './model/Conversation'
+import { Rating } from './models/rating'
+import { RatingResolver } from './rating.resolver'
+import { RatingService } from './rating.service'
 
 @Global()
 @Module({
@@ -18,9 +17,9 @@ import { Conversation } from './model/Conversation'
     AccountModule,
     FileStorageModule,
     OrgModule,
-    TypegooseModule.forFeature([Conversation, Course]),
+    TypegooseModule.forFeature([Rating]),
   ],
-  providers: [ConversationService, ConversationResolver],
-  exports: [ConversationService],
+  providers: [RatingService, RatingResolver],
+  exports: [RatingService],
 })
-export class ConversationModule {}
+export class RatingModule {}

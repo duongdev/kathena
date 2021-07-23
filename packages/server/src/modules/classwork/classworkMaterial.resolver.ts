@@ -94,7 +94,7 @@ export class ClassworkMaterialResolver {
     @Args('classworkMaterialId', { type: () => ID, nullable: false })
     classworkMaterialId: string,
     @Args('publicationState', { type: () => Publication, nullable: false })
-    publicationState: string,
+    publicationState: Publication,
   ): Promise<ClassworkMaterial> {
     return this.classworkService.updateClassworkMaterialPublication(
       {

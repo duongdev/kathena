@@ -15,6 +15,7 @@ import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { MailModule } from 'modules/mail/mail.module'
 import { OrgModule } from 'modules/org/org.module'
 import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
+import { RatingModule } from 'modules/rating/rating.module'
 
 import { GraphQLWithUploadModule } from './graphql-with-upload.module'
 
@@ -29,6 +30,7 @@ export const appModules = [
   ClassworkModule,
   ConversationModule,
   MailModule,
+  RatingModule,
 ]
 
 @Module({
