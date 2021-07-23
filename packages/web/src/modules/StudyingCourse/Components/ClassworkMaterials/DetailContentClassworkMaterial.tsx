@@ -26,6 +26,10 @@ import {
   ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
+import {
+  buildPath,
+  STUDYING_COURSE_CLASSWORK_MATERIALS,
+} from 'utils/path-builder'
 
 export type DetailContentClassworkMaterialProps = {}
 
@@ -108,7 +112,10 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
     }
     return (
       <PageContainer
-        withBackButton
+        backButtonLabel="Danh sách tài liệu"
+        withBackButton={buildPath(STUDYING_COURSE_CLASSWORK_MATERIALS, {
+          id: classworkMaterial?.courseId as ANY,
+        })}
         maxWidth="md"
         title={`${classworkMaterial?.title}`}
       >
