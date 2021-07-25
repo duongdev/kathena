@@ -31,6 +31,10 @@ import {
   ConversationType,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
+import {
+  buildPath,
+  TEACHING_COURSE_CLASSWORK_MATERIALS,
+} from 'utils/path-builder'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
@@ -157,7 +161,10 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   }
   return (
     <PageContainer
-      withBackButton
+      backButtonLabel="Danh sách tài liệu"
+      withBackButton={buildPath(TEACHING_COURSE_CLASSWORK_MATERIALS, {
+        id: classworkMaterial?.courseId as ANY,
+      })}
       maxWidth="md"
       title={`${classworkMaterial?.title}`}
       actions={[

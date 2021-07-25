@@ -40,7 +40,7 @@ export class Classwork extends BaseModel {
   @prop({ type: [Types.ObjectId] })
   attachments?: string[]
 
-  @Field()
+  @Field((_type) => Publication)
   @prop({ required: true, index: true, default: Publication.Draft })
-  publicationState: string
+  publicationState: Publication
 }

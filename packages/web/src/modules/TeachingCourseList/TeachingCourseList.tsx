@@ -1,10 +1,11 @@
 import { FC, useMemo } from 'react'
 
-import { makeStyles, Paper, Skeleton } from '@material-ui/core'
+import { makeStyles, Paper, Skeleton, Grid } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import Search from 'components/Search'
 import format from 'date-fns/format'
 
+import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
   DataTable,
@@ -13,6 +14,7 @@ import {
   Typography,
   usePagination,
   useLocationQuery,
+  SectionCardSkeleton,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useTeachingCourseListQuery } from 'graphql/generated'
@@ -44,7 +46,15 @@ const TeachingCourseList: FC<TeachingCourseListProps> = (props) => {
     () => data?.courses.count ?? 0,
     [data?.courses.count],
   )
-
+  if (loading) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
   return (
     <PageContainer
       className={classes.root}

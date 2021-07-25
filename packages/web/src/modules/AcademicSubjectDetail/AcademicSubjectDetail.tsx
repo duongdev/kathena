@@ -20,6 +20,7 @@ import {
   buildPath,
   CREATE_ACADEMIC_COURSE,
   UPDATE_ACADEMIC_SUBJECT,
+  ACADEMIC_SUBJECTS,
 } from 'utils/path-builder'
 
 import UpdateImageAcademicSubjectDialog from './components/UpdateImageAcademicSubjectDialog'
@@ -57,7 +58,8 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
 
   return (
     <PageContainer
-      withBackButton
+      backButtonLabel="Danh sách khóa học"
+      withBackButton={ACADEMIC_SUBJECTS}
       maxWidth="md"
       title={subject.name}
       actions={[

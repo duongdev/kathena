@@ -1,15 +1,18 @@
-import { FC, Suspense, lazy } from 'react'
+import { FC, Suspense, lazy, useMemo } from 'react'
 
+import { Grid } from '@material-ui/core'
 import { Route, Switch, useParams } from 'react-router-dom'
 
-import { PageContainer, Spinner } from '@kathena/ui'
+import { DASHBOARD_SPACING } from '@kathena/theme'
+import { PageContainer, Spinner, SectionCardSkeleton } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
-import { Permission } from 'graphql/generated'
+import { Permission, useCourseDetailQuery } from 'graphql/generated'
 import {
   buildPath,
   TEACHING_COURSE,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENTS,
   TEACHING_COURSE_CLASSWORK_MATERIALS,
+  TEACHING_COURSE_LIST,
 } from 'utils/path-builder'
 
 import TabMenu from './Components/TabMenu'
@@ -24,8 +27,28 @@ export type TeachingCourseProps = {}
 
 const TeachingCourse: FC<TeachingCourseProps> = () => {
   const params: { id: string } = useParams()
+  const courseId = useMemo(() => params.id, [params])
+  const { data, loading } = useCourseDetailQuery({
+    variables: { id: courseId },
+  })
+  const course = useMemo(() => data?.findCourseById, [data])
+  if (loading) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
   return (
-    <PageContainer title="Chi tiết khóa học" withBackButton maxWidth="lg">
+    <PageContainer
+      title={course?.name}
+      subtitle={course?.code}
+      backButtonLabel="Danh sách khóa học"
+      withBackButton={TEACHING_COURSE_LIST}
+      maxWidth="lg"
+    >
       <TabMenu
         items={[
           {

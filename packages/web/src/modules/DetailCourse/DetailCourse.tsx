@@ -33,7 +33,11 @@ import {
   FindCourseByIdDocument,
   Permission,
 } from 'graphql/generated'
-import { buildPath, UPDATE_ACADEMIC_COURSE } from 'utils/path-builder'
+import {
+  buildPath,
+  UPDATE_ACADEMIC_COURSE,
+  ACADEMIC_COURSE_LIST,
+} from 'utils/path-builder'
 
 import AccountUserName from './AccountUserName'
 import AddLecturer from './AddLecturer'
@@ -164,7 +168,8 @@ const DetailCourse: FC<DetailCourseProps> = () => {
 
   return (
     <PageContainer
-      withBackButton
+      backButtonLabel="Danh sách khóa học"
+      withBackButton={ACADEMIC_COURSE_LIST}
       maxWidth="lg"
       subtitle={course.code}
       title={course.name}

@@ -66,6 +66,15 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
       </Grid>
     )
   }
+  if (loadingClasswork) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
 
   if (!course) {
     return <div>Course not found</div>
