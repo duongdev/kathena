@@ -2173,6 +2173,13 @@ describe('academic.service', () => {
     })
   })
 
+  describe('Lesson', () => {
+    // TODO: [BE] Implement academicService.createLesson
+    // TODO: [BE] Implement academicService.findAndPaginateLesson
+    // TODO: [BE] Implement academicService.updateLessonById
+    // TODO: [BE] Implement academicService.updateLessonPublicationById
+  })
+
   /**
    * START STATISTICAL
    */

@@ -23,6 +23,7 @@ import {
   AccountProfileDocument,
   AccountStatus,
 } from 'graphql/generated'
+import { USER_LIST } from 'utils/path-builder'
 import { getDisplayName } from 'utils/useAccountUtils'
 
 import { UpdateAccountDialog } from './UpdateAccountDialog'
@@ -100,7 +101,8 @@ const AccountProfile: FC<AccountProfileProps> = () => {
 
   return (
     <PageContainer
-      withBackButton
+      backButtonLabel="Danh sách người dùng"
+      withBackButton={USER_LIST}
       maxWidth="sm"
       title={getDisplayName(account)}
       subtitle={`@${account.username}`}

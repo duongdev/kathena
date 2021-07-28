@@ -93,7 +93,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  publicationState: String!
+  publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
 }
@@ -118,7 +118,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  publicationState: String!
+  publicationState: Publication!
 }
 
 type ClassworkSubmission implements BaseModel {
