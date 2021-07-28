@@ -19,7 +19,6 @@ import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 // eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
-import { ConversationsPayload } from '../../../dist/modules/conversation/conversation.type'
 
 import { GRADE_MAX, GRADE_MIN } from './classwork.const'
 import {
@@ -364,7 +363,7 @@ export class ClassworkService {
       accountId: string
       classworkMaterialId: string
     },
-    publicationState: Publication,
+    publicationState: string,
   ): Promise<DocumentType<ClassworkMaterial>> {
     this.logger.log(
       `[${this.updateClassworkMaterial.name}] Updating classworkMaterialPublication`,
