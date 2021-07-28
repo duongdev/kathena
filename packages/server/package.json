@@ -28,7 +28,7 @@
     "@nestjs/platform-fastify": "8.0.5",
     "@nestjs/serve-static": "2.2.2",
     "@nestjs/testing": "8.0.5",
-    "@typegoose/typegoose": "8.0.0-beta.21",
+    "@typegoose/typegoose": "8.0.0",
     "@types/graphql-upload": "8.0.6",
     "apollo-server-express": "2.25.2",
     "apollo-server-fastify": "2.25.2",
