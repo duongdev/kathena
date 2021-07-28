@@ -154,13 +154,13 @@ type AvgGradeOfClassworkByCourse {
   avgGrade: Float!
 }
 
-type ClassworkSubmittedByStudentIdInCourseResponse {
+type ClassworkAssignmentByStudentIdInCourseResponse {
   classworkAssignmentId: ID
   classworkAssignmentsTitle: ID
   dueDate: DateTime
-  grade: Float
-  updatedAt: DateTime
-  description: String
+  classworkSubmissionGrade: Float
+  classworkSubmissionUpdatedAt: DateTime
+  classworkSubmissionDescription: String
 }
 
 type SubmissionStatusStatistics {
@@ -304,10 +304,10 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  listClassworkAssignmentsByStudentIdInCourse(Input: ClassworkAssignmentByStudentIdInCourseInput!): [ClassworkAssignmentByStudentIdInCourseResponse!]!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
-  listClassworkSubmittedsByStudentIdInCourse(Input: ListClassworkSubmittedsByStudentIdInCourseInput!): [ClassworkSubmittedByStudentIdInCourseResponse!]!
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
@@ -340,10 +340,17 @@ input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
 }
 
-input ListClassworkSubmittedsByStudentIdInCourseInput {
-  courseId: String!
-  skip: Float!
+input ClassworkAssignmentByStudentIdInCourseInput {
+  courseId: ID!
   limit: Float!
+  lastId: ID
+  status: ClassworkAssignmentByStudentIdInCourseInputStatus = All
+}
+
+enum ClassworkAssignmentByStudentIdInCourseInputStatus {
+  All
+  HaveSubmission
+  NotHaveSubmission
 }
 
 input ConversationPageOptionInput {
