@@ -13,8 +13,8 @@ export class Lesson extends BaseModel {
   @prop({ type: Date, required: true })
   endTime: Date
 
-  @Field()
-  @prop({ type: String, required: false, nullable: true })
+  @Field({ nullable: true })
+  @prop({ type: String })
   description: string
 
   @Field((_type) => [String])
@@ -22,7 +22,7 @@ export class Lesson extends BaseModel {
   absentStudentIds: string[]
 
   @Field()
-  @prop({ type: String, required: true })
+  @prop({ type: String })
   ratingOfLecturer: string
 
   @Field((_type) => ID)
@@ -30,6 +30,6 @@ export class Lesson extends BaseModel {
   courseId: string
 
   @Field((_type) => Publication)
-  @prop({ required: true, index: true, default: Publication.Draft })
+  @prop({ required: true, default: Publication.Draft })
   publicationState: Publication
 }
