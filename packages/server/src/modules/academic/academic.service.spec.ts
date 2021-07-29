@@ -15,7 +15,7 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
-import { CreateCourseInput } from './academic.type'
+import { CreateCourseInput, CreateLessonInput } from './academic.type'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -2174,7 +2174,158 @@ describe('academic.service', () => {
   })
 
   describe('Lesson', () => {
-    // TODO: [BE] Implement academicService.createLesson
+    describe('createLesson', () => {
+      const course: ANY = {
+        id: objectId(),
+        orgId: objectId(),
+        name: 'NodeJs',
+        code: 'NODEJS',
+      }
+
+      const createLessonInput: CreateLessonInput = {
+        startTime: new Date('2021-08-15 14:00'),
+        endTime: new Date('2021-08-15 16:30'),
+        description: 'Day la buoi 1',
+        courseId: course.id,
+        publicationState: Publication.Published,
+      }
+
+      it('throws error if org invalid', async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('Org ID is invalid')
+      })
+
+      it('throws error if course not exist', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('THIS_COURSE_DOES_NOT_EXIST')
+      })
+
+      it('throws error if startDate and endDate invalid', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        createLessonInput.startTime = new Date('2021-08-15 14:00')
+        createLessonInput.endTime = new Date('2021-08-15 13:00')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('START_TIME_OR_END_TIME_INVALID')
+      })
+
+      it('throws error if startDate and endDate coincide with other lessons', async () => {
+        expect.assertions(4)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+
+        createLessonInput.startTime = new Date('2021-08-15 14:00')
+        createLessonInput.endTime = new Date('2021-08-15 16:30')
+
+        const lessons: ANY = [
+          {
+            ...createLessonInput,
+          },
+        ]
+
+        jest
+          .spyOn(academicService['lessonModel'], 'find')
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+
+        createLessonInput.startTime = new Date('2021-08-15 12:00')
+        createLessonInput.endTime = new Date('2021-08-15 16:30')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        createLessonInput.startTime = new Date('2021-08-15 15:00')
+        createLessonInput.endTime = new Date('2021-08-15 16:00')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        createLessonInput.startTime = new Date('2021-08-15 15:00')
+        createLessonInput.endTime = new Date('2021-08-15 17:00')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        createLessonInput.startTime = new Date('2021-08-15 12:00')
+        createLessonInput.endTime = new Date('2021-08-15 17:30')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+      })
+
+      it('returns a lesson', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lessons: ANY = [
+          {
+            ...createLessonInput,
+          },
+        ]
+
+        jest
+          .spyOn(academicService['lessonModel'], 'find')
+          .mockResolvedValueOnce(lessons)
+
+        createLessonInput.startTime = new Date('2021-08-16 12:00')
+        createLessonInput.endTime = new Date('2021-08-16 16:30')
+
+        await expect(
+          academicService.createLesson(objectId(), createLessonInput),
+        ).resolves.toMatchObject({
+          courseId: course.id,
+          description: 'Day la buoi 1',
+          startTime: createLessonInput.startTime,
+          endTime: createLessonInput.endTime,
+          publicationState: 'Published',
+        })
+      })
+    })
     // TODO: [BE] Implement academicService.findAndPaginateLesson
     // TODO: [BE] Implement academicService.updateLessonById
     // TODO: [BE] Implement academicService.updateLessonPublicationById

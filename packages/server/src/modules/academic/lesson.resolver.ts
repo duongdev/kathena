@@ -20,7 +20,6 @@ export class LessonResolver {
     private readonly academicService: AcademicService,
   ) {}
 
-  // TODO: [BE] Implement academicService.createLesson
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_CreateLesson)
   @UsePipes(ValidationPipe)

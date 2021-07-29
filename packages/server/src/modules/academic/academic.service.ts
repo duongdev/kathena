@@ -627,7 +627,6 @@ export class AcademicService {
    * START LESSON
    */
 
-  // TODO: [BE] Implement academicService.createLesson
   async createLesson(
     orgId: string,
     createLessonInput: CreateLessonInput,
