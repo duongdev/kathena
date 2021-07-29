@@ -363,7 +363,7 @@ export class ClassworkService {
       accountId: string
       classworkMaterialId: string
     },
-    publicationState: string,
+    publicationState: Publication,
   ): Promise<DocumentType<ClassworkMaterial>> {
     this.logger.log(
       `[${this.updateClassworkMaterial.name}] Updating classworkMaterialPublication`,
