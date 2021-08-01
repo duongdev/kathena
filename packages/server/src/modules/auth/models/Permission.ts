@@ -15,15 +15,6 @@ export enum Permission {
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
-
-  OrgOffice_Access = 'OrgOffice_Access',
-  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
-  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
-  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
-
-  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
-  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
-
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
@@ -32,15 +23,24 @@ export enum Permission {
   Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
+  Academic_CreateLesson = 'Academic_CreateLesson',
+
+  OrgOffice_Access = 'OrgOffice_Access',
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
+
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
 
+  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
 
+  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
@@ -48,13 +48,14 @@ export enum Permission {
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
 
-  Comment_CreateComment = 'Comment_CreateComment',
-
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   Classwork_ShowSubmissionStatusList = 'Classwork_ShowSubmissionStatusList',
 
   AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
+
+  Comment_CreateComment = 'Comment_CreateComment',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }

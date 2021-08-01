@@ -190,6 +190,20 @@ type AcademicSubject implements BaseModel {
   imageFileId: String!
 }
 
+type Lesson implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  absentStudentIds: [String!]!
+  ratingOfLecturer: String!
+  courseId: ID!
+  publicationState: Publication!
+}
+
 type AuthenticatePayload {
   account: Account!
   org: Org!
@@ -207,12 +221,6 @@ enum Permission {
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   Academic_UpdateAcademicSubject
-  OrgOffice_Access
-  OrgOffice_CreateOrgOffice
-  OrgOffice_ListOrgOffices
-  OrgOffice_UpdateOrgOffice
-  Classwork_ListClassworkAssignment
-  Classwork_ListClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -221,24 +229,31 @@ enum Permission {
   Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
+  Academic_CreateLesson
+  OrgOffice_Access
+  OrgOffice_CreateOrgOffice
+  OrgOffice_ListOrgOffices
+  OrgOffice_UpdateOrgOffice
   Teaching_Course_Access
   Studying_Course_Access
+  Classwork_ListClassworkAssignment
   Classwork_CreateClassworkAssignment
   Classwork_UpdateClassworkAssignment
   Classwork_SetClassworkAssignmentPublication
   Classwork_AddAttachmentsToClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkAssignment
+  Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
   Classwork_SetGradeForClassworkSubmission
-  Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
+  Comment_CreateComment
   NoPermission
 }
 
@@ -379,6 +394,7 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
+  createLesson(createLessonInput: CreateLessonInput!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -443,6 +459,14 @@ input UpdateCourseInput {
   tuitionFee: Float
   startDate: String
   lecturerIds: [ID!]
+}
+
+input CreateLessonInput {
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  courseId: String!
+  publicationState: Publication!
 }
 
 input CreateOrgOfficeInput {

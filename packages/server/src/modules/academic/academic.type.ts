@@ -2,6 +2,8 @@ import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
+import { Publication } from 'core'
+
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
 
@@ -121,4 +123,25 @@ export class CoursesFilterInput {
 
   @Field((_type) => [ID], { nullable: true })
   studentIds: string[]
+}
+
+@InputType()
+export class CreateLessonInput {
+  @Field((_type) => Date)
+  @IsNotEmpty({ message: 'Start time cannot be empty' })
+  startTime: Date
+
+  @Field((_type) => Date)
+  @IsNotEmpty({ message: 'End time cannot be empty' })
+  endTime: Date
+
+  @Field({ nullable: true })
+  description: string
+
+  @Field()
+  @IsNotEmpty({ message: 'CourseId can not be empty' })
+  courseId: string
+
+  @Field((_type) => Publication)
+  publicationState: Publication
 }
