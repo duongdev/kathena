@@ -18,9 +18,10 @@ import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 
 import { ANY, Nullable } from '../../types'
 
-import { CreateCourseInput } from './academic.type'
+import { CreateCourseInput, CreateLessonInput } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
+import { Lesson } from './models/Lesson'
 
 @Service()
 export class AcademicService {
@@ -39,6 +40,9 @@ export class AcademicService {
 
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
+
+    @InjectModel(Lesson)
+    private readonly lessonModel: ReturnModelType<typeof Lesson>,
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
@@ -623,7 +627,66 @@ export class AcademicService {
    * START LESSON
    */
 
-  // TODO: [BE] Implement academicService.createLesson
+  async createLesson(
+    orgId: string,
+    createLessonInput: CreateLessonInput,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonModel, courseModel } = this
+    const { startTime, endTime, description, courseId, publicationState } =
+      createLessonInput
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    const course = await courseModel.findById(courseId)
+
+    if (!course) {
+      throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    const startTimeInput = new Date(startTime)
+    const endTimeInput = new Date(endTime)
+
+    if (startTimeInput > endTimeInput) {
+      throw new Error('START_TIME_OR_END_TIME_INVALID')
+    }
+
+    const lessons = await lessonModel.find({
+      courseId,
+    })
+
+    const checkLessonStartDate = lessons.map((lesson) => {
+      if (
+        (startTimeInput >= new Date(lesson.startTime) &&
+          startTimeInput <= new Date(lesson.endTime)) ||
+        (endTimeInput >= new Date(lesson.startTime) &&
+          endTimeInput <= new Date(lesson.endTime)) ||
+        (new Date(lesson.startTime) >= startTimeInput &&
+          new Date(lesson.endTime) <= endTimeInput)
+      ) {
+        return Promise.reject(
+          new Error(`THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME`),
+        )
+      }
+
+      return lesson
+    })
+
+    await Promise.all(checkLessonStartDate).catch((err) => {
+      throw new Error(err)
+    })
+
+    const lesson = lessonModel.create({
+      startTime: startTimeInput,
+      endTime: endTimeInput,
+      description,
+      courseId,
+      publicationState,
+    })
+
+    return lesson
+  }
 
   // TODO: [BE] Implement academicService.findAndPaginateLesson
 
