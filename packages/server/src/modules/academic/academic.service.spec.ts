@@ -15,7 +15,7 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
-import { CreateCourseInput, CreateLessonInput } from './academic.type'
+import { CreateCourseInput } from './academic.type'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -2174,22 +2174,23 @@ describe('academic.service', () => {
   })
 
   describe('Lesson', () => {
+    const course: ANY = {
+      id: objectId(),
+      orgId: objectId(),
+      name: 'NodeJs',
+      code: 'NODEJS',
+    }
+
+    const createLessonInput: ANY = {
+      startTime: new Date('2021-08-15 14:00'),
+      endTime: new Date('2021-08-15 16:30'),
+      description: 'Day la buoi 1',
+      courseId: course.id,
+      orgId: course.orgId,
+      publicationState: Publication.Published,
+    }
+
     describe('createLesson', () => {
-      const course: ANY = {
-        id: objectId(),
-        orgId: objectId(),
-        name: 'NodeJs',
-        code: 'NODEJS',
-      }
-
-      const createLessonInput: CreateLessonInput = {
-        startTime: new Date('2021-08-15 14:00'),
-        endTime: new Date('2021-08-15 16:30'),
-        description: 'Day la buoi 1',
-        courseId: course.id,
-        publicationState: Publication.Published,
-      }
-
       it('throws error if org invalid', async () => {
         expect.assertions(1)
 
@@ -2326,7 +2327,166 @@ describe('academic.service', () => {
         })
       })
     })
-    // TODO: [BE] Implement academicService.findAndPaginateLesson
+
+    describe('findAndPaginateLessons', () => {
+      it('returns a list lesson by filter', async () => {
+        expect.assertions(4)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+          .mockResolvedValueOnce(course)
+
+        const listLessons: ANY = []
+
+        const studentId = objectId().toString()
+
+        const lesson1 = await academicService.createLesson(course.orgId, {
+          ...createLessonInput,
+          startTime: new Date('2021-08-15 14:00'),
+          endTime: new Date('2021-08-15 16:30'),
+        })
+
+        const lesson2 = await academicService.createLesson(course.orgId, {
+          ...createLessonInput,
+          startTime: new Date('2021-08-16 14:00'),
+          endTime: new Date('2021-08-16 16:30'),
+          description: 'Day la buoi 2',
+        })
+
+        lesson2.absentStudentIds = [studentId]
+        lesson2.save()
+
+        const lesson3 = await academicService.createLesson(course.orgId, {
+          ...createLessonInput,
+          startTime: new Date('2021-08-17 14:00'),
+          endTime: new Date('2021-08-17 16:30'),
+          description: 'Day la buoi 3',
+        })
+
+        const lesson4 = await academicService.createLesson(course.orgId, {
+          ...createLessonInput,
+          startTime: new Date('2021-08-18 14:00'),
+          endTime: new Date('2021-08-18 16:30'),
+          description: 'Day la buoi 4',
+        })
+
+        lesson4.absentStudentIds = [studentId]
+        lesson4.save()
+
+        listLessons.push(lesson1)
+
+        listLessons.push(lesson2)
+
+        listLessons.push(lesson3)
+
+        listLessons.push(lesson4)
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              orgId: course.orgId,
+              courseId: course.id,
+            },
+          ),
+        ).resolves.toMatchObject({
+          count: listLessons.length,
+          lessons: [
+            {
+              description: 'Day la buoi 1',
+            },
+            {
+              description: 'Day la buoi 2',
+            },
+          ],
+        })
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              orgId: course.orgId,
+              courseId: course.id,
+              startTime: new Date('2021-08-16'),
+            },
+          ),
+        ).resolves.toMatchObject({
+          count: listLessons.length,
+          lessons: [
+            {
+              description: 'Day la buoi 2',
+            },
+            {
+              description: 'Day la buoi 3',
+            },
+          ],
+        })
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              orgId: course.orgId,
+              courseId: course.id,
+              startTime: new Date('2021-08-16'),
+              endTime: new Date('2021-08-18'),
+            },
+          ),
+        ).resolves.toMatchObject({
+          count: listLessons.length,
+          lessons: [
+            {
+              description: 'Day la buoi 2',
+            },
+            {
+              description: 'Day la buoi 3',
+            },
+          ],
+        })
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              orgId: course.orgId,
+              courseId: course.id,
+              startTime: new Date('2021-08-16'),
+              endTime: new Date('2021-08-18'),
+              absentStudentId: studentId,
+            },
+          ),
+        ).resolves.toMatchObject({
+          count: listLessons.length,
+          lessons: [
+            {
+              description: 'Day la buoi 2',
+            },
+          ],
+        })
+      })
+    })
     // TODO: [BE] Implement academicService.updateLessonById
     // TODO: [BE] Implement academicService.updateLessonPublicationById
   })

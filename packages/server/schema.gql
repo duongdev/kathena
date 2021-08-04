@@ -230,6 +230,7 @@ enum Permission {
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
   Academic_CreateLesson
+  Academic_ListLesson
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -279,6 +280,11 @@ type CoursesPayload {
   count: Int!
 }
 
+type LessonsPayload {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
 type Conversation implements BaseModel {
   id: ID!
   orgId: ID!
@@ -312,6 +318,7 @@ type Query {
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
+  lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File
@@ -353,6 +360,14 @@ input CoursesFilterInput {
 
 input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
+}
+
+input LessonsFilterInput {
+  orgId: ID!
+  courseId: ID!
+  startTime: DateTime = null
+  endTime: DateTime = null
+  absentStudentId: ID = null
 }
 
 input ListClassworkSubmittedsByStudentIdInCourseInput {
@@ -501,7 +516,7 @@ input CreateClassworkAssignmentInput {
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
-  dueDate: String
+  dueDate: DateTime
 }
 
 input CreateClassworkSubmissionInput {

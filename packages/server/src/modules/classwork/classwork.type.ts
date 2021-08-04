@@ -98,7 +98,7 @@ export class UpdateClassworkAssignmentInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  dueDate?: string
+  dueDate?: Date
 }
 
 @InputType()

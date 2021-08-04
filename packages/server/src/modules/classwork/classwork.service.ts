@@ -731,7 +731,7 @@ export class ClassworkService {
       accountId: string
       orgId: string
     },
-    update: { title?: string; description?: string; dueDate?: string },
+    update: { title?: string; description?: string; dueDate?: Date },
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { id, orgId, accountId } = query
 

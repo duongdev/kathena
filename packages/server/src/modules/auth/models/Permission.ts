@@ -16,6 +16,8 @@ export enum Permission {
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
   Academic_Course_Access = 'Academic_Course_Access',
+
+  // Course
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
   Academic_ListCourses = 'Academic_ListCourses',
@@ -23,7 +25,10 @@ export enum Permission {
   Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
+
+  // Lesson
   Academic_CreateLesson = 'Academic_CreateLesson',
+  Academic_ListLesson = 'Academic_ListLesson',
 
   OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
