@@ -703,6 +703,7 @@ export class AcademicService {
     const lessonModel = this.lessonModel.find({
       orgId,
       courseId,
+      publicationState: Publication.Published,
     })
     if (startTime) {
       lessonModel.find({
@@ -732,7 +733,11 @@ export class AcademicService {
 
     const lessons = await lessonModel
 
-    const count = await this.lessonModel.countDocuments({ orgId, courseId })
+    const count = await this.lessonModel.countDocuments({
+      orgId,
+      courseId,
+      publicationState: Publication.Published,
+    })
     return { lessons, count }
   }
 
