@@ -16,9 +16,13 @@ import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignmen
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 
-import { ANY, Nullable } from '../../types'
+import { ANY, Nullable, PageOptionsInput } from '../../types'
 
-import { CreateCourseInput, CreateLessonInput } from './academic.type'
+import {
+  CreateCourseInput,
+  CreateLessonInput,
+  LessonsFilterInput,
+} from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
 import { Lesson } from './models/Lesson'
@@ -682,13 +686,60 @@ export class AcademicService {
       endTime: endTimeInput,
       description,
       courseId,
+      orgId,
       publicationState,
     })
 
     return lesson
   }
 
-  // TODO: [BE] Implement academicService.findAndPaginateLesson
+  async findAndPaginateLessons(
+    pageOptions: PageOptionsInput,
+    filter: LessonsFilterInput,
+  ): Promise<{ lessons: DocumentType<Lesson>[]; count: number }> {
+    const { orgId, courseId, startTime, endTime, absentStudentId } = filter
+    const { limit, skip } = pageOptions
+
+    const lessonModel = this.lessonModel.find({
+      orgId,
+      courseId,
+      publicationState: Publication.Published,
+    })
+    if (startTime) {
+      lessonModel.find({
+        startTime: {
+          $gte: new Date(startTime),
+        },
+      })
+    }
+
+    if (endTime) {
+      lessonModel.find({
+        endTime: {
+          $lte: new Date(endTime),
+        },
+      })
+    }
+
+    if (absentStudentId) {
+      lessonModel.find({
+        $expr: {
+          $in: [absentStudentId, '$absentStudentIds'],
+        },
+      })
+    }
+
+    lessonModel.sort({ startTime: 1 }).skip(skip).limit(limit)
+
+    const lessons = await lessonModel
+
+    const count = await this.lessonModel.countDocuments({
+      orgId,
+      courseId,
+      publicationState: Publication.Published,
+    })
+    return { lessons, count }
+  }
 
   // TODO: [BE] Implement academicService.updateLessonById
 

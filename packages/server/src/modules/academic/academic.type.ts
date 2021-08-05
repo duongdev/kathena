@@ -6,6 +6,7 @@ import { Publication } from 'core'
 
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
+import { Lesson } from './models/Lesson'
 
 @InputType()
 export class CreateAcademicSubjectInput {
@@ -144,4 +145,31 @@ export class CreateLessonInput {
 
   @Field((_type) => Publication)
   publicationState: Publication
+}
+
+@InputType()
+export class LessonsFilterInput {
+  @Field((_type) => ID)
+  orgId: string
+
+  @Field((_type) => ID)
+  courseId: string
+
+  @Field((_type) => Date, { nullable: true, defaultValue: null })
+  startTime?: Date
+
+  @Field((_type) => Date, { nullable: true, defaultValue: null })
+  endTime?: Date
+
+  @Field((_type) => ID, { nullable: true, defaultValue: null })
+  absentStudentId?: string
+}
+
+@ObjectType()
+export class LessonsPayload {
+  @Field((_type) => [Lesson])
+  lessons: Lesson[]
+
+  @Field((_type) => Int)
+  count: number
 }
