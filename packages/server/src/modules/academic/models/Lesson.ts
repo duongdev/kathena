@@ -13,23 +13,27 @@ export class Lesson extends BaseModel {
   @prop({ type: Date, required: true })
   endTime: Date
 
-  @Field()
-  @prop({ type: String, required: false, nullable: true })
+  @Field({ nullable: true, defaultValue: null })
+  @prop({ type: String })
   description: string
 
-  @Field((_type) => [String])
+  @Field((_type) => [String], { defaultValue: [] })
   @prop({ type: [String], default: [] })
   absentStudentIds: string[]
 
-  @Field()
-  @prop({ type: String, required: true })
+  @Field({ defaultValue: null })
+  @prop({ type: String, default: null })
   ratingOfLecturer: string
 
   @Field((_type) => ID)
   @prop({ required: true })
   courseId: string
 
+  @Field((_type) => ID)
+  @prop({ required: true })
+  orgId: string
+
   @Field((_type) => Publication)
-  @prop({ required: true, index: true, default: Publication.Draft })
+  @prop({ required: true, default: Publication.Draft })
   publicationState: Publication
 }

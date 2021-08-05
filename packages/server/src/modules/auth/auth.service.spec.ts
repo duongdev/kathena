@@ -275,6 +275,8 @@ describe('auth.service', () => {
                 "Academic_RemoveLecturersFromCourse",
                 "Academic_AcademicSubject_Access",
                 "Academic_Course_Access",
+                "Academic_CreateLesson",
+                "Academic_ListLesson",
                 "Classwork_ListClassworkAssignment",
                 "Classwork_ListClassworkMaterial",
                 "Classwork_CreateClassworkAssignment",
