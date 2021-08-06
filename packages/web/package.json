@@ -15,7 +15,7 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@apollo/client": "3.4.1",
+    "@apollo/client": "3.4.5",
     "@emotion/react": "11.4.0",
     "@emotion/styled": "11.3.0",
     "@material-ui/core": "5.0.0-alpha.32",
@@ -45,7 +45,7 @@
     "react-dropzone": "11.3.2",
     "react-helmet-async": "1.0.9",
     "react-image": "4.0.3",
-    "react-number-format": "4.6.4",
+    "react-number-format": "4.7.3",
     "react-quill": "1.3.5",
     "react-router-dom": "5.2.0",
     "react-use": "17.2.4",
@@ -67,7 +67,7 @@
     "@types/graphql": "14.5.0",
     "@types/gravatar": "1.8.3",
     "@types/jest": "26.0.24",
-    "@types/lodash": "4.14.171",
+    "@types/lodash": "4.14.172",
     "@types/node": "14.14.37",
     "@types/react": "17.0.15",
     "@types/react-dom": "17.0.9",
