@@ -53,7 +53,6 @@ export class LessonResolver {
     return this.academicService.findAndPaginateLessons(pageOptions, filter)
   }
 
-  // TODO: [BE] Implement academicService.updateLessonById
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_UpdateLesson)
   @UsePipes(ValidationPipe)

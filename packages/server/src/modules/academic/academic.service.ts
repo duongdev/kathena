@@ -743,7 +743,6 @@ export class AcademicService {
     return { lessons, count }
   }
 
-  // TODO: [BE] Implement academicService.updateLessonById
   async updateLessonById(
     query: {
       lessonId: string
