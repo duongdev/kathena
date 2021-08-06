@@ -173,3 +173,18 @@ export class LessonsPayload {
   @Field((_type) => Int)
   count: number
 }
+
+@InputType()
+export class UpdateLessonInput {
+  @Field((_type) => Date, { nullable: true })
+  startTime?: Date
+
+  @Field((_type) => Date, { nullable: true })
+  endTime?: Date
+
+  @Field({ nullable: true })
+  description?: string
+
+  @Field((_type) => Publication, { nullable: true })
+  publicationState?: Publication
+}

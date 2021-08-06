@@ -2489,6 +2489,8 @@ describe('academic.service', () => {
     })
     // TODO: [BE] Implement academicService.updateLessonById
     // TODO: [BE] Implement academicService.updateLessonPublicationById
+    // TODO: [BE] Implement academicService.findLessonById
+    // TODO: [BE] Implement academicService.commentsByLecturer
   })
 
   /**

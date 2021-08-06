@@ -199,7 +199,7 @@ type Lesson implements BaseModel {
   endTime: DateTime!
   description: String
   absentStudentIds: [String!]!
-  ratingOfLecturer: String!
+  lecturerComment: String!
   courseId: ID!
   publicationState: Publication!
 }
@@ -231,6 +231,9 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Academic_CreateLesson
   Academic_ListLesson
+  Academic_UpdateLesson
+  Academic_AddAbsentStudentsToLesson
+  Academic_RemoveAbsentStudentsFromLesson
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -403,6 +406,9 @@ type Mutation {
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
+  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
+  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -475,6 +481,13 @@ input CreateLessonInput {
   description: String
   courseId: String!
   publicationState: Publication!
+}
+
+input UpdateLessonInput {
+  startTime: DateTime
+  endTime: DateTime
+  description: String
+  publicationState: Publication
 }
 
 input CreateOrgOfficeInput {
