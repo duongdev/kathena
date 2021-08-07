@@ -2487,8 +2487,435 @@ describe('academic.service', () => {
         })
       })
     })
-    // TODO: [BE] Implement academicService.updateLessonById
+
+    describe('updateLessonById', () => {
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        const updateLessonInput: ANY = {
+          startTime: new Date(),
+          endTime: new Date(),
+          description: 'day la buoi 1',
+          publicationState: Publication.Published,
+        }
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            updateLessonInput,
+          ),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('throws error if startTime or endTime invalid', async () => {
+        expect.assertions(2)
+
+        const lesson: ANY = {
+          id: objectId(),
+          orgId: objectId(),
+          courseId: objectId(),
+          startTime: new Date('2021-08-01 12:00'),
+          endTime: new Date('2021-08-01 14:00'),
+        }
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findOne')
+          .mockResolvedValueOnce(lesson)
+          .mockResolvedValueOnce(lesson)
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            {
+              startTime: new Date('2021-08-02'),
+            },
+          ),
+        ).rejects.toThrowError('endTime or startTime invalid')
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            {
+              endTime: new Date('2021-07-31'),
+            },
+          ),
+        ).rejects.toThrowError('endTime or startTime invalid')
+      })
+
+      it('throws error if startDate and endDate coincide with other lessons', async () => {
+        expect.assertions(4)
+
+        const updateLessonInput: ANY = {
+          startTime: new Date('2021-08-15 14:00'),
+          endTime: new Date('2021-08-15 16:30'),
+          description: 'Day la buoi 1',
+          publicationState: Publication.Published,
+        }
+
+        const lesson: ANY = {
+          id: objectId(),
+          orgId: objectId(),
+          courseId: objectId(),
+          startTime: new Date('2021-08-01 12:00'),
+          endTime: new Date('2021-08-01 14:00'),
+        }
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findOne')
+          .mockResolvedValueOnce(lesson)
+          .mockResolvedValueOnce(lesson)
+          .mockResolvedValueOnce(lesson)
+          .mockResolvedValueOnce(lesson)
+
+        const lessons: ANY = [
+          {
+            ...updateLessonInput,
+          },
+        ]
+
+        jest
+          .spyOn(academicService['lessonModel'], 'find')
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+          .mockResolvedValueOnce(lessons)
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            updateLessonInput,
+          ),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        updateLessonInput.startTime = new Date('2021-08-15 15:00')
+        updateLessonInput.endTime = new Date('2021-08-15 16:00')
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            updateLessonInput,
+          ),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        updateLessonInput.startTime = new Date('2021-08-15 15:00')
+        updateLessonInput.endTime = new Date('2021-08-15 17:00')
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            updateLessonInput,
+          ),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+
+        updateLessonInput.startTime = new Date('2021-08-15 12:00')
+        updateLessonInput.endTime = new Date('2021-08-15 17:30')
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            updateLessonInput,
+          ),
+        ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
+      })
+
+      it('returns lessons with new data', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(objectId(), {
+          ...createLessonInput,
+          startTime: new Date('2021-08-01 12:00'),
+          endTime: new Date('2021-08-01 14:00'),
+        })
+
+        await expect(
+          academicService.updateLessonById(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            {
+              endTime: new Date('2021-08-01 15:00'),
+              description: 'day la buoi 2',
+            },
+          ),
+        ).resolves.toMatchObject({
+          description: 'day la buoi 2',
+          endTime: new Date('2021-08-01 15:00'),
+        })
+      })
+    })
+
+    describe('addAbsentStudentsToLesson', () => {
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.addAbsentStudentsToLesson(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+          ),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('throw error if account id is not a student or not found', async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const orgId = objectId()
+
+        const accountLecturer = await accountService.createAccount({
+          orgId,
+          email: 'huynhthanhcanh1234@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['lecturer'],
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(
+          orgId,
+          createLessonInput,
+        )
+
+        const id = objectId()
+
+        await expect(
+          academicService.addAbsentStudentsToLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [id],
+          ),
+        ).rejects.toThrowError(`ID ${id} is not found`)
+
+        await expect(
+          academicService.addAbsentStudentsToLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [accountLecturer.id],
+          ),
+        ).rejects.toThrowError(`${accountLecturer.displayName} isn't a student`)
+      })
+
+      it('returns lesson with new absentStudentIds data', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const orgId = objectId()
+
+        const accountStudent = await accountService.createAccount({
+          orgId,
+          email: 'huynhthanhcanh1234@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(
+          orgId,
+          createLessonInput,
+        )
+
+        const addAbsentStudentIds =
+          await academicService.addAbsentStudentsToLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [accountStudent.id],
+          )
+
+        expect(
+          JSON.stringify([accountStudent.id]) ===
+            JSON.stringify(addAbsentStudentIds.absentStudentIds),
+        ).toBeTruthy()
+      })
+    })
+
+    describe('removeAbsentStudentsFromLesson', () => {
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.removeAbsentStudentsFromLesson(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+          ),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('throw error if account id is not a student or not found', async () => {
+        expect.assertions(2)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const orgId = objectId()
+
+        const accountLecturer = await accountService.createAccount({
+          orgId,
+          email: 'huynhthanhcanh1234@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['lecturer'],
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(
+          orgId,
+          createLessonInput,
+        )
+
+        const id = objectId()
+
+        await expect(
+          academicService.removeAbsentStudentsFromLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [id],
+          ),
+        ).rejects.toThrowError(`ID ${id} is not found`)
+
+        await expect(
+          academicService.removeAbsentStudentsFromLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [accountLecturer.id],
+          ),
+        ).rejects.toThrowError(`${accountLecturer.displayName} isn't a student`)
+      })
+
+      it('returns lesson with new absentStudentIds data', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        const orgId = objectId()
+
+        const accountStudent = await accountService.createAccount({
+          orgId,
+          email: 'huynhthanhcanh1234@gmail.com',
+          password: '123456',
+          username: 'thanhcanh',
+          roles: ['student'],
+          displayName: 'Huynh Thanh Canh',
+        })
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(
+          orgId,
+          createLessonInput,
+        )
+
+        lesson.absentStudentIds.push(accountStudent.id)
+        await lesson.save()
+
+        const addAbsentStudentIds =
+          await academicService.removeAbsentStudentsFromLesson(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            [accountStudent.id],
+          )
+
+        expect(
+          JSON.stringify([]) ===
+            JSON.stringify(addAbsentStudentIds.absentStudentIds),
+        ).toBeTruthy()
+      })
+    })
+
     // TODO: [BE] Implement academicService.updateLessonPublicationById
+    // TODO: [BE] Implement academicService.findLessonById
+    // TODO: [BE] Implement academicService.commentsByLecturer
   })
 
   /**

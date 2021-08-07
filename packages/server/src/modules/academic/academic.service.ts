@@ -22,6 +22,7 @@ import {
   CreateCourseInput,
   CreateLessonInput,
   LessonsFilterInput,
+  UpdateLessonInput,
 } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
@@ -657,10 +658,11 @@ export class AcademicService {
     }
 
     const lessons = await lessonModel.find({
+      orgId,
       courseId,
     })
 
-    const checkLessonStartDate = lessons.map((lesson) => {
+    const checkLessonDate = lessons.map((lesson) => {
       if (
         (startTimeInput >= new Date(lesson.startTime) &&
           startTimeInput <= new Date(lesson.endTime)) ||
@@ -677,7 +679,7 @@ export class AcademicService {
       return lesson
     })
 
-    await Promise.all(checkLessonStartDate).catch((err) => {
+    await Promise.all(checkLessonDate).catch((err) => {
       throw new Error(err)
     })
 
@@ -741,9 +743,187 @@ export class AcademicService {
     return { lessons, count }
   }
 
-  // TODO: [BE] Implement academicService.updateLessonById
+  async updateLessonById(
+    query: {
+      lessonId: string
+      orgId: string
+      courseId: string
+    },
+    updateInput: UpdateLessonInput,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, orgId, courseId } = query
+    const { startTime, endTime, description, publicationState } = updateInput
+    const { lessonModel } = this
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    if (startTime) {
+      lesson.startTime = new Date(startTime)
+    }
+
+    if (endTime) {
+      lesson.endTime = endTime
+    }
+
+    if (lesson.endTime < lesson.startTime) {
+      throw new Error('endTime or startTime invalid')
+    }
+
+    const lessons = await lessonModel.find({
+      orgId,
+      courseId,
+    })
+
+    const checkLessonDate = lessons.map((data) => {
+      if (data.id !== lesson.id) {
+        if (
+          (lesson.startTime >= data.startTime &&
+            lesson.startTime <= data.endTime) ||
+          (lesson.endTime >= data.startTime &&
+            lesson.endTime <= data.endTime) ||
+          (data.startTime >= lesson.startTime && data.endTime <= lesson.endTime)
+        ) {
+          return Promise.reject(
+            new Error(`THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME`),
+          )
+        }
+      }
+
+      return lesson
+    })
+
+    await Promise.all(checkLessonDate).catch((err) => {
+      throw new Error(err)
+    })
+
+    if (description) {
+      lesson.description = description
+    }
+
+    if (publicationState) {
+      lesson.publicationState = publicationState
+    }
+
+    const update = await lesson.save()
+    return update
+  }
+
+  async addAbsentStudentsToLesson(
+    query: {
+      lessonId: string
+      orgId: string
+      courseId: string
+    },
+    absentStudentIds: string[],
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, orgId, courseId } = query
+    const { lessonModel } = this
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    const studentIds = absentStudentIds.map(async (id) => {
+      const account = await this.accountService.findOneAccount({
+        id,
+        orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${id} is not found`))
+      }
+      if (!account?.roles.includes('student')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a student`),
+        )
+      }
+      return lessonId
+    })
+
+    await Promise.all(studentIds).catch((err) => {
+      throw new Error(err)
+    })
+
+    absentStudentIds.forEach((id) => {
+      if (!lesson.absentStudentIds.includes(id)) {
+        lesson.absentStudentIds.push(id)
+      }
+    })
+
+    const update = await lesson.save()
+    return update
+  }
+
+  async removeAbsentStudentsFromLesson(
+    query: {
+      lessonId: string
+      orgId: string
+      courseId: string
+    },
+    absentStudentIds: string[],
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, orgId, courseId } = query
+    const { lessonModel } = this
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    const studentIds = absentStudentIds.map(async (studentId) => {
+      const account = await this.accountService.findOneAccount({
+        id: studentId,
+        orgId,
+      })
+
+      if (!account) {
+        return Promise.reject(new Error(`ID ${studentId} is not found`))
+      }
+      if (!account?.roles.includes('student')) {
+        return Promise.reject(
+          new Error(`${account?.displayName} isn't a student`),
+        )
+      }
+
+      return lessonId
+    })
+
+    await Promise.all(studentIds).catch((err) => {
+      throw new Error(err)
+    })
+
+    absentStudentIds.map((id) =>
+      lesson.absentStudentIds.splice(lesson.absentStudentIds.indexOf(id), 1),
+    )
+
+    const update = await lesson.save()
+    return update
+  }
 
   // TODO: [BE] Implement academicService.updateLessonPublicationById
+
+  // TODO: [BE] Implement academicService.findLessonById
+
+  // TODO: [BE] Implement academicService.commentsByLecturer
 
   /**
    * END LESSON

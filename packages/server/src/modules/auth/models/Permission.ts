@@ -29,6 +29,9 @@ export enum Permission {
   // Lesson
   Academic_CreateLesson = 'Academic_CreateLesson',
   Academic_ListLesson = 'Academic_ListLesson',
+  Academic_UpdateLesson = 'Academic_UpdateLesson',
+  Academic_AddAbsentStudentsToLesson = 'Academic_AddAbsentStudentsToLesson',
+  Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
 
   OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
