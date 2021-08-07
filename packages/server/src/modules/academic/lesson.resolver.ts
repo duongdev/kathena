@@ -117,7 +117,6 @@ export class LessonResolver {
 
   // TODO: [BE] Implement academicService.findLessonById
 
-  // TODO: [BE] Implement academicService.commentsByLecturer
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_CommentLesson)
   @UsePipes(ValidationPipe)

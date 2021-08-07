@@ -923,7 +923,6 @@ export class AcademicService {
 
   // TODO: [BE] Implement academicService.findLessonById
 
-  // TODO: [BE] Implement academicService.commentsByLecturer
   async commentsByLecturer(
     query: {
       lessonId: string
