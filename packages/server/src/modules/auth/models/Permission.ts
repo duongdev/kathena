@@ -32,6 +32,7 @@ export enum Permission {
   Academic_UpdateLesson = 'Academic_UpdateLesson',
   Academic_AddAbsentStudentsToLesson = 'Academic_AddAbsentStudentsToLesson',
   Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
+  Academic_CommentLesson = 'Academic_CommentLesson',
 
   OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',

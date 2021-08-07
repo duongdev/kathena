@@ -924,6 +924,36 @@ export class AcademicService {
   // TODO: [BE] Implement academicService.findLessonById
 
   // TODO: [BE] Implement academicService.commentsByLecturer
+  async commentsByLecturer(
+    query: {
+      lessonId: string
+      orgId: string
+      courseId: string
+    },
+    comment: string,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, orgId, courseId } = query
+    const { lessonModel } = this
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    if (!comment) {
+      return lesson
+    }
+
+    lesson.lecturerComment = comment
+
+    const update = await lesson.save()
+    return update
+  }
 
   /**
    * END LESSON

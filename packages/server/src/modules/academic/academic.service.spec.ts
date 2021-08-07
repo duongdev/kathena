@@ -2916,6 +2916,56 @@ describe('academic.service', () => {
     // TODO: [BE] Implement academicService.updateLessonPublicationById
     // TODO: [BE] Implement academicService.findLessonById
     // TODO: [BE] Implement academicService.commentsByLecturer
+    describe('commentsByLecturer', () => {
+      const comment = 'hom nay cac ban hoc rat tot'
+
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.commentsByLecturer(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            comment,
+          ),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('returns lesson with new comment data', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        const orgId = objectId()
+
+        jest
+          .spyOn(academicService['courseModel'], 'findById')
+          .mockResolvedValueOnce(course)
+
+        const lesson = await academicService.createLesson(
+          orgId,
+          createLessonInput,
+        )
+
+        await expect(
+          academicService.commentsByLecturer(
+            {
+              lessonId: lesson.id,
+              orgId: lesson.orgId,
+              courseId: lesson.courseId,
+            },
+            comment,
+          ),
+        ).resolves.toMatchObject({
+          lecturerComment: comment,
+        })
+      })
+    })
   })
 
   /**
