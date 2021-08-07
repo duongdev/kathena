@@ -139,7 +139,7 @@ Array [
       "Academic_UpdateLesson",
       "Academic_AddAbsentStudentsToLesson",
       "Academic_RemoveAbsentStudentsFromLesson",
-      "Academic_CommentLesson",
+      "Academic_CommentsForTheLesson",
       "Comment_CreateComment",
       "Classwork_ListClassworkSubmission",
       "AvgGradeStatisticsOfClassworkInTheCourse",

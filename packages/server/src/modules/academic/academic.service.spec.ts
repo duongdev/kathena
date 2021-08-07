@@ -2916,14 +2916,14 @@ describe('academic.service', () => {
     // TODO: [BE] Implement academicService.updateLessonPublicationById
     // TODO: [BE] Implement academicService.findLessonById
 
-    describe('commentsByLecturer', () => {
+    describe('commentsForTheLessonByLecturer', () => {
       const comment = 'hom nay cac ban hoc rat tot'
 
       it('throws error if lesson not found', async () => {
         expect.assertions(1)
 
         await expect(
-          academicService.commentsByLecturer(
+          academicService.commentsForTheLessonByLecturer(
             {
               lessonId: objectId(),
               orgId: objectId(),
@@ -2953,7 +2953,7 @@ describe('academic.service', () => {
         )
 
         await expect(
-          academicService.commentsByLecturer(
+          academicService.commentsForTheLessonByLecturer(
             {
               lessonId: lesson.id,
               orgId: lesson.orgId,

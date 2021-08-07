@@ -118,7 +118,7 @@ export class LessonResolver {
   // TODO: [BE] Implement academicService.findLessonById
 
   @Mutation((_returns) => Lesson)
-  @UseAuthGuard(P.Academic_CommentLesson)
+  @UseAuthGuard(P.Academic_CommentsForTheLesson)
   @UsePipes(ValidationPipe)
   async commentsByLecturer(
     @Args('courseId', { type: () => ID }) courseId: string,
@@ -127,7 +127,7 @@ export class LessonResolver {
     comment: string,
     @CurrentOrg() org: Org,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.commentsByLecturer(
+    return this.academicService.commentsForTheLessonByLecturer(
       {
         lessonId,
         orgId: org.id,
