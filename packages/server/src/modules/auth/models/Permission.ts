@@ -64,6 +64,8 @@ export enum Permission {
 
   Comment_CreateComment = 'Comment_CreateComment',
 
+  Rating_CreateRating = 'Rating_CreateRating',
+
   /** For testing purpose */
   NoPermission = 'NoPermission',
 }
