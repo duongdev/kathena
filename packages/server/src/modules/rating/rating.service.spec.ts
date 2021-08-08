@@ -67,7 +67,6 @@ describe('rating.service', () => {
     })
   })
 
-  // TODO:[BE] Implement ratingService.calculateAvgRatingByTargetId
   describe('calculateAvgRatingByTargetId', () => {
     it('throws error if org invalid', async () => {
       expect.assertions(1)

@@ -19,7 +19,6 @@ export class RatingService {
     private readonly orgService: OrgService,
   ) {}
 
-  // TODO: [BE] Implement ratingService.createRating
   async createRating(
     orgId: string,
     createdByAccountId: string,
