@@ -3,7 +3,6 @@ import { Connection } from 'mongoose'
 
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
 import { RatingService } from './rating.service'
@@ -11,7 +10,6 @@ import { RatingService } from './rating.service'
 describe('rating.service', () => {
   let module: TestingModule
   let ratingService: RatingService
-  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -21,7 +19,6 @@ describe('rating.service', () => {
     module = await createTestingModule(testDb.uri)
 
     ratingService = module.get<RatingService>(RatingService)
-    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
