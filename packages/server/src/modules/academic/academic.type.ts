@@ -188,3 +188,14 @@ export class UpdateLessonInput {
   @Field((_type) => Publication, { nullable: true })
   publicationState?: Publication
 }
+
+@InputType()
+export class CommentsForTheLessonByLecturerQuery {
+  @Field((_type) => ID)
+  @IsNotEmpty({ message: 'Lesson Id can not be empty' })
+  lessonId: string
+
+  @Field((_type) => ID)
+  @IsNotEmpty({ message: 'Course Id can not be empty' })
+  courseId: string
+}

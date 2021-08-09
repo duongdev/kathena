@@ -234,7 +234,7 @@ enum Permission {
   Academic_UpdateLesson
   Academic_AddAbsentStudentsToLesson
   Academic_RemoveAbsentStudentsFromLesson
-  Academic_CommentLesson
+  Academic_CommentsForTheLesson
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -417,7 +417,7 @@ type Mutation {
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
-  commentsByLecturer(comment: String, lessonId: ID!, courseId: ID!): Lesson!
+  commentsByLecturer(comment: String!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -497,6 +497,11 @@ input UpdateLessonInput {
   endTime: DateTime
   description: String
   publicationState: Publication
+}
+
+input CommentsForTheLessonByLecturerQuery {
+  lessonId: ID!
+  courseId: ID!
 }
 
 input CreateOrgOfficeInput {

@@ -2924,9 +2924,9 @@ describe('academic.service', () => {
 
         await expect(
           academicService.commentsForTheLessonByLecturer(
+            objectId(),
             {
               lessonId: objectId(),
-              orgId: objectId(),
               courseId: objectId(),
             },
             comment,
@@ -2954,9 +2954,9 @@ describe('academic.service', () => {
 
         await expect(
           academicService.commentsForTheLessonByLecturer(
+            lesson.orgId,
             {
               lessonId: lesson.id,
-              orgId: lesson.orgId,
               courseId: lesson.courseId,
             },
             comment,

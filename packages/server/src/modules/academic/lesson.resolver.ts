@@ -11,6 +11,7 @@ import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
+  CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
   LessonsFilterInput,
   LessonsPayload,
@@ -121,18 +122,16 @@ export class LessonResolver {
   @UseAuthGuard(P.Academic_CommentsForTheLesson)
   @UsePipes(ValidationPipe)
   async commentsByLecturer(
-    @Args('courseId', { type: () => ID }) courseId: string,
-    @Args('lessonId', { type: () => ID }) lessonId: string,
-    @Args('comment', { type: () => String, nullable: true })
-    comment: string,
+    @Args('commentsForTheLessonByLecturerQuery', {
+      type: () => CommentsForTheLessonByLecturerQuery,
+    })
+    commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery,
+    @Args('comment', { type: () => String }) comment: string,
     @CurrentOrg() org: Org,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.commentsForTheLessonByLecturer(
-      {
-        lessonId,
-        orgId: org.id,
-        courseId,
-      },
+      org.id,
+      commentsForTheLessonByLecturerQuery,
       comment,
     )
   }
