@@ -1,5 +1,13 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  ID,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+  Root,
+} from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
@@ -7,6 +15,7 @@ import { Logger } from 'core'
 import { CurrentOrg, UseAuthGuard } from 'core/auth'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
+import { RatingService } from 'modules/rating/rating.service'
 import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
@@ -25,6 +34,9 @@ export class LessonResolver {
   constructor(
     @Inject(forwardRef(() => AcademicService))
     private readonly academicService: AcademicService,
+
+    @Inject(forwardRef(() => RatingService))
+    private readonly ratingService: RatingService,
   ) {}
 
   @Mutation((_returns) => Lesson)
@@ -111,6 +123,11 @@ export class LessonResolver {
       },
       absentStudentIds,
     )
+  }
+
+  @ResolveField((_returns) => Number)
+  numberOfStars(@Root() { id }, @CurrentOrg() org: Org): Promise<number> {
+    return this.ratingService.calculateAvgRatingByTargetId(org.id, id)
   }
 
   // TODO: [BE] Implement academicService.updateLessonPublicationById

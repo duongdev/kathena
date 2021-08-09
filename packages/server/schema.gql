@@ -202,6 +202,7 @@ type Lesson implements BaseModel {
   lecturerComment: String!
   courseId: ID!
   publicationState: Publication!
+  numberOfStars: Float!
 }
 
 type AuthenticatePayload {
@@ -259,6 +260,7 @@ enum Permission {
   Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
   Comment_CreateComment
+  Rating_CreateRating
   NoPermission
 }
 
@@ -287,6 +289,16 @@ type CoursesPayload {
 type LessonsPayload {
   lessons: [Lesson!]!
   count: Int!
+}
+
+type Rating implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  targetId: ID!
+  numberOfStars: Float!
 }
 
 type Conversation implements BaseModel {
@@ -435,6 +447,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRating(ratingInput: RatingInput!): Rating!
 }
 
 input CreateAccountInput {
@@ -557,6 +570,11 @@ input CreateConversationInput {
   roomId: ID!
   content: String!
   type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 type Subscription {

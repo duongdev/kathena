@@ -33,6 +33,7 @@ export const staff: Role = {
     P.Classwork_SetClassworkAssignmentPublication,
     P.Classwork_UpdateClassworkAssignment,
     P.Comment_CreateComment,
+    P.Rating_CreateRating,
     P.AvgGradeStatisticsOfClassworkInTheCourse,
   ],
 }
@@ -47,6 +48,7 @@ export const student: Role = {
     P.Classwork_ListClassworkMaterial,
     P.Comment_CreateComment,
     P.Academic_ListLesson,
+    P.Rating_CreateRating,
     P.Classwork_CreateClassworkSubmission,
     P.Classwork_ListClassworkSubmission,
   ],
@@ -79,6 +81,7 @@ export const lecturer: Role = {
     P.Academic_RemoveAbsentStudentsFromLesson,
     P.Academic_CommentsForTheLesson,
     P.Comment_CreateComment,
+    P.Rating_CreateRating,
     P.Classwork_ListClassworkSubmission,
     P.AvgGradeStatisticsOfClassworkInTheCourse,
   ],
