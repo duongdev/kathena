@@ -20,6 +20,8 @@ import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
+  CommentsForTheLessonByLecturerInput,
+  CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
   LessonsFilterInput,
   LessonsPayload,
@@ -134,5 +136,24 @@ export class LessonResolver {
 
   // TODO: [BE] Implement academicService.findLessonById
 
-  // TODO: [BE] Implement academicService.commentsByLecturer
+  @Mutation((_returns) => Lesson)
+  @UseAuthGuard(P.Academic_CommentsForTheLesson)
+  @UsePipes(ValidationPipe)
+  async commentsByLecturer(
+    @Args('commentsForTheLessonByLecturerQuery', {
+      type: () => CommentsForTheLessonByLecturerQuery,
+    })
+    commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery,
+    @Args('commentsForTheLessonByLecturerInput', {
+      type: () => CommentsForTheLessonByLecturerInput,
+    })
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
+    @CurrentOrg() org: Org,
+  ): Promise<DocumentType<Lesson>> {
+    return this.academicService.commentsForTheLessonByLecturer(
+      org.id,
+      commentsForTheLessonByLecturerQuery,
+      commentsForTheLessonByLecturerInput,
+    )
+  }
 }

@@ -19,6 +19,8 @@ import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY, Nullable, PageOptionsInput } from '../../types'
 
 import {
+  CommentsForTheLessonByLecturerInput,
+  CommentsForTheLessonByLecturerQuery,
   CreateCourseInput,
   CreateLessonInput,
   LessonsFilterInput,
@@ -923,7 +925,34 @@ export class AcademicService {
 
   // TODO: [BE] Implement academicService.findLessonById
 
-  // TODO: [BE] Implement academicService.commentsByLecturer
+  async commentsForTheLessonByLecturer(
+    orgId: string,
+    query: CommentsForTheLessonByLecturerQuery,
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, courseId } = query
+    const { comment } = commentsForTheLessonByLecturerInput
+    const { lessonModel } = this
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    if (!comment) {
+      return lesson
+    }
+
+    lesson.lecturerComment = comment
+
+    const update = await lesson.save()
+    return update
+  }
 
   /**
    * END LESSON

@@ -79,6 +79,7 @@ export const lecturer: Role = {
     P.Academic_UpdateLesson,
     P.Academic_AddAbsentStudentsToLesson,
     P.Academic_RemoveAbsentStudentsFromLesson,
+    P.Academic_CommentsForTheLesson,
     P.Comment_CreateComment,
     P.Rating_CreateRating,
     P.Classwork_ListClassworkSubmission,
