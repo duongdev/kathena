@@ -1,7 +1,9 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { ANY } from 'types'
 
 import { RatingService } from './rating.service'
 
@@ -33,7 +35,51 @@ describe('rating.service', () => {
     expect(ratingService).toBeDefined()
   })
 
-  // TODO: [BE] Implement ratingService.createRating
+  describe('createRating', () => {
+    const createRatingInput: ANY = {
+      targetId: objectId(),
+      numberOfStars: 5,
+    }
 
-  // TODO:[BE] Implement ratingService.calculateAvgRatingByTargetId
+    it('returns new rating', async () => {
+      expect.assertions(1)
+
+      await expect(
+        ratingService.createRating(objectId(), objectId(), createRatingInput),
+      ).resolves.toMatchObject({
+        numberOfStars: 5,
+        targetId: createRatingInput.targetId,
+      })
+    })
+  })
+
+  describe('calculateAvgRatingByTargetId', () => {
+    it('returns the average number of stars by targetId', async () => {
+      expect.assertions(1)
+
+      const targetId = objectId()
+      const dataArrayOfTargetId: ANY = [
+        {
+          id: targetId,
+          numberOfStars: 5,
+        },
+        {
+          id: targetId,
+          numberOfStars: 4,
+        },
+        {
+          id: targetId,
+          numberOfStars: 4,
+        },
+      ]
+
+      jest
+        .spyOn(ratingService['ratingModel'], 'find')
+        .mockResolvedValueOnce(dataArrayOfTargetId)
+
+      await expect(
+        ratingService.calculateAvgRatingByTargetId(objectId(), targetId),
+      ).resolves.toEqual(4.3)
+    })
+  })
 })

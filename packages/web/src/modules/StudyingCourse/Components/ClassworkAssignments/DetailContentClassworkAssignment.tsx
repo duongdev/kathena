@@ -52,9 +52,10 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
 
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
 
-    const { data: submit } = useFindOneClassworkSubmissionQuery({
-      variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
-    })
+    const { data: submit, loading: loadingSubmit } =
+      useFindOneClassworkSubmissionQuery({
+        variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
+      })
 
     const classworkAssignmentSubmit = useMemo(
       () => submit?.findOneClassworkSubmission,
@@ -114,6 +115,9 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     }
 
     if (loading && !data) {
+      return <PageContainerSkeleton maxWidth="md" />
+    }
+    if (loadingSubmit) {
       return <PageContainerSkeleton maxWidth="md" />
     }
 
