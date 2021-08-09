@@ -20,6 +20,7 @@ import { PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
+  CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
   LessonsFilterInput,
@@ -143,13 +144,16 @@ export class LessonResolver {
       type: () => CommentsForTheLessonByLecturerQuery,
     })
     commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery,
-    @Args('comment', { type: () => String }) comment: string,
+    @Args('commentsForTheLessonByLecturerInput', {
+      type: () => CommentsForTheLessonByLecturerInput,
+    })
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
     @CurrentOrg() org: Org,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.commentsForTheLessonByLecturer(
       org.id,
       commentsForTheLessonByLecturerQuery,
-      comment,
+      commentsForTheLessonByLecturerInput,
     )
   }
 }

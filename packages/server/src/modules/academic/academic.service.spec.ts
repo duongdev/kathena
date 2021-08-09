@@ -2929,7 +2929,7 @@ describe('academic.service', () => {
               lessonId: objectId(),
               courseId: objectId(),
             },
-            comment,
+            { comment },
           ),
         ).rejects.toThrowError('Lesson not found')
       })
@@ -2959,7 +2959,7 @@ describe('academic.service', () => {
               lessonId: lesson.id,
               courseId: lesson.courseId,
             },
-            comment,
+            { comment },
           ),
         ).resolves.toMatchObject({
           lecturerComment: comment,

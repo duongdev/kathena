@@ -19,6 +19,7 @@ import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY, Nullable, PageOptionsInput } from '../../types'
 
 import {
+  CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateCourseInput,
   CreateLessonInput,
@@ -927,9 +928,10 @@ export class AcademicService {
   async commentsForTheLessonByLecturer(
     orgId: string,
     query: CommentsForTheLessonByLecturerQuery,
-    comment: string,
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, courseId } = query
+    const { comment } = commentsForTheLessonByLecturerInput
     const { lessonModel } = this
 
     const lesson = await lessonModel.findOne({
