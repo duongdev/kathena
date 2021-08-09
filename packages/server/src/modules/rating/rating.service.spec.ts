@@ -43,20 +43,9 @@ describe('rating.service', () => {
       targetId: objectId(),
       numberOfStars: 5,
     }
-    it('throws error if org invalid', async () => {
-      expect.assertions(1)
-
-      await expect(
-        ratingService.createRating(objectId(), objectId(), createRatingInput),
-      ).rejects.toThrowError('Org ID is invalid')
-    })
 
     it('returns new rating', async () => {
       expect.assertions(1)
-
-      jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
 
       await expect(
         ratingService.createRating(objectId(), objectId(), createRatingInput),
@@ -68,20 +57,8 @@ describe('rating.service', () => {
   })
 
   describe('calculateAvgRatingByTargetId', () => {
-    it('throws error if org invalid', async () => {
-      expect.assertions(1)
-
-      await expect(
-        ratingService.calculateAvgRatingByTargetId(objectId(), objectId()),
-      ).rejects.toThrowError('Org ID is invalid')
-    })
-
     it('returns the average number of stars by targetId', async () => {
       expect.assertions(1)
-
-      jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
 
       const targetId = objectId()
       const dataArrayOfTargetId: ANY = [

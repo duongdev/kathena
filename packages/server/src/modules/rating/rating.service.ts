@@ -25,9 +25,6 @@ export class RatingService {
     ratingInput: RatingInput,
   ): Promise<DocumentType<Rating>> {
     const { targetId, numberOfStars } = ratingInput
-    if (!(await this.orgService.validateOrgId(orgId))) {
-      throw new Error(`Org ID is invalid`)
-    }
 
     const rating = await this.ratingModel.findOne({
       targetId,
@@ -55,10 +52,6 @@ export class RatingService {
     orgId: string,
     targetId: string,
   ): Promise<number> {
-    if (!(await this.orgService.validateOrgId(orgId))) {
-      throw new Error(`Org ID is invalid`)
-    }
-
     const listRating = await this.ratingModel.find({
       targetId,
       orgId,
