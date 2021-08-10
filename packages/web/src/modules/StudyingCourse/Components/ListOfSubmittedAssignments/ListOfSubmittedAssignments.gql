@@ -1,0 +1,24 @@
+mutation CreateClassworkSubmission(
+  $CreateClassworkSubmissionInput: CreateClassworkSubmissionInput!
+  $courseId: ID!
+) {
+  createClassworkSubmission(
+    createClassworkSubmissionInput: $CreateClassworkSubmissionInput
+    courseId: $courseId
+  ) {
+    id
+    createdAt
+    submissionFileIds
+    description
+  }
+}
+
+query FindOneClassworkSubmission($ClassworkAssignment: ID!) {
+  findOneClassworkSubmission(ClassworkAssignment: $ClassworkAssignment) {
+    id
+    createdAt
+    classworkId
+    createdByAccountId
+    description
+  }
+}
