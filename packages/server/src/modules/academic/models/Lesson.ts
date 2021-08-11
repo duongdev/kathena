@@ -36,4 +36,8 @@ export class Lesson extends BaseModel {
   @Field((_type) => Publication)
   @prop({ required: true, default: Publication.Draft })
   publicationState: Publication
+
+  @Field()
+  @prop({ type: Number, default: 0 })
+  avgNumberOfStars: number
 }

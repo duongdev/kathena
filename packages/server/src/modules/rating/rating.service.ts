@@ -2,9 +2,10 @@ import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
 
 import { Service, InjectModel, Logger } from 'core'
+import { Lesson } from 'modules/academic/models/Lesson'
 import { OrgService } from 'modules/org/org.service'
 
-import { Rating } from './models/rating'
+import { Rating } from './models/Rating'
 import { RatingInput } from './rating.type'
 
 @Service()
@@ -14,6 +15,8 @@ export class RatingService {
   constructor(
     @InjectModel(Rating)
     private readonly ratingModel: ReturnModelType<typeof Rating>,
+    @InjectModel(Lesson)
+    private readonly lessonModel: ReturnModelType<typeof Lesson>,
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
@@ -32,18 +35,26 @@ export class RatingService {
     })
 
     if (rating) {
+      await this.calculateAvgRatingByTargetId(
+        orgId,
+        targetId,
+        numberOfStars,
+        rating,
+      )
       rating.numberOfStars = numberOfStars
 
       const update = await rating.save()
       return update
     }
 
-    const createRating = this.ratingModel.create({
+    const createRating = await this.ratingModel.create({
       createdByAccountId,
       orgId,
       targetId,
       numberOfStars,
     })
+
+    await this.calculateAvgRatingByTargetId(orgId, targetId, numberOfStars)
 
     return createRating
   }
@@ -51,24 +62,43 @@ export class RatingService {
   async calculateAvgRatingByTargetId(
     orgId: string,
     targetId: string,
+    newStar: number,
+    rating?: Rating,
   ): Promise<number> {
-    const listRating = await this.ratingModel.find({
+    const countRating = await this.ratingModel.countDocuments({
       targetId,
       orgId,
     })
 
-    let sum = 0
+    const lesson = await this.lessonModel.findOne({
+      _id: targetId,
+      orgId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    let currentSumNumberOfStars = 0
+    let newSum = 0
     let avgRating = 0
 
-    if (listRating.length > 0) {
-      const listRatingMap = listRating.map(async (rating) => {
-        sum += rating.numberOfStars
-      })
-
-      await Promise.all(listRatingMap).then(() => {
-        avgRating = sum / listRating.length
-      })
+    if (rating) {
+      currentSumNumberOfStars = Math.round(
+        lesson.avgNumberOfStars * countRating,
+      )
+      newSum = currentSumNumberOfStars - rating.numberOfStars + newStar
+    } else {
+      currentSumNumberOfStars = Math.round(
+        lesson.avgNumberOfStars * (countRating - 1),
+      )
+      newSum = currentSumNumberOfStars + newStar
     }
-    return Math.round(avgRating * 10) / 10
+    avgRating = newSum / countRating
+
+    lesson.avgNumberOfStars = avgRating
+    await lesson.save()
+
+    return avgRating
   }
 }
