@@ -28,7 +28,6 @@ import {
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
-  ClassworkAssignmentByStudentIdInCourseResponse,
   ClassworkAssignmentByStudentIdInCourseInput,
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
 } from './classwork.type'

@@ -19,7 +19,6 @@ import {
   CreateClassworkSubmissionInput,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
   ClassworkAssignmentByStudentIdInCourseInput,
-  ClassworkAssignmentByStudentIdInCourseResponse,
 } from './classwork.type'
 import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
