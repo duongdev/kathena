@@ -32,6 +32,7 @@ import {
   ClassworkAssignmentByStudentIdInCourseInput,
   SubmissionStatusStatistics,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
+  ClassworkAssignmentByStudentIdInCourseResponsePayload,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -906,8 +907,8 @@ export class ClassworkService {
     query: ClassworkAssignmentByStudentIdInCourseInput,
     orgId: string,
     accountId: string,
-  ): Promise<Nullable<ClassworkAssignmentByStudentIdInCourseResponse>[]> {
-    const { courseId, limit, lastId, status } = query
+  ): Promise<ClassworkAssignmentByStudentIdInCourseResponsePayload> {
+    const { courseId, limit, skip, status } = query
 
     this.logger.log(
       `[${this.listClassworkAssignmentsByStudentIdInCourse.name}] List ClassworkSubmissions`,
@@ -917,47 +918,89 @@ export class ClassworkService {
       courseId,
       accountId,
       limit,
-      lastId,
+      skip,
+      status,
     })
 
-    let promisePending: ANY
-
-    let res: Nullable<ClassworkAssignmentByStudentIdInCourseResponse>[] = []
-
-    let QueryListClassworkAssignment: ANY
-
-    if (lastId) {
-      QueryListClassworkAssignment = {
-        courseId,
-        orgId,
-        publicationState: Publication.Published,
-        $and: [
-          {
-            _id: {
-              $lt: lastId,
-            },
-          },
-        ],
-      }
-    } else {
-      QueryListClassworkAssignment = {
-        courseId,
-        orgId,
-        publicationState: Publication.Published,
-      }
-    }
-
+    let listClassworkAssignment: ClassworkAssignment[] = []
+    let count = 0
     if (status === ClassworkAssignmentByStudentIdInCourseInputStatus.All) {
-      const classworkAssignments = await this.classworkAssignmentsModel.find(
-        QueryListClassworkAssignment,
+      listClassworkAssignment = await this.classworkAssignmentsModel.find(
+        {
+          orgId,
+          courseId,
+          publicationState: Publication.Published,
+        },
         null,
         {
-          limit,
           sort: { _id: -1 },
+          skip,
+          limit,
         },
       )
 
-      promisePending = classworkAssignments.map(
+      count = await this.classworkAssignmentsModel.count({
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+      })
+    } else if (
+      status ===
+      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveSubmission
+    ) {
+      listClassworkAssignment = await this.classworkAssignmentsModel.find(
+        {
+          orgId,
+          courseId,
+          publicationState: Publication.Published,
+          haveSubmission: true,
+        },
+        null,
+        {
+          sort: { _id: -1 },
+          skip,
+          limit,
+        },
+      )
+
+      count = await this.classworkAssignmentsModel.count({
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+        haveSubmission: true,
+      })
+    } else if (
+      status ===
+      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission
+    ) {
+      listClassworkAssignment = await this.classworkAssignmentsModel.find(
+        {
+          orgId,
+          courseId,
+          publicationState: Publication.Published,
+          haveSubmission: false,
+        },
+        null,
+        {
+          sort: { _id: -1 },
+          skip,
+          limit,
+        },
+      )
+      count = await this.classworkAssignmentsModel.count({
+        orgId,
+        courseId,
+        publicationState: Publication.Published,
+        haveSubmission: false,
+      })
+    }
+
+    let promisePending
+    if (
+      status !==
+      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission
+    ) {
+      promisePending = listClassworkAssignment.map(
         async (
           value,
         ): Promise<
@@ -992,102 +1035,30 @@ export class ClassworkService {
           return response
         },
       )
-
-      res = await Promise.all(promisePending)
     } else if (
       status ===
-      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveSubmission
+      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission
     ) {
-      const listSubmissions = await this.classworkSubmissionModel.find(
-        {
-          courseId,
-          createdByAccountId: accountId,
-          orgId,
-        },
-        null,
-        {
-          sort: { _id: -1 },
-          limit,
-        },
-      )
-
-      promisePending = listSubmissions.map(
-        async (
-          el,
-        ): Promise<
-          Nullable<ClassworkAssignmentByStudentIdInCourseResponse>
-        > => {
-          const classworkAssignment =
-            await this.classworkAssignmentsModel.findById(el.classworkId)
-          if (!classworkAssignment) {
-            return null
-          }
-
-          const response: ClassworkAssignmentByStudentIdInCourseResponse = {
-            classworkAssignmentId: classworkAssignment.id,
-            classworkAssignmentsTitle: classworkAssignment.title,
-            dueDate: classworkAssignment.dueDate,
-            classworkSubmissionGrade: el.grade,
-            classworkSubmissionUpdatedAt: el.updatedAt,
-            classworkSubmissionDescription: el.description
-              ? el.description
-              : '',
-          }
-
-          return response
-        },
-      )
-
-      res = await Promise.all(promisePending)
-    } else if (
-      status ===
-      ClassworkAssignmentByStudentIdInCourseInputStatus.NotHaveSubmission
-    ) {
-      const classworkAssignments = await this.classworkAssignmentsModel.find(
-        QueryListClassworkAssignment,
-        null,
-        {
-          sort: { _id: -1 },
-        },
-      )
-
-      let count = 0
-
-      promisePending = classworkAssignments.map(
+      promisePending = listClassworkAssignment.map(
         async (
           value,
         ): Promise<
           Nullable<ClassworkAssignmentByStudentIdInCourseResponse>
         > => {
-          if (count >= limit) {
-            return null
-          }
+          const response: ClassworkAssignmentByStudentIdInCourseResponse =
+            new ClassworkAssignmentByStudentIdInCourseResponse()
 
-          const classworkSubmission =
-            await this.classworkSubmissionModel.exists({
-              createdByAccountId: accountId,
-              classworkId: value.id,
-              orgId,
-            })
+          response.classworkAssignmentId = value.id
+          response.classworkAssignmentsTitle = value.title
+          response.dueDate = value.dueDate
 
-          if (!classworkSubmission) {
-            count += 1
-            return {
-              classworkAssignmentId: value.id,
-              classworkAssignmentsTitle: value.title,
-              dueDate: value.dueDate,
-            } as ClassworkAssignmentByStudentIdInCourseResponse
-          }
-
-          return null
+          return response
         },
       )
-
-      res = await Promise.all(promisePending)
-      res = res.filter((el): ANY => {
-        return el
-      })
     }
+
+    const res: ClassworkAssignmentByStudentIdInCourseResponse[] =
+      await Promise.all(promisePending)
 
     this.logger.log(
       `[${this.listClassworkAssignmentsByStudentIdInCourse.name}] listed ClassworkSubmissions`,
@@ -1097,10 +1068,14 @@ export class ClassworkService {
       courseId,
       accountId,
       limit,
-      lastId,
+      skip,
+      status,
     })
 
-    return res
+    return {
+      list: res,
+      count,
+    } as ClassworkAssignmentByStudentIdInCourseResponsePayload
   }
 
   /**
@@ -1187,6 +1162,14 @@ export class ClassworkService {
     }
 
     const res = classworkSubmissionWithFileIds || classworkSubmission
+
+    const classworkAssignment = await this.classworkAssignmentsModel.findById(
+      classworkId,
+    )
+    if (classworkAssignment) {
+      classworkAssignment.haveSubmission = true
+      classworkAssignment.save()
+    }
 
     this.logger.log(
       `[${this.createClassworkSubmission.name}] Created createClassworkSubmission successfully`,

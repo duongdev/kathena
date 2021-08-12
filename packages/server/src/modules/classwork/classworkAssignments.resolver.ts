@@ -30,6 +30,7 @@ import {
   AddAttachmentsToClassworkInput,
   ClassworkAssignmentByStudentIdInCourseResponse,
   ClassworkAssignmentByStudentIdInCourseInput,
+  ClassworkAssignmentByStudentIdInCourseResponsePayload,
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
@@ -182,7 +183,7 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
-  @Query((_return) => [ClassworkAssignmentByStudentIdInCourseResponse])
+  @Query((_return) => ClassworkAssignmentByStudentIdInCourseResponsePayload)
   @UseAuthGuard(P.Classwork_ListClassworkSubmission)
   @UsePipes(ValidationPipe)
   async listClassworkAssignmentsByStudentIdInCourse(
@@ -190,7 +191,7 @@ export class ClassworkAssignmentsResolver {
     input: ClassworkAssignmentByStudentIdInCourseInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
-  ): Promise<Nullable<ClassworkAssignmentByStudentIdInCourseResponse>[]> {
+  ): Promise<ClassworkAssignmentByStudentIdInCourseResponsePayload> {
     return this.classworkService.listClassworkAssignmentsByStudentIdInCourse(
       input,
       org.id,

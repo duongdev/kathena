@@ -23,4 +23,8 @@ export class ClassworkAssignment extends Classwork {
   @Field()
   @prop({ default: GRADE_MIN })
   maxScores: number
+
+  @Field()
+  @prop({ default: false })
+  haveSubmission: boolean
 }

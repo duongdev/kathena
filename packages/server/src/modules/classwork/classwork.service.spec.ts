@@ -19,6 +19,7 @@ import {
   CreateClassworkSubmissionInput,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
   ClassworkAssignmentByStudentIdInCourseInput,
+  ClassworkAssignmentByStudentIdInCourseResponse,
 } from './classwork.type'
 import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
@@ -2299,6 +2300,12 @@ describe('classwork.service', () => {
         },
       ]
 
+      const count = 6
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'count')
+        .mockResolvedValueOnce(count as ANY)
+
       jest
         .spyOn(classworkService['classworkAssignmentsModel'], 'find')
         .mockResolvedValueOnce(listClassworkAssignment as ANY)
@@ -2331,65 +2338,74 @@ describe('classwork.service', () => {
           objectId(),
           objectId(),
         ),
-      ).resolves.toMatchObject([
-        {
-          classworkAssignmentId: '507f191e810c19729de860ea',
-          classworkAssignmentsTitle: 'bài 1',
-          dueDate: Date.parse('2021-6-30'),
-          classworkSubmissionGrade: 100,
-          classworkSubmissionUpdatedAt: Date.parse('2021-7-13'),
-          classworkSubmissionDescription: 'bài tập 1 đã xong',
-        },
-        {
-          classworkAssignmentId: '507f191e810c19729de81233',
-          classworkAssignmentsTitle: 'bài 2',
-          dueDate: Date.parse('2021-6-30'),
-          classworkSubmissionGrade: null,
-          classworkSubmissionUpdatedAt: null,
-          classworkSubmissionDescription: '',
-        },
-        {
-          classworkAssignmentId: '507f191e810c19729de81244',
-          classworkAssignmentsTitle: 'bài 3',
-          dueDate: Date.parse('2021-6-28'),
-          classworkSubmissionGrade: 80,
-          classworkSubmissionUpdatedAt: Date.parse('2021-7-11'),
-          classworkSubmissionDescription: 'bài tập 3 đã xong',
-        },
-      ])
+      ).resolves.toMatchObject({
+        list: [
+          {
+            classworkAssignmentId: '507f191e810c19729de860ea',
+            classworkAssignmentsTitle: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+            classworkSubmissionGrade: 100,
+            classworkSubmissionUpdatedAt: Date.parse('2021-7-13'),
+            classworkSubmissionDescription: 'bài tập 1 đã xong',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81233',
+            classworkAssignmentsTitle: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+            classworkSubmissionGrade: null,
+            classworkSubmissionUpdatedAt: null,
+            classworkSubmissionDescription: '',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81244',
+            classworkAssignmentsTitle: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+            classworkSubmissionGrade: 80,
+            classworkSubmissionUpdatedAt: Date.parse('2021-7-11'),
+            classworkSubmissionDescription: 'bài tập 3 đã xong',
+          },
+        ],
+        count,
+      })
     })
 
     it('returns list ClassworkAssignmentByStudentIdInCourseResponse if found status HaveSubmission', async () => {
       expect.assertions(1)
 
-      jest
-        .spyOn(classworkService['classworkSubmissionModel'], 'find')
-        .mockResolvedValueOnce([
-          {
-            classworkId: objectId(),
-            grade: 100,
-            updatedAt: Date.parse('2021-7-13'),
-            description: 'bài tập 1 đã xong',
-          },
-          {
-            classworkId: objectId(),
-            grade: 80,
-            updatedAt: Date.parse('2021-7-11'),
-            description: 'bài tập 3 đã xong',
-          },
-        ] as ANY[])
-
-      jest
-        .spyOn(classworkService['classworkAssignmentsModel'], 'findById')
-        .mockResolvedValueOnce({
+      const listClassworkAssignment = [
+        {
           id: '507f191e810c19729de860ea',
           title: 'bài 1',
           dueDate: Date.parse('2021-6-30'),
-        } as ANY)
-        .mockResolvedValueOnce({
+        },
+        {
           id: '507f191e810c19729de81244',
           title: 'bài 3',
           dueDate: Date.parse('2021-6-28'),
+        },
+      ]
+
+      const count = 6
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'count')
+        .mockResolvedValueOnce(count as ANY)
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'find')
+        .mockResolvedValueOnce(listClassworkAssignment as ANY)
+
+      jest
+        .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+        .mockResolvedValueOnce({
+          grade: 100,
+          updatedAt: Date.parse('2021-7-13'),
+          description: 'bài tập 1 đã xong',
+        } as ANY)
+        .mockResolvedValueOnce({
+          grade: 80,
+          updatedAt: Date.parse('2021-7-11'),
+          description: 'bài tập 3 đã xong',
         } as ANY)
 
       await expect(
@@ -2403,27 +2419,30 @@ describe('classwork.service', () => {
           objectId(),
           objectId(),
         ),
-      ).resolves.toMatchObject([
-        {
-          classworkAssignmentId: '507f191e810c19729de860ea',
-          classworkAssignmentsTitle: 'bài 1',
-          dueDate: Date.parse('2021-6-30'),
-          classworkSubmissionGrade: 100,
-          classworkSubmissionUpdatedAt: Date.parse('2021-7-13'),
-          classworkSubmissionDescription: 'bài tập 1 đã xong',
-        },
-        {
-          classworkAssignmentId: '507f191e810c19729de81244',
-          classworkAssignmentsTitle: 'bài 3',
-          dueDate: Date.parse('2021-6-28'),
-          classworkSubmissionGrade: 80,
-          classworkSubmissionUpdatedAt: Date.parse('2021-7-11'),
-          classworkSubmissionDescription: 'bài tập 3 đã xong',
-        },
-      ])
+      ).resolves.toMatchObject({
+        list: [
+          {
+            classworkAssignmentId: '507f191e810c19729de860ea',
+            classworkAssignmentsTitle: 'bài 1',
+            dueDate: Date.parse('2021-6-30'),
+            classworkSubmissionGrade: 100,
+            classworkSubmissionUpdatedAt: Date.parse('2021-7-13'),
+            classworkSubmissionDescription: 'bài tập 1 đã xong',
+          },
+          {
+            classworkAssignmentId: '507f191e810c19729de81244',
+            classworkAssignmentsTitle: 'bài 3',
+            dueDate: Date.parse('2021-6-28'),
+            classworkSubmissionGrade: 80,
+            classworkSubmissionUpdatedAt: Date.parse('2021-7-11'),
+            classworkSubmissionDescription: 'bài tập 3 đã xong',
+          },
+        ],
+        count,
+      })
     })
 
-    it('returns list ClassworkAssignmentByStudentIdInCourseResponse if found status NotHaveSubmission', async () => {
+    it('returns list ClassworkAssignmentByStudentIdInCourseResponse if found status HaveNotSubmission', async () => {
       expect.assertions(1)
       const listClassworkAssignment = [
         {
@@ -2432,6 +2451,12 @@ describe('classwork.service', () => {
           dueDate: Date.parse('2021-6-30'),
         },
       ]
+
+      const count = 10
+
+      jest
+        .spyOn(classworkService['classworkAssignmentsModel'], 'count')
+        .mockResolvedValueOnce(count as ANY)
 
       jest
         .spyOn(classworkService['classworkAssignmentsModel'], 'find')
@@ -2447,18 +2472,21 @@ describe('classwork.service', () => {
             courseId: objectId(),
             limit: 3,
             status:
-              ClassworkAssignmentByStudentIdInCourseInputStatus.NotHaveSubmission,
+              ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission,
           } as ClassworkAssignmentByStudentIdInCourseInput,
           objectId(),
           objectId(),
         ),
-      ).resolves.toMatchObject([
-        {
-          classworkAssignmentId: '507f191e810c19729de81233',
-          classworkAssignmentsTitle: 'bài 2',
-          dueDate: Date.parse('2021-6-30'),
-        },
-      ])
+      ).resolves.toMatchObject({
+        list: [
+          {
+            classworkAssignmentId: '507f191e810c19729de81233',
+            classworkAssignmentsTitle: 'bài 2',
+            dueDate: Date.parse('2021-6-30'),
+          },
+        ],
+        count,
+      })
     })
 
     it('returns null if not found', async () => {
@@ -2477,7 +2505,7 @@ describe('classwork.service', () => {
           objectId(),
           objectId(),
         ),
-      ).resolves.toMatchObject([])
+      ).resolves.toMatchObject({ count: 0, list: [] })
     })
   })
   /**

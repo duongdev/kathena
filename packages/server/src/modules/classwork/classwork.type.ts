@@ -171,10 +171,22 @@ export class ClassworkAssignmentByStudentIdInCourseResponse {
   @Field({ nullable: true })
   classworkSubmissionDescription: string
 }
+
+@ObjectType()
+export class ClassworkAssignmentByStudentIdInCourseResponsePayload {
+  @Field((_type) => [ClassworkAssignmentByStudentIdInCourseResponse], {
+    nullable: true,
+  })
+  list: ClassworkAssignmentByStudentIdInCourseResponse[]
+
+  @Field((_type) => Int)
+  count: number
+}
+
 export enum ClassworkAssignmentByStudentIdInCourseInputStatus {
   All = 'All',
   HaveSubmission = 'HaveSubmission',
-  NotHaveSubmission = 'NotHaveSubmission',
+  HaveNotSubmission = 'HaveNotSubmission',
 }
 registerEnumType(ClassworkAssignmentByStudentIdInCourseInputStatus, {
   name: 'ClassworkAssignmentByStudentIdInCourseInputStatus',
@@ -187,8 +199,8 @@ export class ClassworkAssignmentByStudentIdInCourseInput {
   @Field((_type) => Number, { nullable: false })
   limit: number
 
-  @Field((_type) => ID, { nullable: true })
-  lastId: string | undefined
+  @Field((_type) => Number, { nullable: true })
+  skip: number
 
   @Field((_type) => ClassworkAssignmentByStudentIdInCourseInputStatus, {
     defaultValue: ClassworkAssignmentByStudentIdInCourseInputStatus.All,
