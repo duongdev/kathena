@@ -23,7 +23,7 @@ export class Lesson extends BaseModel {
 
   @Field({ defaultValue: null })
   @prop({ type: String, default: null })
-  ratingOfLecturer: string
+  lecturerComment: string
 
   @Field((_type) => ID)
   @prop({ required: true })
@@ -36,4 +36,8 @@ export class Lesson extends BaseModel {
   @Field((_type) => Publication)
   @prop({ required: true, default: Publication.Draft })
   publicationState: Publication
+
+  @Field()
+  @prop({ type: Number, default: 0 })
+  avgNumberOfStars: number
 }

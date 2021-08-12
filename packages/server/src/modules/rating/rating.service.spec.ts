@@ -1,13 +1,20 @@
 import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
+import { Publication } from 'core'
+import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { AcademicService } from 'modules/academic/academic.service'
+import { OrgService } from 'modules/org/org.service'
+import { ANY } from 'types'
 
 import { RatingService } from './rating.service'
 
 describe('rating.service', () => {
   let module: TestingModule
   let ratingService: RatingService
+  let academicService: AcademicService
+  let orgService: OrgService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -17,6 +24,8 @@ describe('rating.service', () => {
     module = await createTestingModule(testDb.uri)
 
     ratingService = module.get<RatingService>(RatingService)
+    academicService = module.get<AcademicService>(AcademicService)
+    orgService = module.get<OrgService>(OrgService)
   })
 
   afterAll(async () => {
@@ -33,7 +42,70 @@ describe('rating.service', () => {
     expect(ratingService).toBeDefined()
   })
 
-  // TODO: [BE] Implement ratingService.createRating
+  describe('createRating', () => {
+    const createRatingInput: ANY = {
+      targetId: objectId(),
+      numberOfStars: 5,
+    }
 
-  // TODO:[BE] Implement ratingService.calculateAvgRatingByTargetId
+    it('returns new rating', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(ratingService, 'calculateAvgRatingByTargetId')
+        .mockResolvedValueOnce(4.5)
+
+      await expect(
+        ratingService.createRating(objectId(), objectId(), createRatingInput),
+      ).resolves.toMatchObject({
+        numberOfStars: 5,
+        targetId: createRatingInput.targetId,
+      })
+    })
+  })
+
+  describe('calculateAvgRatingByTargetId', () => {
+    const course: ANY = {
+      id: objectId(),
+      orgId: objectId(),
+      name: 'NodeJs',
+      code: 'NODEJS',
+    }
+
+    it('returns the average number of stars by targetId', async () => {
+      expect.assertions(1)
+
+      const createLessonInput: ANY = {
+        startTime: new Date('2021-08-15 14:00'),
+        endTime: new Date('2021-08-15 16:30'),
+        description: 'Day la buoi 1',
+        courseId: course.id,
+        publicationState: Publication.Published,
+      }
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+      jest
+        .spyOn(ratingService['ratingModel'], 'countDocuments')
+        .mockResolvedValueOnce(3)
+
+      const lesson = await academicService.createLesson(
+        course.orgId,
+        createLessonInput,
+      )
+
+      // (5 + 4)/2
+      lesson.avgNumberOfStars = 4.5
+      await lesson.save()
+
+      // (5 + 4 + 4)/3
+      await expect(
+        ratingService.calculateAvgRatingByTargetId(course.orgId, lesson.id, 4),
+      ).resolves.toEqual((4.5 * 2 + 4) / 3)
+    })
+  })
 })

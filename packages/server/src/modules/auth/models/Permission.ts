@@ -29,6 +29,10 @@ export enum Permission {
   // Lesson
   Academic_CreateLesson = 'Academic_CreateLesson',
   Academic_ListLesson = 'Academic_ListLesson',
+  Academic_UpdateLesson = 'Academic_UpdateLesson',
+  Academic_AddAbsentStudentsToLesson = 'Academic_AddAbsentStudentsToLesson',
+  Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
+  Academic_CommentsForTheLesson = 'Academic_CommentsForTheLesson',
 
   OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
@@ -60,6 +64,8 @@ export enum Permission {
   AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
 
   Comment_CreateComment = 'Comment_CreateComment',
+
+  Rating_CreateRating = 'Rating_CreateRating',
 
   /** For testing purpose */
   NoPermission = 'NoPermission',
