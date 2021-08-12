@@ -7,7 +7,7 @@ import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 
-import { Rating } from './models/rating'
+import { Rating } from './models/Rating'
 import { RatingService } from './rating.service'
 import { RatingInput } from './rating.type'
 

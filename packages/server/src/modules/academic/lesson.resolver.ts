@@ -1,13 +1,5 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
-import {
-  Args,
-  ID,
-  Mutation,
-  Query,
-  ResolveField,
-  Resolver,
-  Root,
-} from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
@@ -125,11 +117,6 @@ export class LessonResolver {
       },
       absentStudentIds,
     )
-  }
-
-  @ResolveField((_returns) => Number)
-  numberOfStars(@Root() { id }, @CurrentOrg() org: Org): Promise<number> {
-    return this.ratingService.calculateAvgRatingByTargetId(org.id, id)
   }
 
   // TODO: [BE] Implement academicService.updateLessonPublicationById

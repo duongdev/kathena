@@ -202,7 +202,7 @@ type Lesson implements BaseModel {
   lecturerComment: String!
   courseId: ID!
   publicationState: Publication!
-  numberOfStars: Float!
+  avgNumberOfStars: Float!
 }
 
 type AuthenticatePayload {
