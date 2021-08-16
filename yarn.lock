@@ -11250,10 +11250,10 @@ graphql@*, graphql@15.5.1, graphql@^15.3.0:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.5.1.tgz#f2f84415d8985e7b84731e7f3536f8bb9d383aad"
   integrity sha512-FeTRX67T3LoE3LWAxxOlW2K3Bz+rMYAC18rRguK4wgXaTZMiJwSUwDmPFo3UadAKbzirKIg5Qy+sNJXbpPRnQw==
 
-gravatar@1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/gravatar/-/gravatar-1.8.1.tgz#743bbdf3185c3433172e00e0e6ff5f6b30c58997"
-  integrity sha512-18frnfVp4kRYkM/eQW32Mfwlsh/KMbwd3S6nkescBZHioobflFEFHsvM71qZAkUSLNifyi2uoI+TuGxJAnQIOA==
+gravatar@1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/gravatar/-/gravatar-1.8.2.tgz#f298642b1562ed685af2ae938dbe31ec0c542cc1"
+  integrity sha512-GdRwLM3oYpFQKy47MKuluw9hZ2gaCtiKPbDGdcDEuYDKlc8eNnW27KYL9LVbIDzEsx88WtDWQm2ClBcsgBnj6w==
   dependencies:
     blueimp-md5 "^2.16.0"
     email-validator "^2.0.4"
