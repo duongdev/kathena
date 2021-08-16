@@ -217,4 +217,22 @@ export class AuthService {
 
     return course.studentIds.includes(account.id)
   }
+
+  /**
+   * @param accountId : the id of the account
+   * @param rolesCanSubmitRating : please use rolesCanSubmitRating values are define in rating.const.ts file as arguments
+   * @returns true or false
+   */
+  async canSubmitRating(
+    accountId: string,
+    rolesCanSubmitRating: string[],
+  ): Promise<boolean> {
+    const accountRoles = await this.getAccountRoles(accountId)
+
+    const check = accountRoles.some((role) =>
+      rolesCanSubmitRating.includes(role.name),
+    )
+
+    return check
+  }
 }
