@@ -453,7 +453,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
-  createRating(ratingInput: RatingInput!): Rating!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
 }
 
 input CreateAccountInput {

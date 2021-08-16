@@ -5,6 +5,7 @@ import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
+import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
@@ -15,6 +16,7 @@ describe('rating.service', () => {
   let ratingService: RatingService
   let academicService: AcademicService
   let orgService: OrgService
+  let authService: AuthService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -26,6 +28,7 @@ describe('rating.service', () => {
     ratingService = module.get<RatingService>(RatingService)
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
+    authService = module.get<AuthService>(AuthService)
   })
 
   afterAll(async () => {
@@ -57,6 +60,52 @@ describe('rating.service', () => {
 
       await expect(
         ratingService.createRating(objectId(), objectId(), createRatingInput),
+      ).resolves.toMatchObject({
+        numberOfStars: 5,
+        targetId: createRatingInput.targetId,
+      })
+    })
+  })
+
+  describe('createRatingForTheLesson', () => {
+    const createRatingInput: ANY = {
+      targetId: objectId(),
+      numberOfStars: 5,
+    }
+
+    it('throws new error if account has no permissions', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(ratingService, 'calculateAvgRatingByTargetId')
+        .mockResolvedValueOnce(4.5)
+
+      await expect(
+        ratingService.createRatingForTheLesson(
+          objectId(),
+          objectId(),
+          createRatingInput,
+        ),
+      ).rejects.toThrowError(
+        `Access denied! You don't have permission for this action!`,
+      )
+    })
+
+    it('returns new rating', async () => {
+      expect.assertions(1)
+
+      jest.spyOn(authService, 'canSubmitRating').mockResolvedValueOnce(true)
+
+      jest
+        .spyOn(ratingService, 'calculateAvgRatingByTargetId')
+        .mockResolvedValueOnce(4.5)
+
+      await expect(
+        ratingService.createRatingForTheLesson(
+          objectId(),
+          objectId(),
+          createRatingInput,
+        ),
       ).resolves.toMatchObject({
         numberOfStars: 5,
         targetId: createRatingInput.targetId,

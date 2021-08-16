@@ -23,11 +23,15 @@ export class RatingResolver {
   @Mutation((_returns) => Rating)
   @UseAuthGuard(P.Rating_CreateRating)
   @UsePipes(ValidationPipe)
-  async createRating(
+  async createRatingForTheLesson(
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
     @Args('ratingInput') ratingInput: RatingInput,
   ): Promise<DocumentType<Rating>> {
-    return this.ratingService.createRating(org.id, account.id, ratingInput)
+    return this.ratingService.createRatingForTheLesson(
+      org.id,
+      account.id,
+      ratingInput,
+    )
   }
 }

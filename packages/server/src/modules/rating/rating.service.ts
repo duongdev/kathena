@@ -1,11 +1,14 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
+import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
 import { Lesson } from 'modules/academic/models/Lesson'
+import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
 import { Rating } from './models/Rating'
+import { RolesCanSubmitRatingForLesson } from './rating.const'
 import { RatingInput } from './rating.type'
 
 @Service()
@@ -20,7 +23,13 @@ export class RatingService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
+
+  /**
+   * START GENERAL
+   */
 
   async createRating(
     orgId: string,
@@ -55,6 +64,33 @@ export class RatingService {
     })
 
     await this.calculateAvgRatingByTargetId(orgId, targetId, numberOfStars)
+
+    return createRating
+  }
+
+  /**
+   * END GENERAL
+   */
+
+  async createRatingForTheLesson(
+    orgId: string,
+    createdByAccountId: string,
+    ratingInput: RatingInput,
+  ): Promise<DocumentType<Rating>> {
+    if (
+      !(await this.authService.canSubmitRating(
+        createdByAccountId,
+        RolesCanSubmitRatingForLesson,
+      ))
+    ) {
+      throw new ForbiddenError()
+    }
+
+    const createRating = await this.createRating(
+      orgId,
+      createdByAccountId,
+      ratingInput,
+    )
 
     return createRating
   }
