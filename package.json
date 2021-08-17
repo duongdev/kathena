@@ -29,7 +29,7 @@
     "prettier": "2.3.2"
   },
   "resolutions": {
-    "babel-loader": "8.1.0",
+    "babel-loader": "8.2.2",
     "prettier": "2.3.2"
   },
   "lint-staged": {
