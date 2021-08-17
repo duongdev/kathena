@@ -4,6 +4,6 @@
   "automergeType": "pr",
   "assignees": ["duongdev"],
   "labels": ["type: dependencies"],
-  "ignoreDeps": ["typescript"],
+  "ignoreDeps": ["typescript", "@material-ui/core", "@material-ui/lab"],
   "semanticCommits": false
 }
