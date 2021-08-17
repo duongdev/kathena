@@ -26,7 +26,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = (props) => {
 }
 
 const GlobalStyles = () => {
-  useGlobalStyles()
+  ;(useGlobalStyles as any)()
   return null
 }
 
