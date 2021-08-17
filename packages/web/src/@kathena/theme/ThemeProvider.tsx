@@ -7,6 +7,8 @@ import {
 } from '@material-ui/core'
 import StyledEngineProvider from '@material-ui/core/StyledEngineProvider'
 
+import { ANY } from '@kathena/types'
+
 import theme from './theme'
 
 export type ThemeProviderProps = {}
@@ -26,7 +28,7 @@ export const ThemeProvider: FC<ThemeProviderProps> = (props) => {
 }
 
 const GlobalStyles = () => {
-  ;(useGlobalStyles as any)()
+  ;(useGlobalStyles as ANY)()
   return null
 }
 
