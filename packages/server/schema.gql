@@ -130,7 +130,7 @@ type ClassworkSubmission implements BaseModel {
   createdByAccountId: String!
   classworkId: ID!
   courseId: ID!
-  grade: Float!
+  grade: Float
   submissionFileIds: [String!]!
   description: String!
 }
