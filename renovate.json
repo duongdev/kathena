@@ -4,6 +4,11 @@
   "automergeType": "pr",
   "assignees": ["duongdev"],
   "labels": ["type: dependencies"],
-  "ignoreDeps": ["typescript", "@material-ui/core", "@material-ui/lab"],
+  "ignoreDeps": [
+    "typescript",
+    "@material-ui/core",
+    "@material-ui/lab",
+    "babel-loader"
+  ],
   "semanticCommits": false
 }
