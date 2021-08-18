@@ -24,8 +24,8 @@ export class ClassworkSubmission extends BaseModel {
   @prop({ required: true, type: Types.ObjectId })
   courseId: string
 
-  @Field()
-  @prop({ required: true, default: 0 })
+  @Field((_type) => Number, { nullable: true })
+  @prop({ default: null, min: 0, max: 100 })
   grade: number
 
   @Field((_type) => [String])

@@ -14,7 +14,11 @@ export class Rating extends BaseModel {
   @prop({ required: true })
   targetId: string
 
-  @Field()
-  @prop({ required: true, min: 1, max: 5, default: 1 })
+  @Field((_type) => ID)
+  @prop({ required: true })
+  orgId: string
+
+  @Field((_type) => Number, { defaultValue: 1 })
+  @prop({ required: true, min: 1, max: 5 })
   numberOfStars: number
 }

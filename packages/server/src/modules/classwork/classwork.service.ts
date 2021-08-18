@@ -892,7 +892,9 @@ export class ClassworkService {
     if (classworkSubmissions.length) {
       const classworkSubmissionsMap = classworkSubmissions.map(
         async (classworkSubmission) => {
-          sum += classworkSubmission.grade
+          if (classworkSubmission.grade !== null) {
+            sum += classworkSubmission.grade
+          }
         },
       )
 

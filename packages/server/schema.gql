@@ -129,7 +129,7 @@ type ClassworkSubmission implements BaseModel {
   createdByAccountId: String!
   classworkId: ID!
   courseId: ID!
-  grade: Float!
+  grade: Float
   submissionFileIds: [String!]!
   description: String!
 }
@@ -204,9 +204,10 @@ type Lesson implements BaseModel {
   endTime: DateTime!
   description: String
   absentStudentIds: [String!]!
-  ratingOfLecturer: String!
+  lecturerComment: String!
   courseId: ID!
   publicationState: Publication!
+  avgNumberOfStars: Float!
 }
 
 type AuthenticatePayload {
@@ -236,6 +237,10 @@ enum Permission {
   Academic_RemoveLecturersFromCourse
   Academic_CreateLesson
   Academic_ListLesson
+  Academic_UpdateLesson
+  Academic_AddAbsentStudentsToLesson
+  Academic_RemoveAbsentStudentsFromLesson
+  Academic_CommentsForTheLesson
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -260,6 +265,7 @@ enum Permission {
   Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
   Comment_CreateComment
+  Rating_CreateRating
   NoPermission
 }
 
@@ -288,6 +294,16 @@ type CoursesPayload {
 type LessonsPayload {
   lessons: [Lesson!]!
   count: Int!
+}
+
+type Rating implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  targetId: ID!
+  numberOfStars: Float!
 }
 
 type Conversation implements BaseModel {
@@ -415,6 +431,10 @@ type Mutation {
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
+  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
+  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -432,6 +452,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
 }
 
 input CreateAccountInput {
@@ -487,6 +508,22 @@ input CreateLessonInput {
   description: String
   courseId: String!
   publicationState: Publication!
+}
+
+input UpdateLessonInput {
+  startTime: DateTime
+  endTime: DateTime
+  description: String
+  publicationState: Publication
+}
+
+input CommentsForTheLessonByLecturerInput {
+  comment: String
+}
+
+input CommentsForTheLessonByLecturerQuery {
+  lessonId: ID!
+  courseId: ID!
 }
 
 input CreateOrgOfficeInput {
@@ -547,6 +584,11 @@ input CreateConversationInput {
   roomId: ID!
   content: String!
   type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 type Subscription {

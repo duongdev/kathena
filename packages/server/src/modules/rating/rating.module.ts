@@ -1,23 +1,20 @@
 import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
-import { AccountModule } from 'modules/account/account.module'
+import { Lesson } from 'modules/academic/models/Lesson'
 import { AuthModule } from 'modules/auth/auth.module'
-import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 
-import { Rating } from './models/rating'
+import { Rating } from './models/Rating'
 import { RatingResolver } from './rating.resolver'
 import { RatingService } from './rating.service'
 
 @Global()
 @Module({
   imports: [
-    AuthModule,
-    AccountModule,
-    FileStorageModule,
     OrgModule,
-    TypegooseModule.forFeature([Rating]),
+    AuthModule,
+    TypegooseModule.forFeature([Rating, Lesson]),
   ],
   providers: [RatingService, RatingResolver],
   exports: [RatingService],
