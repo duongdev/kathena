@@ -2369,7 +2369,6 @@ describe('classwork.service', () => {
         ],
       },
     ]
-    const countMockData = listMockData.length
 
     it('returns a ClassworkAssignmentByStudentIdInCourseResponsePayload if found status All', async () => {
       expect.assertions(2)
