@@ -17,11 +17,11 @@ export class ClassworkSubmission extends BaseModel {
   createdByAccountId: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ required: true, type: Types.ObjectId })
   classworkId: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ required: true, type: Types.ObjectId })
   courseId: string
 
   @Field()

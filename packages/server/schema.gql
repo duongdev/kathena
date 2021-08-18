@@ -96,7 +96,6 @@ type ClassworkAssignment implements BaseModel {
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
-  haveSubmission: Boolean!
 }
 
 type Org implements BaseModel {
