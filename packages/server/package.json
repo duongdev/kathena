@@ -68,7 +68,7 @@
     "@types/express": "4.17.13",
     "@types/file-type": "10.9.1",
     "@types/jest": "27.0.1",
-    "@types/jsonwebtoken": "8.5.4",
+    "@types/jsonwebtoken": "8.5.5",
     "@types/lodash": "4.14.172",
     "@types/mongodb-memory-server": "2.3.0",
     "@types/node": "14.14.37",
