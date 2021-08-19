@@ -30,6 +30,7 @@ import {
 import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
+  STUDYING_COURSE_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
@@ -51,9 +52,10 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
 
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
 
-    const { data: submit } = useFindOneClassworkSubmissionQuery({
-      variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
-    })
+    const { data: submit, loading: loadingSubmit } =
+      useFindOneClassworkSubmissionQuery({
+        variables: { ClassworkAssignment: classworkAssignment?.id as ANY },
+      })
 
     const classworkAssignmentSubmit = useMemo(
       () => submit?.findOneClassworkSubmission,
@@ -115,6 +117,9 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     if (loading && !data) {
       return <PageContainerSkeleton maxWidth="md" />
     }
+    if (loadingSubmit) {
+      return <PageContainerSkeleton maxWidth="md" />
+    }
 
     if (!classworkAssignment) {
       return (
@@ -128,7 +133,10 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     return (
       <PageContainer
         title={classworkAssignment.title}
-        withBackButton
+        backButtonLabel="Danh sách bài tập"
+        withBackButton={buildPath(STUDYING_COURSE_CLASSWORK_ASSIGNMENTS, {
+          id: classworkAssignment.courseId,
+        })}
         subtitle={[
           <>
             {!classworkAssignmentSubmit?.id ? (

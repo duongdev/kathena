@@ -1,4 +1,11 @@
-import { Field, InputType, ID, Int, ObjectType } from '@nestjs/graphql'
+import {
+  Field,
+  InputType,
+  ID,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
@@ -98,7 +105,7 @@ export class UpdateClassworkAssignmentInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  dueDate?: string
+  dueDate?: Date
 }
 
 @InputType()
@@ -145,7 +152,7 @@ export class AvgGradeOfClassworkByCourse {
 }
 
 @ObjectType()
-export class ClassworkSubmittedByStudentIdInCourseResponse {
+export class ClassworkAssignmentByStudentIdInCourseResponse {
   @Field((_type) => ID, { nullable: true })
   classworkAssignmentId: string
 
@@ -156,24 +163,50 @@ export class ClassworkSubmittedByStudentIdInCourseResponse {
   dueDate: Date
 
   @Field({ nullable: true })
-  grade: number
+  classworkSubmissionGrade: number
 
   @Field({ nullable: true })
-  updatedAt: Date
+  classworkSubmissionUpdatedAt: Date
 
   @Field({ nullable: true })
-  description: string
+  classworkSubmissionDescription: string
 }
+
+@ObjectType()
+export class ClassworkAssignmentByStudentIdInCourseResponsePayload {
+  @Field((_type) => [ClassworkAssignmentByStudentIdInCourseResponse], {
+    nullable: true,
+  })
+  list: ClassworkAssignmentByStudentIdInCourseResponse[]
+
+  @Field((_type) => Int)
+  count: number
+}
+
+export enum ClassworkAssignmentByStudentIdInCourseInputStatus {
+  All = 'All',
+  HaveSubmission = 'HaveSubmission',
+  HaveNotSubmission = 'HaveNotSubmission',
+}
+registerEnumType(ClassworkAssignmentByStudentIdInCourseInputStatus, {
+  name: 'ClassworkAssignmentByStudentIdInCourseInputStatus',
+})
 @InputType()
-export class ListClassworkSubmittedsByStudentIdInCourseInput {
-  @Field()
+export class ClassworkAssignmentByStudentIdInCourseInput {
+  @Field((_type) => ID, { nullable: false })
   courseId: string
 
-  @Field((_type) => Number)
+  @Field((_type) => Number, { nullable: false })
+  limit: number
+
+  @Field((_type) => Number, { nullable: true })
   skip: number
 
-  @Field((_type) => Number)
-  limit: number
+  @Field((_type) => ClassworkAssignmentByStudentIdInCourseInputStatus, {
+    defaultValue: ClassworkAssignmentByStudentIdInCourseInputStatus.All,
+    nullable: true,
+  })
+  status: string
 }
 @ObjectType()
 export class SubmissionStatusStatistics {

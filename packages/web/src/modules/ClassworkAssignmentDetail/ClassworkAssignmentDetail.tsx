@@ -40,6 +40,7 @@ import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
 import {
   buildPath,
+  TEACHING_COURSE_CLASSWORK_ASSIGNMENTS,
   TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
 } from 'utils/path-builder'
 
@@ -208,7 +209,10 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
 
   return (
     <PageContainer
-      withBackButton
+      backButtonLabel="Danh sách bài tập"
+      withBackButton={buildPath(TEACHING_COURSE_CLASSWORK_ASSIGNMENTS, {
+        id: classworkAssignment.courseId,
+      })}
       maxWidth="lg"
       title={classworkAssignment.title}
       actions={[
@@ -355,10 +359,19 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           </SectionCard>
         </Grid>
         <SectionCard
-          maxContentHeight={false}
           gridItem={{ xs: 3 }}
-          title="Sinh viên đã nộp"
+          title="Học viên đã nộp"
           fullHeight={false}
+          action={[
+            <>
+              <InfoBlock label="Số lượng nộp:">
+                <Typography align="right">
+                  {' '}
+                  {classworkSubmissions?.length}
+                </Typography>
+              </InfoBlock>
+            </>,
+          ]}
         >
           <CardContent>
             {classworkSubmissions?.length ? (
@@ -381,6 +394,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                     )}
                   >
                     <AccountDisplayName
+                      style={{ cursor: 'pointer' }}
                       accountId={classworkSubmission.createdByAccountId}
                     />
                   </Link>

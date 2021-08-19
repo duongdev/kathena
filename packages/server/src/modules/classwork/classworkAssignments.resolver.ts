@@ -28,6 +28,8 @@ import {
   UpdateClassworkAssignmentInput,
   ClassworkAssignmentPayload,
   AddAttachmentsToClassworkInput,
+  ClassworkAssignmentByStudentIdInCourseInput,
+  ClassworkAssignmentByStudentIdInCourseResponsePayload,
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
@@ -177,6 +179,22 @@ export class ClassworkAssignmentsResolver {
       org.id,
       classworkAssignmentId,
       attachments,
+    )
+  }
+
+  @Query((_return) => ClassworkAssignmentByStudentIdInCourseResponsePayload)
+  @UseAuthGuard(P.Classwork_ListClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async listClassworkAssignmentsByStudentIdInCourse(
+    @Args('Input')
+    input: ClassworkAssignmentByStudentIdInCourseInput,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<ClassworkAssignmentByStudentIdInCourseResponsePayload> {
+    return this.classworkService.listClassworkAssignmentsByStudentIdInCourse(
+      input,
+      org.id,
+      account.id,
     )
   }
 

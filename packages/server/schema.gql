@@ -93,7 +93,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  publicationState: String!
+  publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
 }
@@ -118,7 +118,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  publicationState: String!
+  publicationState: Publication!
 }
 
 type ClassworkSubmission implements BaseModel {
@@ -129,7 +129,7 @@ type ClassworkSubmission implements BaseModel {
   createdByAccountId: String!
   classworkId: ID!
   courseId: ID!
-  grade: Float!
+  grade: Float
   submissionFileIds: [String!]!
   description: String!
 }
@@ -154,13 +154,18 @@ type AvgGradeOfClassworkByCourse {
   avgGrade: Float!
 }
 
-type ClassworkSubmittedByStudentIdInCourseResponse {
+type ClassworkAssignmentByStudentIdInCourseResponse {
   classworkAssignmentId: ID
   classworkAssignmentsTitle: ID
   dueDate: DateTime
-  grade: Float
-  updatedAt: DateTime
-  description: String
+  classworkSubmissionGrade: Float
+  classworkSubmissionUpdatedAt: DateTime
+  classworkSubmissionDescription: String
+}
+
+type ClassworkAssignmentByStudentIdInCourseResponsePayload {
+  list: [ClassworkAssignmentByStudentIdInCourseResponse!]
+  count: Int!
 }
 
 type SubmissionStatusStatistics {
@@ -190,6 +195,21 @@ type AcademicSubject implements BaseModel {
   imageFileId: String!
 }
 
+type Lesson implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  absentStudentIds: [String!]!
+  lecturerComment: String!
+  courseId: ID!
+  publicationState: Publication!
+  avgNumberOfStars: Float!
+}
+
 type AuthenticatePayload {
   account: Account!
   org: Org!
@@ -207,12 +227,6 @@ enum Permission {
   Academic_ListAcademicSubjects
   Academic_SetAcademicSubjectPublication
   Academic_UpdateAcademicSubject
-  OrgOffice_Access
-  OrgOffice_CreateOrgOffice
-  OrgOffice_ListOrgOffices
-  OrgOffice_UpdateOrgOffice
-  Classwork_ListClassworkAssignment
-  Classwork_ListClassworkMaterial
   Academic_Course_Access
   Academic_CreateCourse
   Academic_UpdateCourse
@@ -221,24 +235,37 @@ enum Permission {
   Academic_AddLecturersToCourse
   Academic_RemoveStudentsFromCourse
   Academic_RemoveLecturersFromCourse
+  Academic_CreateLesson
+  Academic_ListLesson
+  Academic_UpdateLesson
+  Academic_AddAbsentStudentsToLesson
+  Academic_RemoveAbsentStudentsFromLesson
+  Academic_CommentsForTheLesson
+  OrgOffice_Access
+  OrgOffice_CreateOrgOffice
+  OrgOffice_ListOrgOffices
+  OrgOffice_UpdateOrgOffice
   Teaching_Course_Access
   Studying_Course_Access
+  Classwork_ListClassworkAssignment
   Classwork_CreateClassworkAssignment
   Classwork_UpdateClassworkAssignment
   Classwork_SetClassworkAssignmentPublication
   Classwork_AddAttachmentsToClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkAssignment
+  Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
   Classwork_SetClassworkMaterialPublication
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
   Classwork_SetGradeForClassworkSubmission
-  Comment_CreateComment
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
   AvgGradeStatisticsOfClassworkInTheCourse
+  Comment_CreateComment
+  Rating_CreateRating
   NoPermission
 }
 
@@ -262,6 +289,21 @@ type AcademicSubjectsPayload {
 type CoursesPayload {
   courses: [Course!]!
   count: Int!
+}
+
+type LessonsPayload {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
+type Rating implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: String!
+  targetId: ID!
+  numberOfStars: Float!
 }
 
 type Conversation implements BaseModel {
@@ -297,6 +339,7 @@ type Query {
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
+  lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File
@@ -304,10 +347,10 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
+  listClassworkAssignmentsByStudentIdInCourse(Input: ClassworkAssignmentByStudentIdInCourseInput!): ClassworkAssignmentByStudentIdInCourseResponsePayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
-  listClassworkSubmittedsByStudentIdInCourse(Input: ListClassworkSubmittedsByStudentIdInCourseInput!): [ClassworkSubmittedByStudentIdInCourseResponse!]!
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
@@ -340,10 +383,25 @@ input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
 }
 
-input ListClassworkSubmittedsByStudentIdInCourseInput {
-  courseId: String!
-  skip: Float!
+input LessonsFilterInput {
+  orgId: ID!
+  courseId: ID!
+  startTime: DateTime = null
+  endTime: DateTime = null
+  absentStudentId: ID = null
+}
+
+input ClassworkAssignmentByStudentIdInCourseInput {
+  courseId: ID!
   limit: Float!
+  skip: Float
+  status: ClassworkAssignmentByStudentIdInCourseInputStatus = All
+}
+
+enum ClassworkAssignmentByStudentIdInCourseInputStatus {
+  All
+  HaveSubmission
+  HaveNotSubmission
 }
 
 input ConversationPageOptionInput {
@@ -372,6 +430,11 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
+  createLesson(createLessonInput: CreateLessonInput!): Lesson!
+  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
+  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -389,6 +452,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
 }
 
 input CreateAccountInput {
@@ -438,6 +502,30 @@ input UpdateCourseInput {
   lecturerIds: [ID!]
 }
 
+input CreateLessonInput {
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  courseId: String!
+  publicationState: Publication!
+}
+
+input UpdateLessonInput {
+  startTime: DateTime
+  endTime: DateTime
+  description: String
+  publicationState: Publication
+}
+
+input CommentsForTheLessonByLecturerInput {
+  comment: String
+}
+
+input CommentsForTheLessonByLecturerQuery {
+  lessonId: ID!
+  courseId: ID!
+}
+
 input CreateOrgOfficeInput {
   name: String!
   address: String!
@@ -477,7 +565,7 @@ input CreateClassworkAssignmentInput {
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
-  dueDate: String
+  dueDate: DateTime
 }
 
 input CreateClassworkSubmissionInput {
@@ -496,6 +584,11 @@ input CreateConversationInput {
   roomId: ID!
   content: String!
   type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 type Subscription {
