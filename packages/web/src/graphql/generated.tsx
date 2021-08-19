@@ -118,9 +118,36 @@ export type ClassworkAssignment = BaseModel & {
   type: Scalars['String']
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
-  publicationState: Scalars['String']
+  publicationState: Publication
   dueDate?: Maybe<Scalars['DateTime']>
   maxScores: Scalars['Float']
+}
+
+export type ClassworkAssignmentByStudentIdInCourseInput = {
+  courseId: Scalars['ID']
+  limit: Scalars['Float']
+  skip?: Maybe<Scalars['Float']>
+  status?: Maybe<ClassworkAssignmentByStudentIdInCourseInputStatus>
+}
+
+export enum ClassworkAssignmentByStudentIdInCourseInputStatus {
+  All = 'All',
+  HaveSubmission = 'HaveSubmission',
+  HaveNotSubmission = 'HaveNotSubmission',
+}
+
+export type ClassworkAssignmentByStudentIdInCourseResponse = {
+  classworkAssignmentId?: Maybe<Scalars['ID']>
+  classworkAssignmentsTitle?: Maybe<Scalars['ID']>
+  dueDate?: Maybe<Scalars['DateTime']>
+  classworkSubmissionGrade?: Maybe<Scalars['Float']>
+  classworkSubmissionUpdatedAt?: Maybe<Scalars['DateTime']>
+  classworkSubmissionDescription?: Maybe<Scalars['String']>
+}
+
+export type ClassworkAssignmentByStudentIdInCourseResponsePayload = {
+  list?: Maybe<Array<ClassworkAssignmentByStudentIdInCourseResponse>>
+  count: Scalars['Int']
 }
 
 export type ClassworkAssignmentPayload = {
@@ -139,7 +166,7 @@ export type ClassworkMaterial = BaseModel & {
   type: Scalars['String']
   description?: Maybe<Scalars['String']>
   attachments: Array<Scalars['String']>
-  publicationState: Scalars['String']
+  publicationState: Publication
 }
 
 export type ClassworkMaterialPayload = {
@@ -154,9 +181,24 @@ export type ClassworkSubmission = BaseModel & {
   updatedAt: Scalars['DateTime']
   createdByAccountId: Scalars['String']
   classworkId: Scalars['ID']
-  grade: Scalars['Float']
+  courseId: Scalars['ID']
+  grade?: Maybe<Scalars['Float']>
   submissionFileIds: Array<Scalars['String']>
   description: Scalars['String']
+}
+
+export type ClassworkSubmissionStatusPayload = {
+  classworkSubmissions: Array<ClassworkSubmission>
+  count: Scalars['Int']
+}
+
+export type CommentsForTheLessonByLecturerInput = {
+  comment?: Maybe<Scalars['String']>
+}
+
+export type CommentsForTheLessonByLecturerQuery = {
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
 }
 
 export type Conversation = BaseModel & {
@@ -267,6 +309,14 @@ export type CreateCourseInput = {
   lecturerIds?: Maybe<Array<Scalars['String']>>
 }
 
+export type CreateLessonInput = {
+  startTime: Scalars['DateTime']
+  endTime: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  courseId: Scalars['String']
+  publicationState: Publication
+}
+
 export type CreateOrgOfficeInput = {
   name: Scalars['String']
   address: Scalars['String']
@@ -290,6 +340,34 @@ export enum FileLocation {
   LocalStorage = 'LocalStorage',
 }
 
+export type Lesson = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  startTime: Scalars['DateTime']
+  endTime: Scalars['DateTime']
+  description?: Maybe<Scalars['String']>
+  absentStudentIds: Array<Scalars['String']>
+  lecturerComment: Scalars['String']
+  courseId: Scalars['ID']
+  publicationState: Publication
+  avgNumberOfStars: Scalars['Float']
+}
+
+export type LessonsFilterInput = {
+  orgId: Scalars['ID']
+  courseId: Scalars['ID']
+  startTime?: Maybe<Scalars['DateTime']>
+  endTime?: Maybe<Scalars['DateTime']>
+  absentStudentId?: Maybe<Scalars['ID']>
+}
+
+export type LessonsPayload = {
+  lessons: Array<Lesson>
+  count: Scalars['Int']
+}
+
 export type Mutation = {
   createOrgAccount: Account
   updateAccount: Account
@@ -306,6 +384,11 @@ export type Mutation = {
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
+  createLesson: Lesson
+  updateLesson: Lesson
+  addAbsentStudentsToLesson: Lesson
+  removeAbsentStudentsFromLesson: Lesson
+  commentsByLecturer: Lesson
   createOrgOffice: OrgOffice
   updateOrgOffice: OrgOffice
   findOrgOffices: Array<OrgOffice>
@@ -323,6 +406,7 @@ export type Mutation = {
   createClassworkSubmission: ClassworkSubmission
   setGradeForClassworkSubmission: ClassworkSubmission
   createConversation: Conversation
+  createRatingForTheLesson: Rating
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -397,6 +481,33 @@ export type MutationRemoveStudentsFromCourseArgs = {
 export type MutationRemoveLecturersFromCourseArgs = {
   lecturerIds: Array<Scalars['ID']>
   id: Scalars['ID']
+}
+
+export type MutationCreateLessonArgs = {
+  createLessonInput: CreateLessonInput
+}
+
+export type MutationUpdateLessonArgs = {
+  updateInput: UpdateLessonInput
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationAddAbsentStudentsToLessonArgs = {
+  absentStudentIds: Array<Scalars['String']>
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationRemoveAbsentStudentsFromLessonArgs = {
+  absentStudentIds: Array<Scalars['String']>
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationCommentsByLecturerArgs = {
+  commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput
+  commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery
 }
 
 export type MutationCreateOrgOfficeArgs = {
@@ -481,6 +592,10 @@ export type MutationCreateConversationArgs = {
   conversationInput: CreateConversationInput
 }
 
+export type MutationCreateRatingForTheLessonArgs = {
+  ratingInput: RatingInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -521,12 +636,6 @@ export enum Permission {
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_SetAcademicSubjectPublication = 'Academic_SetAcademicSubjectPublication',
   Academic_UpdateAcademicSubject = 'Academic_UpdateAcademicSubject',
-  OrgOffice_Access = 'OrgOffice_Access',
-  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
-  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
-  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
-  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
-  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Academic_Course_Access = 'Academic_Course_Access',
   Academic_CreateCourse = 'Academic_CreateCourse',
   Academic_UpdateCourse = 'Academic_UpdateCourse',
@@ -535,23 +644,37 @@ export enum Permission {
   Academic_AddLecturersToCourse = 'Academic_AddLecturersToCourse',
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
+  Academic_CreateLesson = 'Academic_CreateLesson',
+  Academic_ListLesson = 'Academic_ListLesson',
+  Academic_UpdateLesson = 'Academic_UpdateLesson',
+  Academic_AddAbsentStudentsToLesson = 'Academic_AddAbsentStudentsToLesson',
+  Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
+  Academic_CommentsForTheLesson = 'Academic_CommentsForTheLesson',
+  OrgOffice_Access = 'OrgOffice_Access',
+  OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
+  OrgOffice_ListOrgOffices = 'OrgOffice_ListOrgOffices',
+  OrgOffice_UpdateOrgOffice = 'OrgOffice_UpdateOrgOffice',
   Teaching_Course_Access = 'Teaching_Course_Access',
   Studying_Course_Access = 'Studying_Course_Access',
+  Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
+  Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
-  Comment_CreateComment = 'Comment_CreateComment',
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
+  Classwork_ShowSubmissionStatusList = 'Classwork_ShowSubmissionStatusList',
   AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
+  Comment_CreateComment = 'Comment_CreateComment',
+  Rating_CreateRating = 'Rating_CreateRating',
   NoPermission = 'NoPermission',
 }
 
@@ -571,6 +694,7 @@ export type Query = {
   findCourseById: Course
   courses: CoursesPayload
   calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
+  lessons: LessonsPayload
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
   file?: Maybe<File>
@@ -578,9 +702,12 @@ export type Query = {
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
   classworkAssignments: ClassworkAssignmentPayload
+  listClassworkAssignmentsByStudentIdInCourse: ClassworkAssignmentByStudentIdInCourseResponsePayload
   classworkSubmissions: Array<ClassworkSubmission>
   findClassworkSubmissionById: ClassworkSubmission
   findOneClassworkSubmission: ClassworkSubmission
+  getListOfStudentsSubmitAssignmentsByStatus: ClassworkSubmissionStatusPayload
+  submissionStatusStatistics: Array<SubmissionStatusStatistics>
   conversations: ConversationsPayload
 }
 
@@ -624,6 +751,11 @@ export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
   courseId: Scalars['ID']
 }
 
+export type QueryLessonsArgs = {
+  filter: LessonsFilterInput
+  pageOptions: PageOptionsInput
+}
+
 export type QueryOrgOfficeArgs = {
   id: Scalars['ID']
 }
@@ -652,6 +784,10 @@ export type QueryClassworkAssignmentsArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryListClassworkAssignmentsByStudentIdInCourseArgs = {
+  Input: ClassworkAssignmentByStudentIdInCourseInput
+}
+
 export type QueryClassworkSubmissionsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
@@ -664,10 +800,34 @@ export type QueryFindOneClassworkSubmissionArgs = {
   ClassworkAssignment: Scalars['ID']
 }
 
+export type QueryGetListOfStudentsSubmitAssignmentsByStatusArgs = {
+  classworkSubmissionStatus: Scalars['String']
+  classworkAssignmentId: Scalars['ID']
+}
+
+export type QuerySubmissionStatusStatisticsArgs = {
+  classworkAssignmentId: Scalars['ID']
+}
+
 export type QueryConversationsArgs = {
   conversationPageOptionInput: ConversationPageOptionInput
   lastId?: Maybe<Scalars['ID']>
   roomId: Scalars['String']
+}
+
+export type Rating = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['String']
+  targetId: Scalars['ID']
+  numberOfStars: Scalars['Float']
+}
+
+export type RatingInput = {
+  targetId: Scalars['ID']
+  numberOfStars?: Maybe<Scalars['Float']>
 }
 
 export type SetGradeForClassworkSubmissionInput = {
@@ -682,8 +842,18 @@ export type SignInPayload = {
   permissions: Array<Permission>
 }
 
+export type SubmissionStatusStatistics = {
+  label: Scalars['String']
+  number: Scalars['Float']
+}
+
 export type Subscription = {
+  classworkAssignmentCreated: ClassworkAssignment
   conversationCreated: Conversation
+}
+
+export type SubscriptionClassworkAssignmentCreatedArgs = {
+  courseId: Scalars['ID']
 }
 
 export type SubscriptionConversationCreatedArgs = {
@@ -706,7 +876,7 @@ export type UpdateAccountInput = {
 export type UpdateClassworkAssignmentInput = {
   title?: Maybe<Scalars['String']>
   description?: Maybe<Scalars['String']>
-  dueDate?: Maybe<Scalars['String']>
+  dueDate?: Maybe<Scalars['DateTime']>
 }
 
 export type UpdateClassworkMaterialInput = {
@@ -719,6 +889,13 @@ export type UpdateCourseInput = {
   tuitionFee?: Maybe<Scalars['Float']>
   startDate?: Maybe<Scalars['String']>
   lecturerIds?: Maybe<Array<Scalars['ID']>>
+}
+
+export type UpdateLessonInput = {
+  startTime?: Maybe<Scalars['DateTime']>
+  endTime?: Maybe<Scalars['DateTime']>
+  description?: Maybe<Scalars['String']>
+  publicationState?: Maybe<Publication>
 }
 
 export type UpdateOrgOfficeInput = {
@@ -1268,6 +1445,31 @@ export type FindOneClassworkSubmissionQuery = {
     ClassworkSubmission,
     'id' | 'createdAt' | 'classworkId' | 'createdByAccountId' | 'description'
   >
+}
+
+export type ListClassworkAssignmentsByStudentIdInCourseQueryVariables = Exact<{
+  Input: ClassworkAssignmentByStudentIdInCourseInput
+}>
+
+export type ListClassworkAssignmentsByStudentIdInCourseQuery = {
+  listClassworkAssignmentsByStudentIdInCourse: Pick<
+    ClassworkAssignmentByStudentIdInCourseResponsePayload,
+    'count'
+  > & {
+    list?: Maybe<
+      Array<
+        Pick<
+          ClassworkAssignmentByStudentIdInCourseResponse,
+          | 'classworkAssignmentId'
+          | 'classworkAssignmentsTitle'
+          | 'dueDate'
+          | 'classworkSubmissionGrade'
+          | 'classworkSubmissionUpdatedAt'
+          | 'classworkSubmissionDescription'
+        >
+      >
+    >
+  }
 }
 
 export type StudyingCourseListQueryVariables = Exact<{
@@ -8250,6 +8452,200 @@ export type FindOneClassworkSubmissionQueryResult = Apollo.QueryResult<
   FindOneClassworkSubmissionQuery,
   FindOneClassworkSubmissionQueryVariables
 >
+export const ListClassworkAssignmentsByStudentIdInCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {
+        kind: 'Name',
+        value: 'ListClassworkAssignmentsByStudentIdInCourse',
+      },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'Input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'ClassworkAssignmentByStudentIdInCourseInput',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'listClassworkAssignmentsByStudentIdInCourse',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'Input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'Input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'list' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'classworkAssignmentId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'classworkAssignmentsTitle',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dueDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'classworkSubmissionGrade',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'classworkSubmissionGrade',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'classworkSubmissionUpdatedAt',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'classworkSubmissionDescription',
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListClassworkAssignmentsByStudentIdInCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >
+} &
+  TChildProps
+export function withListClassworkAssignmentsByStudentIdInCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables,
+    ListClassworkAssignmentsByStudentIdInCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables,
+    ListClassworkAssignmentsByStudentIdInCourseProps<TChildProps, TDataName>
+  >(ListClassworkAssignmentsByStudentIdInCourseDocument, {
+    alias: 'listClassworkAssignmentsByStudentIdInCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListClassworkAssignmentsByStudentIdInCourseQuery__
+ *
+ * To run a query within a React component, call `useListClassworkAssignmentsByStudentIdInCourseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListClassworkAssignmentsByStudentIdInCourseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListClassworkAssignmentsByStudentIdInCourseQuery({
+ *   variables: {
+ *      Input: // value for 'Input'
+ *   },
+ * });
+ */
+export function useListClassworkAssignmentsByStudentIdInCourseQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >(ListClassworkAssignmentsByStudentIdInCourseDocument, options)
+}
+export function useListClassworkAssignmentsByStudentIdInCourseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >(ListClassworkAssignmentsByStudentIdInCourseDocument, options)
+}
+export type ListClassworkAssignmentsByStudentIdInCourseQueryHookResult =
+  ReturnType<typeof useListClassworkAssignmentsByStudentIdInCourseQuery>
+export type ListClassworkAssignmentsByStudentIdInCourseLazyQueryHookResult =
+  ReturnType<typeof useListClassworkAssignmentsByStudentIdInCourseLazyQuery>
+export type ListClassworkAssignmentsByStudentIdInCourseQueryResult =
+  Apollo.QueryResult<
+    ListClassworkAssignmentsByStudentIdInCourseQuery,
+    ListClassworkAssignmentsByStudentIdInCourseQueryVariables
+  >
 export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [

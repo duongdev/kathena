@@ -1,24 +1,16 @@
-mutation CreateClassworkSubmission(
-  $CreateClassworkSubmissionInput: CreateClassworkSubmissionInput!
-  $courseId: ID!
+query ListClassworkAssignmentsByStudentIdInCourse(
+  $Input: ClassworkAssignmentByStudentIdInCourseInput!
 ) {
-  createClassworkSubmission(
-    createClassworkSubmissionInput: $CreateClassworkSubmissionInput
-    courseId: $courseId
-  ) {
-    id
-    createdAt
-    submissionFileIds
-    description
-  }
-}
-
-query FindOneClassworkSubmission($ClassworkAssignment: ID!) {
-  findOneClassworkSubmission(ClassworkAssignment: $ClassworkAssignment) {
-    id
-    createdAt
-    classworkId
-    createdByAccountId
-    description
+  listClassworkAssignmentsByStudentIdInCourse(Input: $Input) {
+    list {
+      classworkAssignmentId
+      classworkAssignmentsTitle
+      dueDate
+      classworkSubmissionGrade
+      classworkSubmissionGrade
+      classworkSubmissionUpdatedAt
+      classworkSubmissionDescription
+    }
+    count
   }
 }
