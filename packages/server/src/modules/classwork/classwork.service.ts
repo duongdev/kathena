@@ -1,6 +1,6 @@
 /* eslint-disable no-process-env */
 import { forwardRef, Inject } from '@nestjs/common'
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
 
 import {
@@ -32,6 +32,7 @@ import {
   ClassworkAssignmentByStudentIdInCourseInput,
   SubmissionStatusStatistics,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
+  ClassworkAssignmentByStudentIdInCourseResponsePayload,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -908,8 +909,10 @@ export class ClassworkService {
     query: ClassworkAssignmentByStudentIdInCourseInput,
     orgId: string,
     accountId: string,
-  ): Promise<Nullable<ClassworkAssignmentByStudentIdInCourseResponse>[]> {
-    const { courseId, limit, lastId, status } = query
+  ): Promise<ClassworkAssignmentByStudentIdInCourseResponsePayload> {
+    const { courseId, limit, status } = query
+    let { skip } = query
+    skip = !skip ? 0 : skip
 
     this.logger.log(
       `[${this.listClassworkAssignmentsByStudentIdInCourse.name}] List ClassworkSubmissions`,
@@ -919,177 +922,105 @@ export class ClassworkService {
       courseId,
       accountId,
       limit,
-      lastId,
+      skip,
+      status,
     })
 
-    let promisePending: ANY
+    const res: ClassworkAssignmentByStudentIdInCourseResponsePayload =
+      new ClassworkAssignmentByStudentIdInCourseResponsePayload()
 
-    let res: Nullable<ClassworkAssignmentByStudentIdInCourseResponse>[] = []
-
-    let QueryListClassworkAssignment: ANY
-
-    if (lastId) {
-      QueryListClassworkAssignment = {
-        courseId,
-        orgId,
-        publicationState: Publication.Published,
-        $and: [
-          {
-            _id: {
-              $lt: lastId,
-            },
+    const pipeline: ANY = [
+      {
+        $lookup: {
+          from: 'classworksubmissions',
+          let: {
+            varClassworkAssignmentId: '$_id',
           },
-        ],
-      }
-    } else {
-      QueryListClassworkAssignment = {
-        courseId,
-        orgId,
-        publicationState: Publication.Published,
-      }
-    }
-
-    if (status === ClassworkAssignmentByStudentIdInCourseInputStatus.All) {
-      const classworkAssignments = await this.classworkAssignmentsModel.find(
-        QueryListClassworkAssignment,
-        null,
-        {
-          limit,
-          sort: { _id: -1 },
+          pipeline: [
+            {
+              $match: {
+                createdByAccountId: mongoose.Types.ObjectId(accountId),
+              },
+            },
+            {
+              $match: {
+                orgId: mongoose.Types.ObjectId(orgId),
+              },
+            },
+            {
+              $match: {
+                courseId: mongoose.Types.ObjectId(courseId),
+              },
+            },
+            {
+              $match: {
+                $expr: {
+                  $eq: ['$classworkId', '$$varClassworkAssignmentId'],
+                },
+              },
+            },
+          ],
+          as: 'ClassworkSubmissions',
         },
-      )
+      },
+      { $match: { publicationState: Publication.Published } },
+      { $match: { orgId: mongoose.Types.ObjectId(orgId) } },
+      { $match: { courseId: mongoose.Types.ObjectId(courseId) } },
+      { $sort: { _id: -1 } },
+    ]
 
-      promisePending = classworkAssignments.map(
-        async (
-          value,
-        ): Promise<
-          Nullable<ClassworkAssignmentByStudentIdInCourseResponse>
-        > => {
-          const classworkSubmission =
-            await this.classworkSubmissionModel.findOne({
-              createdByAccountId: accountId,
-              classworkId: value.id,
-              orgId,
-            })
+    let aggregateRes: ANY = []
 
-          let response: ClassworkAssignmentByStudentIdInCourseResponse =
-            new ClassworkAssignmentByStudentIdInCourseResponse()
+    aggregateRes = await this.classworkAssignmentsModel.aggregate(pipeline)
 
-          if (!classworkSubmission) {
-            response.classworkAssignmentId = value.id
-            response.classworkAssignmentsTitle = value.title
-            response.dueDate = value.dueDate
-          } else {
-            response = {
-              classworkAssignmentId: value.id,
-              classworkAssignmentsTitle: value.title,
-              dueDate: value.dueDate,
-              classworkSubmissionGrade: classworkSubmission.grade,
-              classworkSubmissionUpdatedAt: classworkSubmission.updatedAt,
-              classworkSubmissionDescription: classworkSubmission.description
-                ? classworkSubmission.description
-                : '',
+    res.list =
+      await Promise.all<ClassworkAssignmentByStudentIdInCourseResponse>(
+        aggregateRes.map(
+          async (
+            el,
+          ): Promise<ClassworkAssignmentByStudentIdInCourseResponse> => {
+            const classworkAssignmentByStudent: ClassworkAssignmentByStudentIdInCourseResponse =
+              new ClassworkAssignmentByStudentIdInCourseResponse()
+
+            // eslint-disable-next-line no-underscore-dangle
+            classworkAssignmentByStudent.classworkAssignmentId = el._id
+            classworkAssignmentByStudent.classworkAssignmentsTitle = el.title
+            classworkAssignmentByStudent.dueDate = el.dueDate
+            if (el.ClassworkSubmissions.length !== 0) {
+              classworkAssignmentByStudent.classworkSubmissionGrade =
+                el.ClassworkSubmissions[0].grade
+              classworkAssignmentByStudent.classworkSubmissionUpdatedAt =
+                el.ClassworkSubmissions[0].updatedAt
+              classworkAssignmentByStudent.classworkSubmissionDescription =
+                el.ClassworkSubmissions[0].description
             }
-          }
-          return response
-        },
+            return classworkAssignmentByStudent
+          },
+        ),
       )
 
-      res = await Promise.all(promisePending)
-    } else if (
+    if (
       status ===
       ClassworkAssignmentByStudentIdInCourseInputStatus.HaveSubmission
     ) {
-      const listSubmissions = await this.classworkSubmissionModel.find(
-        {
-          courseId,
-          createdByAccountId: accountId,
-          orgId,
-        },
-        null,
-        {
-          sort: { _id: -1 },
-          limit,
-        },
-      )
-
-      promisePending = listSubmissions.map(
-        async (
-          el,
-        ): Promise<
-          Nullable<ClassworkAssignmentByStudentIdInCourseResponse>
-        > => {
-          const classworkAssignment =
-            await this.classworkAssignmentsModel.findById(el.classworkId)
-          if (!classworkAssignment) {
-            return null
-          }
-
-          const response: ClassworkAssignmentByStudentIdInCourseResponse = {
-            classworkAssignmentId: classworkAssignment.id,
-            classworkAssignmentsTitle: classworkAssignment.title,
-            dueDate: classworkAssignment.dueDate,
-            classworkSubmissionGrade: el.grade,
-            classworkSubmissionUpdatedAt: el.updatedAt,
-            classworkSubmissionDescription: el.description
-              ? el.description
-              : '',
-          }
-
-          return response
-        },
-      )
-
-      res = await Promise.all(promisePending)
+      res.list = res.list.filter((el): boolean => {
+        return !!el.classworkSubmissionUpdatedAt
+      })
     } else if (
       status ===
-      ClassworkAssignmentByStudentIdInCourseInputStatus.NotHaveSubmission
+      ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission
     ) {
-      const classworkAssignments = await this.classworkAssignmentsModel.find(
-        QueryListClassworkAssignment,
-        null,
-        {
-          sort: { _id: -1 },
-        },
-      )
-
-      let count = 0
-
-      promisePending = classworkAssignments.map(
-        async (
-          value,
-        ): Promise<
-          Nullable<ClassworkAssignmentByStudentIdInCourseResponse>
-        > => {
-          if (count >= limit) {
-            return null
-          }
-
-          const classworkSubmission =
-            await this.classworkSubmissionModel.exists({
-              createdByAccountId: accountId,
-              classworkId: value.id,
-              orgId,
-            })
-
-          if (!classworkSubmission) {
-            count += 1
-            return {
-              classworkAssignmentId: value.id,
-              classworkAssignmentsTitle: value.title,
-              dueDate: value.dueDate,
-            } as ClassworkAssignmentByStudentIdInCourseResponse
-          }
-
-          return null
-        },
-      )
-
-      res = await Promise.all(promisePending)
-      res = res.filter((el): ANY => {
-        return el
+      res.list = res.list.filter((el): boolean => {
+        return !el.classworkSubmissionUpdatedAt
       })
     }
+
+    res.count = res.list.length
+
+    res.list = res.list.slice(
+      skip,
+      skip + limit >= res.count ? res.count : skip + limit,
+    )
 
     this.logger.log(
       `[${this.listClassworkAssignmentsByStudentIdInCourse.name}] listed ClassworkSubmissions`,
@@ -1099,7 +1030,8 @@ export class ClassworkService {
       courseId,
       accountId,
       limit,
-      lastId,
+      skip,
+      status,
     })
 
     return res
@@ -1151,6 +1083,7 @@ export class ClassworkService {
         orgId,
         courseId,
         createdByAccountId: accountId,
+        classworkId,
       })
     ) {
       throw new Error(`STUDENT_SUBMITTED_ASSIGNMENTS`)

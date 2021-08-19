@@ -163,6 +163,11 @@ type ClassworkAssignmentByStudentIdInCourseResponse {
   classworkSubmissionDescription: String
 }
 
+type ClassworkAssignmentByStudentIdInCourseResponsePayload {
+  list: [ClassworkAssignmentByStudentIdInCourseResponse!]
+  count: Int!
+}
+
 type SubmissionStatusStatistics {
   label: String!
   number: Float!
@@ -342,7 +347,7 @@ type Query {
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
   classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
-  listClassworkAssignmentsByStudentIdInCourse(Input: ClassworkAssignmentByStudentIdInCourseInput!): [ClassworkAssignmentByStudentIdInCourseResponse!]!
+  listClassworkAssignmentsByStudentIdInCourse(Input: ClassworkAssignmentByStudentIdInCourseInput!): ClassworkAssignmentByStudentIdInCourseResponsePayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
@@ -389,14 +394,14 @@ input LessonsFilterInput {
 input ClassworkAssignmentByStudentIdInCourseInput {
   courseId: ID!
   limit: Float!
-  lastId: ID
+  skip: Float
   status: ClassworkAssignmentByStudentIdInCourseInputStatus = All
 }
 
 enum ClassworkAssignmentByStudentIdInCourseInputStatus {
   All
   HaveSubmission
-  NotHaveSubmission
+  HaveNotSubmission
 }
 
 input ConversationPageOptionInput {
