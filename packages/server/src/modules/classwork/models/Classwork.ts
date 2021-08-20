@@ -16,7 +16,7 @@ registerEnumType(ClassworkType, {
 
 @ObjectType({ implements: [BaseModel] })
 export class Classwork extends BaseModel {
-  @Field()
+  @Field((_type) => ID)
   @prop({ required: true, type: Types.ObjectId })
   createdByAccountId: string
 

@@ -2316,15 +2316,30 @@ describe('academic.service', () => {
         createLessonInput.startTime = new Date('2021-08-16 12:00')
         createLessonInput.endTime = new Date('2021-08-16 16:30')
 
-        await expect(
-          academicService.createLesson(objectId(), createLessonInput),
-        ).resolves.toMatchObject({
+        const expectLesson = await academicService.createLesson(
+          objectId(),
+          createLessonInput,
+        )
+
+        const resultForExpectLesson = {
+          courseId: expectLesson.courseId,
+          description: expectLesson.description,
+          startTime: expectLesson.startTime,
+          endTime: expectLesson.endTime,
+          publicationState: expectLesson.publicationState,
+        }
+
+        const data = {
           courseId: course.id,
           description: 'Day la buoi 1',
           startTime: createLessonInput.startTime,
           endTime: createLessonInput.endTime,
           publicationState: 'Published',
-        })
+        }
+
+        expect(
+          JSON.stringify(resultForExpectLesson) === JSON.stringify(data),
+        ).toBeTruthy()
       })
     })
 
@@ -2348,7 +2363,7 @@ describe('academic.service', () => {
 
         const listLessons: ANY = []
 
-        const studentId = objectId().toString()
+        const studentId = objectId()
 
         const lesson1 = await academicService.createLesson(course.orgId, {
           ...createLessonInput,

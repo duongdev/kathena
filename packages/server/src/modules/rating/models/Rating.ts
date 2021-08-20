@@ -6,16 +6,16 @@ import { BaseModel } from 'core'
 
 @ObjectType({ implements: [BaseModel] })
 export class Rating extends BaseModel {
-  @Field()
+  @Field((_type) => ID)
   @prop({ required: true, type: Types.ObjectId })
   createdByAccountId: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ required: true, type: Types.ObjectId })
   targetId: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ required: true, type: Types.ObjectId })
   orgId: string
 
   @Field((_type) => Number, { defaultValue: 1 })
