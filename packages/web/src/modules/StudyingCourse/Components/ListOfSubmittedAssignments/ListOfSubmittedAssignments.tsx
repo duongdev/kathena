@@ -20,7 +20,11 @@ import {
   Typography,
   usePagination,
 } from '@kathena/ui'
-import { useListClassworkAssignmentsByStudentIdInCourseQuery } from 'graphql/generated'
+import { WithAuth } from 'common/auth'
+import {
+  Permission,
+  useListClassworkAssignmentsByStudentIdInCourseQuery,
+} from 'graphql/generated'
 import {
   buildPath,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
@@ -176,5 +180,9 @@ const useStyles = makeStyles(() => ({
     width: '8em',
   },
 }))
-
-export default ListOfSubmittedAssignments
+const WithPermissionListOfSubmittedAssignments = () => (
+  <WithAuth permission={Permission.Studying_Course_Access}>
+    <ListOfSubmittedAssignments />
+  </WithAuth>
+)
+export default WithPermissionListOfSubmittedAssignments
