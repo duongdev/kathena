@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql'
 import { prop } from '@typegoose/typegoose'
+import { Types } from 'mongoose'
 
 import { BaseModel, Publication } from 'core'
 
@@ -17,8 +18,8 @@ export class Lesson extends BaseModel {
   @prop({ type: String })
   description: string
 
-  @Field((_type) => [String], { defaultValue: [] })
-  @prop({ type: [String], default: [] })
+  @Field((_type) => [ID], { defaultValue: [] })
+  @prop({ type: [Types.ObjectId], default: [] })
   absentStudentIds: string[]
 
   @Field({ defaultValue: null })
@@ -26,11 +27,11 @@ export class Lesson extends BaseModel {
   lecturerComment: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ type: Types.ObjectId, required: true })
   courseId: string
 
   @Field((_type) => ID)
-  @prop({ required: true })
+  @prop({ type: Types.ObjectId, required: true })
   orgId: string
 
   @Field((_type) => Publication)

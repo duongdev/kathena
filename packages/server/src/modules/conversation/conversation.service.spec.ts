@@ -254,57 +254,100 @@ describe('conversation.service', () => {
         content: 'cmt 4',
       })
 
-      await expect(
-        conversationService.listConversationByTargetId(
+      const expect1 = await conversationService.listConversationByTargetId(
+        {
+          limit: 2,
+        },
+        {
+          orgId: org.id,
+          lastId: comment3.id,
+          roomId: classWorkAssignmentTest1.id,
+        },
+      )
+
+      const resultForExpect1 = {
+        conversations: [
           {
-            limit: 2,
+            roomId: expect1.conversations[0].roomId,
+            content: expect1.conversations[0].content,
           },
-          {
-            orgId: org.id,
-            lastId: comment3.id,
-            roomId: classWorkAssignmentTest1.id,
-          },
-        ),
-      ).resolves.toMatchObject({
+        ],
+        count: expect1.conversations.length,
+      }
+
+      const data1 = {
         conversations: [
           {
             roomId: classWorkAssignmentTest1.id,
             content: comment1.content,
           },
         ],
-      })
+        count: 1,
+      }
 
-      await expect(
-        conversationService.listConversationByTargetId(
+      expect(
+        JSON.stringify(resultForExpect1) === JSON.stringify(data1),
+      ).toBeTruthy()
+
+      const expect2 = await conversationService.listConversationByTargetId(
+        {
+          limit: 2,
+        },
+        {
+          orgId: org.id,
+          lastId: comment4.id,
+          roomId: classWorkAssignmentTest2.id,
+        },
+      )
+
+      const resultForExpect2 = {
+        conversations: [
           {
-            limit: 2,
+            roomId: expect2.conversations[0].roomId,
+            content: expect2.conversations[0].content,
           },
-          {
-            orgId: org.id,
-            lastId: comment4.id,
-            roomId: classWorkAssignmentTest2.id,
-          },
-        ),
-      ).resolves.toMatchObject({
+        ],
+        count: expect2.conversations.length,
+      }
+
+      const data2 = {
         conversations: [
           {
             roomId: classWorkAssignmentTest2.id,
             content: comment2.content,
           },
         ],
-      })
+        count: 1,
+      }
+      expect(
+        JSON.stringify(resultForExpect2) === JSON.stringify(data2),
+      ).toBeTruthy()
 
-      await expect(
-        conversationService.listConversationByTargetId(
+      const expect3 = await conversationService.listConversationByTargetId(
+        {
+          limit: 2,
+        },
+        {
+          orgId: org.id,
+          roomId: classWorkAssignmentTest1.id,
+        },
+      )
+
+      const resultForExpect3 = {
+        conversations: [
           {
-            limit: 2,
+            roomId: expect3.conversations[0].roomId,
+            content: expect3.conversations[0].content,
           },
           {
-            orgId: org.id,
-            roomId: classWorkAssignmentTest1.id,
+            roomId: expect3.conversations[1].roomId,
+            content: expect3.conversations[1].content,
           },
-        ),
-      ).resolves.toMatchObject({
+        ],
+        count: expect3.conversations.length,
+      }
+
+      const data3 = {
         conversations: [
           {
             roomId: classWorkAssignmentTest1.id,
@@ -315,7 +358,11 @@ describe('conversation.service', () => {
             content: comment1.content,
           },
         ],
-      })
+        count: 2,
+      }
+      expect(
+        JSON.stringify(resultForExpect3) === JSON.stringify(data3),
+      ).toBeTruthy()
     })
   })
 })

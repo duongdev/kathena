@@ -15,8 +15,8 @@ type Course implements BaseModel {
   tuitionFee: Float!
   publicationState: Publication!
   publishedAt: DateTime!
-  lecturerIds: [String!]!
-  studentIds: [String!]!
+  lecturerIds: [ID!]!
+  studentIds: [ID!]!
   createdByAccountId: ID!
 }
 
@@ -87,7 +87,7 @@ type ClassworkAssignment implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  createdByAccountId: String!
+  createdByAccountId: ID!
   courseId: ID!
   title: String!
   type: String!
@@ -112,7 +112,7 @@ type ClassworkMaterial implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  createdByAccountId: String!
+  createdByAccountId: ID!
   courseId: ID!
   title: String!
   type: String!
@@ -126,11 +126,11 @@ type ClassworkSubmission implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  createdByAccountId: String!
+  createdByAccountId: ID!
   classworkId: ID!
   courseId: ID!
   grade: Float
-  submissionFileIds: [String!]!
+  submissionFileIds: [ID!]!
   description: String!
 }
 
@@ -203,7 +203,7 @@ type Lesson implements BaseModel {
   startTime: DateTime!
   endTime: DateTime!
   description: String
-  absentStudentIds: [String!]!
+  absentStudentIds: [ID!]!
   lecturerComment: String!
   courseId: ID!
   publicationState: Publication!
@@ -301,7 +301,7 @@ type Rating implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  createdByAccountId: String!
+  createdByAccountId: ID!
   targetId: ID!
   numberOfStars: Float!
 }
@@ -311,8 +311,8 @@ type Conversation implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  createdByAccountId: String!
-  roomId: String!
+  createdByAccountId: ID!
+  roomId: ID!
   content: String!
   type: ConversationType!
 }
