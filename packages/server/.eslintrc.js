@@ -8,6 +8,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
+    'airbnb-base',
     'airbnb-typescript/base',
     'plugin:jest/recommended',
     'plugin:@typescript-eslint/recommended',

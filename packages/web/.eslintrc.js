@@ -1,6 +1,7 @@
 module.exports = {
   ignorePatterns: ['generated.tsx'],
   extends: [
+    'airbnb',
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',

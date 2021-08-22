@@ -119,7 +119,7 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
       title={`${classworkTitle}`}
       actions={[
         <Button onClick={handleOpenGradeDialog} variant="contained">
-          {classworkSubmission.grade > 0 ? 'Chấm lại' : 'Chấm điểm'}
+          {classworkSubmission.grade !== null ? 'Chấm lại' : 'Chấm điểm'}
         </Button>,
       ]}
     >
