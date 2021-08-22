@@ -58,12 +58,25 @@ describe('rating.service', () => {
         .spyOn(ratingService, 'calculateAvgRatingByTargetId')
         .mockResolvedValueOnce(4.5)
 
-      await expect(
-        ratingService.createRating(objectId(), objectId(), createRatingInput),
-      ).resolves.toMatchObject({
+      const expectRating = await ratingService.createRating(
+        objectId(),
+        objectId(),
+        createRatingInput,
+      )
+
+      const resultForExpectRating = {
+        numberOfStars: expectRating.numberOfStars,
+        targetId: expectRating.targetId,
+      }
+
+      const data = {
         numberOfStars: 5,
         targetId: createRatingInput.targetId,
-      })
+      }
+
+      expect(
+        JSON.stringify(resultForExpectRating) === JSON.stringify(data),
+      ).toBeTruthy()
     })
   })
 
@@ -95,21 +108,29 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest.spyOn(authService, 'canSubmitRating').mockResolvedValueOnce(true)
-
       jest
         .spyOn(ratingService, 'calculateAvgRatingByTargetId')
         .mockResolvedValueOnce(4.5)
 
-      await expect(
-        ratingService.createRatingForTheLesson(
-          objectId(),
-          objectId(),
-          createRatingInput,
-        ),
-      ).resolves.toMatchObject({
+      const expectRating = await ratingService.createRating(
+        objectId(),
+        objectId(),
+        createRatingInput,
+      )
+
+      const resultForExpectRating = {
+        numberOfStars: expectRating.numberOfStars,
+        targetId: expectRating.targetId,
+      }
+
+      const data = {
         numberOfStars: 5,
         targetId: createRatingInput.targetId,
-      })
+      }
+
+      expect(
+        JSON.stringify(resultForExpectRating) === JSON.stringify(data),
+      ).toBeTruthy()
     })
   })
 

@@ -60,12 +60,12 @@ export class Course extends BaseModel {
   @prop({ required: false, type: Date })
   publishedAt?: Date | null
 
-  @Field((_type) => [String])
-  @prop({ type: [String], default: [] })
+  @Field((_type) => [ID])
+  @prop({ type: [Types.ObjectId], default: [] })
   lecturerIds: string[]
 
-  @Field((_type) => [String])
-  @prop({ type: [String], default: [] })
+  @Field((_type) => [ID])
+  @prop({ type: [Types.ObjectId], default: [] })
   studentIds: string[]
 
   @Field((_type) => ID)

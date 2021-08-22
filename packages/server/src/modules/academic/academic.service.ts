@@ -1,5 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
+import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
 import { Error, Promise } from 'mongoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
@@ -728,7 +728,7 @@ export class AcademicService {
     if (absentStudentId) {
       lessonModel.find({
         $expr: {
-          $in: [absentStudentId, '$absentStudentIds'],
+          $in: [mongoose.Types.ObjectId(absentStudentId), '$absentStudentIds'],
         },
       })
     }

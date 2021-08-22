@@ -12,7 +12,7 @@ export enum ClassworkSubmissionStatus {
 
 @ObjectType({ implements: [BaseModel] })
 export class ClassworkSubmission extends BaseModel {
-  @Field()
+  @Field((_type) => ID)
   @prop({ required: true, type: Types.ObjectId })
   createdByAccountId: string
 
@@ -28,7 +28,7 @@ export class ClassworkSubmission extends BaseModel {
   @prop({ default: null, min: 0, max: 100 })
   grade: number
 
-  @Field((_type) => [String])
+  @Field((_type) => [ID])
   @prop({ type: [Types.ObjectId] })
   submissionFileIds?: string[]
 
