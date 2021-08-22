@@ -923,7 +923,12 @@ export class AcademicService {
 
   // TODO: [BE] Implement academicService.updateLessonPublicationById
 
-  // TODO: [BE] Implement academicService.findLessonById
+  async findLessonById(
+    lessonId: string,
+    orgId: string,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    return this.lessonModel.findOne({ _id: lessonId, orgId })
+  }
 
   async commentsForTheLessonByLecturer(
     orgId: string,

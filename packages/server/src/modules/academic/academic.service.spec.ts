@@ -16,6 +16,7 @@ import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
 import { CreateCourseInput } from './academic.type'
+import { Lesson } from './models/Lesson'
 
 describe('academic.service', () => {
   let module: TestingModule
@@ -2929,7 +2930,38 @@ describe('academic.service', () => {
     })
 
     // TODO: [BE] Implement academicService.updateLessonPublicationById
-    // TODO: [BE] Implement academicService.findLessonById
+
+    describe('findLessonById', () => {
+      it('returns a lesson if found', async () => {
+        expect.assertions(1)
+
+        const lesson: Lesson = {
+          id: objectId(),
+          orgId: objectId(),
+          courseId: objectId(),
+        } as Lesson
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findOne')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.findLessonById(lesson.id, lesson.orgId),
+        ).resolves.toMatchObject(lesson)
+      })
+
+      it('returns a null if found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findOne')
+          .mockResolvedValueOnce(null as ANY)
+
+        await expect(
+          academicService.findLessonById(objectId(), objectId()),
+        ).resolves.toBeNull()
+      })
+    })
 
     describe('commentsForTheLessonByLecturer', () => {
       const comment = 'hom nay cac ban hoc rat tot'

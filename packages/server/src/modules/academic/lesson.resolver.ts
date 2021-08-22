@@ -8,7 +8,7 @@ import { CurrentOrg, UseAuthGuard } from 'core/auth'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { RatingService } from 'modules/rating/rating.service'
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { AcademicService } from './academic.service'
 import {
@@ -121,7 +121,15 @@ export class LessonResolver {
 
   // TODO: [BE] Implement academicService.updateLessonPublicationById
 
-  // TODO: [BE] Implement academicService.findLessonById
+  @Query((_returns) => Lesson)
+  @UseAuthGuard(P.Academic_ListLesson)
+  @UsePipes(ValidationPipe)
+  async findLessonById(
+    @Args('lessonId', { type: () => ID }) lessonId: string,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    return this.academicService.findLessonById(lessonId, org.id)
+  }
 
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_CommentsForTheLesson)

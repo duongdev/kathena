@@ -204,7 +204,7 @@ type Lesson implements BaseModel {
   endTime: DateTime!
   description: String
   absentStudentIds: [ID!]!
-  lecturerComment: String!
+  lecturerComment: String
   courseId: ID!
   publicationState: Publication!
   avgNumberOfStars: Float!
@@ -340,6 +340,7 @@ type Query {
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
+  findLessonById(lessonId: ID!): Lesson!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File
