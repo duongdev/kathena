@@ -30,7 +30,7 @@ import {
 import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
-  STUDYING_COURSE_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
 } from 'utils/path-builder'
@@ -134,9 +134,12 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       <PageContainer
         title={classworkAssignment.title}
         backButtonLabel="Danh sách bài tập"
-        withBackButton={buildPath(STUDYING_COURSE_CLASSWORK_ASSIGNMENTS, {
-          id: classworkAssignment.courseId,
-        })}
+        withBackButton={buildPath(
+          STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS,
+          {
+            id: classworkAssignment.courseId,
+          },
+        )}
         subtitle={[
           <>
             {!classworkAssignmentSubmit?.id ? (
