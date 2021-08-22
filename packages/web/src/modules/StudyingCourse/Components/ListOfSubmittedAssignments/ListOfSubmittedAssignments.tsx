@@ -1,10 +1,13 @@
-import { FC, useMemo } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 
 import {
   CardContent,
   Chip,
   Grid,
+  InputLabel,
   makeStyles,
+  MenuItem,
+  Select,
   Skeleton,
 } from '@material-ui/core'
 import format from 'date-fns/format'
@@ -22,6 +25,7 @@ import {
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import {
+  ClassworkAssignmentByStudentIdInCourseInputStatus,
   Permission,
   useListClassworkAssignmentsByStudentIdInCourseQuery,
 } from 'graphql/generated'
@@ -38,7 +42,10 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
   const classes = useStyles(props)
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
-
+  const [statusSubmit, setStatusSubmit] = useState({
+    label: 'Tất cả',
+    valueStatusSubmit: ClassworkAssignmentByStudentIdInCourseInputStatus.All,
+  })
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data: dataOfSubmitted, loading: loadingOfSubmitted } =
     useListClassworkAssignmentsByStudentIdInCourseQuery({
@@ -47,10 +54,11 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
           courseId,
           limit: perPage,
           skip: page * perPage,
-          // status: All as ANY,
+          status: statusSubmit.valueStatusSubmit,
         },
       },
     })
+
   const classworkOfSubmits = useMemo(
     () =>
       dataOfSubmitted?.listClassworkAssignmentsByStudentIdInCourse.list ?? [],
@@ -70,9 +78,58 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
       </Grid>
     )
   }
+
+  const handleChangeStatusSubmit = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    // Cập nhật lại state hiển thị
+    setStatusSubmit({
+      ...statusSubmit,
+      valueStatusSubmit: event.target.value as ANY,
+    })
+  }
+  const arrayOptionStatus = [
+    {
+      id: 1,
+      label: 'Tất cả',
+      value: ClassworkAssignmentByStudentIdInCourseInputStatus.All,
+    },
+    {
+      id: 2,
+      label: 'Bài tập đã nộp',
+      value: ClassworkAssignmentByStudentIdInCourseInputStatus.HaveSubmission,
+    },
+    {
+      id: 3,
+      label: 'Bài tập chưa nộp',
+      value:
+        ClassworkAssignmentByStudentIdInCourseInputStatus.HaveNotSubmission,
+    },
+  ]
+
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard title="Bài tập" gridItem={{ xs: 12 }}>
+      <SectionCard
+        title="Bài tập"
+        gridItem={{ xs: 12 }}
+        action={[
+          <>
+            {/* <Typography>Tìm kiếm:</Typography> */}
+            <InputLabel>Tìm kiếm</InputLabel>
+            <Select
+              className={classes.selectStatus}
+              value={statusSubmit.valueStatusSubmit}
+              onChange={handleChangeStatusSubmit}
+            >
+              {arrayOptionStatus?.map((OptionStatus) => (
+                <MenuItem key={OptionStatus.id} value={OptionStatus.value}>
+                  {OptionStatus.label ?? OptionStatus.value}
+                </MenuItem>
+              ))}
+            </Select>
+          </>,
+        ]}
+      >
         <CardContent>
           {classworkOfSubmits.length ? (
             <DataTable
@@ -115,6 +172,8 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                 },
                 {
                   label: 'Điểm',
+                  width: 20,
+                  align: 'center',
                   skeleton: <Skeleton />,
                   render: (classworkOfSubmit) => (
                     <>
@@ -178,6 +237,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
 const useStyles = makeStyles(() => ({
   root: {
     width: '8em',
+  },
+  selectStatus: {
+    width: '13em',
   },
 }))
 const WithPermissionListOfSubmittedAssignments = () => (
