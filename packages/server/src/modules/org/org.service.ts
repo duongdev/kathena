@@ -65,7 +65,6 @@ export class OrgService {
     if (!(id && isValidObjectId(id))) return false
 
     const exists = await this.existsOrgById(id)
-
     return exists
   }
 }
