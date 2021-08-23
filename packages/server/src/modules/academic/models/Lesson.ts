@@ -22,7 +22,7 @@ export class Lesson extends BaseModel {
   @prop({ type: [Types.ObjectId], default: [] })
   absentStudentIds: string[]
 
-  @Field({ defaultValue: null })
+  @Field({ defaultValue: null, nullable: true })
   @prop({ type: String, default: null })
   lecturerComment: string
 
@@ -38,7 +38,7 @@ export class Lesson extends BaseModel {
   @prop({ required: true, default: Publication.Draft })
   publicationState: Publication
 
-  @Field()
+  @Field({ defaultValue: 0 })
   @prop({ type: Number, default: 0 })
   avgNumberOfStars: number
 }
