@@ -120,7 +120,16 @@ export class LessonResolver {
     )
   }
 
-  // TODO: [BE] Implement academicService.updateLessonPublicationById
+  @Query((_returns) => Lesson)
+  @UseAuthGuard(P.Academic_UpdateLesson)
+  @UsePipes(ValidationPipe)
+  async updateLessonPublicationById(
+    @Args('input', { type: () => UpdateLessonPublicationByIdInput })
+    input: UpdateLessonPublicationByIdInput,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    return this.academicService.updateLessonPublicationById(input, org.id)
+  }
 
   @Query((_returns) => Lesson)
   @UseAuthGuard(P.Academic_ListLesson)
@@ -151,16 +160,5 @@ export class LessonResolver {
       commentsForTheLessonByLecturerQuery,
       commentsForTheLessonByLecturerInput,
     )
-  }
-
-  @Query((_returns) => Lesson)
-  @UseAuthGuard(P.Academic_UpdateLesson)
-  @UsePipes(ValidationPipe)
-  async updateLessonPublicationById(
-    @Args('input', { type: () => UpdateLessonPublicationByIdInput })
-    input: UpdateLessonPublicationByIdInput,
-    @CurrentOrg() org: Org,
-  ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.updateLessonPublicationById(input, org.id)
   }
 }

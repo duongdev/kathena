@@ -213,4 +213,7 @@ export class UpdateLessonPublicationByIdInput {
 
   @Field((_type) => Publication)
   publicationState: Publication
+
+  @Field((_type) => ID)
+  courseId: string
 }

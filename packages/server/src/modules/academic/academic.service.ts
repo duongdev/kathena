@@ -962,9 +962,14 @@ export class AcademicService {
 
   async updateLessonPublicationById(
     input: UpdateLessonPublicationByIdInput,
-    orgId: string,
+    accountId: string,
   ): Promise<DocumentType<Lesson>> {
-    const { lessonId, publicationState } = input
+    const { lessonId, publicationState, courseId } = input
+
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
     const lesson = await this.lessonModel.findByIdAndUpdate(
       lessonId,
       { $set: { publicationState } },
