@@ -18,6 +18,7 @@ import {
   LessonsFilterInput,
   LessonsPayload,
   UpdateLessonInput,
+  UpdateLessonPublicationByIdInput,
 } from './academic.type'
 import { Lesson } from './models/Lesson'
 
@@ -150,5 +151,16 @@ export class LessonResolver {
       commentsForTheLessonByLecturerQuery,
       commentsForTheLessonByLecturerInput,
     )
+  }
+
+  @Query((_returns) => Lesson)
+  @UseAuthGuard(P.Academic_UpdateLesson)
+  @UsePipes(ValidationPipe)
+  async updateLessonPublicationById(
+    @Args('input', { type: () => UpdateLessonPublicationByIdInput })
+    input: UpdateLessonPublicationByIdInput,
+    @CurrentOrg() org: Org,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    return this.academicService.updateLessonPublicationById(input, org.id)
   }
 }

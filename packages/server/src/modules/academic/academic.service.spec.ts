@@ -3013,6 +3013,57 @@ describe('academic.service', () => {
         })
       })
     })
+
+    describe('updateLessonPublicationById', () => {
+      it('returns an error if the lesson is not found', async () => {
+        expect.assertions(1)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+        }
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('returns a lesson if it updated', async () => {
+        expect.assertions(2)
+        let input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+        }
+        let lesson = {
+          ...createLessonInput,
+          publicationState: input.publicationState,
+        }
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+
+        input = {
+          lessonId: objectId(),
+          publicationState: Publication.Draft,
+        }
+
+        lesson = {
+          ...createLessonInput,
+          publicationState: input.publicationState,
+        }
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+      })
+    })
   })
 
   /**

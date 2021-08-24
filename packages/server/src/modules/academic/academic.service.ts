@@ -25,6 +25,7 @@ import {
   CreateLessonInput,
   LessonsFilterInput,
   UpdateLessonInput,
+  UpdateLessonPublicationByIdInput,
 } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
@@ -957,6 +958,23 @@ export class AcademicService {
 
     const update = await lesson.save()
     return update
+  }
+
+  async updateLessonPublicationById(
+    input: UpdateLessonPublicationByIdInput,
+    orgId: string,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, publicationState } = input
+    const lesson = await this.lessonModel.findByIdAndUpdate(
+      lessonId,
+      { $set: { publicationState } },
+      { new: true },
+    )
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+    return lesson
   }
 
   /**
