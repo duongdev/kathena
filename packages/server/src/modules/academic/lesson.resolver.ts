@@ -4,7 +4,8 @@ import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { Logger } from 'core'
-import { CurrentOrg, UseAuthGuard } from 'core/auth'
+import { CurrentOrg, UseAuthGuard, CurrentAccount } from 'core/auth'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { RatingService } from 'modules/rating/rating.service'
@@ -126,9 +127,9 @@ export class LessonResolver {
   async updateLessonPublicationById(
     @Args('input', { type: () => UpdateLessonPublicationByIdInput })
     input: UpdateLessonPublicationByIdInput,
-    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.updateLessonPublicationById(input, org.id)
+    return this.academicService.updateLessonPublicationById(input, account.id)
   }
 
   @Query((_returns) => Lesson)

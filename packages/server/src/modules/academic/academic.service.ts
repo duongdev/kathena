@@ -964,6 +964,9 @@ export class AcademicService {
     input: UpdateLessonPublicationByIdInput,
     accountId: string,
   ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.updateLessonPublicationById.name}] updating ...`)
+    this.logger.verbose({ input, accountId })
+
     const { lessonId, publicationState, courseId } = input
 
     if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
@@ -979,6 +982,10 @@ export class AcademicService {
     if (!lesson) {
       throw new Error('Lesson not found')
     }
+
+    this.logger.log(`[${this.updateLessonPublicationById.name}] update`)
+    this.logger.verbose(lesson)
+
     return lesson
   }
 
