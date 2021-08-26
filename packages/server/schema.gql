@@ -340,6 +340,7 @@ type Query {
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
+  updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
@@ -390,6 +391,12 @@ input LessonsFilterInput {
   startTime: DateTime = null
   endTime: DateTime = null
   absentStudentId: ID = null
+}
+
+input UpdateLessonPublicationByIdInput {
+  lessonId: ID!
+  publicationState: Publication!
+  courseId: ID!
 }
 
 input ClassworkAssignmentByStudentIdInCourseInput {

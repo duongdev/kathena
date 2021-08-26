@@ -3013,6 +3013,75 @@ describe('academic.service', () => {
         })
       })
     })
+
+    describe('updateLessonPublicationById', () => {
+      it(`returns an error if account can't manage course`, async () => {
+        expect.assertions(1)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('returns an error if the lesson is not found', async () => {
+        expect.assertions(1)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+
+        jest
+          .spyOn(academicService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('returns a lesson if it updated', async () => {
+        expect.assertions(2)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+        const lesson = {
+          ...createLessonInput,
+          publicationState: input.publicationState,
+        }
+        jest
+          .spyOn(academicService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+
+        input.publicationState = Publication.Draft
+
+        lesson.publicationState = input.publicationState
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+      })
+    })
   })
 
   /**

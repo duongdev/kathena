@@ -25,6 +25,7 @@ import {
   CreateLessonInput,
   LessonsFilterInput,
   UpdateLessonInput,
+  UpdateLessonPublicationByIdInput,
 } from './academic.type'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
@@ -957,6 +958,35 @@ export class AcademicService {
 
     const update = await lesson.save()
     return update
+  }
+
+  async updateLessonPublicationById(
+    input: UpdateLessonPublicationByIdInput,
+    accountId: string,
+  ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.updateLessonPublicationById.name}] updating ...`)
+    this.logger.verbose({ input, accountId })
+
+    const { lessonId, publicationState, courseId } = input
+
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const lesson = await this.lessonModel.findByIdAndUpdate(
+      lessonId,
+      { $set: { publicationState } },
+      { new: true },
+    )
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    this.logger.log(`[${this.updateLessonPublicationById.name}] update`)
+    this.logger.verbose(lesson)
+
+    return lesson
   }
 
   /**
