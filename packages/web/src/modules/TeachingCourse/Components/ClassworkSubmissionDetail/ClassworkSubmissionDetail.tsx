@@ -134,9 +134,15 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
           gridItem={{ xs: 12 }}
           title={`Thông tin nộp bài của học viên: ${creatorName}`}
           action={
-            <StatusChip variant="contained">
-              Điểm: {classworkSubmission.grade}
-            </StatusChip>
+            classworkSubmission.grade ? (
+              <StatusChip variant="contained">
+                Điểm: {classworkSubmission.grade}
+              </StatusChip>
+            ) : (
+              <StatusChip variant="outlined" color="pale">
+                Chưa chấm
+              </StatusChip>
+            )
           }
         >
           <CardContent className={classes.root}>
