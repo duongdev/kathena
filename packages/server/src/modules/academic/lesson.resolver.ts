@@ -4,7 +4,8 @@ import { DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { Logger } from 'core'
-import { CurrentOrg, UseAuthGuard } from 'core/auth'
+import { CurrentOrg, UseAuthGuard, CurrentAccount } from 'core/auth'
+import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
 import { RatingService } from 'modules/rating/rating.service'
@@ -18,6 +19,7 @@ import {
   LessonsFilterInput,
   LessonsPayload,
   UpdateLessonInput,
+  UpdateLessonPublicationByIdInput,
 } from './academic.type'
 import { Lesson } from './models/Lesson'
 
@@ -119,7 +121,16 @@ export class LessonResolver {
     )
   }
 
-  // TODO: [BE] Implement academicService.updateLessonPublicationById
+  @Query((_returns) => Lesson)
+  @UseAuthGuard(P.Academic_UpdateLesson)
+  @UsePipes(ValidationPipe)
+  async updateLessonPublicationById(
+    @Args('input', { type: () => UpdateLessonPublicationByIdInput })
+    input: UpdateLessonPublicationByIdInput,
+    @CurrentAccount() account: Account,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    return this.academicService.updateLessonPublicationById(input, account.id)
+  }
 
   @Query((_returns) => Lesson)
   @UseAuthGuard(P.Academic_ListLesson)
