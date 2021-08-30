@@ -82,7 +82,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.24.2",
     "eslint-plugin-jest": "24.4.0",
-    "eslint-plugin-prettier": "3.4.1",
+    "eslint-plugin-prettier": "4.0.0",
     "jest": "27.1.0",
     "start-server-webpack-plugin": "2.2.5",
     "supertest": "6.1.6",
