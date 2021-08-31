@@ -2196,8 +2196,28 @@ describe('academic.service', () => {
         expect.assertions(1)
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('Org ID is invalid')
+      })
+
+      it('throws error if the account has no permissions', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(orgService, 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
+        ).rejects.toThrowError(`THIS_COURSE_DOES_NOT_EXIST`)
       })
 
       it('throws error if course not exist', async () => {
@@ -2206,9 +2226,16 @@ describe('academic.service', () => {
         jest
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('THIS_COURSE_DOES_NOT_EXIST')
       })
 
@@ -2218,6 +2245,9 @@ describe('academic.service', () => {
         jest
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
 
         jest
           .spyOn(academicService['courseModel'], 'findById')
@@ -2227,7 +2257,11 @@ describe('academic.service', () => {
         createLessonInput.endTime = new Date('2021-08-15 13:00')
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('START_TIME_OR_END_TIME_INVALID')
       })
 
@@ -2240,6 +2274,13 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
         jest
           .spyOn(academicService['courseModel'], 'findById')
@@ -2268,28 +2309,44 @@ describe('academic.service', () => {
         createLessonInput.endTime = new Date('2021-08-15 16:30')
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
         createLessonInput.startTime = new Date('2021-08-15 15:00')
         createLessonInput.endTime = new Date('2021-08-15 16:00')
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
         createLessonInput.startTime = new Date('2021-08-15 15:00')
         createLessonInput.endTime = new Date('2021-08-15 17:00')
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
         createLessonInput.startTime = new Date('2021-08-15 12:00')
         createLessonInput.endTime = new Date('2021-08-15 17:30')
 
         await expect(
-          academicService.createLesson(objectId(), createLessonInput),
+          academicService.createLesson(
+            objectId(),
+            objectId(),
+            createLessonInput,
+          ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
       })
 
@@ -2299,6 +2356,10 @@ describe('academic.service', () => {
         jest
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
 
         jest
           .spyOn(academicService['courseModel'], 'findById')
@@ -2318,6 +2379,7 @@ describe('academic.service', () => {
         createLessonInput.endTime = new Date('2021-08-16 16:30')
 
         const expectLesson = await academicService.createLesson(
+          objectId(),
           objectId(),
           createLessonInput,
         )
@@ -2366,35 +2428,58 @@ describe('academic.service', () => {
 
         const studentId = objectId()
 
-        const lesson1 = await academicService.createLesson(course.orgId, {
-          ...createLessonInput,
-          startTime: new Date('2021-08-15 14:00'),
-          endTime: new Date('2021-08-15 16:30'),
-        })
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
-        const lesson2 = await academicService.createLesson(course.orgId, {
-          ...createLessonInput,
-          startTime: new Date('2021-08-16 14:00'),
-          endTime: new Date('2021-08-16 16:30'),
-          description: 'Day la buoi 2',
-        })
+        const lesson1 = await academicService.createLesson(
+          course.orgId,
+          objectId(),
+          {
+            ...createLessonInput,
+            startTime: new Date('2021-08-15 14:00'),
+            endTime: new Date('2021-08-15 16:30'),
+          },
+        )
+
+        const lesson2 = await academicService.createLesson(
+          course.orgId,
+          objectId(),
+          {
+            ...createLessonInput,
+            startTime: new Date('2021-08-16 14:00'),
+            endTime: new Date('2021-08-16 16:30'),
+            description: 'Day la buoi 2',
+          },
+        )
 
         lesson2.absentStudentIds = [studentId]
         lesson2.save()
 
-        const lesson3 = await academicService.createLesson(course.orgId, {
-          ...createLessonInput,
-          startTime: new Date('2021-08-17 14:00'),
-          endTime: new Date('2021-08-17 16:30'),
-          description: 'Day la buoi 3',
-        })
+        const lesson3 = await academicService.createLesson(
+          course.orgId,
+          objectId(),
+          {
+            ...createLessonInput,
+            startTime: new Date('2021-08-17 14:00'),
+            endTime: new Date('2021-08-17 16:30'),
+            description: 'Day la buoi 3',
+          },
+        )
 
-        const lesson4 = await academicService.createLesson(course.orgId, {
-          ...createLessonInput,
-          startTime: new Date('2021-08-18 14:00'),
-          endTime: new Date('2021-08-18 16:30'),
-          description: 'Day la buoi 4',
-        })
+        const lesson4 = await academicService.createLesson(
+          course.orgId,
+          objectId(),
+          {
+            ...createLessonInput,
+            startTime: new Date('2021-08-18 14:00'),
+            endTime: new Date('2021-08-18 16:30'),
+            description: 'Day la buoi 4',
+          },
+        )
 
         lesson4.absentStudentIds = [studentId]
         lesson4.save()
@@ -2515,6 +2600,10 @@ describe('academic.service', () => {
           publicationState: Publication.Published,
         }
 
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
         await expect(
           academicService.updateLessonById(
             {
@@ -2523,6 +2612,7 @@ describe('academic.service', () => {
               courseId: objectId(),
             },
             updateLessonInput,
+            objectId(),
           ),
         ).rejects.toThrowError('Lesson not found')
       })
@@ -2543,6 +2633,11 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(lesson)
           .mockResolvedValueOnce(lesson)
 
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+
         await expect(
           academicService.updateLessonById(
             {
@@ -2553,6 +2648,7 @@ describe('academic.service', () => {
             {
               startTime: new Date('2021-08-02'),
             },
+            objectId(),
           ),
         ).rejects.toThrowError('endTime or startTime invalid')
 
@@ -2566,6 +2662,7 @@ describe('academic.service', () => {
             {
               endTime: new Date('2021-07-31'),
             },
+            objectId(),
           ),
         ).rejects.toThrowError('endTime or startTime invalid')
       })
@@ -2608,6 +2705,13 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(lessons)
           .mockResolvedValueOnce(lessons)
 
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+
         await expect(
           academicService.updateLessonById(
             {
@@ -2616,6 +2720,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             updateLessonInput,
+            objectId(),
           ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
@@ -2630,6 +2735,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             updateLessonInput,
+            objectId(),
           ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
@@ -2644,6 +2750,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             updateLessonInput,
+            objectId(),
           ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
@@ -2658,6 +2765,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             updateLessonInput,
+            objectId(),
           ),
         ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
       })
@@ -2673,11 +2781,20 @@ describe('academic.service', () => {
           .spyOn(academicService['courseModel'], 'findById')
           .mockResolvedValueOnce(course)
 
-        const lesson = await academicService.createLesson(objectId(), {
-          ...createLessonInput,
-          startTime: new Date('2021-08-01 12:00'),
-          endTime: new Date('2021-08-01 14:00'),
-        })
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+
+        const lesson = await academicService.createLesson(
+          objectId(),
+          objectId(),
+          {
+            ...createLessonInput,
+            startTime: new Date('2021-08-01 12:00'),
+            endTime: new Date('2021-08-01 14:00'),
+          },
+        )
 
         await expect(
           academicService.updateLessonById(
@@ -2690,6 +2807,7 @@ describe('academic.service', () => {
               endTime: new Date('2021-08-01 15:00'),
               description: 'day la buoi 2',
             },
+            objectId(),
           ),
         ).resolves.toMatchObject({
           description: 'day la buoi 2',
@@ -2699,7 +2817,7 @@ describe('academic.service', () => {
     })
 
     describe('addAbsentStudentsToLesson', () => {
-      it('throws error if lesson not found', async () => {
+      it('throws error if the account has no permissions', async () => {
         expect.assertions(1)
 
         await expect(
@@ -2710,6 +2828,27 @@ describe('academic.service', () => {
               courseId: objectId(),
             },
             [objectId()],
+            objectId(),
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        await expect(
+          academicService.addAbsentStudentsToLesson(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+            objectId(),
           ),
         ).rejects.toThrowError('Lesson not found')
       })
@@ -2721,6 +2860,12 @@ describe('academic.service', () => {
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
         const orgId = objectId()
 
@@ -2739,6 +2884,7 @@ describe('academic.service', () => {
 
         const lesson = await academicService.createLesson(
           orgId,
+          objectId(),
           createLessonInput,
         )
 
@@ -2752,6 +2898,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [id],
+            objectId(),
           ),
         ).rejects.toThrowError(`ID ${id} is not found`)
 
@@ -2763,6 +2910,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [accountLecturer.id],
+            objectId(),
           ),
         ).rejects.toThrowError(`${accountLecturer.displayName} isn't a student`)
       })
@@ -2774,6 +2922,11 @@ describe('academic.service', () => {
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
         const orgId = objectId()
 
@@ -2792,6 +2945,7 @@ describe('academic.service', () => {
 
         const lesson = await academicService.createLesson(
           orgId,
+          objectId(),
           createLessonInput,
         )
 
@@ -2803,6 +2957,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [accountStudent.id],
+            objectId(),
           )
 
         expect(
@@ -2813,7 +2968,7 @@ describe('academic.service', () => {
     })
 
     describe('removeAbsentStudentsFromLesson', () => {
-      it('throws error if lesson not found', async () => {
+      it('throws error if the account has no permissions', async () => {
         expect.assertions(1)
 
         await expect(
@@ -2824,6 +2979,27 @@ describe('academic.service', () => {
               courseId: objectId(),
             },
             [objectId()],
+            objectId(),
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        await expect(
+          academicService.removeAbsentStudentsFromLesson(
+            {
+              lessonId: objectId(),
+              orgId: objectId(),
+              courseId: objectId(),
+            },
+            [objectId()],
+            objectId(),
           ),
         ).rejects.toThrowError('Lesson not found')
       })
@@ -2835,6 +3011,12 @@ describe('academic.service', () => {
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
         const orgId = objectId()
 
@@ -2853,6 +3035,7 @@ describe('academic.service', () => {
 
         const lesson = await academicService.createLesson(
           orgId,
+          objectId(),
           createLessonInput,
         )
 
@@ -2866,6 +3049,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [id],
+            objectId(),
           ),
         ).rejects.toThrowError(`ID ${id} is not found`)
 
@@ -2877,6 +3061,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [accountLecturer.id],
+            objectId(),
           ),
         ).rejects.toThrowError(`${accountLecturer.displayName} isn't a student`)
       })
@@ -2888,6 +3073,11 @@ describe('academic.service', () => {
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
 
         const orgId = objectId()
 
@@ -2906,6 +3096,7 @@ describe('academic.service', () => {
 
         const lesson = await academicService.createLesson(
           orgId,
+          objectId(),
           createLessonInput,
         )
 
@@ -2920,6 +3111,7 @@ describe('academic.service', () => {
               courseId: lesson.courseId,
             },
             [accountStudent.id],
+            objectId(),
           )
 
         expect(
@@ -2929,10 +3121,8 @@ describe('academic.service', () => {
       })
     })
 
-    // TODO: [BE] Implement academicService.updateLessonPublicationById
-
     describe('findLessonById', () => {
-      it('returns a lesson if found', async () => {
+      it('throws error if the account has no permissions', async () => {
         expect.assertions(1)
 
         const lesson: Lesson = {
@@ -2946,7 +3136,39 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(lesson as ANY)
 
         await expect(
-          academicService.findLessonById(lesson.id, lesson.orgId),
+          academicService.findLessonById(
+            objectId(),
+            objectId(),
+            lesson.id,
+            lesson.orgId,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('returns a lesson if found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        const lesson: Lesson = {
+          id: objectId(),
+          orgId: objectId(),
+          courseId: objectId(),
+        } as Lesson
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findOne')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.findLessonById(
+            objectId(),
+            objectId(),
+            lesson.id,
+            lesson.orgId,
+          ),
         ).resolves.toMatchObject(lesson)
       })
 
@@ -2954,11 +3176,20 @@ describe('academic.service', () => {
         expect.assertions(1)
 
         jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        jest
           .spyOn(academicService['lessonModel'], 'findOne')
           .mockResolvedValueOnce(null as ANY)
 
         await expect(
-          academicService.findLessonById(objectId(), objectId()),
+          academicService.findLessonById(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
         ).resolves.toBeNull()
       })
     })
@@ -2966,11 +3197,32 @@ describe('academic.service', () => {
     describe('commentsForTheLessonByLecturer', () => {
       const comment = 'hom nay cac ban hoc rat tot'
 
-      it('throws error if lesson not found', async () => {
+      it('throws error if the account has no permissions', async () => {
         expect.assertions(1)
 
         await expect(
           academicService.commentsForTheLessonByLecturer(
+            objectId(),
+            objectId(),
+            {
+              lessonId: objectId(),
+              courseId: objectId(),
+            },
+            { comment },
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('throws error if lesson not found', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+
+        await expect(
+          academicService.commentsForTheLessonByLecturer(
+            objectId(),
             objectId(),
             {
               lessonId: objectId(),
@@ -2988,6 +3240,11 @@ describe('academic.service', () => {
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
 
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true)
+          .mockResolvedValueOnce(true)
+
         const orgId = objectId()
 
         jest
@@ -2996,12 +3253,14 @@ describe('academic.service', () => {
 
         const lesson = await academicService.createLesson(
           orgId,
+          objectId(),
           createLessonInput,
         )
 
         await expect(
           academicService.commentsForTheLessonByLecturer(
             lesson.orgId,
+            objectId(),
             {
               lessonId: lesson.id,
               courseId: lesson.courseId,
