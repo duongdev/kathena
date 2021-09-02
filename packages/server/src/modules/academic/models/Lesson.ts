@@ -6,6 +6,14 @@ import { BaseModel, Publication } from 'core'
 
 @ObjectType({ implements: [BaseModel] })
 export class Lesson extends BaseModel {
+  @Field((_type) => ID)
+  @prop({ type: Types.ObjectId, required: true })
+  createdByAccountId: string
+
+  @Field((_type) => ID)
+  @prop({ type: Types.ObjectId, required: true })
+  updatedByAccountId: string
+
   @Field((_type) => Date)
   @prop({ type: Date, required: true })
   startTime: Date
