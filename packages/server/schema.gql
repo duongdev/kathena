@@ -200,6 +200,8 @@ type Lesson implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  createdByAccountId: ID!
+  updatedByAccountId: ID!
   startTime: DateTime!
   endTime: DateTime!
   description: String
@@ -341,7 +343,7 @@ type Query {
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
-  findLessonById(lessonId: ID!): Lesson!
+  findLessonById(courseId: ID!, lessonId: ID!): Lesson!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File

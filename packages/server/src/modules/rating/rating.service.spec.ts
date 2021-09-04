@@ -162,9 +162,13 @@ describe('rating.service', () => {
       jest
         .spyOn(ratingService['ratingModel'], 'countDocuments')
         .mockResolvedValueOnce(3)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
 
       const lesson = await academicService.createLesson(
         course.orgId,
+        objectId(),
         createLessonInput,
       )
 

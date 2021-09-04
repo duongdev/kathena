@@ -639,6 +639,7 @@ export class AcademicService {
 
   async createLesson(
     orgId: string,
+    createdByAccountId: string,
     createLessonInput: CreateLessonInput,
   ): Promise<DocumentType<Lesson>> {
     const { lessonModel, courseModel } = this
@@ -653,6 +654,15 @@ export class AcademicService {
 
     if (!course) {
       throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        createdByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
     const startTimeInput = new Date(startTime)
@@ -689,6 +699,8 @@ export class AcademicService {
     })
 
     const lesson = lessonModel.create({
+      createdByAccountId,
+      updatedByAccountId: createdByAccountId,
       startTime: startTimeInput,
       endTime: endTimeInput,
       description,
@@ -879,10 +891,20 @@ export class AcademicService {
       courseId: string
     },
     updateInput: UpdateLessonInput,
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { startTime, endTime, description, publicationState } = updateInput
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -939,6 +961,7 @@ export class AcademicService {
 
     if (publicationState) {
       lesson.publicationState = publicationState
+      lesson.updatedByAccountId = updatedByAccountId
     }
 
     const update = await lesson.save()
@@ -952,9 +975,19 @@ export class AcademicService {
       courseId: string
     },
     absentStudentIds: string[],
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -992,6 +1025,7 @@ export class AcademicService {
         lesson.absentStudentIds.push(id)
       }
     })
+    lesson.updatedByAccountId = updatedByAccountId
 
     const update = await lesson.save()
     return update
@@ -1004,9 +1038,19 @@ export class AcademicService {
       courseId: string
     },
     absentStudentIds: string[],
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -1043,6 +1087,54 @@ export class AcademicService {
     absentStudentIds.map((id) =>
       lesson.absentStudentIds.splice(lesson.absentStudentIds.indexOf(id), 1),
     )
+    lesson.updatedByAccountId = updatedByAccountId
+
+    const update = await lesson.save()
+    return update
+  }
+
+  async findLessonById(
+    accountId: string,
+    courseId: string,
+    lessonId: string,
+    orgId: string,
+  ): Promise<Nullable<DocumentType<Lesson>>> {
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+    return this.lessonModel.findOne({ _id: lessonId, orgId, courseId })
+  }
+
+  async commentsForTheLessonByLecturer(
+    orgId: string,
+    accountId: string,
+    query: CommentsForTheLessonByLecturerQuery,
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
+  ): Promise<DocumentType<Lesson>> {
+    const { lessonId, courseId } = query
+    const { comment } = commentsForTheLessonByLecturerInput
+    const { lessonModel } = this
+
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const lesson = await lessonModel.findOne({
+      _id: lessonId,
+      orgId,
+      courseId,
+    })
+
+    if (!lesson) {
+      throw new Error('Lesson not found')
+    }
+
+    if (!comment) {
+      return lesson
+    }
+
+    lesson.lecturerComment = comment
+    lesson.updatedByAccountId = accountId
 
     const update = await lesson.save()
     return update
@@ -1063,7 +1155,12 @@ export class AcademicService {
 
     const lesson = await this.lessonModel.findByIdAndUpdate(
       lessonId,
-      { $set: { publicationState } },
+      {
+        $set: {
+          publicationState,
+          updatedByAccountId: accountId,
+        },
+      },
       { new: true },
     )
 
@@ -1075,42 +1172,6 @@ export class AcademicService {
     this.logger.verbose(lesson)
 
     return lesson
-  }
-
-  async findLessonById(
-    lessonId: string,
-    orgId: string,
-  ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.lessonModel.findOne({ _id: lessonId, orgId })
-  }
-
-  async commentsForTheLessonByLecturer(
-    orgId: string,
-    query: CommentsForTheLessonByLecturerQuery,
-    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
-  ): Promise<DocumentType<Lesson>> {
-    const { lessonId, courseId } = query
-    const { comment } = commentsForTheLessonByLecturerInput
-    const { lessonModel } = this
-
-    const lesson = await lessonModel.findOne({
-      _id: lessonId,
-      orgId,
-      courseId,
-    })
-
-    if (!lesson) {
-      throw new Error('Lesson not found')
-    }
-
-    if (!comment) {
-      return lesson
-    }
-
-    lesson.lecturerComment = comment
-
-    const update = await lesson.save()
-    return update
   }
 
   /**

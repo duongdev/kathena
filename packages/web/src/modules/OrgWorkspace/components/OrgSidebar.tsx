@@ -45,6 +45,7 @@ const OrgSidebar: FC<OrgSidebarProps> = () => {
           key: 'academicSubject',
           title: 'Học vụ',
           icon: Book,
+          hidden: !permissions.includes(Permission.Hr_Access),
           items: [
             {
               key: 'academicSubjectList',

@@ -41,8 +41,13 @@ export class LessonResolver {
     @Args('createLessonInput', { type: () => CreateLessonInput })
     createLessonInput: CreateLessonInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.createLesson(org.id, createLessonInput)
+    return this.academicService.createLesson(
+      org.id,
+      account.id,
+      createLessonInput,
+    )
   }
 
   @Query((_returns) => LessonsPayload)
@@ -73,6 +78,7 @@ export class LessonResolver {
     @Args('updateInput', { type: () => UpdateLessonInput })
     updateInput: UpdateLessonInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.updateLessonById(
       {
@@ -81,6 +87,7 @@ export class LessonResolver {
         courseId,
       },
       updateInput,
+      account.id,
     )
   }
 
@@ -93,6 +100,7 @@ export class LessonResolver {
     @Args('absentStudentIds', { type: () => [String] })
     absentStudentIds: string[],
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.addAbsentStudentsToLesson(
       {
@@ -101,6 +109,7 @@ export class LessonResolver {
         courseId,
       },
       absentStudentIds,
+      account.id,
     )
   }
 
@@ -113,6 +122,7 @@ export class LessonResolver {
     @Args('absentStudentIds', { type: () => [String] })
     absentStudentIds: string[],
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.removeAbsentStudentsFromLesson(
       {
@@ -121,6 +131,7 @@ export class LessonResolver {
         courseId,
       },
       absentStudentIds,
+      account.id,
     )
   }
 
@@ -140,9 +151,16 @@ export class LessonResolver {
   @UsePipes(ValidationPipe)
   async findLessonById(
     @Args('lessonId', { type: () => ID }) lessonId: string,
+    @Args('courseId', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.findLessonById(lessonId, org.id)
+    return this.academicService.findLessonById(
+      account.id,
+      courseId,
+      lessonId,
+      org.id,
+    )
   }
 
   @Mutation((_returns) => Lesson)
@@ -158,9 +176,11 @@ export class LessonResolver {
     })
     commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.commentsForTheLessonByLecturer(
       org.id,
+      account.id,
       commentsForTheLessonByLecturerQuery,
       commentsForTheLessonByLecturerInput,
     )
