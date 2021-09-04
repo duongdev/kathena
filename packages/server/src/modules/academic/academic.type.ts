@@ -1,4 +1,12 @@
-import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
+import {
+  Field,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql'
+import { DocumentType } from '@typegoose/typegoose'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
@@ -147,11 +155,17 @@ export class CreateLessonInput {
   publicationState: Publication
 }
 
+export enum LessonsFilterInputStatus {
+  academic = 0,
+  studying = 1,
+  teaching = 2,
+}
+registerEnumType(LessonsFilterInputStatus, {
+  name: 'LessonsFilterInputStatus',
+})
+
 @InputType()
 export class LessonsFilterInput {
-  @Field((_type) => ID)
-  orgId: string
-
   @Field((_type) => ID)
   courseId: string
 
@@ -163,6 +177,14 @@ export class LessonsFilterInput {
 
   @Field((_type) => ID, { nullable: true, defaultValue: null })
   absentStudentId?: string
+
+  @Field((_type) => Number, { nullable: true, defaultValue: null })
+  ratingStar?: number
+
+  @Field((_type) => LessonsFilterInputStatus, {
+    nullable: false,
+  })
+  status: LessonsFilterInputStatus
 }
 
 @ObjectType()
@@ -188,6 +210,7 @@ export class UpdateLessonInput {
   @Field((_type) => Publication, { nullable: true })
   publicationState?: Publication
 }
+
 @InputType()
 export class CommentsForTheLessonByLecturerQuery {
   @Field((_type) => ID)

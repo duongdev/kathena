@@ -1,7 +1,6 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 import { Logger } from 'core'
 import { CurrentOrg, UseAuthGuard, CurrentAccount } from 'core/auth'
@@ -51,14 +50,18 @@ export class LessonResolver {
   async lessons(
     @Args('pageOptions', { type: () => PageOptionsInput })
     pageOptions: PageOptionsInput,
-    @CurrentOrg() org: Org,
     @Args('filter', { type: () => LessonsFilterInput })
     filter: LessonsFilterInput,
+    @CurrentAccount()
+    account: Account,
+    @CurrentOrg() org: Org,
   ): Promise<LessonsPayload> {
-    if (org.id !== filter.orgId) {
-      throw new ForbiddenError()
-    }
-    return this.academicService.findAndPaginateLessons(pageOptions, filter)
+    return this.academicService.findAndPaginateLessons(
+      pageOptions,
+      filter,
+      account.id,
+      org.id,
+    )
   }
 
   @Mutation((_returns) => Lesson)
