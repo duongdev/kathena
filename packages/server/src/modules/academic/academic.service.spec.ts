@@ -2704,7 +2704,7 @@ describe('academic.service', () => {
         })
       })
 
-      it(`returns a list lesson when studying status`, async () => {
+      it(`returns a list lesson when teaching status`, async () => {
         expect.assertions(1)
 
         jest
@@ -2755,7 +2755,7 @@ describe('academic.service', () => {
             },
             {
               courseId: objectId(),
-              status: LessonsFilterInputStatus.studying,
+              status: LessonsFilterInputStatus.teaching,
             },
             staffId,
             course.orgId,
@@ -2766,7 +2766,7 @@ describe('academic.service', () => {
         })
       })
 
-      it('returns a list lesson with status studying', async () => {
+      it('returns a list lesson when studying status', async () => {
         expect.assertions(1)
 
         const courseMock = {
