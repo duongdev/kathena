@@ -743,8 +743,8 @@ export class AcademicService {
     }
 
     const accountHasRoles = await this.authService.getAccountRoles(accountId)
-    if (!accountHasRoles) {
-      throw new Error(`ACCOUNT_DON'T_EXIT`)
+    if (!accountHasRoles.length) {
+      throw new Error(`ACCOUNT_DON'T_HAVE_ROLE`)
     }
 
     const pipeline: ANY = [
@@ -763,8 +763,8 @@ export class AcademicService {
     switch (status) {
       case LessonsFilterInputStatus.academic: {
         let hasPermission = false
-        accountHasRoles.forEach((role): boolean => {
-          const lecturerRole = 4
+        const lecturerRole = 4
+        accountHasRoles.every((role): boolean => {
           if (role.priority < lecturerRole) {
             hasPermission = true
             return false
@@ -772,7 +772,7 @@ export class AcademicService {
           return true
         })
 
-        if (!hasPermission) throw new Error(`CAN_NOT_PERMISSION`)
+        if (!hasPermission) throw new Error(`DON'T_HAVE_PERMISSION`)
         break
       }
 
@@ -869,6 +869,8 @@ export class AcademicService {
         lecturerComment: el.lecturerComment,
         publicationState: el.publicationState,
         avgNumberOfStars: el.avgNumberOfStars,
+        createdByAccountId: el.createdByAccountId,
+        updatedByAccountI: el.updatedByAccountI,
         startTime: el.startTime,
         endTime: el.endTime,
         description: el.description,
@@ -876,7 +878,7 @@ export class AcademicService {
         orgId: el.orgId,
         createdAt: el.createdAt,
         updatedAt: el.updatedAt,
-      } as Lesson
+      } as ANY
       return lesson
     })
     lessonsPayload.count = count

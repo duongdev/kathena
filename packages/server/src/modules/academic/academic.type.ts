@@ -6,7 +6,6 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql'
-import { DocumentType } from '@typegoose/typegoose'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
