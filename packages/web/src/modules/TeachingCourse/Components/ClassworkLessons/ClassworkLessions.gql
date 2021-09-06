@@ -1,0 +1,42 @@
+mutation CreateLesson($createLessonInput: CreateLessonInput!) {
+  createLesson(createLessonInput: $createLessonInput) {
+    id
+    orgId
+    createdAt
+    createdByAccountId
+    updatedByAccountId
+    startTime
+    endTime
+    description
+    absentStudentIds
+    lecturerComment
+    courseId
+    publicationState
+    avgNumberOfStars
+  }
+}
+
+query ListLessons(
+  $filter: LessonsFilterInput!
+  $pageOptions: PageOptionsInput!
+) {
+  lessons(filter: $filter, pageOptions: $pageOptions) {
+    lessons {
+      id
+      orgId
+      createdAt
+      updatedAt
+      createdByAccountId
+      updatedByAccountId
+      startTime
+      endTime
+      description
+      absentStudentIds
+      lecturerComment
+      courseId
+      publicationState
+      avgNumberOfStars
+    }
+    count
+  }
+}

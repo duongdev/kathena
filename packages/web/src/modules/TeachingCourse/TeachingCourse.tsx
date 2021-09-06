@@ -11,6 +11,7 @@ import {
   buildPath,
   TEACHING_COURSE,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENTS,
+  TEACHING_COURSE_CLASSWORK_LESSONS,
   TEACHING_COURSE_CLASSWORK_MATERIALS,
   TEACHING_COURSE_LIST,
 } from 'utils/path-builder'
@@ -57,6 +58,11 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
             exact: true,
           },
           {
+            title: 'Lộ trình',
+            to: buildPath(TEACHING_COURSE_CLASSWORK_LESSONS, { id: params.id }),
+            exact: true,
+          },
+          {
             title: 'Bài tập',
             to: buildPath(TEACHING_COURSE_CLASSWORK_ASSIGNMENTS, {
               id: params.id,
@@ -75,6 +81,11 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
       <Suspense fallback={<Spinner p={4} center />}>
         <Switch>
           <Route path={TEACHING_COURSE} exact component={General} />
+          <Route
+            path={TEACHING_COURSE_CLASSWORK_LESSONS}
+            exact
+            component={ClassworkAssignments}
+          />
           <Route
             path={TEACHING_COURSE_CLASSWORK_ASSIGNMENTS}
             exact
