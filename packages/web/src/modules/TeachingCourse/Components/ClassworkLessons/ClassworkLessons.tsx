@@ -17,10 +17,8 @@ import {
   Link,
   Button,
 } from '@kathena/ui'
-import {
-  useCourseDetailQuery,
-  useClassworkAssignmentListQuery,
-} from 'graphql/generated'
+import { useAuth } from 'common/auth'
+import { useCourseDetailQuery, useListLessonsQuery } from 'graphql/generated'
 import {
   buildPath,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
@@ -36,25 +34,33 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
     variables: { id: courseId },
   })
   const course = useMemo(() => dataCourse?.findCourseById, [dataCourse])
-
+  const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data: dataClasswork, loading: loadingClasswork } =
-    useClassworkAssignmentListQuery({
+    useListLessonsQuery({
       variables: {
-        courseId,
-        limit: perPage,
-        skip: page * perPage,
+        filter: {
+          courseId,
+          orgId: org.id,
+          absentStudentId: null,
+          endTime: null,
+          startTime: null,
+        },
+        pageOptions: {
+          limit: perPage,
+          skip: page * perPage,
+        },
       },
     })
 
-  const classworkAssignments = useMemo(
-    () => dataClasswork?.classworkAssignments.classworkAssignments ?? [],
-    [dataClasswork?.classworkAssignments.classworkAssignments],
+  const classworkLessons = useMemo(
+    () => dataClasswork?.lessons.lessons ?? [],
+    [dataClasswork?.lessons.lessons],
   )
 
   const totalCount = useMemo(
-    () => dataClasswork?.classworkAssignments.count ?? 0,
-    [dataClasswork?.classworkAssignments.count],
+    () => dataClasswork?.lessons.count ?? 0,
+    [dataClasswork?.lessons.count],
   )
 
   if (loadingCourse) {
@@ -75,7 +81,6 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
       </Grid>
     )
   }
-
   if (!course) {
     return <div>Course not found</div>
   }
@@ -83,7 +88,7 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
-        title="Bài tập"
+        title="Lộ trình"
         gridItem={{ xs: 12 }}
         action={
           <Button
@@ -92,57 +97,55 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
               id: courseId,
             })}
           >
-            Thêm bài tập
+            Thêm buổi học
           </Button>
         }
       >
         <CardContent>
-          {classworkAssignments.length ? (
+          {classworkLessons.length ? (
             <DataTable
-              data={classworkAssignments}
+              data={classworkLessons}
               rowKey="id"
               loading={loadingClasswork}
               columns={[
                 {
                   label: 'Tiêu đề',
-                  render: (classworkAssignment) => (
+                  render: (classworkLesson) => (
                     <Typography variant="body1" fontWeight="bold">
                       <Link
                         to={buildPath(TEACHING_COURSE_CLASSWORK_ASSIGNMENT, {
-                          id: classworkAssignment.id,
+                          id: classworkLesson.id,
                         })}
                       >
-                        {classworkAssignment.title}
+                        {classworkLesson.description}
                       </Link>
                     </Typography>
                   ),
                 },
+
                 {
-                  label: 'Mô tả',
+                  label: 'Thời gian bắt đầu',
+                  align: 'center',
                   skeleton: <Skeleton />,
-                  render: ({ description }) => (
-                    <div
-                      // eslint-disable-next-line
-                      dangerouslySetInnerHTML={{ __html: description as ANY }}
-                      style={{
-                        display: '-webkit-box',
-                        maxWidth: 250,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        WebkitLineClamp: 1,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    />
+                  render: ({ startTime }) => (
+                    <>
+                      {startTime && (
+                        <Typography>
+                          {format(new Date(startTime), 'dd/MM/yyyy - h:mm a')}
+                        </Typography>
+                      )}
+                    </>
                   ),
                 },
                 {
-                  label: 'Ngày hết hạn',
+                  label: 'Thời gian kết thúc',
+                  align: 'center',
                   skeleton: <Skeleton />,
-                  render: ({ dueDate }) => (
+                  render: ({ endTime }) => (
                     <>
-                      {dueDate && (
+                      {endTime && (
                         <Typography>
-                          {format(new Date(dueDate), 'dd/MM/yyyy')}
+                          {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
                         </Typography>
                       )}
                     </>
@@ -170,7 +173,7 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
               }}
             />
           ) : (
-            <Typography>Không có bài tập</Typography>
+            <Typography>Không có buổi học nào</Typography>
           )}
         </CardContent>
       </SectionCard>

@@ -22,6 +22,7 @@ const General = lazy(() => import('./Components/General'))
 const ClassworkAssignments = lazy(
   () => import('./Components/ClassworkAssignments'),
 )
+const ClassworkLessons = lazy(() => import('./Components/ClassworkLessons'))
 const ClassworkMaterials = lazy(() => import('./Components/ClassworkMaterials'))
 
 export type TeachingCourseProps = {}
@@ -84,7 +85,7 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
           <Route
             path={TEACHING_COURSE_CLASSWORK_LESSONS}
             exact
-            component={ClassworkAssignments}
+            component={ClassworkLessons}
           />
           <Route
             path={TEACHING_COURSE_CLASSWORK_ASSIGNMENTS}
