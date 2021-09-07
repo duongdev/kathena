@@ -42,6 +42,15 @@ export class QuizResolver {
     return this.quizService.findAndPaginateQuiz(pageOptions, filter)
   }
 
+  @Query((_return) => QuizzesPayload)
+  @UseAuthGuard()
+  async quizzesStudying(
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @Args('filter') filter: QuizzesFilterInput,
+  ): Promise<QuizzesPayload> {
+    return this.quizService.findAndPaginateQuiz(pageOptions, filter)
+  }
+
   @Query((_return) => Quiz)
   @UseAuthGuard()
   async quiz(

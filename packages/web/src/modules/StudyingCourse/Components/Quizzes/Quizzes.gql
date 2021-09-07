@@ -1,0 +1,15 @@
+query QuizzesStudying($skip: Int!, $limit: Int!, $courseId: ID!) {
+  quizzesStudying(pageOptions: { skip: $skip, limit: $limit },filter: { courseId: $courseId, publicationState:Published }) {
+    quizzes {
+      id
+      title
+      description
+      courseId
+      questionIds
+      duration
+      createdByAccountId
+      publicationState
+    }
+    count
+  }
+}

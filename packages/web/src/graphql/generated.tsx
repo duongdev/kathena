@@ -423,8 +423,8 @@ export type Mutation = {
   setGradeForClassworkSubmission: ClassworkSubmission
   createConversation: Conversation
   createRatingForTheLesson: Rating
-  createQuestion: Question
   createQuiz: Quiz
+  createQuestion: Question
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -614,12 +614,12 @@ export type MutationCreateRatingForTheLessonArgs = {
   ratingInput: RatingInput
 }
 
-export type MutationCreateQuestionArgs = {
-  input: CreateQuestionInput
-}
-
 export type MutationCreateQuizArgs = {
   input: CreateQuizInput
+}
+
+export type MutationCreateQuestionArgs = {
+  input: CreateQuestionInput
 }
 
 export type Org = BaseModel & {
@@ -738,7 +738,10 @@ export type Query = {
   submissionStatusStatistics: Array<SubmissionStatusStatistics>
   conversations: ConversationsPayload
   quizzes: QuizzesPayload
+  quizzesStudying: QuizzesPayload
   quiz: Quiz
+  question: Question
+  questionChoices: QuestionChoicesPayload
 }
 
 export type QueryAccountArgs = {
@@ -858,8 +861,21 @@ export type QueryQuizzesArgs = {
   pageOptions: PageOptionsInput
 }
 
+export type QueryQuizzesStudyingArgs = {
+  filter: QuizzesFilterInput
+  pageOptions: PageOptionsInput
+}
+
 export type QueryQuizArgs = {
   id: Scalars['ID']
+}
+
+export type QueryQuestionArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryQuestionChoicesArgs = {
+  questionId: Scalars['ID']
 }
 
 export type Question = BaseModel & {
@@ -870,6 +886,22 @@ export type Question = BaseModel & {
   title: Scalars['String']
   scores: Scalars['Float']
   createdByAccountId: Scalars['ID']
+}
+
+export type QuestionChoice = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  title: Scalars['String']
+  questionId: Scalars['ID']
+  isRight: Scalars['Boolean']
+  createdByAccountId: Scalars['ID']
+}
+
+export type QuestionChoicesPayload = {
+  questionChoices: Array<QuestionChoice>
+  idRight: Scalars['String']
 }
 
 export type Quiz = BaseModel & {
@@ -888,6 +920,7 @@ export type Quiz = BaseModel & {
 
 export type QuizzesFilterInput = {
   courseId: Scalars['ID']
+  publicationState?: Maybe<Publication>
 }
 
 export type QuizzesPayload = {
@@ -1641,6 +1674,28 @@ export type ListClassworkAssignmentsByStudentIdInCourseQuery = {
   }
 }
 
+export type QuizzesStudyingQueryVariables = Exact<{
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+  courseId: Scalars['ID']
+}>
+
+export type QuizzesStudyingQuery = {
+  quizzesStudying: {
+    count: number
+    quizzes: Array<{
+      id: string
+      title: string
+      description?: Maybe<string>
+      courseId: string
+      questionIds: Array<string>
+      duration?: Maybe<number>
+      createdByAccountId: string
+      publicationState: Publication
+    }>
+  }
+}
+
 export type StudyingCourseListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
@@ -1892,6 +1947,36 @@ export type QuizQuery = {
     publicationState: Publication
     questionIds: Array<string>
     createdByAccountId: string
+  }
+}
+
+export type QuestionQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type QuestionQuery = {
+  question: {
+    id: string
+    title: string
+    scores: number
+    createdByAccountId: string
+  }
+}
+
+export type QuestionChoicesQueryVariables = Exact<{
+  questionId: Scalars['ID']
+}>
+
+export type QuestionChoicesQuery = {
+  questionChoices: {
+    idRight: string
+    questionChoices: Array<{
+      id: string
+      title: string
+      isRight: boolean
+      questionId: string
+      createdByAccountId: string
+    }>
   }
 }
 
@@ -8888,6 +8973,232 @@ export type ListClassworkAssignmentsByStudentIdInCourseQueryResult =
     ListClassworkAssignmentsByStudentIdInCourseQuery,
     ListClassworkAssignmentsByStudentIdInCourseQueryVariables
   >
+export const QuizzesStudyingDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'QuizzesStudying' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quizzesStudying' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'courseId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'publicationState' },
+                      value: { kind: 'EnumValue', value: 'Published' },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizzes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'duration' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizzesStudyingProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables
+  >
+} &
+  TChildProps
+export function withQuizzesStudying<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables,
+    QuizzesStudyingProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables,
+    QuizzesStudyingProps<TChildProps, TDataName>
+  >(QuizzesStudyingDocument, {
+    alias: 'quizzesStudying',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizzesStudyingQuery__
+ *
+ * To run a query within a React component, call `useQuizzesStudyingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizzesStudyingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizzesStudyingQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useQuizzesStudyingQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuizzesStudyingQuery, QuizzesStudyingQueryVariables>(
+    QuizzesStudyingDocument,
+    options,
+  )
+}
+export function useQuizzesStudyingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    QuizzesStudyingQuery,
+    QuizzesStudyingQueryVariables
+  >(QuizzesStudyingDocument, options)
+}
+export type QuizzesStudyingQueryHookResult = ReturnType<
+  typeof useQuizzesStudyingQuery
+>
+export type QuizzesStudyingLazyQueryHookResult = ReturnType<
+  typeof useQuizzesStudyingLazyQuery
+>
+export type QuizzesStudyingQueryResult = Apollo.QueryResult<
+  QuizzesStudyingQuery,
+  QuizzesStudyingQueryVariables
+>
 export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [
@@ -11365,6 +11676,289 @@ export function useQuizLazyQuery(
 export type QuizQueryHookResult = ReturnType<typeof useQuizQuery>
 export type QuizLazyQueryHookResult = ReturnType<typeof useQuizLazyQuery>
 export type QuizQueryResult = Apollo.QueryResult<QuizQuery, QuizQueryVariables>
+export const QuestionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Question' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'question' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuestionProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuestionQuery,
+    QuestionQueryVariables
+  >
+} &
+  TChildProps
+export function withQuestion<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuestionQuery,
+    QuestionQueryVariables,
+    QuestionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuestionQuery,
+    QuestionQueryVariables,
+    QuestionProps<TChildProps, TDataName>
+  >(QuestionDocument, {
+    alias: 'question',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuestionQuery__
+ *
+ * To run a query within a React component, call `useQuestionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useQuestionQuery(
+  baseOptions: Apollo.QueryHookOptions<QuestionQuery, QuestionQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuestionQuery, QuestionQueryVariables>(
+    QuestionDocument,
+    options,
+  )
+}
+export function useQuestionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuestionQuery,
+    QuestionQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<QuestionQuery, QuestionQueryVariables>(
+    QuestionDocument,
+    options,
+  )
+}
+export type QuestionQueryHookResult = ReturnType<typeof useQuestionQuery>
+export type QuestionLazyQueryHookResult = ReturnType<
+  typeof useQuestionLazyQuery
+>
+export type QuestionQueryResult = Apollo.QueryResult<
+  QuestionQuery,
+  QuestionQueryVariables
+>
+export const QuestionChoicesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'QuestionChoices' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'questionId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'questionChoices' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'questionId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'questionId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoices' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isRight' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'idRight' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuestionChoicesProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables
+  >
+} &
+  TChildProps
+export function withQuestionChoices<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables,
+    QuestionChoicesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables,
+    QuestionChoicesProps<TChildProps, TDataName>
+  >(QuestionChoicesDocument, {
+    alias: 'questionChoices',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuestionChoicesQuery__
+ *
+ * To run a query within a React component, call `useQuestionChoicesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionChoicesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionChoicesQuery({
+ *   variables: {
+ *      questionId: // value for 'questionId'
+ *   },
+ * });
+ */
+export function useQuestionChoicesQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuestionChoicesQuery, QuestionChoicesQueryVariables>(
+    QuestionChoicesDocument,
+    options,
+  )
+}
+export function useQuestionChoicesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    QuestionChoicesQuery,
+    QuestionChoicesQueryVariables
+  >(QuestionChoicesDocument, options)
+}
+export type QuestionChoicesQueryHookResult = ReturnType<
+  typeof useQuestionChoicesQuery
+>
+export type QuestionChoicesLazyQueryHookResult = ReturnType<
+  typeof useQuestionChoicesLazyQuery
+>
+export type QuestionChoicesQueryResult = Apollo.QueryResult<
+  QuestionChoicesQuery,
+  QuestionChoicesQueryVariables
+>
 export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [

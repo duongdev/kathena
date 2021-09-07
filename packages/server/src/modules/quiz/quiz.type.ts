@@ -1,8 +1,9 @@
 import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 import { Publication } from 'core'
 
+import { QuestionChoice } from './models/QuestionChoice'
 import { Quiz } from './models/Quiz'
 
 @InputType()
@@ -66,6 +67,10 @@ export class CreateQuizInput {
 export class QuizzesFilterInput {
   @Field((_type) => ID)
   courseId: string
+
+  @Field((_type) => Publication, { nullable: true })
+  @IsOptional()
+  publicationState?: Publication
 }
 
 @ObjectType()
@@ -75,4 +80,13 @@ export class QuizzesPayload {
 
   @Field((_type) => Int)
   count: number
+}
+
+@ObjectType()
+export class QuestionChoicesPayload {
+  @Field((_type) => [QuestionChoice])
+  questionChoices: QuestionChoice[]
+
+  @Field()
+  idRight: string
 }

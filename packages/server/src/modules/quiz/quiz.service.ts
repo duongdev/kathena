@@ -1,7 +1,7 @@
 // import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
-import { InjectModel, Logger, Service } from 'core'
+import { InjectModel, Logger, Publication, Service } from 'core'
 import { Nullable } from 'types'
 
 // import { AccountService } from 'modules/account/account.service'
@@ -129,17 +129,23 @@ export class QuizService {
     },
     filter: {
       courseId: string
+      publicationState?: Publication
     },
   ): Promise<{
     quizzes: DocumentType<Quiz>[]
     count: number
   }> {
     const { limit, skip } = pageOptions
-    const { courseId } = filter
+    const { courseId, publicationState } = filter
 
     const quizModel = this.quizModel.find({
       courseId,
     })
+    if (publicationState) {
+      quizModel.find({
+        publicationState,
+      })
+    }
     quizModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const quizzes = await quizModel
     const count = await this.quizModel.countDocuments({ courseId })
@@ -154,5 +160,20 @@ export class QuizService {
     id: string,
   ): Promise<Nullable<DocumentType<Question>>> {
     return this.questionModel.findById(id)
+  }
+
+  async questionChoices(questionId: string): Promise<{
+    questionChoices: DocumentType<QuestionChoice>[]
+    idRight: string
+  }> {
+    const questionChoices = await this.questionChoiceModel.find({
+      questionId,
+    })
+
+    const questionChoiceRight = await this.questionChoiceModel.findOne({
+      questionId,
+      isRight: true,
+    })
+    return { questionChoices, idRight: questionChoiceRight?.id }
   }
 }

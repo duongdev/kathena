@@ -50,6 +50,22 @@ query Quiz($id: ID!){
 
 query Question($id: ID!){
   question(id: $id){
+    id
+    title
+    scores
+    createdByAccountId
+  }
+}
 
+query QuestionChoices($questionId: ID!){
+  questionChoices(questionId: $questionId){
+    questionChoices{
+      id
+      title
+      isRight
+      questionId
+      createdByAccountId
+    }
+    idRight
   }
 }

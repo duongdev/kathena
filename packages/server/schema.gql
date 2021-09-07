@@ -338,6 +338,17 @@ type Question implements BaseModel {
   createdByAccountId: ID!
 }
 
+type QuestionChoice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  questionId: ID!
+  isRight: Boolean!
+  createdByAccountId: ID!
+}
+
 type Quiz implements BaseModel {
   id: ID!
   orgId: ID!
@@ -355,6 +366,11 @@ type Quiz implements BaseModel {
 type QuizzesPayload {
   quizzes: [Quiz!]!
   count: Int!
+}
+
+type QuestionChoicesPayload {
+  questionChoices: [QuestionChoice!]!
+  idRight: String!
 }
 
 type Query {
@@ -386,8 +402,10 @@ type Query {
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quiz(id: ID!): Quiz!
   question(id: ID!): Question!
+  questionChoices(questionId: ID!): QuestionChoicesPayload!
 }
 
 input AccountsFilterInput {
@@ -450,6 +468,7 @@ input ConversationPageOptionInput {
 
 input QuizzesFilterInput {
   courseId: ID!
+  publicationState: Publication
 }
 
 type Mutation {

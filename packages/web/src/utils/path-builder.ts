@@ -52,6 +52,7 @@ export const STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYI
 export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/classwork-material/detail`
 export const STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/Submission`
 export const STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS = `${STUDYING_COURSES}/:id/detail/list-of-submitted-assignments`
+export const STUDYING_COURSE_QUIZZES = `${STUDYING_COURSES}/:id/detail/quizzes`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
