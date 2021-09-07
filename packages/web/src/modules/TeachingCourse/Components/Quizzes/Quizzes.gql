@@ -1,0 +1,55 @@
+query Quizzes($skip: Int!, $limit: Int!, $courseId: ID!) {
+  quizzes(pageOptions: { skip: $skip, limit: $limit },filter: { courseId: $courseId }) {
+    quizzes {
+      id
+      title
+      description
+      courseId
+      questionIds
+      duration
+      createdByAccountId
+      publicationState
+    }
+    count
+  }
+}
+
+mutation CreateQuestion($input: CreateQuestionInput!){
+  createQuestion(input: $input){
+    id
+    title
+    scores
+    createdByAccountId
+  }
+}
+
+mutation CreateQuiz($input: CreateQuizInput!){
+  createQuiz(input: $input){
+    id
+    title
+    duration
+    description
+    courseId
+    questionIds
+    createdByAccountId
+  }
+}
+
+query Quiz($id: ID!){
+  quiz(id: $id){
+    id
+    title
+    description
+    courseId
+    duration
+    publicationState
+    questionIds
+    createdByAccountId
+  }
+}
+
+query Question($id: ID!){
+  question(id: $id){
+
+  }
+}

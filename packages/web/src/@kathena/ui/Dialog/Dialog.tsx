@@ -15,7 +15,7 @@ import Button from '../Button'
 
 export type DialogProps = {
   open: boolean
-  dialogTitle?: string
+  dialogTitle?: string | React.ReactNode
   extraDialogActions?: ReactNode
   onClose: () => ANY
   width?: number | string

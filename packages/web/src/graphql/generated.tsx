@@ -112,7 +112,7 @@ export type ClassworkAssignment = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   courseId: Scalars['ID']
   title: Scalars['String']
   type: Scalars['String']
@@ -160,7 +160,7 @@ export type ClassworkMaterial = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   courseId: Scalars['ID']
   title: Scalars['String']
   type: Scalars['String']
@@ -179,11 +179,11 @@ export type ClassworkSubmission = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   classworkId: Scalars['ID']
   courseId: Scalars['ID']
   grade?: Maybe<Scalars['Float']>
-  submissionFileIds: Array<Scalars['String']>
+  submissionFileIds: Array<Scalars['ID']>
   description: Scalars['String']
 }
 
@@ -206,8 +206,8 @@ export type Conversation = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
-  roomId: Scalars['String']
+  createdByAccountId: Scalars['ID']
+  roomId: Scalars['ID']
   content: Scalars['String']
   type: ConversationType
 }
@@ -240,8 +240,8 @@ export type Course = BaseModel & {
   tuitionFee: Scalars['Float']
   publicationState: Publication
   publishedAt: Scalars['DateTime']
-  lecturerIds: Array<Scalars['String']>
-  studentIds: Array<Scalars['String']>
+  lecturerIds: Array<Scalars['ID']>
+  studentIds: Array<Scalars['ID']>
   createdByAccountId: Scalars['ID']
 }
 
@@ -323,6 +323,22 @@ export type CreateOrgOfficeInput = {
   phone: Scalars['String']
 }
 
+export type CreateQuestionInput = {
+  title: Scalars['String']
+  scores: Scalars['Float']
+  questionChoicesTitle: Array<Scalars['String']>
+  questionChoicesRight: Array<Scalars['Boolean']>
+}
+
+export type CreateQuizInput = {
+  title: Scalars['String']
+  courseId: Scalars['String']
+  questionIds?: Maybe<Array<Scalars['String']>>
+  duration?: Maybe<Scalars['Float']>
+  description: Scalars['String']
+  publicationState?: Maybe<Publication>
+}
+
 export type File = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -348,8 +364,8 @@ export type Lesson = BaseModel & {
   startTime: Scalars['DateTime']
   endTime: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
-  absentStudentIds: Array<Scalars['String']>
-  lecturerComment: Scalars['String']
+  absentStudentIds: Array<Scalars['ID']>
+  lecturerComment?: Maybe<Scalars['String']>
   courseId: Scalars['ID']
   publicationState: Publication
   avgNumberOfStars: Scalars['Float']
@@ -407,6 +423,8 @@ export type Mutation = {
   setGradeForClassworkSubmission: ClassworkSubmission
   createConversation: Conversation
   createRatingForTheLesson: Rating
+  createQuestion: Question
+  createQuiz: Quiz
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -596,6 +614,14 @@ export type MutationCreateRatingForTheLessonArgs = {
   ratingInput: RatingInput
 }
 
+export type MutationCreateQuestionArgs = {
+  input: CreateQuestionInput
+}
+
+export type MutationCreateQuizArgs = {
+  input: CreateQuizInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -695,6 +721,8 @@ export type Query = {
   courses: CoursesPayload
   calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   lessons: LessonsPayload
+  updateLessonPublicationById: Lesson
+  findLessonById: Lesson
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
   file?: Maybe<File>
@@ -709,6 +737,8 @@ export type Query = {
   getListOfStudentsSubmitAssignmentsByStatus: ClassworkSubmissionStatusPayload
   submissionStatusStatistics: Array<SubmissionStatusStatistics>
   conversations: ConversationsPayload
+  quizzes: QuizzesPayload
+  quiz: Quiz
 }
 
 export type QueryAccountArgs = {
@@ -754,6 +784,14 @@ export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
 export type QueryLessonsArgs = {
   filter: LessonsFilterInput
   pageOptions: PageOptionsInput
+}
+
+export type QueryUpdateLessonPublicationByIdArgs = {
+  input: UpdateLessonPublicationByIdInput
+}
+
+export type QueryFindLessonByIdArgs = {
+  lessonId: Scalars['ID']
 }
 
 export type QueryOrgOfficeArgs = {
@@ -815,12 +853,54 @@ export type QueryConversationsArgs = {
   roomId: Scalars['String']
 }
 
+export type QueryQuizzesArgs = {
+  filter: QuizzesFilterInput
+  pageOptions: PageOptionsInput
+}
+
+export type QueryQuizArgs = {
+  id: Scalars['ID']
+}
+
+export type Question = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  title: Scalars['String']
+  scores: Scalars['Float']
+  createdByAccountId: Scalars['ID']
+}
+
+export type Quiz = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  title: Scalars['String']
+  description?: Maybe<Scalars['String']>
+  courseId: Scalars['ID']
+  questionIds: Array<Scalars['ID']>
+  duration?: Maybe<Scalars['Float']>
+  createdByAccountId: Scalars['ID']
+  publicationState: Publication
+}
+
+export type QuizzesFilterInput = {
+  courseId: Scalars['ID']
+}
+
+export type QuizzesPayload = {
+  quizzes: Array<Quiz>
+  count: Scalars['Int']
+}
+
 export type Rating = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   targetId: Scalars['ID']
   numberOfStars: Scalars['Float']
 }
@@ -898,25 +978,30 @@ export type UpdateLessonInput = {
   publicationState?: Maybe<Publication>
 }
 
+export type UpdateLessonPublicationByIdInput = {
+  lessonId: Scalars['ID']
+  publicationState: Publication
+  courseId: Scalars['ID']
+}
+
 export type UpdateOrgOfficeInput = {
   name?: Maybe<Scalars['String']>
   address?: Maybe<Scalars['String']>
   phone?: Maybe<Scalars['String']>
 }
 
-export type AuthAccountFragment = Pick<
-  Account,
-  | 'id'
-  | 'orgId'
-  | 'status'
-  | 'email'
-  | 'otp'
-  | 'otpExpired'
-  | 'username'
-  | 'displayName'
->
+export type AuthAccountFragment = {
+  id: string
+  orgId: string
+  status: AccountStatus
+  email: string
+  otp?: Maybe<string>
+  otpExpired?: Maybe<any>
+  username: string
+  displayName?: Maybe<string>
+}
 
-export type AuthOrgFragment = Pick<Org, 'id' | 'name' | 'namespace'>
+export type AuthOrgFragment = { id: string; name: string; namespace: string }
 
 export type SignInMutationVariables = Exact<{
   orgNamespace: Scalars['String']
@@ -925,18 +1010,38 @@ export type SignInMutationVariables = Exact<{
 }>
 
 export type SignInMutation = {
-  signIn: Pick<SignInPayload, 'token'> & {
-    account: AuthAccountFragment
-    org: AuthOrgFragment
+  signIn: {
+    token: string
+    account: {
+      id: string
+      orgId: string
+      status: AccountStatus
+      email: string
+      otp?: Maybe<string>
+      otpExpired?: Maybe<any>
+      username: string
+      displayName?: Maybe<string>
+    }
+    org: { id: string; name: string; namespace: string }
   }
 }
 
 export type AuthenticateQueryVariables = Exact<{ [key: string]: never }>
 
 export type AuthenticateQuery = {
-  authenticate: Pick<AuthenticatePayload, 'permissions'> & {
-    account: AuthAccountFragment
-    org: AuthOrgFragment
+  authenticate: {
+    permissions: Array<Permission>
+    account: {
+      id: string
+      orgId: string
+      status: AccountStatus
+      email: string
+      otp?: Maybe<string>
+      otpExpired?: Maybe<any>
+      username: string
+      displayName?: Maybe<string>
+    }
+    org: { id: string; name: string; namespace: string }
   }
 }
 
@@ -944,14 +1049,25 @@ export type CanAccountManageRolesQueryVariables = Exact<{
   roles: Array<Scalars['String']> | Scalars['String']
 }>
 
-export type CanAccountManageRolesQuery = Pick<Query, 'canAccountManageRoles'>
+export type CanAccountManageRolesQuery = { canAccountManageRoles: boolean }
 
 export type CallOtpMutationVariables = Exact<{
   identity: Scalars['String']
   type: Scalars['String']
 }>
 
-export type CallOtpMutation = { callOTP: AuthAccountFragment }
+export type CallOtpMutation = {
+  callOTP: {
+    id: string
+    orgId: string
+    status: AccountStatus
+    email: string
+    otp?: Maybe<string>
+    otpExpired?: Maybe<any>
+    username: string
+    displayName?: Maybe<string>
+  }
+}
 
 export type SetPasswordMutationVariables = Exact<{
   usernameOrEmail: Scalars['String']
@@ -959,16 +1075,31 @@ export type SetPasswordMutationVariables = Exact<{
   otp: Scalars['String']
 }>
 
-export type SetPasswordMutation = { setPassword: AuthAccountFragment }
+export type SetPasswordMutation = {
+  setPassword: {
+    id: string
+    orgId: string
+    status: AccountStatus
+    email: string
+    otp?: Maybe<string>
+    otpExpired?: Maybe<any>
+    username: string
+    displayName?: Maybe<string>
+  }
+}
 
 export type AccountAvatarQueryVariables = Exact<{
   id: Scalars['ID']
 }>
 
 export type AccountAvatarQuery = {
-  account?: Maybe<
-    Pick<Account, 'id' | 'email' | 'username' | 'displayName' | 'availability'>
-  >
+  account?: Maybe<{
+    id: string
+    email: string
+    username: string
+    displayName?: Maybe<string>
+    availability: AccountAvailability
+  }>
 }
 
 export type AccountDisplayNameQueryVariables = Exact<{
@@ -976,7 +1107,7 @@ export type AccountDisplayNameQueryVariables = Exact<{
 }>
 
 export type AccountDisplayNameQuery = {
-  account?: Maybe<Pick<Account, 'id' | 'username' | 'displayName'>>
+  account?: Maybe<{ id: string; username: string; displayName?: Maybe<string> }>
 }
 
 export type ConversationCreatedSubscriptionVariables = Exact<{
@@ -984,10 +1115,14 @@ export type ConversationCreatedSubscriptionVariables = Exact<{
 }>
 
 export type ConversationCreatedSubscription = {
-  conversationCreated: Pick<
-    Conversation,
-    'id' | 'roomId' | 'content' | 'createdAt' | 'createdByAccountId' | 'type'
-  >
+  conversationCreated: {
+    id: string
+    roomId: string
+    content: string
+    createdAt: any
+    createdByAccountId: string
+    type: ConversationType
+  }
 }
 
 export type ConversationsQueryVariables = Exact<{
@@ -997,18 +1132,16 @@ export type ConversationsQueryVariables = Exact<{
 }>
 
 export type ConversationsQuery = {
-  conversations: Pick<ConversationsPayload, 'count'> & {
-    conversations: Array<
-      Pick<
-        Conversation,
-        | 'id'
-        | 'createdAt'
-        | 'createdByAccountId'
-        | 'roomId'
-        | 'content'
-        | 'type'
-      >
-    >
+  conversations: {
+    count: number
+    conversations: Array<{
+      id: string
+      createdAt: any
+      createdByAccountId: string
+      roomId: string
+      content: string
+      type: ConversationType
+    }>
   }
 }
 
@@ -1017,10 +1150,14 @@ export type CreateConversationMutationVariables = Exact<{
 }>
 
 export type CreateConversationMutation = {
-  createConversation: Pick<
-    Conversation,
-    'id' | 'roomId' | 'content' | 'createdAt' | 'createdByAccountId' | 'type'
-  >
+  createConversation: {
+    id: string
+    roomId: string
+    content: string
+    createdAt: any
+    createdByAccountId: string
+    type: ConversationType
+  }
 }
 
 export type FileQueryVariables = Exact<{
@@ -1028,9 +1165,14 @@ export type FileQueryVariables = Exact<{
 }>
 
 export type FileQuery = {
-  file?: Maybe<
-    Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size' | 'signedUrl'>
-  >
+  file?: Maybe<{
+    id: string
+    orgId: string
+    mimeType: string
+    name: string
+    size: number
+    signedUrl?: Maybe<string>
+  }>
 }
 
 export type ImageFileQueryVariables = Exact<{
@@ -1038,9 +1180,14 @@ export type ImageFileQueryVariables = Exact<{
 }>
 
 export type ImageFileQuery = {
-  file?: Maybe<
-    Pick<File, 'id' | 'orgId' | 'mimeType' | 'name' | 'size' | 'signedUrl'>
-  >
+  file?: Maybe<{
+    id: string
+    orgId: string
+    mimeType: string
+    name: string
+    size: number
+    signedUrl?: Maybe<string>
+  }>
 }
 
 export type AcademicSubjectDetailQueryVariables = Exact<{
@@ -1048,10 +1195,14 @@ export type AcademicSubjectDetailQueryVariables = Exact<{
 }>
 
 export type AcademicSubjectDetailQuery = {
-  academicSubject: Pick<
-    AcademicSubject,
-    'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
-  >
+  academicSubject: {
+    id: string
+    code: string
+    name: string
+    description: string
+    imageFileId: string
+    publication: Publication
+  }
 }
 
 export type UpdateFileMutationVariables = Exact<{
@@ -1059,7 +1210,7 @@ export type UpdateFileMutationVariables = Exact<{
   newFile: Scalars['Upload']
 }>
 
-export type UpdateFileMutation = { updateFile: Pick<File, 'id' | 'name'> }
+export type UpdateFileMutation = { updateFile: { id: string; name: string } }
 
 export type AcademicSubjectListQueryVariables = Exact<{
   orgId: Scalars['ID']
@@ -1069,19 +1220,17 @@ export type AcademicSubjectListQueryVariables = Exact<{
 }>
 
 export type AcademicSubjectListQuery = {
-  academicSubjects: Pick<AcademicSubjectsPayload, 'count'> & {
-    academicSubjects: Array<
-      Pick<
-        AcademicSubject,
-        | 'id'
-        | 'orgId'
-        | 'name'
-        | 'code'
-        | 'description'
-        | 'publication'
-        | 'imageFileId'
-      >
-    >
+  academicSubjects: {
+    count: number
+    academicSubjects: Array<{
+      id: string
+      orgId: string
+      name: string
+      code: string
+      description: string
+      publication: Publication
+      imageFileId: string
+    }>
   }
 }
 
@@ -1090,18 +1239,15 @@ export type AccountProfileQueryVariables = Exact<{
 }>
 
 export type AccountProfileQuery = {
-  accountByUserName?: Maybe<
-    Pick<
-      Account,
-      | 'id'
-      | 'email'
-      | 'username'
-      | 'displayName'
-      | 'roles'
-      | 'status'
-      | 'availability'
-    >
-  >
+  accountByUserName?: Maybe<{
+    id: string
+    email: string
+    username: string
+    displayName?: Maybe<string>
+    roles: Array<string>
+    status: AccountStatus
+    availability: AccountAvailability
+  }>
 }
 
 export type UpdateAccountStatusMutationVariables = Exact<{
@@ -1110,10 +1256,14 @@ export type UpdateAccountStatusMutationVariables = Exact<{
 }>
 
 export type UpdateAccountStatusMutation = {
-  updateAccountStatus: Pick<
-    Account,
-    'id' | 'email' | 'username' | 'displayName' | 'roles' | 'status'
-  >
+  updateAccountStatus: {
+    id: string
+    email: string
+    username: string
+    displayName?: Maybe<string>
+    roles: Array<string>
+    status: AccountStatus
+  }
 }
 
 export type UpdateAccountMutationVariables = Exact<{
@@ -1122,7 +1272,12 @@ export type UpdateAccountMutationVariables = Exact<{
 }>
 
 export type UpdateAccountMutation = {
-  updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+  updateAccount: {
+    id: string
+    displayName?: Maybe<string>
+    email: string
+    roles: Array<string>
+  }
 }
 
 export type UpdateSelfAccountMutationVariables = Exact<{
@@ -1131,7 +1286,12 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 }>
 
 export type UpdateSelfAccountMutation = {
-  updateAccount: Pick<Account, 'id' | 'displayName' | 'email' | 'roles'>
+  updateAccount: {
+    id: string
+    displayName?: Maybe<string>
+    email: string
+    roles: Array<string>
+  }
 }
 
 export type ClassworkAssignmentDetailQueryVariables = Exact<{
@@ -1139,18 +1299,17 @@ export type ClassworkAssignmentDetailQueryVariables = Exact<{
 }>
 
 export type ClassworkAssignmentDetailQuery = {
-  classworkAssignment: Pick<
-    ClassworkAssignment,
-    | 'id'
-    | 'orgId'
-    | 'courseId'
-    | 'title'
-    | 'type'
-    | 'description'
-    | 'publicationState'
-    | 'attachments'
-    | 'dueDate'
-  >
+  classworkAssignment: {
+    id: string
+    orgId: string
+    courseId: string
+    title: string
+    type: string
+    description?: Maybe<string>
+    publicationState: Publication
+    attachments: Array<string>
+    dueDate?: Maybe<any>
+  }
 }
 
 export type AddAttachmentsToClassworkAssignmentMutationVariables = Exact<{
@@ -1159,18 +1318,17 @@ export type AddAttachmentsToClassworkAssignmentMutationVariables = Exact<{
 }>
 
 export type AddAttachmentsToClassworkAssignmentMutation = {
-  addAttachmentsToClassworkAssignment: Pick<
-    ClassworkAssignment,
-    | 'id'
-    | 'orgId'
-    | 'courseId'
-    | 'title'
-    | 'type'
-    | 'description'
-    | 'publicationState'
-    | 'attachments'
-    | 'dueDate'
-  >
+  addAttachmentsToClassworkAssignment: {
+    id: string
+    orgId: string
+    courseId: string
+    title: string
+    type: string
+    description?: Maybe<string>
+    publicationState: Publication
+    attachments: Array<string>
+    dueDate?: Maybe<any>
+  }
 }
 
 export type RemoveAttachmentsFromClassworkAssignmentMutationVariables = Exact<{
@@ -1179,18 +1337,17 @@ export type RemoveAttachmentsFromClassworkAssignmentMutationVariables = Exact<{
 }>
 
 export type RemoveAttachmentsFromClassworkAssignmentMutation = {
-  removeAttachmentsFromClassworkAssignments: Pick<
-    ClassworkAssignment,
-    | 'id'
-    | 'orgId'
-    | 'courseId'
-    | 'title'
-    | 'type'
-    | 'description'
-    | 'publicationState'
-    | 'attachments'
-    | 'dueDate'
-  >
+  removeAttachmentsFromClassworkAssignments: {
+    id: string
+    orgId: string
+    courseId: string
+    title: string
+    type: string
+    description?: Maybe<string>
+    publicationState: Publication
+    attachments: Array<string>
+    dueDate?: Maybe<any>
+  }
 }
 
 export type ListClassworkSubmissionQueryVariables = Exact<{
@@ -1198,9 +1355,11 @@ export type ListClassworkSubmissionQueryVariables = Exact<{
 }>
 
 export type ListClassworkSubmissionQuery = {
-  classworkSubmissions: Array<
-    Pick<ClassworkSubmission, 'id' | 'createdByAccountId' | 'createdAt'>
-  >
+  classworkSubmissions: Array<{
+    id: string
+    createdByAccountId: string
+    createdAt: any
+  }>
 }
 
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
@@ -1208,16 +1367,15 @@ export type FindClassworkSubmissionByIdQueryVariables = Exact<{
 }>
 
 export type FindClassworkSubmissionByIdQuery = {
-  findClassworkSubmissionById: Pick<
-    ClassworkSubmission,
-    | 'id'
-    | 'createdAt'
-    | 'createdByAccountId'
-    | 'description'
-    | 'submissionFileIds'
-    | 'classworkId'
-    | 'grade'
-  >
+  findClassworkSubmissionById: {
+    id: string
+    createdAt: any
+    createdByAccountId: string
+    description: string
+    submissionFileIds: Array<string>
+    classworkId: string
+    grade?: Maybe<number>
+  }
 }
 
 export type CoursesQueryVariables = Exact<{
@@ -1228,22 +1386,20 @@ export type CoursesQueryVariables = Exact<{
 }>
 
 export type CoursesQuery = {
-  courses: Pick<CoursesPayload, 'count'> & {
-    courses: Array<
-      Pick<
-        Course,
-        | 'id'
-        | 'createdAt'
-        | 'name'
-        | 'code'
-        | 'orgId'
-        | 'academicSubjectId'
-        | 'startDate'
-        | 'tuitionFee'
-        | 'lecturerIds'
-        | 'orgOfficeId'
-      >
-    >
+  courses: {
+    count: number
+    courses: Array<{
+      id: string
+      createdAt: any
+      name: string
+      code: string
+      orgId: string
+      academicSubjectId: string
+      startDate: any
+      tuitionFee: number
+      lecturerIds: Array<string>
+      orgOfficeId: string
+    }>
   }
 }
 
@@ -1253,10 +1409,11 @@ export type CreateClassworkAssignmentMutationVariables = Exact<{
 }>
 
 export type CreateClassworkAssignmentMutation = {
-  createClassworkAssignment: Pick<
-    ClassworkAssignment,
-    'id' | 'title' | 'description'
-  >
+  createClassworkAssignment: {
+    id: string
+    title: string
+    description?: Maybe<string>
+  }
 }
 
 export type CreateCourseMutationVariables = Exact<{
@@ -1264,7 +1421,7 @@ export type CreateCourseMutationVariables = Exact<{
 }>
 
 export type CreateCourseMutation = {
-  createCourse: Pick<Course, 'id' | 'code' | 'name'>
+  createCourse: { id: string; code: string; name: string }
 }
 
 export type CreateAcademicSubjectMutationVariables = Exact<{
@@ -1272,7 +1429,7 @@ export type CreateAcademicSubjectMutationVariables = Exact<{
 }>
 
 export type CreateAcademicSubjectMutation = {
-  createAcademicSubject: Pick<AcademicSubject, 'id' | 'code' | 'name'>
+  createAcademicSubject: { id: string; code: string; name: string }
 }
 
 export type FindAcademicSubjectByIdQueryVariables = Exact<{
@@ -1280,10 +1437,14 @@ export type FindAcademicSubjectByIdQueryVariables = Exact<{
 }>
 
 export type FindAcademicSubjectByIdQuery = {
-  academicSubject: Pick<
-    AcademicSubject,
-    'id' | 'code' | 'name' | 'description' | 'imageFileId' | 'publication'
-  >
+  academicSubject: {
+    id: string
+    code: string
+    name: string
+    description: string
+    imageFileId: string
+    publication: Publication
+  }
 }
 
 export type UpdateAcademicSubjectMutationVariables = Exact<{
@@ -1292,7 +1453,7 @@ export type UpdateAcademicSubjectMutationVariables = Exact<{
 }>
 
 export type UpdateAcademicSubjectMutation = {
-  updateAcademicSubject: Pick<AcademicSubject, 'id' | 'code' | 'name'>
+  updateAcademicSubject: { id: string; code: string; name: string }
 }
 
 export type UpdateAcademicSubjectPublicationMutationVariables = Exact<{
@@ -1301,10 +1462,11 @@ export type UpdateAcademicSubjectPublicationMutationVariables = Exact<{
 }>
 
 export type UpdateAcademicSubjectPublicationMutation = {
-  updateAcademicSubjectPublication: Pick<
-    AcademicSubject,
-    'id' | 'code' | 'publication'
-  >
+  updateAcademicSubjectPublication: {
+    id: string
+    code: string
+    publication: Publication
+  }
 }
 
 export type CreateAccountMutationVariables = Exact<{
@@ -1312,7 +1474,12 @@ export type CreateAccountMutationVariables = Exact<{
 }>
 
 export type CreateAccountMutation = {
-  createOrgAccount: Pick<Account, 'id' | 'displayName' | 'username' | 'email'>
+  createOrgAccount: {
+    id: string
+    displayName?: Maybe<string>
+    username: string
+    email: string
+  }
 }
 
 export type AddLecturesToCourseMutationVariables = Exact<{
@@ -1321,7 +1488,7 @@ export type AddLecturesToCourseMutationVariables = Exact<{
 }>
 
 export type AddLecturesToCourseMutation = {
-  addLecturesToCourse: Pick<Course, 'id' | 'name' | 'lecturerIds'>
+  addLecturesToCourse: { id: string; name: string; lecturerIds: Array<string> }
 }
 
 export type AddStudentToCourseMutationVariables = Exact<{
@@ -1330,7 +1497,7 @@ export type AddStudentToCourseMutationVariables = Exact<{
 }>
 
 export type AddStudentToCourseMutation = {
-  addStudentsToCourse: Pick<Course, 'id' | 'name' | 'studentIds'>
+  addStudentsToCourse: { id: string; name: string; studentIds: Array<string> }
 }
 
 export type FindCourseByIdQueryVariables = Exact<{
@@ -1338,16 +1505,15 @@ export type FindCourseByIdQueryVariables = Exact<{
 }>
 
 export type FindCourseByIdQuery = {
-  findCourseById: Pick<
-    Course,
-    | 'id'
-    | 'code'
-    | 'name'
-    | 'lecturerIds'
-    | 'studentIds'
-    | 'startDate'
-    | 'tuitionFee'
-  >
+  findCourseById: {
+    id: string
+    code: string
+    name: string
+    lecturerIds: Array<string>
+    studentIds: Array<string>
+    startDate: any
+    tuitionFee: number
+  }
 }
 
 export type RemoveLecturersFromCourseMutationVariables = Exact<{
@@ -1356,7 +1522,7 @@ export type RemoveLecturersFromCourseMutationVariables = Exact<{
 }>
 
 export type RemoveLecturersFromCourseMutation = {
-  removeLecturersFromCourse: Pick<Course, 'id' | 'code' | 'name'>
+  removeLecturersFromCourse: { id: string; code: string; name: string }
 }
 
 export type RemoveStudentsFromCourseMutationVariables = Exact<{
@@ -1365,7 +1531,7 @@ export type RemoveStudentsFromCourseMutationVariables = Exact<{
 }>
 
 export type RemoveStudentsFromCourseMutation = {
-  removeStudentsFromCourse: Pick<Course, 'id' | 'code' | 'name'>
+  removeStudentsFromCourse: { id: string; code: string; name: string }
 }
 
 export type OrgAccountListQueryVariables = Exact<{
@@ -1377,26 +1543,29 @@ export type OrgAccountListQueryVariables = Exact<{
 }>
 
 export type OrgAccountListQuery = {
-  orgAccounts: Pick<OrgAccountsPayload, 'count'> & {
-    accounts: Array<
-      Pick<
-        Account,
-        | 'id'
-        | 'email'
-        | 'displayName'
-        | 'username'
-        | 'roles'
-        | 'availability'
-        | 'status'
-      >
-    >
+  orgAccounts: {
+    count: number
+    accounts: Array<{
+      id: string
+      email: string
+      displayName?: Maybe<string>
+      username: string
+      roles: Array<string>
+      availability: AccountAvailability
+      status: AccountStatus
+    }>
   }
 }
 
 export type ListOrgOfficesQueryVariables = Exact<{ [key: string]: never }>
 
 export type ListOrgOfficesQuery = {
-  orgOffices: Array<Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>>
+  orgOffices: Array<{
+    id: string
+    name: string
+    address: string
+    phone: string
+  }>
 }
 
 export type CreateOrgOfficeMutationVariables = Exact<{
@@ -1404,7 +1573,7 @@ export type CreateOrgOfficeMutationVariables = Exact<{
 }>
 
 export type CreateOrgOfficeMutation = {
-  createOrgOffice: Pick<OrgOffice, 'id' | 'name'>
+  createOrgOffice: { id: string; name: string }
 }
 
 export type UpdateOrgOfficeMutationVariables = Exact<{
@@ -1413,7 +1582,7 @@ export type UpdateOrgOfficeMutationVariables = Exact<{
 }>
 
 export type UpdateOrgOfficeMutation = {
-  updateOrgOffice: Pick<OrgOffice, 'id' | 'name'>
+  updateOrgOffice: { id: string; name: string }
 }
 
 export type OrgOfficeQueryVariables = Exact<{
@@ -1421,7 +1590,7 @@ export type OrgOfficeQueryVariables = Exact<{
 }>
 
 export type OrgOfficeQuery = {
-  orgOffice: Pick<OrgOffice, 'id' | 'name' | 'address' | 'phone'>
+  orgOffice: { id: string; name: string; address: string; phone: string }
 }
 
 export type CreateClassworkSubmissionMutationVariables = Exact<{
@@ -1430,10 +1599,12 @@ export type CreateClassworkSubmissionMutationVariables = Exact<{
 }>
 
 export type CreateClassworkSubmissionMutation = {
-  createClassworkSubmission: Pick<
-    ClassworkSubmission,
-    'id' | 'createdAt' | 'submissionFileIds' | 'description'
-  >
+  createClassworkSubmission: {
+    id: string
+    createdAt: any
+    submissionFileIds: Array<string>
+    description: string
+  }
 }
 
 export type FindOneClassworkSubmissionQueryVariables = Exact<{
@@ -1441,10 +1612,13 @@ export type FindOneClassworkSubmissionQueryVariables = Exact<{
 }>
 
 export type FindOneClassworkSubmissionQuery = {
-  findOneClassworkSubmission: Pick<
-    ClassworkSubmission,
-    'id' | 'createdAt' | 'classworkId' | 'createdByAccountId' | 'description'
-  >
+  findOneClassworkSubmission: {
+    id: string
+    createdAt: any
+    classworkId: string
+    createdByAccountId: string
+    description: string
+  }
 }
 
 export type ListClassworkAssignmentsByStudentIdInCourseQueryVariables = Exact<{
@@ -1452,22 +1626,17 @@ export type ListClassworkAssignmentsByStudentIdInCourseQueryVariables = Exact<{
 }>
 
 export type ListClassworkAssignmentsByStudentIdInCourseQuery = {
-  listClassworkAssignmentsByStudentIdInCourse: Pick<
-    ClassworkAssignmentByStudentIdInCourseResponsePayload,
-    'count'
-  > & {
+  listClassworkAssignmentsByStudentIdInCourse: {
+    count: number
     list?: Maybe<
-      Array<
-        Pick<
-          ClassworkAssignmentByStudentIdInCourseResponse,
-          | 'classworkAssignmentId'
-          | 'classworkAssignmentsTitle'
-          | 'dueDate'
-          | 'classworkSubmissionGrade'
-          | 'classworkSubmissionUpdatedAt'
-          | 'classworkSubmissionDescription'
-        >
-      >
+      Array<{
+        classworkAssignmentId?: Maybe<string>
+        classworkAssignmentsTitle?: Maybe<string>
+        dueDate?: Maybe<any>
+        classworkSubmissionGrade?: Maybe<number>
+        classworkSubmissionUpdatedAt?: Maybe<any>
+        classworkSubmissionDescription?: Maybe<string>
+      }>
     >
   }
 }
@@ -1481,21 +1650,19 @@ export type StudyingCourseListQueryVariables = Exact<{
 }>
 
 export type StudyingCourseListQuery = {
-  courses: Pick<CoursesPayload, 'count'> & {
-    courses: Array<
-      Pick<
-        Course,
-        | 'id'
-        | 'orgId'
-        | 'name'
-        | 'code'
-        | 'tuitionFee'
-        | 'startDate'
-        | 'lecturerIds'
-        | 'studentIds'
-        | 'publicationState'
-      >
-    >
+  courses: {
+    count: number
+    courses: Array<{
+      id: string
+      orgId: string
+      name: string
+      code: string
+      tuitionFee: number
+      startDate: any
+      lecturerIds: Array<string>
+      studentIds: Array<string>
+      publicationState: Publication
+    }>
   }
 }
 
@@ -1506,21 +1673,19 @@ export type ClassworkAssignmentListQueryVariables = Exact<{
 }>
 
 export type ClassworkAssignmentListQuery = {
-  classworkAssignments: Pick<ClassworkAssignmentPayload, 'count'> & {
-    classworkAssignments: Array<
-      Pick<
-        ClassworkAssignment,
-        | 'id'
-        | 'orgId'
-        | 'courseId'
-        | 'title'
-        | 'type'
-        | 'description'
-        | 'publicationState'
-        | 'attachments'
-        | 'dueDate'
-      >
-    >
+  classworkAssignments: {
+    count: number
+    classworkAssignments: Array<{
+      id: string
+      orgId: string
+      courseId: string
+      title: string
+      type: string
+      description?: Maybe<string>
+      publicationState: Publication
+      attachments: Array<string>
+      dueDate?: Maybe<any>
+    }>
   }
 }
 
@@ -1531,20 +1696,18 @@ export type ClassworkMaterialsListQueryVariables = Exact<{
 }>
 
 export type ClassworkMaterialsListQuery = {
-  classworkMaterials: Pick<ClassworkMaterialPayload, 'count'> & {
-    classworkMaterials: Array<
-      Pick<
-        ClassworkMaterial,
-        | 'id'
-        | 'orgId'
-        | 'createdAt'
-        | 'updatedAt'
-        | 'publicationState'
-        | 'title'
-        | 'description'
-        | 'attachments'
-      >
-    >
+  classworkMaterials: {
+    count: number
+    classworkMaterials: Array<{
+      id: string
+      orgId: string
+      createdAt: any
+      updatedAt: any
+      publicationState: Publication
+      title: string
+      description?: Maybe<string>
+      attachments: Array<string>
+    }>
   }
 }
 
@@ -1554,10 +1717,14 @@ export type CreateClassworkMaterialMutationVariables = Exact<{
 }>
 
 export type CreateClassworkMaterialMutation = {
-  createClassworkMaterial: Pick<
-    ClassworkMaterial,
-    'id' | 'createdAt' | 'courseId' | 'title' | 'description' | 'attachments'
-  >
+  createClassworkMaterial: {
+    id: string
+    createdAt: any
+    courseId: string
+    title: string
+    description?: Maybe<string>
+    attachments: Array<string>
+  }
 }
 
 export type DetailClassworkMaterialQueryVariables = Exact<{
@@ -1565,18 +1732,17 @@ export type DetailClassworkMaterialQueryVariables = Exact<{
 }>
 
 export type DetailClassworkMaterialQuery = {
-  classworkMaterial: Pick<
-    ClassworkMaterial,
-    | 'id'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'createdByAccountId'
-    | 'title'
-    | 'description'
-    | 'attachments'
-    | 'publicationState'
-    | 'courseId'
-  >
+  classworkMaterial: {
+    id: string
+    createdAt: any
+    updatedAt: any
+    createdByAccountId: string
+    title: string
+    description?: Maybe<string>
+    attachments: Array<string>
+    publicationState: Publication
+    courseId: string
+  }
 }
 
 export type UpdateClassworkMaterialMutationVariables = Exact<{
@@ -1585,10 +1751,14 @@ export type UpdateClassworkMaterialMutationVariables = Exact<{
 }>
 
 export type UpdateClassworkMaterialMutation = {
-  updateClassworkMaterial: Pick<
-    ClassworkMaterial,
-    'id' | 'createdAt' | 'courseId' | 'title' | 'description' | 'attachments'
-  >
+  updateClassworkMaterial: {
+    id: string
+    createdAt: any
+    courseId: string
+    title: string
+    description?: Maybe<string>
+    attachments: Array<string>
+  }
 }
 
 export type AddAttachmentsToClassworkMaterialMutationVariables = Exact<{
@@ -1597,10 +1767,12 @@ export type AddAttachmentsToClassworkMaterialMutationVariables = Exact<{
 }>
 
 export type AddAttachmentsToClassworkMaterialMutation = {
-  addAttachmentsToClassworkMaterial: Pick<
-    ClassworkMaterial,
-    'id' | 'orgId' | 'title' | 'attachments'
-  >
+  addAttachmentsToClassworkMaterial: {
+    id: string
+    orgId: string
+    title: string
+    attachments: Array<string>
+  }
 }
 
 export type RemoveAttachmentsFromClassworkMaterialMutationVariables = Exact<{
@@ -1609,10 +1781,12 @@ export type RemoveAttachmentsFromClassworkMaterialMutationVariables = Exact<{
 }>
 
 export type RemoveAttachmentsFromClassworkMaterialMutation = {
-  removeAttachmentsFromClassworkMaterial: Pick<
-    ClassworkMaterial,
-    'id' | 'orgId' | 'title' | 'attachments'
-  >
+  removeAttachmentsFromClassworkMaterial: {
+    id: string
+    orgId: string
+    title: string
+    attachments: Array<string>
+  }
 }
 
 export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
@@ -1620,7 +1794,7 @@ export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
 }>
 
 export type SetGradeForClassworkSubmissionMutation = {
-  setGradeForClassworkSubmission: Pick<ClassworkSubmission, 'id' | 'grade'>
+  setGradeForClassworkSubmission: { id: string; grade?: Maybe<number> }
 }
 
 export type CourseDetailQueryVariables = Exact<{
@@ -1628,18 +1802,17 @@ export type CourseDetailQueryVariables = Exact<{
 }>
 
 export type CourseDetailQuery = {
-  findCourseById: Pick<
-    Course,
-    | 'id'
-    | 'orgId'
-    | 'name'
-    | 'code'
-    | 'tuitionFee'
-    | 'startDate'
-    | 'lecturerIds'
-    | 'studentIds'
-    | 'publicationState'
-  >
+  findCourseById: {
+    id: string
+    orgId: string
+    name: string
+    code: string
+    tuitionFee: number
+    startDate: any
+    lecturerIds: Array<string>
+    studentIds: Array<string>
+    publicationState: Publication
+  }
 }
 
 export type AvgGradeOfClassworkAssignmentInCourseQueryVariables = Exact<{
@@ -1648,9 +1821,78 @@ export type AvgGradeOfClassworkAssignmentInCourseQueryVariables = Exact<{
 }>
 
 export type AvgGradeOfClassworkAssignmentInCourseQuery = {
-  calculateAvgGradeOfClassworkAssignmentInCourse: Array<
-    Pick<AvgGradeOfClassworkByCourse, 'classworkTitle' | 'avgGrade'>
-  >
+  calculateAvgGradeOfClassworkAssignmentInCourse: Array<{
+    classworkTitle: string
+    avgGrade: number
+  }>
+}
+
+export type QuizzesQueryVariables = Exact<{
+  skip: Scalars['Int']
+  limit: Scalars['Int']
+  courseId: Scalars['ID']
+}>
+
+export type QuizzesQuery = {
+  quizzes: {
+    count: number
+    quizzes: Array<{
+      id: string
+      title: string
+      description?: Maybe<string>
+      courseId: string
+      questionIds: Array<string>
+      duration?: Maybe<number>
+      createdByAccountId: string
+      publicationState: Publication
+    }>
+  }
+}
+
+export type CreateQuestionMutationVariables = Exact<{
+  input: CreateQuestionInput
+}>
+
+export type CreateQuestionMutation = {
+  createQuestion: {
+    id: string
+    title: string
+    scores: number
+    createdByAccountId: string
+  }
+}
+
+export type CreateQuizMutationVariables = Exact<{
+  input: CreateQuizInput
+}>
+
+export type CreateQuizMutation = {
+  createQuiz: {
+    id: string
+    title: string
+    duration?: Maybe<number>
+    description?: Maybe<string>
+    courseId: string
+    questionIds: Array<string>
+    createdByAccountId: string
+  }
+}
+
+export type QuizQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type QuizQuery = {
+  quiz: {
+    id: string
+    title: string
+    description?: Maybe<string>
+    courseId: string
+    duration?: Maybe<number>
+    publicationState: Publication
+    questionIds: Array<string>
+    createdByAccountId: string
+  }
 }
 
 export type TeachingCourseListQueryVariables = Exact<{
@@ -1662,20 +1904,18 @@ export type TeachingCourseListQueryVariables = Exact<{
 }>
 
 export type TeachingCourseListQuery = {
-  courses: Pick<CoursesPayload, 'count'> & {
-    courses: Array<
-      Pick<
-        Course,
-        | 'id'
-        | 'orgId'
-        | 'name'
-        | 'code'
-        | 'tuitionFee'
-        | 'startDate'
-        | 'lecturerIds'
-        | 'publicationState'
-      >
-    >
+  courses: {
+    count: number
+    courses: Array<{
+      id: string
+      orgId: string
+      name: string
+      code: string
+      tuitionFee: number
+      startDate: any
+      lecturerIds: Array<string>
+      publicationState: Publication
+    }>
   }
 }
 
@@ -1685,10 +1925,13 @@ export type UpdateClassworkAssignmentMutationVariables = Exact<{
 }>
 
 export type UpdateClassworkAssignmentMutation = {
-  updateClassworkAssignment: Pick<
-    ClassworkAssignment,
-    'id' | 'courseId' | 'title' | 'description' | 'dueDate'
-  >
+  updateClassworkAssignment: {
+    id: string
+    courseId: string
+    title: string
+    description?: Maybe<string>
+    dueDate?: Maybe<any>
+  }
 }
 
 export type UpdateCourseMutationVariables = Exact<{
@@ -1697,16 +1940,15 @@ export type UpdateCourseMutationVariables = Exact<{
 }>
 
 export type UpdateCourseMutation = {
-  updateCourse: Pick<
-    Course,
-    | 'id'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'name'
-    | 'startDate'
-    | 'lecturerIds'
-    | 'tuitionFee'
-  >
+  updateCourse: {
+    id: string
+    createdAt: any
+    updatedAt: any
+    name: string
+    startDate: any
+    lecturerIds: Array<string>
+    tuitionFee: number
+  }
 }
 
 export const AuthAccountFragmentDoc = {
@@ -10524,6 +10766,605 @@ export type AvgGradeOfClassworkAssignmentInCourseQueryResult =
     AvgGradeOfClassworkAssignmentInCourseQuery,
     AvgGradeOfClassworkAssignmentInCourseQueryVariables
   >
+export const QuizzesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Quizzes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quizzes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'skip' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'skip' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'limit' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'courseId' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizzes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'duration' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizzesProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuizzesQuery,
+    QuizzesQueryVariables
+  >
+} &
+  TChildProps
+export function withQuizzes<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizzesQuery,
+    QuizzesQueryVariables,
+    QuizzesProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizzesQuery,
+    QuizzesQueryVariables,
+    QuizzesProps<TChildProps, TDataName>
+  >(QuizzesDocument, {
+    alias: 'quizzes',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizzesQuery__
+ *
+ * To run a query within a React component, call `useQuizzesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizzesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizzesQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useQuizzesQuery(
+  baseOptions: Apollo.QueryHookOptions<QuizzesQuery, QuizzesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuizzesQuery, QuizzesQueryVariables>(
+    QuizzesDocument,
+    options,
+  )
+}
+export function useQuizzesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuizzesQuery,
+    QuizzesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<QuizzesQuery, QuizzesQueryVariables>(
+    QuizzesDocument,
+    options,
+  )
+}
+export type QuizzesQueryHookResult = ReturnType<typeof useQuizzesQuery>
+export type QuizzesLazyQueryHookResult = ReturnType<typeof useQuizzesLazyQuery>
+export type QuizzesQueryResult = Apollo.QueryResult<
+  QuizzesQuery,
+  QuizzesQueryVariables
+>
+export const CreateQuestionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateQuestion' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateQuestionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createQuestion' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateQuestionMutationFn = Apollo.MutationFunction<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>
+export type CreateQuestionProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateQuestion<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables,
+    CreateQuestionProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables,
+    CreateQuestionProps<TChildProps, TDataName>
+  >(CreateQuestionDocument, {
+    alias: 'createQuestion',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateQuestionMutation__
+ *
+ * To run a mutation, you first call `useCreateQuestionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuestionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuestionMutation, { data, loading, error }] = useCreateQuestionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >(CreateQuestionDocument, options)
+}
+export type CreateQuestionMutationHookResult = ReturnType<
+  typeof useCreateQuestionMutation
+>
+export type CreateQuestionMutationResult =
+  Apollo.MutationResult<CreateQuestionMutation>
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>
+export const CreateQuizDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateQuiz' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateQuizInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createQuiz' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'duration' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateQuizMutationFn = Apollo.MutationFunction<
+  CreateQuizMutation,
+  CreateQuizMutationVariables
+>
+export type CreateQuizProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateQuizMutation,
+    CreateQuizMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateQuiz<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateQuizMutation,
+    CreateQuizMutationVariables,
+    CreateQuizProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateQuizMutation,
+    CreateQuizMutationVariables,
+    CreateQuizProps<TChildProps, TDataName>
+  >(CreateQuizDocument, {
+    alias: 'createQuiz',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateQuizMutation__
+ *
+ * To run a mutation, you first call `useCreateQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuizMutation, { data, loading, error }] = useCreateQuizMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateQuizMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateQuizMutation,
+    CreateQuizMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateQuizMutation, CreateQuizMutationVariables>(
+    CreateQuizDocument,
+    options,
+  )
+}
+export type CreateQuizMutationHookResult = ReturnType<
+  typeof useCreateQuizMutation
+>
+export type CreateQuizMutationResult = Apollo.MutationResult<CreateQuizMutation>
+export type CreateQuizMutationOptions = Apollo.BaseMutationOptions<
+  CreateQuizMutation,
+  CreateQuizMutationVariables
+>
+export const QuizDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Quiz' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quiz' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'duration' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<QuizQuery, QuizQueryVariables>
+} &
+  TChildProps
+export function withQuiz<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizQuery,
+    QuizQueryVariables,
+    QuizProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizQuery,
+    QuizQueryVariables,
+    QuizProps<TChildProps, TDataName>
+  >(QuizDocument, {
+    alias: 'quiz',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizQuery__
+ *
+ * To run a query within a React component, call `useQuizQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useQuizQuery(
+  baseOptions: Apollo.QueryHookOptions<QuizQuery, QuizQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuizQuery, QuizQueryVariables>(QuizDocument, options)
+}
+export function useQuizLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<QuizQuery, QuizQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<QuizQuery, QuizQueryVariables>(
+    QuizDocument,
+    options,
+  )
+}
+export type QuizQueryHookResult = ReturnType<typeof useQuizQuery>
+export type QuizLazyQueryHookResult = ReturnType<typeof useQuizLazyQuery>
+export type QuizQueryResult = Apollo.QueryResult<QuizQuery, QuizQueryVariables>
 export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [

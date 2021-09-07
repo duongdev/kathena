@@ -328,6 +328,35 @@ type ConversationsPayload {
   count: Int!
 }
 
+type Question implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  scores: Float!
+  createdByAccountId: ID!
+}
+
+type Quiz implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String
+  courseId: ID!
+  questionIds: [ID!]!
+  duration: Float
+  createdByAccountId: ID!
+  publicationState: Publication!
+}
+
+type QuizzesPayload {
+  quizzes: [Quiz!]!
+  count: Int!
+}
+
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
@@ -356,6 +385,9 @@ type Query {
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
+  quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quiz(id: ID!): Quiz!
+  question(id: ID!): Question!
 }
 
 input AccountsFilterInput {
@@ -416,6 +448,10 @@ input ConversationPageOptionInput {
   limit: Int!
 }
 
+input QuizzesFilterInput {
+  courseId: ID!
+}
+
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
@@ -461,6 +497,8 @@ type Mutation {
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
+  createQuiz(input: CreateQuizInput!): Quiz!
+  createQuestion(input: CreateQuestionInput!): Question!
 }
 
 input CreateAccountInput {
@@ -597,6 +635,22 @@ input CreateConversationInput {
 input RatingInput {
   targetId: ID!
   numberOfStars: Float = 1
+}
+
+input CreateQuizInput {
+  title: String!
+  courseId: String!
+  questionIds: [String!] = []
+  duration: Float
+  description: String!
+  publicationState: Publication
+}
+
+input CreateQuestionInput {
+  title: String!
+  scores: Float!
+  questionChoicesTitle: [String!]!
+  questionChoicesRight: [Boolean!]!
 }
 
 type Subscription {

@@ -13,6 +13,7 @@ import {
   TEACHING_COURSE_CLASSWORK_ASSIGNMENTS,
   TEACHING_COURSE_CLASSWORK_MATERIALS,
   TEACHING_COURSE_LIST,
+  TEACHING_COURSE_QUIZZES,
 } from 'utils/path-builder'
 
 import TabMenu from './Components/TabMenu'
@@ -22,6 +23,7 @@ const ClassworkAssignments = lazy(
   () => import('./Components/ClassworkAssignments'),
 )
 const ClassworkMaterials = lazy(() => import('./Components/ClassworkMaterials'))
+const Quizzes = lazy(() => import('./Components/Quizzes'))
 
 export type TeachingCourseProps = {}
 
@@ -70,6 +72,13 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
             }),
             exact: true,
           },
+          {
+            title: 'Thử thách câu hỏi',
+            to: buildPath(TEACHING_COURSE_QUIZZES, {
+              id: params.id,
+            }),
+            exact: true,
+          },
         ]}
       />
       <Suspense fallback={<Spinner p={4} center />}>
@@ -85,6 +94,7 @@ const TeachingCourse: FC<TeachingCourseProps> = () => {
             exact
             component={ClassworkMaterials}
           />
+          <Route path={TEACHING_COURSE_QUIZZES} exact component={Quizzes} />
         </Switch>
       </Suspense>
     </PageContainer>
