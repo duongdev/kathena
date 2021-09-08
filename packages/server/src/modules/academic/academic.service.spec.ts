@@ -3429,29 +3429,6 @@ describe('academic.service', () => {
     })
 
     describe('findLessonById', () => {
-      it('throws error if the account has no permissions', async () => {
-        expect.assertions(1)
-
-        const lesson: Lesson = {
-          id: objectId(),
-          orgId: objectId(),
-          courseId: objectId(),
-        } as Lesson
-
-        jest
-          .spyOn(academicService['lessonModel'], 'findOne')
-          .mockResolvedValueOnce(lesson as ANY)
-
-        await expect(
-          academicService.findLessonById(
-            objectId(),
-            objectId(),
-            lesson.id,
-            lesson.orgId,
-          ),
-        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-      })
-
       it('returns a lesson if found', async () => {
         expect.assertions(1)
 
@@ -3470,12 +3447,7 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(lesson as ANY)
 
         await expect(
-          academicService.findLessonById(
-            objectId(),
-            objectId(),
-            lesson.id,
-            lesson.orgId,
-          ),
+          academicService.findLessonById(lesson.id, lesson.orgId),
         ).resolves.toMatchObject(lesson)
       })
 
@@ -3491,12 +3463,7 @@ describe('academic.service', () => {
           .mockResolvedValueOnce(null as ANY)
 
         await expect(
-          academicService.findLessonById(
-            objectId(),
-            objectId(),
-            objectId(),
-            objectId(),
-          ),
+          academicService.findLessonById(objectId(), objectId()),
         ).resolves.toBeNull()
       })
     })
