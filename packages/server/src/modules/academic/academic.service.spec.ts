@@ -15,7 +15,7 @@ import { AuthService } from '../auth/auth.service'
 import { OrgService } from '../org/org.service'
 
 import { AcademicService } from './academic.service'
-import { CreateCourseInput } from './academic.type'
+import { CreateCourseInput, LessonsFilterInputStatus } from './academic.type'
 import { Lesson } from './models/Lesson'
 
 describe('academic.service', () => {
@@ -2407,90 +2407,197 @@ describe('academic.service', () => {
     })
 
     describe('findAndPaginateLessons', () => {
-      it('returns a list lesson by filter', async () => {
-        expect.assertions(4)
+      const courseId = course.id
+      const studentId = objectId()
+      const lecturerId = objectId()
+      const staffId = objectId()
+      const { orgId } = course
+      const dataMock = [
+        {
+          _id: objectId(),
+          absentStudentIds: [studentId],
+          lecturerComment: null,
+          publicationState: 'Published',
+          avgNumberOfStars: 2.5,
+          description: 'first2',
+          createdByAccountId: lecturerId,
+          updatedByAccountI: lecturerId,
+          courseId,
+          orgId,
+          createdAt: {
+            $date: '2021-08-21T17:00:42.173Z',
+          },
+          updatedAt: {
+            $date: '2021-08-27T12:56:54.959Z',
+          },
+          startTime: {
+            $date: '2020-02-28T17:00:00Z',
+          },
+          endTime: {
+            $date: '2020-02-29T17:00:00Z',
+          },
+        },
+        {
+          _id: objectId(),
+          absentStudentIds: [],
+          lecturerComment: null,
+          publicationState: 'Published',
+          avgNumberOfStars: 0,
+          description: 'first4',
+          courseId,
+          orgId,
+          createdByAccountId: lecturerId,
+          updatedByAccountI: lecturerId,
+          startTime: {
+            $date: '2021-03-28T17:00:00Z',
+          },
+          endTime: {
+            $date: '2021-03-29T17:00:00Z',
+          },
+          createdAt: {
+            $date: '2021-08-22T16:03:08.216Z',
+          },
+          updatedAt: {
+            $date: '2021-08-22T16:03:08.216Z',
+          },
+        },
+        {
+          _id: objectId(),
+          absentStudentIds: [],
+          lecturerComment: null,
+          publicationState: 'Published',
+          avgNumberOfStars: 4,
+          description: 'first3',
+          courseId,
+          orgId,
+          createdByAccountId: lecturerId,
+          updatedByAccountI: lecturerId,
+          startTime: {
+            $date: '2021-02-28T17:00:00Z',
+          },
+          endTime: {
+            $date: '2021-03-01T17:00:00Z',
+          },
+          createdAt: {
+            $date: '2021-08-22T16:02:41.482Z',
+          },
+          updatedAt: {
+            $date: '2021-08-22T16:02:41.482Z',
+          },
+        },
+        {
+          _id: objectId(),
+          absentStudentIds: [studentId],
+          lecturerComment: null,
+          publicationState: 'Draft',
+          avgNumberOfStars: 0,
+          description: 'first1',
+          courseId,
+          orgId,
+          createdByAccountId: lecturerId,
+          updatedByAccountI: lecturerId,
+          startTime: {
+            $date: '2020-02-11T17:00:00Z',
+          },
+          endTime: {
+            $date: '2020-02-14T17:00:00Z',
+          },
+          createdAt: {
+            $date: '2021-08-21T16:55:09.994Z',
+          },
+          updatedAt: {
+            $date: '2021-08-24T14:41:15.682Z',
+          },
+        },
+      ]
+
+      it(`returns an error if course not found`, async () => {
+        expect.assertions(1)
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.studying,
+            },
+            studentId,
+            course.orgId,
+          ),
+        ).rejects.toThrowError(`COURSE_DON'T_EXIT`)
+      })
+
+      it(`returns an error if account don't have role`, async () => {
+        expect.assertions(1)
 
         jest
-          .spyOn(orgService, 'validateOrgId')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(course as ANY)
 
         jest
-          .spyOn(academicService['courseModel'], 'findById')
-          .mockResolvedValueOnce(course)
-          .mockResolvedValueOnce(course)
-          .mockResolvedValueOnce(course)
-          .mockResolvedValueOnce(course)
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([] as ANY)
 
-        const listLessons: ANY = []
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.studying,
+            },
+            studentId,
+            course.orgId,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_DON'T_HAVE_ROLE`)
+      })
 
-        const studentId = objectId()
+      it(`returns an error if account don't have permission when academic status`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(course as ANY)
+
+        jest
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([{ priority: 4 }] as ANY)
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.academic,
+            },
+            studentId,
+            course.orgId,
+          ),
+        ).rejects.toThrowError(`DON'T_HAVE_PERMISSION`)
+      })
+
+      it(`returns an error if account can't manage course when teaching status`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(course as ANY)
+
+        jest
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([{ priorit: 4 }] as ANY)
 
         jest
           .spyOn(authService, 'canAccountManageCourse')
-          .mockResolvedValueOnce(true)
-          .mockResolvedValueOnce(true)
-          .mockResolvedValueOnce(true)
-          .mockResolvedValueOnce(true)
-
-        const lesson1 = await academicService.createLesson(
-          course.orgId,
-          objectId(),
-          {
-            ...createLessonInput,
-            startTime: new Date('2021-08-15 14:00'),
-            endTime: new Date('2021-08-15 16:30'),
-          },
-        )
-
-        const lesson2 = await academicService.createLesson(
-          course.orgId,
-          objectId(),
-          {
-            ...createLessonInput,
-            startTime: new Date('2021-08-16 14:00'),
-            endTime: new Date('2021-08-16 16:30'),
-            description: 'Day la buoi 2',
-          },
-        )
-
-        lesson2.absentStudentIds = [studentId]
-        lesson2.save()
-
-        const lesson3 = await academicService.createLesson(
-          course.orgId,
-          objectId(),
-          {
-            ...createLessonInput,
-            startTime: new Date('2021-08-17 14:00'),
-            endTime: new Date('2021-08-17 16:30'),
-            description: 'Day la buoi 3',
-          },
-        )
-
-        const lesson4 = await academicService.createLesson(
-          course.orgId,
-          objectId(),
-          {
-            ...createLessonInput,
-            startTime: new Date('2021-08-18 14:00'),
-            endTime: new Date('2021-08-18 16:30'),
-            description: 'Day la buoi 4',
-          },
-        )
-
-        lesson4.absentStudentIds = [studentId]
-        lesson4.save()
-
-        listLessons.push(lesson1)
-
-        listLessons.push(lesson2)
-
-        listLessons.push(lesson3)
-
-        listLessons.push(lesson4)
+          .mockResolvedValueOnce(false as ANY)
 
         await expect(
           academicService.findAndPaginateLessons(
@@ -2499,20 +2606,205 @@ describe('academic.service', () => {
               limit: 2,
             },
             {
-              orgId: course.orgId,
-              courseId: course.id,
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.teaching,
             },
+            lecturerId,
+            course.orgId,
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it(`returns an error if student don't exist form course when studying status`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce({ ...course, studentIds: [objectId()] } as ANY)
+
+        jest
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([{ priorit: 4 }] as ANY)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(false as ANY)
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 2,
+            },
+            {
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.studying,
+            },
+            lecturerId,
+            course.orgId,
+          ),
+        ).rejects.toThrowError(`STUDENT_DON'T_EXIST_FORM_COURSE`)
+      })
+
+      it(`returns a list lesson when academic status`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(course as ANY)
+
+        jest
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([
+            { priority: 3 },
+            { priority: 4 },
+            { priority: 2 },
+          ] as ANY)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'aggregate')
+          .mockResolvedValueOnce(dataMock as ANY)
+
+        const resolveValue = await dataMock.map((element): ANY => {
+          return {
+            // eslint-disable-next-line no-underscore-dangle
+            id: element._id,
+            absentStudentIds: element.absentStudentIds,
+            lecturerComment: element.lecturerComment,
+            publicationState: element.publicationState,
+            avgNumberOfStars: element.avgNumberOfStars,
+            description: element.description,
+            courseId: element.courseId,
+            orgId: element.orgId,
+            createdByAccountId: element.createdByAccountId,
+            updatedByAccountI: element.updatedByAccountI,
+            startTime: element.startTime,
+            endTime: element.endTime,
+            createdAt: element.createdAt,
+            updatedAt: element.updatedAt,
+          }
+        })
+
+        await expect(
+          academicService.findAndPaginateLessons(
+            {
+              skip: 0,
+              limit: 4,
+            },
+            {
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.academic,
+            },
+            staffId,
+            course.orgId,
           ),
         ).resolves.toMatchObject({
-          count: listLessons.length,
-          lessons: [
+          count: 4,
+          lessons: resolveValue,
+        })
+      })
+
+      it(`returns a list lesson when teaching status`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(course as ANY)
+
+        jest
+          .spyOn(authService, 'getAccountRoles')
+          .mockResolvedValueOnce([
+            { priority: 3 },
+            { priority: 4 },
+            { priority: 2 },
+          ] as ANY)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'aggregate')
+          .mockResolvedValueOnce(dataMock as ANY)
+
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        const resolveValue = await dataMock.map((element): ANY => {
+          return {
+            // eslint-disable-next-line no-underscore-dangle
+            id: element._id,
+            absentStudentIds: element.absentStudentIds,
+            lecturerComment: element.lecturerComment,
+            publicationState: element.publicationState,
+            avgNumberOfStars: element.avgNumberOfStars,
+            description: element.description,
+            courseId: element.courseId,
+            orgId: element.orgId,
+            createdByAccountId: element.createdByAccountId,
+            updatedByAccountI: element.updatedByAccountI,
+            startTime: element.startTime,
+            endTime: element.endTime,
+            createdAt: element.createdAt,
+            updatedAt: element.updatedAt,
+          }
+        })
+
+        await expect(
+          academicService.findAndPaginateLessons(
             {
-              description: 'Day la buoi 1',
+              skip: 0,
+              limit: 4,
             },
             {
-              description: 'Day la buoi 2',
+              courseId: objectId(),
+              status: LessonsFilterInputStatus.teaching,
             },
-          ],
+            staffId,
+            course.orgId,
+          ),
+        ).resolves.toMatchObject({
+          count: 4,
+          lessons: resolveValue,
+        })
+      })
+
+      it('returns a list lesson when studying status', async () => {
+        expect.assertions(1)
+
+        const courseMock = {
+          ...course,
+          studentIds: [studentId],
+        }
+        const studentRoles = 'student'
+
+        jest
+          .spyOn(academicService, 'findCourseById')
+          .mockResolvedValueOnce(courseMock as ANY)
+
+        jest
+          .spyOn(academicService['authService'], 'getAccountRoles')
+          .mockResolvedValueOnce([studentRoles] as ANY)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'aggregate')
+          .mockResolvedValueOnce(dataMock.slice(0, 3) as ANY)
+
+        const resolveValue = await dataMock.slice(0, 2).map((element): ANY => {
+          return {
+            // eslint-disable-next-line no-underscore-dangle
+            id: element._id,
+            absentStudentIds: element.absentStudentIds,
+            lecturerComment: element.lecturerComment,
+            publicationState: element.publicationState,
+            avgNumberOfStars: element.avgNumberOfStars,
+            description: element.description,
+            courseId: element.courseId,
+            orgId: element.orgId,
+            createdByAccountId: element.createdByAccountId,
+            updatedByAccountI: element.updatedByAccountI,
+            startTime: element.startTime,
+            endTime: element.endTime,
+            createdAt: element.createdAt,
+            updatedAt: element.updatedAt,
+          }
         })
 
         await expect(
@@ -2522,69 +2814,15 @@ describe('academic.service', () => {
               limit: 2,
             },
             {
-              orgId: course.orgId,
               courseId: course.id,
-              startTime: new Date('2021-08-16'),
+              status: LessonsFilterInputStatus.studying,
             },
+            studentId,
+            course.orgId,
           ),
         ).resolves.toMatchObject({
-          count: listLessons.length,
-          lessons: [
-            {
-              description: 'Day la buoi 2',
-            },
-            {
-              description: 'Day la buoi 3',
-            },
-          ],
-        })
-
-        await expect(
-          academicService.findAndPaginateLessons(
-            {
-              skip: 0,
-              limit: 2,
-            },
-            {
-              orgId: course.orgId,
-              courseId: course.id,
-              startTime: new Date('2021-08-16'),
-              endTime: new Date('2021-08-18'),
-            },
-          ),
-        ).resolves.toMatchObject({
-          count: listLessons.length,
-          lessons: [
-            {
-              description: 'Day la buoi 2',
-            },
-            {
-              description: 'Day la buoi 3',
-            },
-          ],
-        })
-
-        await expect(
-          academicService.findAndPaginateLessons(
-            {
-              skip: 0,
-              limit: 2,
-            },
-            {
-              orgId: course.orgId,
-              courseId: course.id,
-              startTime: new Date('2021-08-16'),
-              endTime: new Date('2021-08-18'),
-              absentStudentId: studentId,
-            },
-          ),
-        ).resolves.toMatchObject({
-          count: listLessons.length,
-          lessons: [
-            {
-              description: 'Day la buoi 2',
-            },
-          ],
+          count: 3,
+          lessons: resolveValue,
         })
       })
     })
@@ -3121,6 +3359,75 @@ describe('academic.service', () => {
       })
     })
 
+    describe('updateLessonPublicationById', () => {
+      it(`returns an error if account can't manage course`, async () => {
+        expect.assertions(1)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+      })
+
+      it('returns an error if the lesson is not found', async () => {
+        expect.assertions(1)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+
+        jest
+          .spyOn(academicService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).rejects.toThrowError('Lesson not found')
+      })
+
+      it('returns a lesson if it updated', async () => {
+        expect.assertions(2)
+        const input = {
+          lessonId: objectId(),
+          publicationState: Publication.Published,
+          courseId: objectId(),
+        }
+        const lesson = {
+          ...createLessonInput,
+          publicationState: input.publicationState,
+        }
+        jest
+          .spyOn(academicService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+
+        input.publicationState = Publication.Draft
+
+        lesson.publicationState = input.publicationState
+
+        jest
+          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
+          .mockResolvedValueOnce(lesson as ANY)
+
+        await expect(
+          academicService.updateLessonPublicationById(input, objectId()),
+        ).resolves.toMatchObject(lesson)
+      })
+    })
+
     describe('findLessonById', () => {
       it('throws error if the account has no permissions', async () => {
         expect.assertions(1)
@@ -3270,75 +3577,6 @@ describe('academic.service', () => {
         ).resolves.toMatchObject({
           lecturerComment: comment,
         })
-      })
-    })
-
-    describe('updateLessonPublicationById', () => {
-      it(`returns an error if account can't manage course`, async () => {
-        expect.assertions(1)
-        const input = {
-          lessonId: objectId(),
-          publicationState: Publication.Published,
-          courseId: objectId(),
-        }
-
-        await expect(
-          academicService.updateLessonPublicationById(input, objectId()),
-        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-      })
-
-      it('returns an error if the lesson is not found', async () => {
-        expect.assertions(1)
-        const input = {
-          lessonId: objectId(),
-          publicationState: Publication.Published,
-          courseId: objectId(),
-        }
-
-        jest
-          .spyOn(academicService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as never)
-
-        await expect(
-          academicService.updateLessonPublicationById(input, objectId()),
-        ).rejects.toThrowError('Lesson not found')
-      })
-
-      it('returns a lesson if it updated', async () => {
-        expect.assertions(2)
-        const input = {
-          lessonId: objectId(),
-          publicationState: Publication.Published,
-          courseId: objectId(),
-        }
-        const lesson = {
-          ...createLessonInput,
-          publicationState: input.publicationState,
-        }
-        jest
-          .spyOn(academicService['authService'], 'canAccountManageCourse')
-          .mockResolvedValueOnce(true as never)
-          .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
-          .mockResolvedValueOnce(lesson as ANY)
-
-        await expect(
-          academicService.updateLessonPublicationById(input, objectId()),
-        ).resolves.toMatchObject(lesson)
-
-        input.publicationState = Publication.Draft
-
-        lesson.publicationState = input.publicationState
-
-        jest
-          .spyOn(academicService['lessonModel'], 'findByIdAndUpdate')
-          .mockResolvedValueOnce(lesson as ANY)
-
-        await expect(
-          academicService.updateLessonPublicationById(input, objectId()),
-        ).resolves.toMatchObject(lesson)
       })
     })
   })
