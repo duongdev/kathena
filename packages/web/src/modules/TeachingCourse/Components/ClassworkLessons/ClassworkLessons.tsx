@@ -24,8 +24,8 @@ import {
 } from 'graphql/generated'
 import {
   buildPath,
-  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
   TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
+  TEACHING_COURSE_DETAIL_CLASSWORK_LESSON,
 } from 'utils/path-builder'
 
 export type ClassworkLessonProps = {}
@@ -87,7 +87,6 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
   if (!course) {
     return <div>Course not found</div>
   }
-
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
@@ -116,8 +115,9 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
                   render: (classworkLesson) => (
                     <Typography variant="body1" fontWeight="bold">
                       <Link
-                        to={buildPath(TEACHING_COURSE_CLASSWORK_ASSIGNMENT, {
+                        to={buildPath(TEACHING_COURSE_DETAIL_CLASSWORK_LESSON, {
                           id: classworkLesson.id,
+                          courseDetailId: classworkLesson.courseId,
                         })}
                       >
                         {classworkLesson.description}

@@ -39,3 +39,21 @@ query ListLessons(
     count
   }
 }
+# Xem chi tiết một buổi học
+query FindLessonById($courseId: ID!, $lessonId: ID!) {
+  findLessonById(courseId: $courseId, lessonId: $lessonId) {
+    id
+    orgId
+    createdAt
+    updatedAt
+    createdByAccountId
+    startTime
+    endTime
+    description
+    absentStudentIds
+    lecturerComment
+    courseId
+    publicationState
+    avgNumberOfStars
+  }
+}
