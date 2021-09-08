@@ -358,11 +358,18 @@ export type Lesson = BaseModel & {
 }
 
 export type LessonsFilterInput = {
-  orgId: Scalars['ID']
   courseId: Scalars['ID']
   startTime?: Maybe<Scalars['DateTime']>
   endTime?: Maybe<Scalars['DateTime']>
   absentStudentId?: Maybe<Scalars['ID']>
+  ratingStar?: Maybe<Scalars['Float']>
+  status: LessonsFilterInputStatus
+}
+
+export enum LessonsFilterInputStatus {
+  academic = 'academic',
+  studying = 'studying',
+  teaching = 'teaching',
 }
 
 export type LessonsPayload = {
@@ -1581,7 +1588,6 @@ export type ListLessonsQuery = {
         | 'createdAt'
         | 'updatedAt'
         | 'createdByAccountId'
-        | 'updatedByAccountId'
         | 'startTime'
         | 'endTime'
         | 'description'
@@ -9425,10 +9431,6 @@ export const ListLessonsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdByAccountId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'updatedByAccountId' },
                       },
                       {
                         kind: 'Field',

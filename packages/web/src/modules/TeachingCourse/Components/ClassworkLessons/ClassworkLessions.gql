@@ -27,7 +27,6 @@ query ListLessons(
       createdAt
       updatedAt
       createdByAccountId
-      updatedByAccountId
       startTime
       endTime
       description

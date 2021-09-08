@@ -9,16 +9,19 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
-  SectionCardSkeleton,
-  SectionCard,
-  usePagination,
-  DataTable,
-  Typography,
-  Link,
   Button,
+  DataTable,
+  Link,
+  SectionCard,
+  SectionCardSkeleton,
+  Typography,
+  usePagination,
 } from '@kathena/ui'
-import { useAuth } from 'common/auth'
-import { useCourseDetailQuery, useListLessonsQuery } from 'graphql/generated'
+import {
+  LessonsFilterInputStatus,
+  useCourseDetailQuery,
+  useListLessonsQuery,
+} from 'graphql/generated'
 import {
   buildPath,
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
@@ -34,17 +37,17 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
     variables: { id: courseId },
   })
   const course = useMemo(() => dataCourse?.findCourseById, [dataCourse])
-  const { $org: org } = useAuth()
   const { page, perPage, setPage, setPerPage } = usePagination()
   const { data: dataClasswork, loading: loadingClasswork } =
     useListLessonsQuery({
       variables: {
         filter: {
           courseId,
-          orgId: org.id,
           absentStudentId: null,
           endTime: null,
           startTime: null,
+          status: LessonsFilterInputStatus.teaching,
+          ratingStar: null,
         },
         pageOptions: {
           limit: perPage,
