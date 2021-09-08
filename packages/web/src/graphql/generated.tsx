@@ -1601,6 +1601,30 @@ export type ListLessonsQuery = {
   }
 }
 
+export type FindLessonByIdQueryVariables = Exact<{
+  courseId: Scalars['ID']
+  lessonId: Scalars['ID']
+}>
+
+export type FindLessonByIdQuery = {
+  findLessonById: Pick<
+    Lesson,
+    | 'id'
+    | 'orgId'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'createdByAccountId'
+    | 'startTime'
+    | 'endTime'
+    | 'description'
+    | 'absentStudentIds'
+    | 'lecturerComment'
+    | 'courseId'
+    | 'publicationState'
+    | 'avgNumberOfStars'
+  >
+}
+
 export type ClassworkMaterialsListQueryVariables = Exact<{
   courseId: Scalars['String']
   skip: Scalars['Int']
@@ -9557,6 +9581,184 @@ export type ListLessonsLazyQueryHookResult = ReturnType<
 export type ListLessonsQueryResult = Apollo.QueryResult<
   ListLessonsQuery,
   ListLessonsQueryVariables
+>
+export const FindLessonByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindLessonById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lessonId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findLessonById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lessonId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lessonId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'absentStudentIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lecturerComment' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avgNumberOfStars' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindLessonByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindLessonById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables,
+    FindLessonByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables,
+    FindLessonByIdProps<TChildProps, TDataName>
+  >(FindLessonByIdDocument, {
+    alias: 'findLessonById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindLessonByIdQuery__
+ *
+ * To run a query within a React component, call `useFindLessonByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindLessonByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindLessonByIdQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *      lessonId: // value for 'lessonId'
+ *   },
+ * });
+ */
+export function useFindLessonByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FindLessonByIdQuery, FindLessonByIdQueryVariables>(
+    FindLessonByIdDocument,
+    options,
+  )
+}
+export function useFindLessonByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FindLessonByIdQuery, FindLessonByIdQueryVariables>(
+    FindLessonByIdDocument,
+    options,
+  )
+}
+export type FindLessonByIdQueryHookResult = ReturnType<
+  typeof useFindLessonByIdQuery
+>
+export type FindLessonByIdLazyQueryHookResult = ReturnType<
+  typeof useFindLessonByIdLazyQuery
+>
+export type FindLessonByIdQueryResult = Apollo.QueryResult<
+  FindLessonByIdQuery,
+  FindLessonByIdQueryVariables
 >
 export const ClassworkMaterialsListDocument = {
   kind: 'Document',
