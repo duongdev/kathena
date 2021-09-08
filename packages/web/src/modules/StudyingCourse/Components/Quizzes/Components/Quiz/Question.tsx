@@ -26,14 +26,15 @@ const Question: FC<QuestionProps> = (props) => {
   })
 
   const question = useMemo(() => data?.question, [data])
-  const questionChoices = useMemo(
-    () => dataQuestionChoice?.questionChoices?.questionChoices ?? [],
-    [dataQuestionChoice],
-  )
-  const idRight = useMemo(
-    () => dataQuestionChoice?.questionChoices?.idRight,
-    [dataQuestionChoice],
-  )
+  const questionChoices = useMemo(() => {
+    if (dataQuestionChoice?.questionChoices?.questionChoices) {
+      let list = [...dataQuestionChoice?.questionChoices?.questionChoices]
+      list = list.sort(() => Math.random() - 0.5)
+      return list
+    }
+    return []
+  }, [dataQuestionChoice])
+
   return (
     <SectionCard
       maxContentHeight={false}
@@ -43,11 +44,10 @@ const Question: FC<QuestionProps> = (props) => {
       } (${question?.scores} điểm)`}
     >
       <CardContent>
-        <RadioGroup value={idRight}>
+        <RadioGroup>
           {questionChoices.map((item) => (
             <FormControlLabel
               value={item.id}
-              disabled
               control={<Radio />}
               label={item.title}
             />

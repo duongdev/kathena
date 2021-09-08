@@ -18,7 +18,7 @@ import {
   useCourseDetailQuery,
   useQuizzesStudyingQuery,
 } from 'graphql/generated'
-import { buildPath, TEACHING_COURSE_QUIZ } from 'utils/path-builder'
+import { buildPath, STUDYING_COURSE_QUIZ } from 'utils/path-builder'
 
 export type ClassworkAssignmentsProps = {}
 
@@ -89,7 +89,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                   render: (quiz) => (
                     <Typography variant="body1" fontWeight="bold">
                       <Link
-                        to={buildPath(TEACHING_COURSE_QUIZ, {
+                        to={buildPath(STUDYING_COURSE_QUIZ, {
                           id: quiz.id,
                         })}
                       >
