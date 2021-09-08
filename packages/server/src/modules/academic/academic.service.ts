@@ -1096,15 +1096,10 @@ export class AcademicService {
   }
 
   async findLessonById(
-    accountId: string,
-    courseId: string,
     lessonId: string,
     orgId: string,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
-      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-    }
-    return this.lessonModel.findOne({ _id: lessonId, orgId, courseId })
+    return this.lessonModel.findOne({ _id: lessonId, orgId })
   }
 
   async commentsForTheLessonByLecturer(

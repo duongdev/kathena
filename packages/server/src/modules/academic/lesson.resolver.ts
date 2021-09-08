@@ -151,16 +151,9 @@ export class LessonResolver {
   @UsePipes(ValidationPipe)
   async findLessonById(
     @Args('lessonId', { type: () => ID }) lessonId: string,
-    @Args('courseId', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
-    @CurrentAccount() account: Account,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.findLessonById(
-      account.id,
-      courseId,
-      lessonId,
-      org.id,
-    )
+    return this.academicService.findLessonById(lessonId, org.id)
   }
 
   @Mutation((_returns) => Lesson)
