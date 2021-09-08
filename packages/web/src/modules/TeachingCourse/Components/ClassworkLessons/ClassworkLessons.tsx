@@ -87,7 +87,6 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
   if (!course) {
     return <div>Course not found</div>
   }
-
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
@@ -118,6 +117,7 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
                       <Link
                         to={buildPath(TEACHING_COURSE_DETAIL_CLASSWORK_LESSON, {
                           id: classworkLesson.id,
+                          courseDetailId: classworkLesson.courseId,
                         })}
                       >
                         {classworkLesson.description}
