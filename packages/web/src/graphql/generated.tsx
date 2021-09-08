@@ -112,7 +112,7 @@ export type ClassworkAssignment = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   courseId: Scalars['ID']
   title: Scalars['String']
   type: Scalars['String']
@@ -160,7 +160,7 @@ export type ClassworkMaterial = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   courseId: Scalars['ID']
   title: Scalars['String']
   type: Scalars['String']
@@ -179,11 +179,11 @@ export type ClassworkSubmission = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   classworkId: Scalars['ID']
   courseId: Scalars['ID']
   grade?: Maybe<Scalars['Float']>
-  submissionFileIds: Array<Scalars['String']>
+  submissionFileIds: Array<Scalars['ID']>
   description: Scalars['String']
 }
 
@@ -206,8 +206,8 @@ export type Conversation = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
-  roomId: Scalars['String']
+  createdByAccountId: Scalars['ID']
+  roomId: Scalars['ID']
   content: Scalars['String']
   type: ConversationType
 }
@@ -240,8 +240,8 @@ export type Course = BaseModel & {
   tuitionFee: Scalars['Float']
   publicationState: Publication
   publishedAt: Scalars['DateTime']
-  lecturerIds: Array<Scalars['String']>
-  studentIds: Array<Scalars['String']>
+  lecturerIds: Array<Scalars['ID']>
+  studentIds: Array<Scalars['ID']>
   createdByAccountId: Scalars['ID']
 }
 
@@ -345,22 +345,31 @@ export type Lesson = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['ID']
+  updatedByAccountId: Scalars['ID']
   startTime: Scalars['DateTime']
   endTime: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
-  absentStudentIds: Array<Scalars['String']>
-  lecturerComment: Scalars['String']
+  absentStudentIds: Array<Scalars['ID']>
+  lecturerComment?: Maybe<Scalars['String']>
   courseId: Scalars['ID']
   publicationState: Publication
   avgNumberOfStars: Scalars['Float']
 }
 
 export type LessonsFilterInput = {
-  orgId: Scalars['ID']
   courseId: Scalars['ID']
   startTime?: Maybe<Scalars['DateTime']>
   endTime?: Maybe<Scalars['DateTime']>
   absentStudentId?: Maybe<Scalars['ID']>
+  ratingStar?: Maybe<Scalars['Float']>
+  status: LessonsFilterInputStatus
+}
+
+export enum LessonsFilterInputStatus {
+  academic = 'academic',
+  studying = 'studying',
+  teaching = 'teaching',
 }
 
 export type LessonsPayload = {
@@ -695,6 +704,8 @@ export type Query = {
   courses: CoursesPayload
   calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
   lessons: LessonsPayload
+  updateLessonPublicationById: Lesson
+  findLessonById: Lesson
   orgOffices: Array<OrgOffice>
   orgOffice: OrgOffice
   file?: Maybe<File>
@@ -754,6 +765,15 @@ export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
 export type QueryLessonsArgs = {
   filter: LessonsFilterInput
   pageOptions: PageOptionsInput
+}
+
+export type QueryUpdateLessonPublicationByIdArgs = {
+  input: UpdateLessonPublicationByIdInput
+}
+
+export type QueryFindLessonByIdArgs = {
+  courseId: Scalars['ID']
+  lessonId: Scalars['ID']
 }
 
 export type QueryOrgOfficeArgs = {
@@ -820,7 +840,7 @@ export type Rating = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
-  createdByAccountId: Scalars['String']
+  createdByAccountId: Scalars['ID']
   targetId: Scalars['ID']
   numberOfStars: Scalars['Float']
 }
@@ -896,6 +916,12 @@ export type UpdateLessonInput = {
   endTime?: Maybe<Scalars['DateTime']>
   description?: Maybe<Scalars['String']>
   publicationState?: Maybe<Publication>
+}
+
+export type UpdateLessonPublicationByIdInput = {
+  lessonId: Scalars['ID']
+  publicationState: Publication
+  courseId: Scalars['ID']
 }
 
 export type UpdateOrgOfficeInput = {
@@ -1519,6 +1545,57 @@ export type ClassworkAssignmentListQuery = {
         | 'publicationState'
         | 'attachments'
         | 'dueDate'
+      >
+    >
+  }
+}
+
+export type CreateLessonMutationVariables = Exact<{
+  createLessonInput: CreateLessonInput
+}>
+
+export type CreateLessonMutation = {
+  createLesson: Pick<
+    Lesson,
+    | 'id'
+    | 'orgId'
+    | 'createdAt'
+    | 'createdByAccountId'
+    | 'updatedByAccountId'
+    | 'startTime'
+    | 'endTime'
+    | 'description'
+    | 'absentStudentIds'
+    | 'lecturerComment'
+    | 'courseId'
+    | 'publicationState'
+    | 'avgNumberOfStars'
+  >
+}
+
+export type ListLessonsQueryVariables = Exact<{
+  filter: LessonsFilterInput
+  pageOptions: PageOptionsInput
+}>
+
+export type ListLessonsQuery = {
+  lessons: Pick<LessonsPayload, 'count'> & {
+    lessons: Array<
+      Pick<
+        Lesson,
+        | 'id'
+        | 'orgId'
+        | 'createdAt'
+        | 'updatedAt'
+        | 'createdByAccountId'
+        | 'startTime'
+        | 'endTime'
+        | 'description'
+        | 'absentStudentIds'
+        | 'lecturerComment'
+        | 'courseId'
+        | 'publicationState'
+        | 'avgNumberOfStars'
       >
     >
   }
@@ -9114,6 +9191,372 @@ export type ClassworkAssignmentListLazyQueryHookResult = ReturnType<
 export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
+>
+export const CreateLessonDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateLesson' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'createLessonInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateLessonInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createLesson' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'createLessonInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'createLessonInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'updatedByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'absentStudentIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lecturerComment' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avgNumberOfStars' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateLessonMutationFn = Apollo.MutationFunction<
+  CreateLessonMutation,
+  CreateLessonMutationVariables
+>
+export type CreateLessonProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateLesson<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateLessonMutation,
+    CreateLessonMutationVariables,
+    CreateLessonProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateLessonMutation,
+    CreateLessonMutationVariables,
+    CreateLessonProps<TChildProps, TDataName>
+  >(CreateLessonDocument, {
+    alias: 'createLesson',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateLessonMutation__
+ *
+ * To run a mutation, you first call `useCreateLessonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLessonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLessonMutation, { data, loading, error }] = useCreateLessonMutation({
+ *   variables: {
+ *      createLessonInput: // value for 'createLessonInput'
+ *   },
+ * });
+ */
+export function useCreateLessonMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >(CreateLessonDocument, options)
+}
+export type CreateLessonMutationHookResult = ReturnType<
+  typeof useCreateLessonMutation
+>
+export type CreateLessonMutationResult =
+  Apollo.MutationResult<CreateLessonMutation>
+export type CreateLessonMutationOptions = Apollo.BaseMutationOptions<
+  CreateLessonMutation,
+  CreateLessonMutationVariables
+>
+export const ListLessonsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListLessons' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'LessonsFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'pageOptions' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PageOptionsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lessons' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'pageOptions' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lessons' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'absentStudentIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lecturerComment' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avgNumberOfStars' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListLessonsProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >
+} &
+  TChildProps
+export function withListLessons<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListLessonsQuery,
+    ListLessonsQueryVariables,
+    ListLessonsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListLessonsQuery,
+    ListLessonsQueryVariables,
+    ListLessonsProps<TChildProps, TDataName>
+  >(ListLessonsDocument, {
+    alias: 'listLessons',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListLessonsQuery__
+ *
+ * To run a query within a React component, call `useListLessonsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListLessonsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListLessonsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      pageOptions: // value for 'pageOptions'
+ *   },
+ * });
+ */
+export function useListLessonsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ListLessonsQuery, ListLessonsQueryVariables>(
+    ListLessonsDocument,
+    options,
+  )
+}
+export function useListLessonsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ListLessonsQuery, ListLessonsQueryVariables>(
+    ListLessonsDocument,
+    options,
+  )
+}
+export type ListLessonsQueryHookResult = ReturnType<typeof useListLessonsQuery>
+export type ListLessonsLazyQueryHookResult = ReturnType<
+  typeof useListLessonsLazyQuery
+>
+export type ListLessonsQueryResult = Apollo.QueryResult<
+  ListLessonsQuery,
+  ListLessonsQueryVariables
 >
 export const ClassworkMaterialsListDocument = {
   kind: 'Document',
