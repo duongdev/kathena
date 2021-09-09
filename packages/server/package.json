@@ -56,7 +56,7 @@
     "rimraf": "3.0.2",
     "rxjs": "7.3.0",
     "shortid": "2.2.16",
-    "source-map-support": "0.5.19",
+    "source-map-support": "0.5.20",
     "type-graphql": "1.1.1"
   },
   "devDependencies": {
