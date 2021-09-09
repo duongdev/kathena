@@ -40,8 +40,8 @@ query ListLessons(
   }
 }
 # Xem chi tiết một buổi học
-query FindLessonById($courseId: ID!, $lessonId: ID!) {
-  findLessonById(courseId: $courseId, lessonId: $lessonId) {
+query FindLessonById($lessonId: ID!) {
+  findLessonById(lessonId: $lessonId) {
     id
     orgId
     createdAt

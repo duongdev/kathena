@@ -26,10 +26,9 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   const classes = useStyles(props)
   const params: { id: string; courseDetailId: string } = useParams()
   const lessonId = useMemo(() => params.id, [params])
-  const courseDetailId = useMemo(() => params.courseDetailId, [params])
 
   const { data, loading } = useFindLessonByIdQuery({
-    variables: { lessonId, courseId: courseDetailId },
+    variables: { lessonId },
   })
 
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
