@@ -12,6 +12,8 @@ import {
   Permission,
   Publication,
   useCreateLessonMutation,
+  ListLessonsDocument,
+  LessonsFilterInputStatus,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -57,7 +59,27 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
   const idCourse = useMemo(() => params.id, [params])
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
-  const [createClassworkLesson] = useCreateLessonMutation()
+  const [createClassworkLesson] = useCreateLessonMutation({
+    refetchQueries: [
+      {
+        query: ListLessonsDocument,
+        variables: {
+          filter: {
+            courseId: idCourse,
+            absentStudentId: null,
+            endTime: null,
+            startTime: null,
+            status: LessonsFilterInputStatus.teaching,
+            ratingStar: null,
+          },
+          pageOptions: {
+            limit: 10,
+            skip: 0,
+          },
+        },
+      },
+    ],
+  })
   const handleSubmitForm = useCallback(
     async (input: CreateClassworkLessonInput) => {
       try {
