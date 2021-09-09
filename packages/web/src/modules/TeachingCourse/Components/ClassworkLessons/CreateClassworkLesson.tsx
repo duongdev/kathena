@@ -25,21 +25,29 @@ export type CreateClassworkLessonInput = {
   description: string
   startTime: string
   endTime: string
+  startDay: string
+  endDay: string
 }
 const labels: { [k in keyof CreateClassworkLessonInput]: string } = {
   description: 'Tiêu đề',
   startTime: 'Thời gian bắt đầu',
   endTime: 'Thời gian kết thúc',
+  startDay: 'Ngày bắt đầu',
+  endDay: 'Ngày kết thúc',
 }
 const validationSchema: SchemaOf<CreateClassworkLessonInput> = yup.object({
   description: yup.string().label(labels.description).required(),
   startTime: yup.string().label(labels.startTime).trim().required(),
   endTime: yup.string().label(labels.endTime).trim().required(),
+  startDay: yup.string().label(labels.startDay).trim().required(),
+  endDay: yup.string().label(labels.endDay).trim().required(),
 })
 const initialValues = {
   description: '',
   startTime: '',
   endTime: '',
+  startDay: '',
+  endDay: '',
 }
 
 const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
@@ -53,6 +61,8 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
   const handleSubmitForm = useCallback(
     async (input: CreateClassworkLessonInput) => {
       try {
+        const TimeStart = `${input.startDay} ${input.startTime}`
+        const TimeEnd = `${input.endDay} ${input.endTime}`
         if (!idCourse) return
         const dataCreated = (
           await createClassworkLesson({
@@ -60,14 +70,13 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
               createLessonInput: {
                 courseId: idCourse,
                 description: input.description,
-                endTime: input.endTime,
-                startTime: input.startTime,
+                endTime: TimeEnd,
+                startTime: TimeStart,
                 publicationState: publication,
               },
             },
           })
         ).data
-
         const classworkLesson = dataCreated?.createLesson
 
         if (!classworkLesson) {
@@ -99,7 +108,8 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
     >
       {(formik) => (
         <PageContainer
-          title="Thêm buổi học mới"
+          maxWidth="sm"
+          title="Thêm buổi học "
           backButtonLabel="Danh sách bài tập"
           withBackButton={buildPath(TEACHING_COURSE_CLASSWORK_LESSONS, {
             id: idCourse,

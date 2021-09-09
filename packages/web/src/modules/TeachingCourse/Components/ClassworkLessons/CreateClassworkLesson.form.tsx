@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { SectionCard, TextFormField } from '@kathena/ui'
@@ -19,30 +19,60 @@ const CreateClassworkLessonForm: FC<CreateClassworkLessonFormProps> = (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
         maxContentHeight={false}
-        gridItem={{ xs: 12, sm: 6 }}
-        title="Thông tin bài tập"
+        gridItem={{ xs: 12, sm: 12 }}
+        title="Thông tin buổi học"
       >
         <CardContent>
-          <Stack spacing={2}>
-            <TextFormField
-              required
-              autoFocus
-              name="description"
-              label={labels.description}
-            />
-            <TextFormField
-              type="date"
-              required
-              name="startTime"
-              label={labels.startTime}
-            />
-            <TextFormField
-              type="date"
-              required
-              name="endTime"
-              label={labels.endTime}
-            />
-          </Stack>
+          <Grid container spacing={2}>
+            <Grid item container xs={12}>
+              <TextFormField
+                required
+                autoFocus
+                name="description"
+                label={labels.description}
+              />
+            </Grid>
+          </Grid>
+          <Grid container mt={0.5}>
+            <Grid item container xs={12} spacing={2}>
+              <Grid item xs={6}>
+                <TextFormField
+                  type="date"
+                  required
+                  name="startDay"
+                  label={labels.startDay}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextFormField
+                  type="time"
+                  required
+                  name="startTime"
+                  label={labels.startTime}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container mt={0.5}>
+            <Grid item container xs={12} spacing={2}>
+              <Grid item xs={6}>
+                <TextFormField
+                  type="date"
+                  required
+                  name="endDay"
+                  label={labels.endDay}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextFormField
+                  type="time"
+                  required
+                  name="endTime"
+                  label={labels.endTime}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </CardContent>
       </SectionCard>
     </Grid>
