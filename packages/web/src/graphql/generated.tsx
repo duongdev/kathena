@@ -772,7 +772,6 @@ export type QueryUpdateLessonPublicationByIdArgs = {
 }
 
 export type QueryFindLessonByIdArgs = {
-  courseId: Scalars['ID']
   lessonId: Scalars['ID']
 }
 
@@ -1602,7 +1601,6 @@ export type ListLessonsQuery = {
 }
 
 export type FindLessonByIdQueryVariables = Exact<{
-  courseId: Scalars['ID']
   lessonId: Scalars['ID']
 }>
 
@@ -9594,17 +9592,6 @@ export const FindLessonByIdDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'courseId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'lessonId' },
           },
           type: {
@@ -9620,14 +9607,6 @@ export const FindLessonByIdDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'findLessonById' },
             arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'courseId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'courseId' },
-                },
-              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'lessonId' },
@@ -9721,7 +9700,6 @@ export function withFindLessonById<
  * @example
  * const { data, loading, error } = useFindLessonByIdQuery({
  *   variables: {
- *      courseId: // value for 'courseId'
  *      lessonId: // value for 'lessonId'
  *   },
  * });

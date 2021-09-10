@@ -17,14 +17,16 @@ import {
   Typography,
   usePagination,
 } from '@kathena/ui'
+import { WithAuth } from 'common/auth'
 import {
   LessonsFilterInputStatus,
+  Permission,
   useCourseDetailQuery,
   useListLessonsQuery,
 } from 'graphql/generated'
 import {
   buildPath,
-  TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT,
+  TEACHING_COURSE_CREATE_CLASSWORK_LESSON,
   TEACHING_COURSE_DETAIL_CLASSWORK_LESSON,
 } from 'utils/path-builder'
 
@@ -95,7 +97,7 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
         action={
           <Button
             startIcon={<FilePlus size={24} />}
-            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT, {
+            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_LESSON, {
               id: courseId,
             })}
           >
@@ -183,5 +185,9 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
     </Grid>
   )
 }
-
-export default ClassworkLesson
+const WithPermissionClassworkLesson = () => (
+  <WithAuth permission={Permission.Teaching_Course_Access}>
+    <ClassworkLesson />
+  </WithAuth>
+)
+export default WithPermissionClassworkLesson
