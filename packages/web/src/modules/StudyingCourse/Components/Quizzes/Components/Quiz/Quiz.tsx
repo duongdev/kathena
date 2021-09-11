@@ -37,10 +37,7 @@ const Quiz: FC<QuizProps> = () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [isSubmited, setIsSubmited] = useState(false)
   const quizSubmitId = useRef<string | null>()
-  const lastSubmisted = useRef<boolean>(false)
-  const [submits, setSubmits] = useState<
-    { questionId: string; questionChoiceId: string }[]
-  >([])
+  const submits = useRef<{ questionId: string; questionChoiceId: string }[]>([])
 
   const id = useMemo(() => params.id, [params])
   const [startQuiz] = useStartQuizMutation({
@@ -121,9 +118,9 @@ const Quiz: FC<QuizProps> = () => {
         const seconds = Math.floor((distance % (1000 * 60)) / 1000)
         if (minutes < 0 && seconds < 0) {
           setEndTime('00:00')
-          if (!lastSubmisted.current) {
-            lastSubmisted.current = true
-            handleSubmit()
+          if (!isSubmited) {
+            setIsSubmited(true)
+            handleSubmit(true)
           }
         } else {
           setEndTime(`${minutes}:${seconds}`)
@@ -155,7 +152,6 @@ const Quiz: FC<QuizProps> = () => {
       </PageContainer>
     )
   }
-
   const handleStart = async () => {
     const now = new Date()
     const startQuizSubmit = await startQuiz({
@@ -176,23 +172,23 @@ const Quiz: FC<QuizProps> = () => {
     questionId: string
     questionChoiceId: string
   }) => {
-    const arr = [...submits]
+    const arr = [...submits.current]
     const index = arr.findIndex((item) => item.questionId === value.questionId)
     if (index !== -1) {
       arr[index].questionChoiceId = value.questionChoiceId
-      setSubmits(arr)
+      submits.current = arr
     } else {
       arr.push(value)
-      setSubmits(arr)
+      submits.current = arr
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (last?: boolean) => {
     setLoadingSubmit(true)
     const questionIds: string[] = []
     const questionChoiceIds: string[] = []
     // eslint-disable-next-line
-    submits.map((item) => {
+    submits.current.map((item) => {
       questionIds.push(item.questionId)
       questionChoiceIds.push(item.questionChoiceId)
     })
@@ -207,15 +203,17 @@ const Quiz: FC<QuizProps> = () => {
         },
       })
       if (res) {
-        setIsSubmited(true)
+        if (last) {
+          setIsSubmited(true)
+          setStartTime(null)
+        }
         enqueueSnackbar(`Nộp bài thành công`, { variant: 'success' })
       }
     } else {
-      enqueueSnackbar(`Nộp bài thất bại`, { variant: 'success' })
+      enqueueSnackbar(`Nộp bài thất bại`, { variant: 'error' })
     }
     setLoadingSubmit(false)
   }
-
   return (
     <PageContainer
       backButtonLabel="Danh sách trắc nghiệm"
@@ -254,22 +252,13 @@ const Quiz: FC<QuizProps> = () => {
                 )}
               </>
             ) : (
-              <>
-                {lastSubmisted.current ? (
-                  <Chip
-                    color="primary"
-                    label={`${quizSubmit?.scores ?? 0} điểm`}
-                  />
-                ) : (
-                  <Button
-                    variant="contained"
-                    loading={loadingSubmit}
-                    onClick={() => handleSubmit()}
-                  >
-                    Nộp bài: {endTime}
-                  </Button>
-                )}
-              </>
+              <Button
+                variant="contained"
+                loading={loadingSubmit}
+                onClick={() => handleSubmit()}
+              >
+                Nộp bài: {endTime}
+              </Button>
             )
           }
         >
@@ -290,6 +279,7 @@ const Quiz: FC<QuizProps> = () => {
               <Question
                 id={item}
                 index={index}
+                quizSubmit={quizSubmit}
                 onChange={(value) => onChangeChoice(value)}
               />
             ))

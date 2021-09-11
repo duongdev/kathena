@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
 import {
   CardContent,
@@ -7,24 +7,41 @@ import {
   FormControlLabel,
 } from '@material-ui/core'
 
-import { SectionCard } from '@kathena/ui'
-import { useQuestionQuery, useQuestionChoicesQuery } from 'graphql/generated'
+import { ANY } from '@kathena/types'
+import { SectionCard, Spinner } from '@kathena/ui'
+import {
+  useQuestionQuery,
+  useQuestionChoicesQuery,
+  Maybe,
+} from 'graphql/generated'
 
 export type QuestionProps = {
   id: string
   index?: number
   onChange: (value: { questionId: string; questionChoiceId: string }) => void
+  quizSubmit:
+    | {
+        id: string
+        quizId: string
+        scores: number
+        startTime?: ANY
+        questionIds?: Maybe<string[]> | undefined
+        questionChoiceIds?: Maybe<string[]> | undefined
+        createdByAccountId: string
+      }
+    | undefined
 }
 
 const Question: FC<QuestionProps> = (props) => {
-  const { id, index, onChange } = props
-  const { data } = useQuestionQuery({
+  const { id, index, onChange, quizSubmit } = props
+  const { data, loading } = useQuestionQuery({
     variables: { id },
   })
-
-  const { data: dataQuestionChoice } = useQuestionChoicesQuery({
-    variables: { questionId: id },
-  })
+  const [defaultValue, setDefaultValue] = useState('')
+  const { data: dataQuestionChoice, loading: loadingChoice } =
+    useQuestionChoicesQuery({
+      variables: { questionId: id },
+    })
 
   const question = useMemo(() => data?.question, [data])
   const questionChoices = useMemo(() => {
@@ -36,6 +53,35 @@ const Question: FC<QuestionProps> = (props) => {
     return []
   }, [dataQuestionChoice])
 
+  useEffect(() => {
+    if (quizSubmit && quizSubmit.questionIds && quizSubmit.questionChoiceIds) {
+      const i = quizSubmit.questionIds?.findIndex((item) => item === id)
+      if (i > -1) {
+        setDefaultValue(quizSubmit.questionChoiceIds[i])
+        onChange({
+          questionId: id,
+          questionChoiceId: quizSubmit.questionChoiceIds[i],
+        })
+      }
+    }
+    // eslint-disable-next-line
+  }, [id, quizSubmit])
+
+  if (loading || loadingChoice) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%',
+          margin: 20,
+        }}
+      >
+        <Spinner />
+      </div>
+    )
+  }
+
   return (
     <SectionCard
       maxContentHeight={false}
@@ -46,6 +92,7 @@ const Question: FC<QuestionProps> = (props) => {
     >
       <CardContent>
         <RadioGroup
+          defaultValue={defaultValue}
           onChange={(e) =>
             onChange({ questionId: id, questionChoiceId: e.target.value })
           }
