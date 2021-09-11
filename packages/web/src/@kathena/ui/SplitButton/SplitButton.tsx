@@ -18,10 +18,11 @@ import withComponentHocs from '../hocs/withComponentHocs'
 export type SplitButtonProps = {
   items: ButtonProps[]
   variant?: 'contained' | 'outlined' | 'text'
+  disable?: boolean
 }
 
 const SplitButton: FC<SplitButtonProps> = (props) => {
-  const { variant, items } = props
+  const { variant, items, disable } = props
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -55,6 +56,7 @@ const SplitButton: FC<SplitButtonProps> = (props) => {
         variant={variant ?? 'contained'}
         ref={anchorRef}
         aria-label="split button"
+        disabled={disable}
       >
         <Button {...items[selectedIndex]} />
         <Button

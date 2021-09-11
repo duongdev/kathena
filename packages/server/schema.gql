@@ -298,16 +298,6 @@ type ConversationsPayload {
   count: Int!
 }
 
-type Rating implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: ID!
-  targetId: ID!
-  numberOfStars: Float!
-}
-
 type Lesson implements BaseModel {
   id: ID!
   orgId: ID!
@@ -328,6 +318,74 @@ type Lesson implements BaseModel {
 type LessonsPayload {
   lessons: [Lesson!]!
   count: Int!
+}
+
+type Question implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  scores: Float!
+  createdByAccountId: ID!
+}
+
+type QuestionChoice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  questionId: ID!
+  isRight: Boolean!
+  createdByAccountId: ID!
+}
+
+type Quiz implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String
+  courseId: ID!
+  questionIds: [ID!]!
+  duration: Float
+  createdByAccountId: ID!
+  publicationState: Publication!
+}
+
+type QuizSubmit implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quizId: ID!
+  scores: Float!
+  startTime: DateTime
+  questionIds: [String!]
+  questionChoiceIds: [String!]
+  createdByAccountId: ID!
+}
+
+type QuizzesPayload {
+  quizzes: [Quiz!]!
+  count: Int!
+}
+
+type QuestionChoicesPayload {
+  questionChoices: [QuestionChoice!]!
+  idRight: String!
+}
+
+type Rating implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: ID!
+  targetId: ID!
+  numberOfStars: Float!
 }
 
 type Query {
@@ -358,6 +416,12 @@ type Query {
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
+  quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quiz(id: ID!): Quiz!
+  question(id: ID!): Question!
+  questionChoices(questionId: ID!): QuestionChoicesPayload!
+  quizSubmit(quizId: ID!): QuizSubmit!
 }
 
 input AccountsFilterInput {
@@ -425,6 +489,11 @@ input UpdateLessonPublicationByIdInput {
   courseId: ID!
 }
 
+input QuizzesFilterInput {
+  courseId: ID!
+  publicationState: Publication
+}
+
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
@@ -470,6 +539,10 @@ type Mutation {
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  createQuiz(input: CreateQuizInput!): Quiz!
+  createQuestion(input: CreateQuestionInput!): Question!
+  createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
+  submitQuiz(input: SubmitQuizInput!): QuizSubmit!
 }
 
 input CreateAccountInput {
@@ -606,6 +679,33 @@ input CommentsForTheLessonByLecturerInput {
 input CommentsForTheLessonByLecturerQuery {
   lessonId: ID!
   courseId: ID!
+}
+
+input CreateQuizInput {
+  title: String!
+  courseId: String!
+  questionIds: [String!] = []
+  duration: Float
+  description: String!
+  publicationState: Publication
+}
+
+input CreateQuestionInput {
+  title: String!
+  scores: Float!
+  questionChoicesTitle: [String!]!
+  questionChoicesRight: [Boolean!]!
+}
+
+input CreateQuizSubmitInput {
+  quizId: String!
+  startTime: DateTime!
+}
+
+input SubmitQuizInput {
+  quizSubmitId: String!
+  questionIds: [String!]!
+  questionChoiceIds: [String!]!
 }
 
 type Subscription {

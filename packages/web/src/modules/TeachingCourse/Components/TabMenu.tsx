@@ -46,7 +46,7 @@ const CustomLink = ({ title, to, exact }: ANY) => {
 const useStyles = makeStyles({
   root: {
     display: 'flex',
-    marginBottom: '10px',
+    marginBottom: '30px',
   },
   item: {
     padding: '10px 20px',
