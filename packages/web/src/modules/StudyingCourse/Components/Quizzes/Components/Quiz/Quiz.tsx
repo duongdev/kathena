@@ -274,13 +274,14 @@ const Quiz: FC<QuizProps> = () => {
             </Grid>
           </CardContent>
         </SectionCard>
-        {startTime
+        {startTime || (!startTime && isSubmited)
           ? questions.map((item, index) => (
               <Question
                 id={item}
                 index={index}
                 quizSubmit={quizSubmit}
                 onChange={(value) => onChangeChoice(value)}
+                isSubmited={!startTime && isSubmited}
               />
             ))
           : ''}

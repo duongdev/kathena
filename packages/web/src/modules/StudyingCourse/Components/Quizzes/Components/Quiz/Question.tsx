@@ -5,6 +5,9 @@ import {
   RadioGroup,
   Radio,
   FormControlLabel,
+  withStyles,
+  Checkbox,
+  CheckboxProps,
 } from '@material-ui/core'
 
 import { ANY } from '@kathena/types'
@@ -30,10 +33,33 @@ export type QuestionProps = {
         createdByAccountId: string
       }
     | undefined
+  isSubmited?: boolean
 }
 
+const CheckboxGreen = withStyles({
+  root: {
+    color: 'green',
+    '&$checked': {
+      color: 'green',
+    },
+  },
+  checked: {},
+  // eslint-disable-next-line react/jsx-props-no-spreading
+})((props: CheckboxProps) => <Checkbox color="default" {...props} />)
+
+const CheckBoxRed = withStyles({
+  root: {
+    color: 'red',
+    '&$checked': {
+      color: 'red',
+    },
+  },
+  checked: {},
+  // eslint-disable-next-line react/jsx-props-no-spreading
+})((props: CheckboxProps) => <Checkbox color="default" {...props} />)
+
 const Question: FC<QuestionProps> = (props) => {
-  const { id, index, onChange, quizSubmit } = props
+  const { id, index, onChange, quizSubmit, isSubmited } = props
   const { data, loading } = useQuestionQuery({
     variables: { id },
   })
@@ -97,13 +123,34 @@ const Question: FC<QuestionProps> = (props) => {
             onChange({ questionId: id, questionChoiceId: e.target.value })
           }
         >
-          {questionChoices.map((item) => (
-            <FormControlLabel
-              value={item.id}
-              control={<Radio />}
-              label={item.title}
-            />
-          ))}
+          {isSubmited
+            ? questionChoices.map((item) => (
+                <FormControlLabel
+                  disabled
+                  value={item.id}
+                  control={
+                    item.isRight ? (
+                      <CheckboxGreen disabled checked />
+                    ) : (
+                      <>
+                        {defaultValue === item.id ? (
+                          <CheckBoxRed disabled checked />
+                        ) : (
+                          <Checkbox disabled />
+                        )}
+                      </>
+                    )
+                  }
+                  label={item.title}
+                />
+              ))
+            : questionChoices.map((item) => (
+                <FormControlLabel
+                  value={item.id}
+                  control={<Radio />}
+                  label={item.title}
+                />
+              ))}
         </RadioGroup>
       </CardContent>
     </SectionCard>
