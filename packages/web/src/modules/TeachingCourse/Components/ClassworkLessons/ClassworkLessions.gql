@@ -57,3 +57,25 @@ query FindLessonById($lessonId: ID!) {
     avgNumberOfStars
   }
 }
+
+# Cập nhật buổi học
+mutation UpdateLesson(
+  $lessonId: ID!
+  $courseId: ID!
+  $updateInput: UpdateLessonInput!
+) {
+  updateLesson(
+    courseId: $courseId
+    lessonId: $lessonId
+    updateInput: $updateInput
+  ) {
+    id
+    createdAt
+    updatedAt
+    startTime
+    endTime
+    description
+    publicationState
+    courseId
+  }
+}
