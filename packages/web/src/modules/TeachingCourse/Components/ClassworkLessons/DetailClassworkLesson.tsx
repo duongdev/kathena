@@ -14,11 +14,14 @@ import {
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
+  useDialogState,
   SectionCard,
   Typography,
 } from '@kathena/ui'
-import { WithAuth } from 'common/auth'
+import { WithAuth, RequiredPermission } from 'common/auth'
 import { Permission, useFindLessonByIdQuery } from 'graphql/generated'
+
+import UpdateClassworkLessonDialog from './UpdateClassworkLessonDialog'
 
 export type DetailClassworkLessonProps = {}
 
@@ -26,7 +29,8 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   const classes = useStyles(props)
   const params: { id: string; courseDetailId: string } = useParams()
   const lessonId = useMemo(() => params.id, [params])
-
+  const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
   const { data, loading } = useFindLessonByIdQuery({
     variables: { lessonId },
   })
@@ -53,8 +57,21 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
         withBackButton
         maxWidth="lg"
         title={classworkLesson.description as ANY}
-        actions={[<Button variant="contained">Sửa buổi học</Button>]}
+        actions={[
+          <Button onClick={handleOpenUpdateDialog} variant="contained">
+            Sửa buổi học
+          </Button>,
+        ]}
       >
+        <RequiredPermission
+          permission={Permission.Classwork_UpdateClassworkMaterial}
+        >
+          <UpdateClassworkLessonDialog
+            open={updateDialogOpen}
+            onClose={handleCloseUpdateDialog}
+            classworkLesson={classworkLesson as ANY}
+          />
+        </RequiredPermission>
         <Grid container spacing={DASHBOARD_SPACING}>
           <Grid item xs={12} container spacing={DASHBOARD_SPACING}>
             <SectionCard
@@ -70,7 +87,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                         <InfoBlock label="Tiêu đề">
                           {classworkLesson.description}
                         </InfoBlock>
-                        <InfoBlock label="Thời gian tạo tạo">
+                        <InfoBlock label="Thời gian tạo">
                           <Typography>
                             {format(
                               new Date(classworkLesson.createdAt),
