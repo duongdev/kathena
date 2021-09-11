@@ -21,6 +21,17 @@ export class CreateQuestionInput {
   @Field((_type) => [Boolean])
   questionChoicesRight: boolean[]
 }
+@InputType()
+export class SubmitQuizInput {
+  @Field()
+  quizSubmitId: string
+
+  @Field((_type) => [String])
+  questionIds: string[]
+
+  @Field((_type) => [String])
+  questionChoiceIds: string[]
+}
 
 // @InputType()
 // export class CreateQuestionChoiceInput {
@@ -61,6 +72,15 @@ export class CreateQuizInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+}
+@InputType()
+export class CreateQuizSubmitInput {
+  @Field()
+  @IsNotEmpty({ message: 'Quiz id cannot be empty' })
+  quizId: string
+
+  @Field()
+  startTime: Date
 }
 
 @InputType()

@@ -339,6 +339,11 @@ export type CreateQuizInput = {
   publicationState?: Maybe<Publication>
 }
 
+export type CreateQuizSubmitInput = {
+  quizId: Scalars['String']
+  startTime: Scalars['DateTime']
+}
+
 export type File = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -425,6 +430,8 @@ export type Mutation = {
   createRatingForTheLesson: Rating
   createQuiz: Quiz
   createQuestion: Question
+  createQuizSubmit: QuizSubmit
+  submitQuiz: QuizSubmit
 }
 
 export type MutationCreateOrgAccountArgs = {
@@ -622,6 +629,14 @@ export type MutationCreateQuestionArgs = {
   input: CreateQuestionInput
 }
 
+export type MutationCreateQuizSubmitArgs = {
+  input: CreateQuizSubmitInput
+}
+
+export type MutationSubmitQuizArgs = {
+  input: SubmitQuizInput
+}
+
 export type Org = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -742,6 +757,7 @@ export type Query = {
   quiz: Quiz
   question: Question
   questionChoices: QuestionChoicesPayload
+  quizSubmit: QuizSubmit
 }
 
 export type QueryAccountArgs = {
@@ -878,6 +894,10 @@ export type QueryQuestionChoicesArgs = {
   questionId: Scalars['ID']
 }
 
+export type QueryQuizSubmitArgs = {
+  quizId: Scalars['ID']
+}
+
 export type Question = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -916,6 +936,19 @@ export type Quiz = BaseModel & {
   duration?: Maybe<Scalars['Float']>
   createdByAccountId: Scalars['ID']
   publicationState: Publication
+}
+
+export type QuizSubmit = BaseModel & {
+  id: Scalars['ID']
+  orgId: Scalars['ID']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  quizId: Scalars['ID']
+  scores: Scalars['Float']
+  startTime?: Maybe<Scalars['DateTime']>
+  questionIds?: Maybe<Array<Scalars['String']>>
+  questionChoiceIds?: Maybe<Array<Scalars['String']>>
+  createdByAccountId: Scalars['ID']
 }
 
 export type QuizzesFilterInput = {
@@ -958,6 +991,12 @@ export type SignInPayload = {
 export type SubmissionStatusStatistics = {
   label: Scalars['String']
   number: Scalars['Float']
+}
+
+export type SubmitQuizInput = {
+  quizSubmitId: Scalars['String']
+  questionIds: Array<Scalars['String']>
+  questionChoiceIds: Array<Scalars['String']>
 }
 
 export type Subscription = {
@@ -1693,6 +1732,54 @@ export type QuizzesStudyingQuery = {
       createdByAccountId: string
       publicationState: Publication
     }>
+  }
+}
+
+export type StartQuizMutationVariables = Exact<{
+  input: CreateQuizSubmitInput
+}>
+
+export type StartQuizMutation = {
+  createQuizSubmit: {
+    id: string
+    quizId: string
+    scores: number
+    startTime?: Maybe<any>
+    questionIds?: Maybe<Array<string>>
+    questionChoiceIds?: Maybe<Array<string>>
+    createdByAccountId: string
+  }
+}
+
+export type QuizSubmitQueryVariables = Exact<{
+  quizId: Scalars['ID']
+}>
+
+export type QuizSubmitQuery = {
+  quizSubmit: {
+    id: string
+    quizId: string
+    scores: number
+    startTime?: Maybe<any>
+    questionIds?: Maybe<Array<string>>
+    questionChoiceIds?: Maybe<Array<string>>
+    createdByAccountId: string
+  }
+}
+
+export type SubmitQuizMutationVariables = Exact<{
+  input: SubmitQuizInput
+}>
+
+export type SubmitQuizMutation = {
+  submitQuiz: {
+    id: string
+    quizId: string
+    scores: number
+    startTime?: Maybe<any>
+    questionIds?: Maybe<Array<string>>
+    questionChoiceIds?: Maybe<Array<string>>
+    createdByAccountId: string
   }
 }
 
@@ -9198,6 +9285,421 @@ export type QuizzesStudyingLazyQueryHookResult = ReturnType<
 export type QuizzesStudyingQueryResult = Apollo.QueryResult<
   QuizzesStudyingQuery,
   QuizzesStudyingQueryVariables
+>
+export const StartQuizDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'StartQuiz' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateQuizSubmitInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createQuizSubmit' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'quizId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoiceIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type StartQuizMutationFn = Apollo.MutationFunction<
+  StartQuizMutation,
+  StartQuizMutationVariables
+>
+export type StartQuizProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    StartQuizMutation,
+    StartQuizMutationVariables
+  >
+} &
+  TChildProps
+export function withStartQuiz<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    StartQuizMutation,
+    StartQuizMutationVariables,
+    StartQuizProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    StartQuizMutation,
+    StartQuizMutationVariables,
+    StartQuizProps<TChildProps, TDataName>
+  >(StartQuizDocument, {
+    alias: 'startQuiz',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useStartQuizMutation__
+ *
+ * To run a mutation, you first call `useStartQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startQuizMutation, { data, loading, error }] = useStartQuizMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useStartQuizMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    StartQuizMutation,
+    StartQuizMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<StartQuizMutation, StartQuizMutationVariables>(
+    StartQuizDocument,
+    options,
+  )
+}
+export type StartQuizMutationHookResult = ReturnType<
+  typeof useStartQuizMutation
+>
+export type StartQuizMutationResult = Apollo.MutationResult<StartQuizMutation>
+export type StartQuizMutationOptions = Apollo.BaseMutationOptions<
+  StartQuizMutation,
+  StartQuizMutationVariables
+>
+export const QuizSubmitDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'QuizSubmit' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'quizId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quizSubmit' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'quizId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'quizId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'quizId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoiceIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizSubmitProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuizSubmitQuery,
+    QuizSubmitQueryVariables
+  >
+} &
+  TChildProps
+export function withQuizSubmit<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizSubmitQuery,
+    QuizSubmitQueryVariables,
+    QuizSubmitProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizSubmitQuery,
+    QuizSubmitQueryVariables,
+    QuizSubmitProps<TChildProps, TDataName>
+  >(QuizSubmitDocument, {
+    alias: 'quizSubmit',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizSubmitQuery__
+ *
+ * To run a query within a React component, call `useQuizSubmitQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizSubmitQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizSubmitQuery({
+ *   variables: {
+ *      quizId: // value for 'quizId'
+ *   },
+ * });
+ */
+export function useQuizSubmitQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    QuizSubmitQuery,
+    QuizSubmitQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<QuizSubmitQuery, QuizSubmitQueryVariables>(
+    QuizSubmitDocument,
+    options,
+  )
+}
+export function useQuizSubmitLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuizSubmitQuery,
+    QuizSubmitQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<QuizSubmitQuery, QuizSubmitQueryVariables>(
+    QuizSubmitDocument,
+    options,
+  )
+}
+export type QuizSubmitQueryHookResult = ReturnType<typeof useQuizSubmitQuery>
+export type QuizSubmitLazyQueryHookResult = ReturnType<
+  typeof useQuizSubmitLazyQuery
+>
+export type QuizSubmitQueryResult = Apollo.QueryResult<
+  QuizSubmitQuery,
+  QuizSubmitQueryVariables
+>
+export const SubmitQuizDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SubmitQuiz' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'SubmitQuizInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'submitQuiz' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'quizId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoiceIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type SubmitQuizMutationFn = Apollo.MutationFunction<
+  SubmitQuizMutation,
+  SubmitQuizMutationVariables
+>
+export type SubmitQuizProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    SubmitQuizMutation,
+    SubmitQuizMutationVariables
+  >
+} &
+  TChildProps
+export function withSubmitQuiz<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    SubmitQuizMutation,
+    SubmitQuizMutationVariables,
+    SubmitQuizProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    SubmitQuizMutation,
+    SubmitQuizMutationVariables,
+    SubmitQuizProps<TChildProps, TDataName>
+  >(SubmitQuizDocument, {
+    alias: 'submitQuiz',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useSubmitQuizMutation__
+ *
+ * To run a mutation, you first call `useSubmitQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitQuizMutation, { data, loading, error }] = useSubmitQuizMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSubmitQuizMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SubmitQuizMutation,
+    SubmitQuizMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<SubmitQuizMutation, SubmitQuizMutationVariables>(
+    SubmitQuizDocument,
+    options,
+  )
+}
+export type SubmitQuizMutationHookResult = ReturnType<
+  typeof useSubmitQuizMutation
+>
+export type SubmitQuizMutationResult = Apollo.MutationResult<SubmitQuizMutation>
+export type SubmitQuizMutationOptions = Apollo.BaseMutationOptions<
+  SubmitQuizMutation,
+  SubmitQuizMutationVariables
 >
 export const StudyingCourseListDocument = {
   kind: 'Document',

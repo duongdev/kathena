@@ -7,7 +7,7 @@ import {
   FormControlLabel,
 } from '@material-ui/core'
 
-import { SectionCard } from '@kathena/ui'
+import { SectionCard, Spinner } from '@kathena/ui'
 import { useQuestionQuery, useQuestionChoicesQuery } from 'graphql/generated'
 
 export type QuestionProps = {
@@ -17,13 +17,14 @@ export type QuestionProps = {
 
 const Question: FC<QuestionProps> = (props) => {
   const { id, index } = props
-  const { data } = useQuestionQuery({
+  const { data, loading } = useQuestionQuery({
     variables: { id },
   })
 
-  const { data: dataQuestionChoice } = useQuestionChoicesQuery({
-    variables: { questionId: id },
-  })
+  const { data: dataQuestionChoice, loading: loadingChoice } =
+    useQuestionChoicesQuery({
+      variables: { questionId: id },
+    })
 
   const question = useMemo(() => data?.question, [data])
   const questionChoices = useMemo(
@@ -34,6 +35,21 @@ const Question: FC<QuestionProps> = (props) => {
     () => dataQuestionChoice?.questionChoices?.idRight,
     [dataQuestionChoice],
   )
+  if (loading || loadingChoice) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%',
+          margin: 20,
+        }}
+      >
+        <Spinner />
+      </div>
+    )
+  }
+
   return (
     <SectionCard
       maxContentHeight={false}

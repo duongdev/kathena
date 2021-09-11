@@ -363,6 +363,19 @@ type Quiz implements BaseModel {
   publicationState: Publication!
 }
 
+type QuizSubmit implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quizId: ID!
+  scores: Float!
+  startTime: DateTime
+  questionIds: [String!]
+  questionChoiceIds: [String!]
+  createdByAccountId: ID!
+}
+
 type QuizzesPayload {
   quizzes: [Quiz!]!
   count: Int!
@@ -406,6 +419,7 @@ type Query {
   quiz(id: ID!): Quiz!
   question(id: ID!): Question!
   questionChoices(questionId: ID!): QuestionChoicesPayload!
+  quizSubmit(quizId: ID!): QuizSubmit!
 }
 
 input AccountsFilterInput {
@@ -518,6 +532,8 @@ type Mutation {
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createQuiz(input: CreateQuizInput!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
+  createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
+  submitQuiz(input: SubmitQuizInput!): QuizSubmit!
 }
 
 input CreateAccountInput {
@@ -670,6 +686,17 @@ input CreateQuestionInput {
   scores: Float!
   questionChoicesTitle: [String!]!
   questionChoicesRight: [Boolean!]!
+}
+
+input CreateQuizSubmitInput {
+  quizId: String!
+  startTime: DateTime!
+}
+
+input SubmitQuizInput {
+  quizSubmitId: String!
+  questionIds: [String!]!
+  questionChoiceIds: [String!]!
 }
 
 type Subscription {

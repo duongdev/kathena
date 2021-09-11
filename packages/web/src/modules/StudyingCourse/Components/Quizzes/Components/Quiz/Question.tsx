@@ -13,10 +13,11 @@ import { useQuestionQuery, useQuestionChoicesQuery } from 'graphql/generated'
 export type QuestionProps = {
   id: string
   index?: number
+  onChange: (value: { questionId: string; questionChoiceId: string }) => void
 }
 
 const Question: FC<QuestionProps> = (props) => {
-  const { id, index } = props
+  const { id, index, onChange } = props
   const { data } = useQuestionQuery({
     variables: { id },
   })
@@ -44,7 +45,11 @@ const Question: FC<QuestionProps> = (props) => {
       } (${question?.scores} điểm)`}
     >
       <CardContent>
-        <RadioGroup>
+        <RadioGroup
+          onChange={(e) =>
+            onChange({ questionId: id, questionChoiceId: e.target.value })
+          }
+        >
           {questionChoices.map((item) => (
             <FormControlLabel
               value={item.id}

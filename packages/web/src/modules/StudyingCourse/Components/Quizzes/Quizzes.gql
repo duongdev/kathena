@@ -13,3 +13,39 @@ query QuizzesStudying($skip: Int!, $limit: Int!, $courseId: ID!) {
     count
   }
 }
+
+mutation StartQuiz($input: CreateQuizSubmitInput!){
+  createQuizSubmit(input: $input){
+    id
+    quizId
+    scores
+    startTime
+    questionIds
+    questionChoiceIds
+    createdByAccountId
+  }
+}
+
+query QuizSubmit($quizId: ID!){
+  quizSubmit(quizId: $quizId){
+    id
+    quizId
+    scores
+    startTime
+    questionIds
+    questionChoiceIds
+    createdByAccountId
+  }
+}
+
+mutation SubmitQuiz($input: SubmitQuizInput!){
+  submitQuiz(input: $input){
+    id
+    quizId
+    scores
+    startTime
+    questionIds
+    questionChoiceIds
+    createdByAccountId
+  }
+}
