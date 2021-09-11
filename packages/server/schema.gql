@@ -330,6 +330,64 @@ type ConversationsPayload {
   count: Int!
 }
 
+type Question implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  scores: Float!
+  createdByAccountId: ID!
+}
+
+type QuestionChoice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  questionId: ID!
+  isRight: Boolean!
+  createdByAccountId: ID!
+}
+
+type Quiz implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String
+  courseId: ID!
+  questionIds: [ID!]!
+  duration: Float
+  createdByAccountId: ID!
+  publicationState: Publication!
+}
+
+type QuizSubmit implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quizId: ID!
+  scores: Float!
+  startTime: DateTime
+  questionIds: [String!]
+  questionChoiceIds: [String!]
+  createdByAccountId: ID!
+}
+
+type QuizzesPayload {
+  quizzes: [Quiz!]!
+  count: Int!
+}
+
+type QuestionChoicesPayload {
+  questionChoices: [QuestionChoice!]!
+  idRight: String!
+}
+
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
@@ -358,6 +416,12 @@ type Query {
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
+  quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  quiz(id: ID!): Quiz!
+  question(id: ID!): Question!
+  questionChoices(questionId: ID!): QuestionChoicesPayload!
+  quizSubmit(quizId: ID!): QuizSubmit!
 }
 
 input AccountsFilterInput {
@@ -425,6 +489,11 @@ input ConversationPageOptionInput {
   limit: Int!
 }
 
+input QuizzesFilterInput {
+  courseId: ID!
+  publicationState: Publication
+}
+
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
@@ -470,6 +539,10 @@ type Mutation {
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
+  createQuiz(input: CreateQuizInput!): Quiz!
+  createQuestion(input: CreateQuestionInput!): Question!
+  createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
+  submitQuiz(input: SubmitQuizInput!): QuizSubmit!
 }
 
 input CreateAccountInput {
@@ -606,6 +679,33 @@ input CreateConversationInput {
 input RatingInput {
   targetId: ID!
   numberOfStars: Float = 1
+}
+
+input CreateQuizInput {
+  title: String!
+  courseId: String!
+  questionIds: [String!] = []
+  duration: Float
+  description: String!
+  publicationState: Publication
+}
+
+input CreateQuestionInput {
+  title: String!
+  scores: Float!
+  questionChoicesTitle: [String!]!
+  questionChoicesRight: [Boolean!]!
+}
+
+input CreateQuizSubmitInput {
+  quizId: String!
+  startTime: DateTime!
+}
+
+input SubmitQuizInput {
+  quizSubmitId: String!
+  questionIds: [String!]!
+  questionChoiceIds: [String!]!
 }
 
 type Subscription {

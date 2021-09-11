@@ -29,6 +29,9 @@ import {
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
   UPDATE_ACADEMIC_COURSE,
   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+  TEACHING_COURSE_CREATE_QUIZ,
+  TEACHING_COURSE_QUIZ,
+  STUDYING_COURSE_QUIZ,
   TEACHING_COURSE_DETAIL_CLASSWORK_LESSON,
   TEACHING_COURSE_CREATE_CLASSWORK_LESSON,
 } from 'utils/path-builder'
@@ -169,6 +172,24 @@ const DetailSubmissionClassworkAssignment = lazy(
       'modules/StudyingCourse/Components/ClassworkAssignments/DetailClassworkSubmissionAssignment'
     ) /* webpackChunkName: "modules/ClassworkAssignmentDetail/ClassworkSubmission/DetailClassworkSubmissionAssignment" */,
 )
+const CreateQuiz = lazy(
+  () =>
+    import(
+      'modules/TeachingCourse/Components/Quizzes/Components/CreateQuiz'
+    ) /* webpackChunkName: 'modules/TeachingCourse/Components/Quizzes/Components/CreateQuiz' */,
+)
+const Quiz = lazy(
+  () =>
+    import(
+      'modules/TeachingCourse/Components/Quizzes/Components/Quiz'
+    ) /* webpackChunkName: 'modules/TeachingCourse/Components/Quizzes/Components/Quiz' */,
+)
+const QuizStudying = lazy(
+  () =>
+    import(
+      'modules/StudyingCourse/Components/Quizzes/Components/Quiz'
+    ) /* webpackChunkName: 'modules/StudyingCourse/Components/Quizzes/Components/Quiz' */,
+)
 const DetailClassworkLesson = lazy(
   () =>
     import(
@@ -264,6 +285,9 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
         exact
         component={DetailSubmissionClassworkAssignment}
       />
+      <Route path={TEACHING_COURSE_CREATE_QUIZ} exact component={CreateQuiz} />
+      <Route path={TEACHING_COURSE_QUIZ} exact component={Quiz} />
+      <Route path={STUDYING_COURSE_QUIZ} exact component={QuizStudying} />
       <Route
         path={TEACHING_COURSE_DETAIL_CLASSWORK_LESSON}
         exact

@@ -37,6 +37,9 @@ export const TEACHING_COURSE_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/deta
 export const TEACHING_COURSE_CREATE_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/classwork-materials/create`
 export const TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS = `${TEACHING_COURSES}/:id/classwork-materials/detail`
 export const TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS = `${TEACHING_COURSES}/:id/classwork-submissions/detail`
+export const TEACHING_COURSE_QUIZZES = `${TEACHING_COURSES}/:id/detail/quizzes`
+export const TEACHING_COURSE_CREATE_QUIZ = `${TEACHING_COURSES}/:id/quizzes/create`
+export const TEACHING_COURSE_QUIZ = `${TEACHING_COURSES}/:id/quiz/detail`
 export const TEACHING_COURSE_CLASSWORK_LESSONS = `${TEACHING_COURSES}/:id/detail/classwork-lessons`
 export const TEACHING_COURSE_DETAIL_CLASSWORK_LESSON = `${TEACHING_COURSES}/classwork-lessons/:id/detail`
 export const TEACHING_COURSE_CREATE_CLASSWORK_LESSON = `${TEACHING_COURSES}/:id/classwork-lesson/create`
@@ -52,6 +55,8 @@ export const STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYI
 export const STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS = `${STUDYING_COURSES}/:id/classwork-material/detail`
 export const STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS = `${STUDYING_COURSES}/:id/classwork-assignments/Submission`
 export const STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS = `${STUDYING_COURSES}/:id/detail/list-of-submitted-assignments`
+export const STUDYING_COURSE_QUIZZES = `${STUDYING_COURSES}/:id/detail/quizzes`
+export const STUDYING_COURSE_QUIZ = `${STUDYING_COURSES}/:id/quiz/detail`
 
 export const ORG_SETTINGS = `${ORG_WORKSPACE}/org-settings`
 
