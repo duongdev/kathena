@@ -59,7 +59,16 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
   )
   const { enqueueSnackbar } = useSnackbar()
 
-  const initialValues: ANY = useMemo(() => classworkLesson, [classworkLesson])
+  const initialValues: ANY = useMemo(
+    () => ({
+      description: classworkLesson.description,
+      startDay: '',
+      startTime: '',
+      endDay: '',
+      endTime: '',
+    }),
+    [classworkLesson.description],
+  )
 
   const handleUpdateClassworkLesson = useCallback(
     async (input: UpdateClassworkLessonFormInput) => {
@@ -105,6 +114,7 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
   return (
     <FormDialog
       open={open}
+      width="40vw"
       onClose={onClose}
       initialValues={initialValues}
       validationSchema={validationSchema}
