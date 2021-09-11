@@ -6,6 +6,7 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { LessonService } from 'modules/lesson/lesson.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
@@ -17,6 +18,7 @@ describe('rating.service', () => {
   let academicService: AcademicService
   let orgService: OrgService
   let authService: AuthService
+  let lessonService: LessonService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -29,6 +31,7 @@ describe('rating.service', () => {
     academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
+    lessonService = module.get<LessonService>(LessonService)
   })
 
   afterAll(async () => {
@@ -166,7 +169,7 @@ describe('rating.service', () => {
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
 
-      const lesson = await academicService.createLesson(
+      const lesson = await lessonService.createLesson(
         course.orgId,
         objectId(),
         createLessonInput,
