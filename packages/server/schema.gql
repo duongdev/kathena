@@ -200,6 +200,8 @@ type Lesson implements BaseModel {
   orgId: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  createdByAccountId: ID!
+  updatedByAccountId: ID!
   startTime: DateTime!
   endTime: DateTime!
   description: String
@@ -208,6 +210,21 @@ type Lesson implements BaseModel {
   courseId: ID!
   publicationState: Publication!
   avgNumberOfStars: Float!
+}
+
+type AcademicSubjectsPayload {
+  academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
+}
+
+type LessonsPayload {
+  lessons: [Lesson!]!
+  count: Int!
 }
 
 type AuthenticatePayload {
@@ -278,21 +295,6 @@ type SignInPayload {
 
 type OrgAccountsPayload {
   accounts: [Account!]!
-  count: Int!
-}
-
-type AcademicSubjectsPayload {
-  academicSubjects: [AcademicSubject!]!
-  count: Int!
-}
-
-type CoursesPayload {
-  courses: [Course!]!
-  count: Int!
-}
-
-type LessonsPayload {
-  lessons: [Lesson!]!
   count: Int!
 }
 
@@ -450,11 +452,18 @@ input AvgGradeOfClassworkByCourseOptionInput {
 }
 
 input LessonsFilterInput {
-  orgId: ID!
   courseId: ID!
   startTime: DateTime = null
   endTime: DateTime = null
   absentStudentId: ID = null
+  ratingStar: Float = null
+  status: LessonsFilterInputStatus!
+}
+
+enum LessonsFilterInputStatus {
+  academic
+  studying
+  teaching
 }
 
 input UpdateLessonPublicationByIdInput {

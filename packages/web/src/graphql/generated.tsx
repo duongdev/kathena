@@ -366,6 +366,8 @@ export type Lesson = BaseModel & {
   orgId: Scalars['ID']
   createdAt: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
+  createdByAccountId: Scalars['ID']
+  updatedByAccountId: Scalars['ID']
   startTime: Scalars['DateTime']
   endTime: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
@@ -377,11 +379,18 @@ export type Lesson = BaseModel & {
 }
 
 export type LessonsFilterInput = {
-  orgId: Scalars['ID']
   courseId: Scalars['ID']
   startTime?: Maybe<Scalars['DateTime']>
   endTime?: Maybe<Scalars['DateTime']>
   absentStudentId?: Maybe<Scalars['ID']>
+  ratingStar?: Maybe<Scalars['Float']>
+  status: LessonsFilterInputStatus
+}
+
+export enum LessonsFilterInputStatus {
+  academic = 'academic',
+  studying = 'studying',
+  teaching = 'teaching',
 }
 
 export type LessonsPayload = {
@@ -1828,6 +1837,95 @@ export type ClassworkAssignmentListQuery = {
       attachments: Array<string>
       dueDate?: Maybe<any>
     }>
+  }
+}
+
+export type CreateLessonMutationVariables = Exact<{
+  createLessonInput: CreateLessonInput
+}>
+
+export type CreateLessonMutation = {
+  createLesson: {
+    id: string
+    orgId: string
+    createdAt: any
+    createdByAccountId: string
+    updatedByAccountId: string
+    startTime: any
+    endTime: any
+    description?: Maybe<string>
+    absentStudentIds: Array<string>
+    lecturerComment?: Maybe<string>
+    courseId: string
+    publicationState: Publication
+    avgNumberOfStars: number
+  }
+}
+
+export type ListLessonsQueryVariables = Exact<{
+  filter: LessonsFilterInput
+  pageOptions: PageOptionsInput
+}>
+
+export type ListLessonsQuery = {
+  lessons: {
+    count: number
+    lessons: Array<{
+      id: string
+      orgId: string
+      createdAt: any
+      updatedAt: any
+      createdByAccountId: string
+      startTime: any
+      endTime: any
+      description?: Maybe<string>
+      absentStudentIds: Array<string>
+      lecturerComment?: Maybe<string>
+      courseId: string
+      publicationState: Publication
+      avgNumberOfStars: number
+    }>
+  }
+}
+
+export type FindLessonByIdQueryVariables = Exact<{
+  lessonId: Scalars['ID']
+}>
+
+export type FindLessonByIdQuery = {
+  findLessonById: {
+    id: string
+    orgId: string
+    createdAt: any
+    updatedAt: any
+    createdByAccountId: string
+    startTime: any
+    endTime: any
+    description?: Maybe<string>
+    absentStudentIds: Array<string>
+    lecturerComment?: Maybe<string>
+    courseId: string
+    publicationState: Publication
+    avgNumberOfStars: number
+  }
+}
+
+export type UpdateLessonMutationVariables = Exact<{
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+  updateInput: UpdateLessonInput
+}>
+
+export type UpdateLessonMutation = {
+  updateLesson: {
+    id: string
+    createdAt: any
+    updatedAt: any
+    startTime: any
+    endTime: any
+    description?: Maybe<string>
+    publicationState: Publication
+    courseId: string
   }
 }
 
@@ -10169,6 +10267,706 @@ export type ClassworkAssignmentListLazyQueryHookResult = ReturnType<
 export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
+>
+export const CreateLessonDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateLesson' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'createLessonInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateLessonInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createLesson' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'createLessonInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'createLessonInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'updatedByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'absentStudentIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lecturerComment' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avgNumberOfStars' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CreateLessonMutationFn = Apollo.MutationFunction<
+  CreateLessonMutation,
+  CreateLessonMutationVariables
+>
+export type CreateLessonProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >
+} &
+  TChildProps
+export function withCreateLesson<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateLessonMutation,
+    CreateLessonMutationVariables,
+    CreateLessonProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateLessonMutation,
+    CreateLessonMutationVariables,
+    CreateLessonProps<TChildProps, TDataName>
+  >(CreateLessonDocument, {
+    alias: 'createLesson',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCreateLessonMutation__
+ *
+ * To run a mutation, you first call `useCreateLessonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLessonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLessonMutation, { data, loading, error }] = useCreateLessonMutation({
+ *   variables: {
+ *      createLessonInput: // value for 'createLessonInput'
+ *   },
+ * });
+ */
+export function useCreateLessonMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    CreateLessonMutation,
+    CreateLessonMutationVariables
+  >(CreateLessonDocument, options)
+}
+export type CreateLessonMutationHookResult = ReturnType<
+  typeof useCreateLessonMutation
+>
+export type CreateLessonMutationResult =
+  Apollo.MutationResult<CreateLessonMutation>
+export type CreateLessonMutationOptions = Apollo.BaseMutationOptions<
+  CreateLessonMutation,
+  CreateLessonMutationVariables
+>
+export const ListLessonsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ListLessons' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'LessonsFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'pageOptions' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PageOptionsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lessons' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'pageOptions' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lessons' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'absentStudentIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lecturerComment' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'courseId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationState' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'avgNumberOfStars' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type ListLessonsProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >
+} &
+  TChildProps
+export function withListLessons<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    ListLessonsQuery,
+    ListLessonsQueryVariables,
+    ListLessonsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    ListLessonsQuery,
+    ListLessonsQueryVariables,
+    ListLessonsProps<TChildProps, TDataName>
+  >(ListLessonsDocument, {
+    alias: 'listLessons',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useListLessonsQuery__
+ *
+ * To run a query within a React component, call `useListLessonsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListLessonsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListLessonsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      pageOptions: // value for 'pageOptions'
+ *   },
+ * });
+ */
+export function useListLessonsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ListLessonsQuery, ListLessonsQueryVariables>(
+    ListLessonsDocument,
+    options,
+  )
+}
+export function useListLessonsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListLessonsQuery,
+    ListLessonsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ListLessonsQuery, ListLessonsQueryVariables>(
+    ListLessonsDocument,
+    options,
+  )
+}
+export type ListLessonsQueryHookResult = ReturnType<typeof useListLessonsQuery>
+export type ListLessonsLazyQueryHookResult = ReturnType<
+  typeof useListLessonsLazyQuery
+>
+export type ListLessonsQueryResult = Apollo.QueryResult<
+  ListLessonsQuery,
+  ListLessonsQueryVariables
+>
+export const FindLessonByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindLessonById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lessonId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findLessonById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lessonId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lessonId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'absentStudentIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lecturerComment' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'avgNumberOfStars' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindLessonByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindLessonById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables,
+    FindLessonByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables,
+    FindLessonByIdProps<TChildProps, TDataName>
+  >(FindLessonByIdDocument, {
+    alias: 'findLessonById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindLessonByIdQuery__
+ *
+ * To run a query within a React component, call `useFindLessonByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindLessonByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindLessonByIdQuery({
+ *   variables: {
+ *      lessonId: // value for 'lessonId'
+ *   },
+ * });
+ */
+export function useFindLessonByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FindLessonByIdQuery, FindLessonByIdQueryVariables>(
+    FindLessonByIdDocument,
+    options,
+  )
+}
+export function useFindLessonByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindLessonByIdQuery,
+    FindLessonByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FindLessonByIdQuery, FindLessonByIdQueryVariables>(
+    FindLessonByIdDocument,
+    options,
+  )
+}
+export type FindLessonByIdQueryHookResult = ReturnType<
+  typeof useFindLessonByIdQuery
+>
+export type FindLessonByIdLazyQueryHookResult = ReturnType<
+  typeof useFindLessonByIdLazyQuery
+>
+export type FindLessonByIdQueryResult = Apollo.QueryResult<
+  FindLessonByIdQuery,
+  FindLessonByIdQueryVariables
+>
+export const UpdateLessonDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateLesson' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'lessonId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updateInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateLessonInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateLesson' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'lessonId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'lessonId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updateInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updateInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'endTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateLessonMutationFn = Apollo.MutationFunction<
+  UpdateLessonMutation,
+  UpdateLessonMutationVariables
+>
+export type UpdateLessonProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateLessonMutation,
+    UpdateLessonMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdateLesson<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateLessonMutation,
+    UpdateLessonMutationVariables,
+    UpdateLessonProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateLessonMutation,
+    UpdateLessonMutationVariables,
+    UpdateLessonProps<TChildProps, TDataName>
+  >(UpdateLessonDocument, {
+    alias: 'updateLesson',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateLessonMutation__
+ *
+ * To run a mutation, you first call `useUpdateLessonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLessonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLessonMutation, { data, loading, error }] = useUpdateLessonMutation({
+ *   variables: {
+ *      lessonId: // value for 'lessonId'
+ *      courseId: // value for 'courseId'
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateLessonMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLessonMutation,
+    UpdateLessonMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateLessonMutation,
+    UpdateLessonMutationVariables
+  >(UpdateLessonDocument, options)
+}
+export type UpdateLessonMutationHookResult = ReturnType<
+  typeof useUpdateLessonMutation
+>
+export type UpdateLessonMutationResult =
+  Apollo.MutationResult<UpdateLessonMutation>
+export type UpdateLessonMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLessonMutation,
+  UpdateLessonMutationVariables
 >
 export const ClassworkMaterialsListDocument = {
   kind: 'Document',

@@ -1,7 +1,6 @@
 import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { ForbiddenError } from 'type-graphql'
 
 import { Logger } from 'core'
 import { CurrentOrg, UseAuthGuard, CurrentAccount } from 'core/auth'
@@ -42,8 +41,13 @@ export class LessonResolver {
     @Args('createLessonInput', { type: () => CreateLessonInput })
     createLessonInput: CreateLessonInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.createLesson(org.id, createLessonInput)
+    return this.academicService.createLesson(
+      org.id,
+      account.id,
+      createLessonInput,
+    )
   }
 
   @Query((_returns) => LessonsPayload)
@@ -51,14 +55,18 @@ export class LessonResolver {
   async lessons(
     @Args('pageOptions', { type: () => PageOptionsInput })
     pageOptions: PageOptionsInput,
-    @CurrentOrg() org: Org,
     @Args('filter', { type: () => LessonsFilterInput })
     filter: LessonsFilterInput,
+    @CurrentAccount()
+    account: Account,
+    @CurrentOrg() org: Org,
   ): Promise<LessonsPayload> {
-    if (org.id !== filter.orgId) {
-      throw new ForbiddenError()
-    }
-    return this.academicService.findAndPaginateLessons(pageOptions, filter)
+    return this.academicService.findAndPaginateLessons(
+      pageOptions,
+      filter,
+      account.id,
+      org.id,
+    )
   }
 
   @Mutation((_returns) => Lesson)
@@ -70,6 +78,7 @@ export class LessonResolver {
     @Args('updateInput', { type: () => UpdateLessonInput })
     updateInput: UpdateLessonInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.updateLessonById(
       {
@@ -78,6 +87,7 @@ export class LessonResolver {
         courseId,
       },
       updateInput,
+      account.id,
     )
   }
 
@@ -90,6 +100,7 @@ export class LessonResolver {
     @Args('absentStudentIds', { type: () => [String] })
     absentStudentIds: string[],
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.addAbsentStudentsToLesson(
       {
@@ -98,6 +109,7 @@ export class LessonResolver {
         courseId,
       },
       absentStudentIds,
+      account.id,
     )
   }
 
@@ -110,6 +122,7 @@ export class LessonResolver {
     @Args('absentStudentIds', { type: () => [String] })
     absentStudentIds: string[],
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.removeAbsentStudentsFromLesson(
       {
@@ -118,6 +131,7 @@ export class LessonResolver {
         courseId,
       },
       absentStudentIds,
+      account.id,
     )
   }
 
@@ -155,9 +169,11 @@ export class LessonResolver {
     })
     commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
     @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
     return this.academicService.commentsForTheLessonByLecturer(
       org.id,
+      account.id,
       commentsForTheLessonByLecturerQuery,
       commentsForTheLessonByLecturerInput,
     )

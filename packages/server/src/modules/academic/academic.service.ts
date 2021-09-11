@@ -24,6 +24,8 @@ import {
   CreateCourseInput,
   CreateLessonInput,
   LessonsFilterInput,
+  LessonsFilterInputStatus,
+  LessonsPayload,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
 } from './academic.type'
@@ -637,6 +639,7 @@ export class AcademicService {
 
   async createLesson(
     orgId: string,
+    createdByAccountId: string,
     createLessonInput: CreateLessonInput,
   ): Promise<DocumentType<Lesson>> {
     const { lessonModel, courseModel } = this
@@ -651,6 +654,15 @@ export class AcademicService {
 
     if (!course) {
       throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        createdByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
     const startTimeInput = new Date(startTime)
@@ -687,6 +699,8 @@ export class AcademicService {
     })
 
     const lesson = lessonModel.create({
+      createdByAccountId,
+      updatedByAccountId: createdByAccountId,
       startTime: startTimeInput,
       endTime: endTimeInput,
       description,
@@ -701,49 +715,175 @@ export class AcademicService {
   async findAndPaginateLessons(
     pageOptions: PageOptionsInput,
     filter: LessonsFilterInput,
-  ): Promise<{ lessons: DocumentType<Lesson>[]; count: number }> {
-    const { orgId, courseId, startTime, endTime, absentStudentId } = filter
+    accountId: string,
+    orgId: string,
+  ): Promise<LessonsPayload> {
+    this.logger.log(`[${this.findAndPaginateLessons.name}] finding... `)
+    this.logger.verbose({
+      pageOptions,
+      filter,
+      accountId,
+      orgId,
+    })
+
+    const {
+      courseId,
+      startTime,
+      endTime,
+      absentStudentId,
+      ratingStar,
+      status,
+    } = filter
     const { limit, skip } = pageOptions
 
-    const lessonModel = this.lessonModel.find({
-      orgId,
-      courseId,
-      publicationState: Publication.Published,
-    })
+    const course = await this.findCourseById(courseId, orgId)
+
+    if (!course) {
+      throw new Error(`COURSE_DON'T_EXIT`)
+    }
+
+    const accountHasRoles = await this.authService.getAccountRoles(accountId)
+    if (!accountHasRoles.length) {
+      throw new Error(`ACCOUNT_DON'T_HAVE_ROLE`)
+    }
+
+    const pipeline: ANY = [
+      {
+        $match: {
+          orgId: mongoose.Types.ObjectId(orgId),
+        },
+      },
+      {
+        $match: {
+          courseId: mongoose.Types.ObjectId(courseId),
+        },
+      },
+    ]
+
+    switch (status) {
+      case LessonsFilterInputStatus.academic: {
+        let hasPermission = false
+        const lecturerRole = 4
+        accountHasRoles.every((role): boolean => {
+          if (role.priority < lecturerRole) {
+            hasPermission = true
+            return false
+          }
+          return true
+        })
+
+        if (!hasPermission) throw new Error(`DON'T_HAVE_PERMISSION`)
+        break
+      }
+
+      case LessonsFilterInputStatus.teaching: {
+        if (
+          !(await this.authService.canAccountManageCourse(accountId, courseId))
+        ) {
+          throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+        }
+        break
+      }
+
+      case LessonsFilterInputStatus.studying: {
+        if (course.studentIds.includes(accountId)) {
+          pipeline.push({
+            $match: {
+              publicationState: Publication.Published,
+            },
+          })
+        } else {
+          throw new Error(`STUDENT_DON'T_EXIST_FORM_COURSE`)
+        }
+        break
+      }
+
+      default: {
+        throw new Error(`STATUS_NOT_FOUND`)
+      }
+    }
+
     if (startTime) {
-      lessonModel.find({
-        startTime: {
-          $gte: new Date(startTime),
+      pipeline.push({
+        $match: {
+          startTime: {
+            $gte: new Date(startTime),
+          },
         },
       })
     }
 
     if (endTime) {
-      lessonModel.find({
-        endTime: {
-          $lte: new Date(endTime),
+      pipeline.push({
+        $match: {
+          endTime: {
+            $lte: new Date(endTime),
+          },
         },
       })
     }
 
     if (absentStudentId) {
-      lessonModel.find({
-        $expr: {
-          $in: [mongoose.Types.ObjectId(absentStudentId), '$absentStudentIds'],
+      pipeline.push({
+        $match: {
+          $expr: {
+            $in: [
+              mongoose.Types.ObjectId(absentStudentId),
+              '$absentStudentIds',
+            ],
+          },
         },
       })
     }
 
-    lessonModel.sort({ startTime: 1 }).skip(skip).limit(limit)
+    if (ratingStar !== null) {
+      pipeline.push({
+        $match: {
+          $expr: {
+            $eq: [{ $round: ['$avgNumberOfStars', 0] }, ratingStar],
+          },
+        },
+      })
+    }
 
-    const lessons = await lessonModel
-
-    const count = await this.lessonModel.countDocuments({
-      orgId,
-      courseId,
-      publicationState: Publication.Published,
+    pipeline.push({
+      $sort: { startTime: 1 },
     })
-    return { lessons, count }
+
+    let lessons = await this.lessonModel.aggregate(pipeline)
+
+    const count = lessons.length
+
+    lessons = lessons.slice(skip, skip + limit >= count ? count : skip + limit)
+
+    this.logger.log(`[${this.findAndPaginateLessons.name}] done ! `)
+    this.logger.verbose({ lessons, count })
+
+    const lessonsPayload = new LessonsPayload()
+
+    lessonsPayload.lessons = await lessons.map((el): Lesson => {
+      const lesson = {
+        // eslint-disable-next-line no-underscore-dangle
+        id: el._id,
+        absentStudentIds: el.absentStudentIds,
+        lecturerComment: el.lecturerComment,
+        publicationState: el.publicationState,
+        avgNumberOfStars: el.avgNumberOfStars,
+        createdByAccountId: el.createdByAccountId,
+        updatedByAccountI: el.updatedByAccountI,
+        startTime: el.startTime,
+        endTime: el.endTime,
+        description: el.description,
+        courseId: el.courseId,
+        orgId: el.orgId,
+        createdAt: el.createdAt,
+        updatedAt: el.updatedAt,
+      } as ANY
+      return lesson
+    })
+    lessonsPayload.count = count
+
+    return lessonsPayload
   }
 
   async updateLessonById(
@@ -753,10 +893,20 @@ export class AcademicService {
       courseId: string
     },
     updateInput: UpdateLessonInput,
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { startTime, endTime, description, publicationState } = updateInput
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -813,6 +963,7 @@ export class AcademicService {
 
     if (publicationState) {
       lesson.publicationState = publicationState
+      lesson.updatedByAccountId = updatedByAccountId
     }
 
     const update = await lesson.save()
@@ -826,9 +977,19 @@ export class AcademicService {
       courseId: string
     },
     absentStudentIds: string[],
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -866,6 +1027,7 @@ export class AcademicService {
         lesson.absentStudentIds.push(id)
       }
     })
+    lesson.updatedByAccountId = updatedByAccountId
 
     const update = await lesson.save()
     return update
@@ -878,9 +1040,19 @@ export class AcademicService {
       courseId: string
     },
     absentStudentIds: string[],
+    updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
     const { lessonModel } = this
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -917,12 +1089,11 @@ export class AcademicService {
     absentStudentIds.map((id) =>
       lesson.absentStudentIds.splice(lesson.absentStudentIds.indexOf(id), 1),
     )
+    lesson.updatedByAccountId = updatedByAccountId
 
     const update = await lesson.save()
     return update
   }
-
-  // TODO: [BE] Implement academicService.updateLessonPublicationById
 
   async findLessonById(
     lessonId: string,
@@ -933,12 +1104,17 @@ export class AcademicService {
 
   async commentsForTheLessonByLecturer(
     orgId: string,
+    accountId: string,
     query: CommentsForTheLessonByLecturerQuery,
     commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, courseId } = query
     const { comment } = commentsForTheLessonByLecturerInput
     const { lessonModel } = this
+
+    if (!(await this.authService.canAccountManageCourse(accountId, courseId))) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
 
     const lesson = await lessonModel.findOne({
       _id: lessonId,
@@ -955,6 +1131,7 @@ export class AcademicService {
     }
 
     lesson.lecturerComment = comment
+    lesson.updatedByAccountId = accountId
 
     const update = await lesson.save()
     return update
@@ -975,7 +1152,12 @@ export class AcademicService {
 
     const lesson = await this.lessonModel.findByIdAndUpdate(
       lessonId,
-      { $set: { publicationState } },
+      {
+        $set: {
+          publicationState,
+          updatedByAccountId: accountId,
+        },
+      },
       { new: true },
     )
 
