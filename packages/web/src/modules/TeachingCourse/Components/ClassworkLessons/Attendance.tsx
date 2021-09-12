@@ -80,7 +80,7 @@ const Attendance: FC<AttendanceProps> = (props) => {
               className={`${classes.item} ${absent ? classes.active : ''}`}
             >
               <AccountAvatar accountId={item} />
-              <AccountDisplayName accountId={item} />
+              <AccountDisplayName maxWidth={100} accountId={item} />
             </div>
           )
         })}
