@@ -1056,6 +1056,7 @@ export type UpdateLessonInput = {
   startTime?: Maybe<Scalars['DateTime']>
   endTime?: Maybe<Scalars['DateTime']>
   description?: Maybe<Scalars['String']>
+  absentStudentIds?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
 }
 

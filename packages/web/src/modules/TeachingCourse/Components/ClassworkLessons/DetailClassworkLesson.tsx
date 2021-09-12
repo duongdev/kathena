@@ -150,12 +150,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12, md: 3 }}
-            title="Sinh viên vắng mặt: 3 sv"
-            // action={
-            //   <Typography align="left" style={{ paddingRight: '1em' }}>
-            //     Số lượng vắng: {classworkLesson.absentStudentIds.length}
-            //   </Typography>
-            // }
+            title={`SV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
           >
             <CardContent>
               {classworkLesson.absentStudentIds.length ? (

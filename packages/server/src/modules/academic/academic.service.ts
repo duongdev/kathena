@@ -896,7 +896,13 @@ export class AcademicService {
     updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
-    const { startTime, endTime, description, publicationState } = updateInput
+    const {
+      startTime,
+      endTime,
+      description,
+      publicationState,
+      absentStudentIds,
+    } = updateInput
     const { lessonModel } = this
 
     if (
@@ -924,6 +930,10 @@ export class AcademicService {
 
     if (endTime) {
       lesson.endTime = endTime
+    }
+
+    if (absentStudentIds) {
+      lesson.absentStudentIds = absentStudentIds
     }
 
     if (lesson.endTime < lesson.startTime) {
