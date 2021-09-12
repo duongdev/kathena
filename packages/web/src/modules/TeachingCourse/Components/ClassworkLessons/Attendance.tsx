@@ -6,33 +6,37 @@ import AccountDisplayName from 'components/AccountDisplayName'
 
 import { ANY } from '@kathena/types'
 import { Button, Dialog } from '@kathena/ui'
-import { Maybe, useFindCourseByIdQuery } from 'graphql/generated'
+import { Maybe, Publication, useFindCourseByIdQuery } from 'graphql/generated'
 
 export type AttendanceProps = {
   open: boolean
   onClose: () => void
   idCourse: string
-  lesson: {
-    id: string;
-    orgId: string;
-    createdAt: ANY;
-    updatedAt: ANY;
-    createdByAccountId: string;
-    startTime: ANY;
-    endTime: ANY;
-    description?: Maybe<string> | undefined;
-    absentStudentIds: string[];
-    courseId: string;
-    publicationState: Publication;
-    avgNumberOfStars: number;
-} | undefined
+  lesson:
+    | {
+        id: string
+        orgId: string
+        createdAt: ANY
+        updatedAt: ANY
+        createdByAccountId: string
+        startTime: ANY
+        endTime: ANY
+        description?: Maybe<string> | undefined
+        absentStudentIds: string[]
+        courseId: string
+        publicationState: Publication
+        avgNumberOfStars: number
+      }
+    | undefined
 }
 
 const Attendance: FC<AttendanceProps> = (props) => {
+  const { open, onClose, lesson } = props
   const classes = useStyles(props)
   const [students, setStudents] = useState<string[]>([])
-  const [absentStudentIds, setAbsentStudentIds] = useState<string[]>([])
-  const { open, onClose } = props
+  const [absentStudentIds, setAbsentStudentIds] = useState<string[]>(
+    lesson?.absentStudentIds ?? [],
+  )
   const { data: dataCourse } = useFindCourseByIdQuery({
     variables: {
       id: props.idCourse,

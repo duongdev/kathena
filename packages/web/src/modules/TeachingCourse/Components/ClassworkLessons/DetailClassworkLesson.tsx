@@ -79,6 +79,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           />
         </RequiredPermission>
         <Attendance
+          lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
           open={attendanceOpen}
           onClose={handleCloseAttendance}
