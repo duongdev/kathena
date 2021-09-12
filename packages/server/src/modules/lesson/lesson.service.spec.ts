@@ -7,6 +7,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
 
@@ -14,13 +15,14 @@ import { LessonService } from './lesson.service'
 import { LessonsFilterInputStatus } from './lesson.type'
 import { Lesson } from './models/Lesson'
 
-describe('rating.service', () => {
+describe('lesson.service', () => {
   let module: TestingModule
   let academicService: AcademicService
   let orgService: OrgService
   let authService: AuthService
   let lessonService: LessonService
   let accountService: AccountService
+  let courseService: CourseService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -34,6 +36,7 @@ describe('rating.service', () => {
     authService = module.get<AuthService>(AuthService)
     lessonService = module.get<LessonService>(LessonService)
     accountService = module.get<AccountService>(AccountService)
+    courseService = module.get<CourseService>(CourseService)
   })
 
   afterAll(async () => {
@@ -113,7 +116,7 @@ describe('rating.service', () => {
         .mockResolvedValueOnce(true)
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       createLessonInput.startTime = new Date('2021-08-15 14:00')
@@ -142,7 +145,7 @@ describe('rating.service', () => {
         .mockResolvedValueOnce(true)
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
         .mockResolvedValueOnce(course)
         .mockResolvedValueOnce(course)
@@ -205,7 +208,7 @@ describe('rating.service', () => {
         .mockResolvedValueOnce(true)
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lessons: ANY = [
@@ -377,7 +380,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(course as ANY)
 
       jest
@@ -404,7 +407,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(course as ANY)
 
       jest
@@ -431,7 +434,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(course as ANY)
 
       jest
@@ -462,7 +465,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce({ ...course, studentIds: [objectId()] } as ANY)
 
       jest
@@ -493,7 +496,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(course as ANY)
 
       jest
@@ -551,7 +554,7 @@ describe('rating.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(course as ANY)
 
       jest
@@ -619,7 +622,7 @@ describe('rating.service', () => {
       const studentRoles = 'student'
 
       jest
-        .spyOn(academicService, 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(courseMock as ANY)
 
       jest
@@ -859,7 +862,7 @@ describe('rating.service', () => {
         .mockResolvedValueOnce(true as never)
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       jest
@@ -956,7 +959,7 @@ describe('rating.service', () => {
       })
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lesson = await lessonService.createLesson(
@@ -1017,7 +1020,7 @@ describe('rating.service', () => {
       })
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lesson = await lessonService.createLesson(
@@ -1106,7 +1109,7 @@ describe('rating.service', () => {
       })
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lesson = await lessonService.createLesson(
@@ -1167,7 +1170,7 @@ describe('rating.service', () => {
       })
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lesson = await lessonService.createLesson(
@@ -1360,7 +1363,7 @@ describe('rating.service', () => {
       const orgId = objectId()
 
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
       const lesson = await lessonService.createLesson(

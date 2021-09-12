@@ -5,9 +5,10 @@ import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
-import { CreateCourseInput } from 'modules/academic/academic.type'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
+import { CreateCourseInput } from 'modules/course/course.type'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
@@ -32,6 +33,7 @@ describe('classwork.service', () => {
   let orgOfficeService: OrgOfficeService
   let authService: AuthService
   let accountService: AccountService
+  let courseService: CourseService
   let academicService: AcademicService
 
   beforeAll(async () => {
@@ -46,6 +48,7 @@ describe('classwork.service', () => {
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     authService = module.get<AuthService>(AuthService)
     accountService = module.get<AccountService>(AccountService)
+    courseService = module.get<CourseService>(CourseService)
   })
 
   afterAll(async () => {
@@ -572,7 +575,7 @@ describe('classwork.service', () => {
           lecturerIds: [lecturerAccount.id],
         }
 
-        const course = await academicService.createCourse(
+        const course = await courseService.createCourse(
           creatorAccount.id,
           org.id,
           {
@@ -710,7 +713,7 @@ describe('classwork.service', () => {
           lecturerIds: [lecturerAccount.id],
         }
 
-        const course = await academicService.createCourse(
+        const course = await courseService.createCourse(
           creatorAccount.id,
           org.id,
           {
@@ -964,7 +967,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1087,7 +1090,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1167,7 +1170,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1244,7 +1247,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1322,7 +1325,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1404,7 +1407,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1530,7 +1533,7 @@ describe('classwork.service', () => {
           lecturerIds: [lecturerAccount.id],
         }
 
-        const course = await academicService.createCourse(
+        const course = await courseService.createCourse(
           creatorAccount.id,
           org.id,
           {
@@ -1701,7 +1704,7 @@ describe('classwork.service', () => {
           lecturerIds: [lecturerAccount.id],
         }
 
-        const course = await academicService.createCourse(
+        const course = await courseService.createCourse(
           creatorAccount.id,
           org.id,
           {
@@ -1899,7 +1902,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           accountLecturer.orgId,
           {
@@ -1972,7 +1975,7 @@ describe('classwork.service', () => {
           .spyOn(orgOfficeService, 'findOrgOfficeById')
           .mockResolvedValueOnce(true as never)
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           objectId(),
           org.id,
           {
@@ -2070,7 +2073,7 @@ describe('classwork.service', () => {
           lecturerIds: [accountLecturer.id],
         }
 
-        const courseTest = await academicService.createCourse(
+        const courseTest = await courseService.createCourse(
           accountAdmin.id,
           accountLecturer.orgId,
           {
@@ -2204,7 +2207,7 @@ describe('classwork.service', () => {
           lecturerIds: [accLecturer.id],
         }
 
-        const course = await academicService.createCourse(accAdmin.id, org.id, {
+        const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
           startDate: Date.now(),
           lecturerIds: [accLecturer.id],
@@ -3326,7 +3329,7 @@ describe('classwork.service', () => {
           lecturerIds: [accLecturer.id],
         }
 
-        const course = await academicService.createCourse(accAdmin.id, org.id, {
+        const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
           startDate: Date.now(),
           lecturerIds: [accLecturer.id],
@@ -3485,7 +3488,7 @@ describe('classwork.service', () => {
           lecturerIds: [accLecturer.id],
         }
 
-        const course = await academicService.createCourse(accAdmin.id, org.id, {
+        const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
           startDate: Date.now(),
           lecturerIds: [accLecturer.id],

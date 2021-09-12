@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
-import { Course } from 'modules/academic/models/Course'
 import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
+import { Course } from 'modules/course/models/Course'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { AuthModule } from 'modules/auth/auth.module'
@@ -9,7 +9,11 @@ import { OrgOfficeResolver } from './OrgOffice.resolver'
 import { OrgOfficeService } from './orgOffice.service'
 
 @Module({
-  imports: [TypegooseModule.forFeature([OrgOffice]), AuthModule, OrgModule],
+  imports: [
+    TypegooseModule.forFeature([OrgOffice]),
+    forwardRef(() => AuthModule),
+    forwardRef(() => OrgModule),
+  ],
   providers: [OrgOfficeService, OrgOfficeResolver],
   exports: [OrgOfficeService],
 })

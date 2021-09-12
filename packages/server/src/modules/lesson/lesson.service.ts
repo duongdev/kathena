@@ -2,10 +2,10 @@ import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType, mongoose } from '@typegoose/typegoose'
 
 import { Service, InjectModel, Logger, Publication } from 'core'
-import { AcademicService } from 'modules/academic/academic.service'
-import { Course } from 'modules/academic/models/Course'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
+import { Course } from 'modules/course/models/Course'
 import { OrgService } from 'modules/org/org.service'
 import { ANY, Nullable, PageOptionsInput } from 'types'
 
@@ -32,14 +32,14 @@ export class LessonService {
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
 
+    @Inject(forwardRef(() => CourseService))
+    private readonly courseService: CourseService,
+
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
@@ -144,7 +144,7 @@ export class LessonService {
     } = filter
     const { limit, skip } = pageOptions
 
-    const course = await this.academicService.findCourseById(courseId, orgId)
+    const course = await this.courseService.findCourseById(courseId, orgId)
 
     if (!course) {
       throw new Error(`COURSE_DON'T_EXIT`)
