@@ -10,30 +10,18 @@ import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
 import { AcademicService } from './academic.service'
 import { AcademicSubjectResolver } from './academicSubject.resolver'
 import { CourseResolver } from './course.resolver'
-import { LessonResolver } from './lesson.resolver'
 import { AcademicSubject } from './models/AcademicSubject'
 import { Course } from './models/Course'
-import { Lesson } from './models/Lesson'
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      AcademicSubject,
-      Course,
-      ClassworkAssignment,
-      Lesson,
-    ]),
+    TypegooseModule.forFeature([AcademicSubject, Course, ClassworkAssignment]),
     forwardRef(() => OrgModule),
     forwardRef(() => OrgOfficeModule),
     forwardRef(() => AccountModule),
     forwardRef(() => FileStorageModule),
   ],
-  providers: [
-    AcademicSubjectResolver,
-    AcademicService,
-    CourseResolver,
-    LessonResolver,
-  ],
+  providers: [AcademicSubjectResolver, AcademicService, CourseResolver],
   exports: [AcademicService],
 })
 export class AcademicModule {}

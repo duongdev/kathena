@@ -195,38 +195,6 @@ type AcademicSubject implements BaseModel {
   imageFileId: String!
 }
 
-type Lesson implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: ID!
-  updatedByAccountId: ID!
-  startTime: DateTime!
-  endTime: DateTime!
-  description: String
-  absentStudentIds: [ID!]!
-  lecturerComment: String
-  courseId: ID!
-  publicationState: Publication!
-  avgNumberOfStars: Float!
-}
-
-type AcademicSubjectsPayload {
-  academicSubjects: [AcademicSubject!]!
-  count: Int!
-}
-
-type CoursesPayload {
-  courses: [Course!]!
-  count: Int!
-}
-
-type LessonsPayload {
-  lessons: [Lesson!]!
-  count: Int!
-}
-
 type AuthenticatePayload {
   account: Account!
   org: Org!
@@ -298,14 +266,14 @@ type OrgAccountsPayload {
   count: Int!
 }
 
-type Rating implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: ID!
-  targetId: ID!
-  numberOfStars: Float!
+type AcademicSubjectsPayload {
+  academicSubjects: [AcademicSubject!]!
+  count: Int!
+}
+
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
 }
 
 type Conversation implements BaseModel {
@@ -327,6 +295,28 @@ enum ConversationType {
 
 type ConversationsPayload {
   conversations: [Conversation!]!
+  count: Int!
+}
+
+type Lesson implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: ID!
+  updatedByAccountId: ID!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  absentStudentIds: [ID!]!
+  lecturerComment: String
+  courseId: ID!
+  publicationState: Publication!
+  avgNumberOfStars: Float!
+}
+
+type LessonsPayload {
+  lessons: [Lesson!]!
   count: Int!
 }
 
@@ -388,6 +378,16 @@ type QuestionChoicesPayload {
   idRight: String!
 }
 
+type Rating implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: ID!
+  targetId: ID!
+  numberOfStars: Float!
+}
+
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
@@ -399,9 +399,6 @@ type Query {
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
-  lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
-  updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
-  findLessonById(lessonId: ID!): Lesson!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   file(id: ID!): File
@@ -416,6 +413,9 @@ type Query {
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
+  lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
+  updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
+  findLessonById(lessonId: ID!): Lesson!
   quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quiz(id: ID!): Quiz!
@@ -451,6 +451,23 @@ input AvgGradeOfClassworkByCourseOptionInput {
   limit: Float = 0
 }
 
+input ClassworkAssignmentByStudentIdInCourseInput {
+  courseId: ID!
+  limit: Float!
+  skip: Float
+  status: ClassworkAssignmentByStudentIdInCourseInputStatus = All
+}
+
+enum ClassworkAssignmentByStudentIdInCourseInputStatus {
+  All
+  HaveSubmission
+  HaveNotSubmission
+}
+
+input ConversationPageOptionInput {
+  limit: Int!
+}
+
 input LessonsFilterInput {
   courseId: ID!
   startTime: DateTime = null
@@ -470,23 +487,6 @@ input UpdateLessonPublicationByIdInput {
   lessonId: ID!
   publicationState: Publication!
   courseId: ID!
-}
-
-input ClassworkAssignmentByStudentIdInCourseInput {
-  courseId: ID!
-  limit: Float!
-  skip: Float
-  status: ClassworkAssignmentByStudentIdInCourseInputStatus = All
-}
-
-enum ClassworkAssignmentByStudentIdInCourseInputStatus {
-  All
-  HaveSubmission
-  HaveNotSubmission
-}
-
-input ConversationPageOptionInput {
-  limit: Int!
 }
 
 input QuizzesFilterInput {
@@ -516,11 +516,6 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
-  createLesson(createLessonInput: CreateLessonInput!): Lesson!
-  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
-  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
-  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
-  commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -539,6 +534,11 @@ type Mutation {
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
+  createLesson(createLessonInput: CreateLessonInput!): Lesson!
+  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
+  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
+  commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createQuiz(input: CreateQuizInput!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
@@ -590,30 +590,6 @@ input UpdateCourseInput {
   tuitionFee: Float
   startDate: String
   lecturerIds: [ID!]
-}
-
-input CreateLessonInput {
-  startTime: DateTime!
-  endTime: DateTime!
-  description: String
-  courseId: String!
-  publicationState: Publication!
-}
-
-input UpdateLessonInput {
-  startTime: DateTime
-  endTime: DateTime
-  description: String
-  publicationState: Publication
-}
-
-input CommentsForTheLessonByLecturerInput {
-  comment: String
-}
-
-input CommentsForTheLessonByLecturerQuery {
-  lessonId: ID!
-  courseId: ID!
 }
 
 input CreateOrgOfficeInput {
@@ -679,6 +655,30 @@ input CreateConversationInput {
 input RatingInput {
   targetId: ID!
   numberOfStars: Float = 1
+}
+
+input CreateLessonInput {
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  courseId: String!
+  publicationState: Publication!
+}
+
+input UpdateLessonInput {
+  startTime: DateTime
+  endTime: DateTime
+  description: String
+  publicationState: Publication
+}
+
+input CommentsForTheLessonByLecturerInput {
+  comment: String
+}
+
+input CommentsForTheLessonByLecturerQuery {
+  lessonId: ID!
+  courseId: ID!
 }
 
 input CreateQuizInput {
