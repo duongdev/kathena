@@ -7,12 +7,14 @@ export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  {
+    [SubKey in K]?: Maybe<T[SubKey]>
+  }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  {
+    [SubKey in K]: Maybe<T[SubKey]>
+  }
 const defaultOptions = {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -1058,6 +1060,7 @@ export type UpdateLessonInput = {
   startTime?: Maybe<Scalars['DateTime']>
   endTime?: Maybe<Scalars['DateTime']>
   description?: Maybe<Scalars['String']>
+  absentStudentIds?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
 }
 
@@ -2440,7 +2443,8 @@ export type SignInProps<
     SignInMutation,
     SignInMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withSignIn<
   TProps,
   TChildProps = {},
@@ -2597,7 +2601,8 @@ export type AuthenticateProps<
     AuthenticateQuery,
     AuthenticateQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAuthenticate<
   TProps,
   TChildProps = {},
@@ -2729,7 +2734,8 @@ export type CanAccountManageRolesProps<
     CanAccountManageRolesQuery,
     CanAccountManageRolesQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCanAccountManageRoles<
   TProps,
   TChildProps = {},
@@ -2909,7 +2915,8 @@ export type CallOtpProps<
     CallOtpMutation,
     CallOtpMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCallOtp<
   TProps,
   TChildProps = {},
@@ -3097,7 +3104,8 @@ export type SetPasswordProps<
     SetPasswordMutation,
     SetPasswordMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withSetPassword<
   TProps,
   TChildProps = {},
@@ -3221,7 +3229,8 @@ export type AccountAvatarProps<
     AccountAvatarQuery,
     AccountAvatarQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAccountAvatar<
   TProps,
   TChildProps = {},
@@ -3350,7 +3359,8 @@ export type AccountDisplayNameProps<
     AccountDisplayNameQuery,
     AccountDisplayNameQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAccountDisplayName<
   TProps,
   TChildProps = {},
@@ -3491,7 +3501,8 @@ export type ConversationCreatedProps<
     ConversationCreatedSubscription,
     ConversationCreatedSubscriptionVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withConversationCreated<
   TProps,
   TChildProps = {},
@@ -3672,7 +3683,8 @@ export type ConversationsProps<
     ConversationsQuery,
     ConversationsQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withConversations<
   TProps,
   TChildProps = {},
@@ -3819,7 +3831,8 @@ export type CreateConversationProps<
     CreateConversationMutation,
     CreateConversationMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateConversation<
   TProps,
   TChildProps = {},
@@ -3933,7 +3946,8 @@ export const FileDocument = {
 } as unknown as DocumentNode
 export type FileProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<FileQuery, FileQueryVariables>
-} & TChildProps
+} &
+  TChildProps
 export function withFile<
   TProps,
   TChildProps = {},
@@ -4049,7 +4063,8 @@ export type ImageFileProps<
     ImageFileQuery,
     ImageFileQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withImageFile<
   TProps,
   TChildProps = {},
@@ -4176,7 +4191,8 @@ export type AcademicSubjectDetailProps<
     AcademicSubjectDetailQuery,
     AcademicSubjectDetailQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAcademicSubjectDetail<
   TProps,
   TChildProps = {},
@@ -4330,7 +4346,8 @@ export type UpdateFileProps<
     UpdateFileMutation,
     UpdateFileMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateFile<
   TProps,
   TChildProps = {},
@@ -4542,7 +4559,8 @@ export type AcademicSubjectListProps<
     AcademicSubjectListQuery,
     AcademicSubjectListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAcademicSubjectList<
   TProps,
   TChildProps = {},
@@ -4687,7 +4705,8 @@ export type AccountProfileProps<
     AccountProfileQuery,
     AccountProfileQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAccountProfile<
   TProps,
   TChildProps = {},
@@ -4845,7 +4864,8 @@ export type UpdateAccountStatusProps<
     UpdateAccountStatusMutation,
     UpdateAccountStatusMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateAccountStatus<
   TProps,
   TChildProps = {},
@@ -4993,7 +5013,8 @@ export type UpdateAccountProps<
     UpdateAccountMutation,
     UpdateAccountMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateAccount<
   TProps,
   TChildProps = {},
@@ -5141,7 +5162,8 @@ export type UpdateSelfAccountProps<
     UpdateSelfAccountMutation,
     UpdateSelfAccountMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateSelfAccount<
   TProps,
   TChildProps = {},
@@ -5268,7 +5290,8 @@ export type ClassworkAssignmentDetailProps<
     ClassworkAssignmentDetailQuery,
     ClassworkAssignmentDetailQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withClassworkAssignmentDetail<
   TProps,
   TChildProps = {},
@@ -5439,7 +5462,8 @@ export type AddAttachmentsToClassworkAssignmentProps<
     AddAttachmentsToClassworkAssignmentMutation,
     AddAttachmentsToClassworkAssignmentMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAddAttachmentsToClassworkAssignment<
   TProps,
   TChildProps = {},
@@ -5606,7 +5630,8 @@ export type RemoveAttachmentsFromClassworkAssignmentProps<
     RemoveAttachmentsFromClassworkAssignmentMutation,
     RemoveAttachmentsFromClassworkAssignmentMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withRemoveAttachmentsFromClassworkAssignment<
   TProps,
   TChildProps = {},
@@ -5730,7 +5755,8 @@ export type ListClassworkSubmissionProps<
     ListClassworkSubmissionQuery,
     ListClassworkSubmissionQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withListClassworkSubmission<
   TProps,
   TChildProps = {},
@@ -5872,7 +5898,8 @@ export type FindClassworkSubmissionByIdProps<
     FindClassworkSubmissionByIdQuery,
     FindClassworkSubmissionByIdQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withFindClassworkSubmissionById<
   TProps,
   TChildProps = {},
@@ -6108,7 +6135,8 @@ export type CoursesProps<
     CoursesQuery,
     CoursesQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCourses<
   TProps,
   TChildProps = {},
@@ -6262,7 +6290,8 @@ export type CreateClassworkAssignmentProps<
     CreateClassworkAssignmentMutation,
     CreateClassworkAssignmentMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateClassworkAssignment<
   TProps,
   TChildProps = {},
@@ -6391,7 +6420,8 @@ export type CreateCourseProps<
     CreateCourseMutation,
     CreateCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateCourse<
   TProps,
   TChildProps = {},
@@ -6518,7 +6548,8 @@ export type CreateAcademicSubjectProps<
     CreateAcademicSubjectMutation,
     CreateAcademicSubjectMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateAcademicSubject<
   TProps,
   TChildProps = {},
@@ -6638,7 +6669,8 @@ export type FindAcademicSubjectByIdProps<
     FindAcademicSubjectByIdQuery,
     FindAcademicSubjectByIdQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withFindAcademicSubjectById<
   TProps,
   TChildProps = {},
@@ -6793,7 +6825,8 @@ export type UpdateAcademicSubjectProps<
     UpdateAcademicSubjectMutation,
     UpdateAcademicSubjectMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateAcademicSubject<
   TProps,
   TChildProps = {},
@@ -6938,7 +6971,8 @@ export type UpdateAcademicSubjectPublicationProps<
     UpdateAcademicSubjectPublicationMutation,
     UpdateAcademicSubjectPublicationMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateAcademicSubjectPublication<
   TProps,
   TChildProps = {},
@@ -7068,7 +7102,8 @@ export type CreateAccountProps<
     CreateAccountMutation,
     CreateAccountMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateAccount<
   TProps,
   TChildProps = {},
@@ -7220,7 +7255,8 @@ export type AddLecturesToCourseProps<
     AddLecturesToCourseMutation,
     AddLecturesToCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAddLecturesToCourse<
   TProps,
   TChildProps = {},
@@ -7373,7 +7409,8 @@ export type AddStudentToCourseProps<
     AddStudentToCourseMutation,
     AddStudentToCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAddStudentToCourse<
   TProps,
   TChildProps = {},
@@ -7495,7 +7532,8 @@ export type FindCourseByIdProps<
     FindCourseByIdQuery,
     FindCourseByIdQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withFindCourseById<
   TProps,
   TChildProps = {},
@@ -7656,7 +7694,8 @@ export type RemoveLecturersFromCourseProps<
     RemoveLecturersFromCourseMutation,
     RemoveLecturersFromCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withRemoveLecturersFromCourse<
   TProps,
   TChildProps = {},
@@ -7807,7 +7846,8 @@ export type RemoveStudentsFromCourseProps<
     RemoveStudentsFromCourseMutation,
     RemoveStudentsFromCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withRemoveStudentsFromCourse<
   TProps,
   TChildProps = {},
@@ -8049,7 +8089,8 @@ export type OrgAccountListProps<
     OrgAccountListQuery,
     OrgAccountListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withOrgAccountList<
   TProps,
   TChildProps = {},
@@ -8163,7 +8204,8 @@ export type ListOrgOfficesProps<
     ListOrgOfficesQuery,
     ListOrgOfficesQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withListOrgOffices<
   TProps,
   TChildProps = {},
@@ -8300,7 +8342,8 @@ export type CreateOrgOfficeProps<
     CreateOrgOfficeMutation,
     CreateOrgOfficeMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateOrgOffice<
   TProps,
   TChildProps = {},
@@ -8442,7 +8485,8 @@ export type UpdateOrgOfficeProps<
     UpdateOrgOfficeMutation,
     UpdateOrgOfficeMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateOrgOffice<
   TProps,
   TChildProps = {},
@@ -8561,7 +8605,8 @@ export type OrgOfficeProps<
     OrgOfficeQuery,
     OrgOfficeQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withOrgOffice<
   TProps,
   TChildProps = {},
@@ -8721,7 +8766,8 @@ export type CreateClassworkSubmissionProps<
     CreateClassworkSubmissionMutation,
     CreateClassworkSubmissionMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateClassworkSubmission<
   TProps,
   TChildProps = {},
@@ -8848,7 +8894,8 @@ export type FindOneClassworkSubmissionProps<
     FindOneClassworkSubmissionQuery,
     FindOneClassworkSubmissionQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withFindOneClassworkSubmission<
   TProps,
   TChildProps = {},
@@ -9042,7 +9089,8 @@ export type ListClassworkAssignmentsByStudentIdInCourseProps<
     ListClassworkAssignmentsByStudentIdInCourseQuery,
     ListClassworkAssignmentsByStudentIdInCourseQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withListClassworkAssignmentsByStudentIdInCourse<
   TProps,
   TChildProps = {},
@@ -9264,7 +9312,8 @@ export type QuizzesStudyingProps<
     QuizzesStudyingQuery,
     QuizzesStudyingQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withQuizzesStudying<
   TProps,
   TChildProps = {},
@@ -9415,7 +9464,8 @@ export type StartQuizProps<
     StartQuizMutation,
     StartQuizMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withStartQuiz<
   TProps,
   TChildProps = {},
@@ -9544,7 +9594,8 @@ export type QuizSubmitProps<
     QuizSubmitQuery,
     QuizSubmitQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withQuizSubmit<
   TProps,
   TChildProps = {},
@@ -9691,7 +9742,8 @@ export type SubmitQuizProps<
     SubmitQuizMutation,
     SubmitQuizMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withSubmitQuiz<
   TProps,
   TChildProps = {},
@@ -9932,7 +9984,8 @@ export type StudyingCourseListProps<
     StudyingCourseListQuery,
     StudyingCourseListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withStudyingCourseList<
   TProps,
   TChildProps = {},
@@ -10143,7 +10196,8 @@ export type ClassworkAssignmentListProps<
     ClassworkAssignmentListQuery,
     ClassworkAssignmentListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withClassworkAssignmentList<
   TProps,
   TChildProps = {},
@@ -10312,7 +10366,8 @@ export type CreateLessonProps<
     CreateLessonMutation,
     CreateLessonMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateLesson<
   TProps,
   TChildProps = {},
@@ -10510,7 +10565,8 @@ export type ListLessonsProps<
     ListLessonsQuery,
     ListLessonsQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withListLessons<
   TProps,
   TChildProps = {},
@@ -10666,7 +10722,8 @@ export type FindLessonByIdProps<
     FindLessonByIdQuery,
     FindLessonByIdQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withFindLessonById<
   TProps,
   TChildProps = {},
@@ -10851,7 +10908,8 @@ export type UpdateLessonProps<
     UpdateLessonMutation,
     UpdateLessonMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateLesson<
   TProps,
   TChildProps = {},
@@ -11050,7 +11108,8 @@ export type ClassworkMaterialsListProps<
     ClassworkMaterialsListQuery,
     ClassworkMaterialsListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withClassworkMaterialsList<
   TProps,
   TChildProps = {},
@@ -11213,7 +11272,8 @@ export type CreateClassworkMaterialProps<
     CreateClassworkMaterialMutation,
     CreateClassworkMaterialMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateClassworkMaterial<
   TProps,
   TChildProps = {},
@@ -11343,7 +11403,8 @@ export type DetailClassworkMaterialProps<
     DetailClassworkMaterialQuery,
     DetailClassworkMaterialQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withDetailClassworkMaterial<
   TProps,
   TChildProps = {},
@@ -11504,7 +11565,8 @@ export type UpdateClassworkMaterialProps<
     UpdateClassworkMaterialMutation,
     UpdateClassworkMaterialMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateClassworkMaterial<
   TProps,
   TChildProps = {},
@@ -11653,7 +11715,8 @@ export type AddAttachmentsToClassworkMaterialProps<
     AddAttachmentsToClassworkMaterialMutation,
     AddAttachmentsToClassworkMaterialMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAddAttachmentsToClassworkMaterial<
   TProps,
   TChildProps = {},
@@ -11812,7 +11875,8 @@ export type RemoveAttachmentsFromClassworkMaterialProps<
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withRemoveAttachmentsFromClassworkMaterial<
   TProps,
   TChildProps = {},
@@ -11951,7 +12015,8 @@ export type SetGradeForClassworkSubmissionProps<
     SetGradeForClassworkSubmissionMutation,
     SetGradeForClassworkSubmissionMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withSetGradeForClassworkSubmission<
   TProps,
   TChildProps = {},
@@ -12078,7 +12143,8 @@ export type CourseDetailProps<
     CourseDetailQuery,
     CourseDetailQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCourseDetail<
   TProps,
   TChildProps = {},
@@ -12240,7 +12306,8 @@ export type AvgGradeOfClassworkAssignmentInCourseProps<
     AvgGradeOfClassworkAssignmentInCourseQuery,
     AvgGradeOfClassworkAssignmentInCourseQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withAvgGradeOfClassworkAssignmentInCourse<
   TProps,
   TChildProps = {},
@@ -12459,7 +12526,8 @@ export type QuizzesProps<
     QuizzesQuery,
     QuizzesQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withQuizzes<
   TProps,
   TChildProps = {},
@@ -12597,7 +12665,8 @@ export type CreateQuestionProps<
     CreateQuestionMutation,
     CreateQuestionMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateQuestion<
   TProps,
   TChildProps = {},
@@ -12731,7 +12800,8 @@ export type CreateQuizProps<
     CreateQuizMutation,
     CreateQuizMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withCreateQuiz<
   TProps,
   TChildProps = {},
@@ -12852,7 +12922,8 @@ export const QuizDocument = {
 } as unknown as DocumentNode
 export type QuizProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<QuizQuery, QuizQueryVariables>
-} & TChildProps
+} &
+  TChildProps
 export function withQuiz<
   TProps,
   TChildProps = {},
@@ -12969,7 +13040,8 @@ export type QuestionProps<
     QuestionQuery,
     QuestionQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withQuestion<
   TProps,
   TChildProps = {},
@@ -13117,7 +13189,8 @@ export type QuestionChoicesProps<
     QuestionChoicesQuery,
     QuestionChoicesQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withQuestionChoices<
   TProps,
   TChildProps = {},
@@ -13367,7 +13440,8 @@ export type TeachingCourseListProps<
     TeachingCourseListQuery,
     TeachingCourseListQueryVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withTeachingCourseList<
   TProps,
   TChildProps = {},
@@ -13528,7 +13602,8 @@ export type UpdateClassworkAssignmentProps<
     UpdateClassworkAssignmentMutation,
     UpdateClassworkAssignmentMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateClassworkAssignment<
   TProps,
   TChildProps = {},
@@ -13677,7 +13752,8 @@ export type UpdateCourseProps<
     UpdateCourseMutation,
     UpdateCourseMutationVariables
   >
-} & TChildProps
+} &
+  TChildProps
 export function withUpdateCourse<
   TProps,
   TChildProps = {},

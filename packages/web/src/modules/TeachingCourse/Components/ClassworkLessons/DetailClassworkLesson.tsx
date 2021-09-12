@@ -21,6 +21,7 @@ import {
 import { WithAuth, RequiredPermission } from 'common/auth'
 import { Permission, useFindLessonByIdQuery } from 'graphql/generated'
 
+import Attendance from './Attendance'
 import UpdateClassworkLessonDialog from './UpdateClassworkLessonDialog'
 
 export type DetailClassworkLessonProps = {}
@@ -30,6 +31,8 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   const params: { id: string; courseDetailId: string } = useParams()
   const lessonId = useMemo(() => params.id, [params])
   const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
+  const [attendanceOpen, handleOpenAttendance, handleCloseAttendance] =
     useDialogState()
   const { data, loading } = useFindLessonByIdQuery({
     variables: { lessonId },
@@ -58,6 +61,9 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
         maxWidth="lg"
         title={classworkLesson.description as ANY}
         actions={[
+          <Button onClick={handleOpenAttendance} variant="contained">
+            Điểm danh
+          </Button>,
           <Button onClick={handleOpenUpdateDialog} variant="contained">
             Sửa buổi học
           </Button>,
@@ -72,105 +78,102 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             classworkLesson={classworkLesson as ANY}
           />
         </RequiredPermission>
+        <Attendance
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={attendanceOpen}
+          onClose={handleCloseAttendance}
+        />
         <Grid container spacing={DASHBOARD_SPACING}>
-          <Grid item xs={12} container spacing={DASHBOARD_SPACING}>
-            <SectionCard
-              maxContentHeight={false}
-              gridItem={{ xs: 12 }}
-              title="Thông tin buổi học"
-            >
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item container xs={12}>
-                    <Grid item xs={4}>
-                      <Stack spacing={2}>
-                        <InfoBlock label="Tiêu đề">
-                          {classworkLesson.description}
-                        </InfoBlock>
-                        <InfoBlock label="Thời gian tạo">
-                          <Typography>
-                            {format(
-                              new Date(classworkLesson.createdAt),
-                              'dd/MM/yyyy - h:mm a',
-                            )}
-                          </Typography>
-                        </InfoBlock>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Stack spacing={2}>
-                        <InfoBlock label="Trạng thái">
-                          {classworkLesson.publicationState}
-                        </InfoBlock>
-                        <InfoBlock label="Thời gian bắt đầu">
-                          <Typography>
-                            {format(
-                              new Date(classworkLesson.startTime),
-                              'dd/MM/yyyy - h:mm a',
-                            )}
-                          </Typography>
-                        </InfoBlock>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Stack spacing={2}>
-                        <InfoBlock label="Đánh giá sao">
-                          <Rating
-                            name="customized-empty"
-                            readOnly
-                            defaultValue={classworkLesson.avgNumberOfStars}
-                            precision={0.5}
-                          />
-                        </InfoBlock>
-                        <InfoBlock label="Thời gian kêt thúc">
-                          <Typography>
-                            {format(
-                              new Date(classworkLesson.endTime),
-                              'dd/MM/yyyy - h:mm a',
-                            )}
-                          </Typography>
-                        </InfoBlock>
-                      </Stack>
-                    </Grid>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12, md: 9 }}
+            title="Thông tin buổi học"
+          >
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item container xs={12}>
+                  <Grid item xs={4}>
+                    <Stack spacing={2}>
+                      <InfoBlock label="Tiêu đề">
+                        {classworkLesson.description}
+                      </InfoBlock>
+                      <InfoBlock label="Thời gian tạo">
+                        <Typography>
+                          {format(
+                            new Date(classworkLesson.createdAt),
+                            'dd/MM/yyyy - h:mm a',
+                          )}
+                        </Typography>
+                      </InfoBlock>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Stack spacing={2}>
+                      <InfoBlock label="Trạng thái">
+                        {classworkLesson.publicationState}
+                      </InfoBlock>
+                      <InfoBlock label="Thời gian bắt đầu">
+                        <Typography>
+                          {format(
+                            new Date(classworkLesson.startTime),
+                            'dd/MM/yyyy - h:mm a',
+                          )}
+                        </Typography>
+                      </InfoBlock>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Stack spacing={2}>
+                      <InfoBlock label="Đánh giá sao">
+                        <Rating
+                          name="customized-empty"
+                          readOnly
+                          defaultValue={classworkLesson.avgNumberOfStars}
+                          precision={0.5}
+                        />
+                      </InfoBlock>
+                      <InfoBlock label="Thời gian kêt thúc">
+                        <Typography>
+                          {format(
+                            new Date(classworkLesson.endTime),
+                            'dd/MM/yyyy - h:mm a',
+                          )}
+                        </Typography>
+                      </InfoBlock>
+                    </Stack>
                   </Grid>
                 </Grid>
-              </CardContent>
-            </SectionCard>
-            <SectionCard
-              maxContentHeight={false}
-              gridItem={{ xs: 12 }}
-              title="Danh sách sinh viên vắng mặt"
-              action={
-                <Typography align="left" style={{ paddingRight: '1em' }}>
-                  Số lượng vắng: {classworkLesson.absentStudentIds.length}
-                </Typography>
-              }
-            >
-              <CardContent>
-                {classworkLesson.absentStudentIds.length ? (
-                  classworkLesson.absentStudentIds.map(
-                    (classworkSubmission) => (
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          marginBottom: '5px',
-                        }}
-                      >
-                        <AccountAvatar accountId={classworkSubmission} />
-                        <AccountDisplayName
-                          style={{ cursor: 'pointer', paddingLeft: '0.5em' }}
-                          accountId={classworkSubmission}
-                        />
-                      </div>
-                    ),
-                  )
-                ) : (
-                  <Typography>Không có học viên nào</Typography>
-                )}
-              </CardContent>
-            </SectionCard>
-          </Grid>
+              </Grid>
+            </CardContent>
+          </SectionCard>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12, md: 3 }}
+            title={`SV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
+          >
+            <CardContent>
+              {classworkLesson.absentStudentIds.length ? (
+                classworkLesson.absentStudentIds.map((classworkSubmission) => (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '5px',
+                    }}
+                  >
+                    <AccountAvatar accountId={classworkSubmission} />
+                    <AccountDisplayName
+                      style={{ cursor: 'pointer', paddingLeft: '0.5em' }}
+                      accountId={classworkSubmission}
+                    />
+                  </div>
+                ))
+              ) : (
+                <Typography>Không có học viên nào vắng</Typography>
+              )}
+            </CardContent>
+          </SectionCard>
         </Grid>
       </PageContainer>
     </div>

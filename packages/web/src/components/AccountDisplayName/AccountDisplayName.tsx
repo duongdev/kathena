@@ -16,11 +16,11 @@ export type AccountDisplayNameWithAccount = {
   account: Pick<Account, 'id' | 'username' | 'displayName'>
 }
 
-export type AccountDisplayNameProps = TypographyProps &
+export type AccountDisplayNameProps = { maxWidth?: number } & TypographyProps &
   (AccountDisplayNameWithId | AccountDisplayNameWithAccount)
 
 const AccountDisplayName: FC<AccountDisplayNameProps> = (props) => {
-  const { className, ...TypoProps } = props
+  const { className, maxWidth, ...TypoProps } = props
   const { accountId } = props as AccountDisplayNameWithId
   const { account: accountProp } = props as AccountDisplayNameWithAccount
 
@@ -45,6 +45,7 @@ const AccountDisplayName: FC<AccountDisplayNameProps> = (props) => {
   return (
     <Typography
       className={clsx(className, classes.root)}
+      style={{ maxWidth }}
       noWrap
       title={displayName}
       {...TypoProps}
