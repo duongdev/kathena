@@ -3,9 +3,8 @@ import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
 import { ForbiddenError } from 'type-graphql'
 
 import { Service, InjectModel, Logger } from 'core'
-import { Lesson } from 'modules/academic/models/Lesson'
 import { AuthService } from 'modules/auth/auth.service'
-import { OrgService } from 'modules/org/org.service'
+import { Lesson } from 'modules/lesson/models/Lesson'
 
 import { Rating } from './models/Rating'
 import { RolesCanSubmitRatingForLesson } from './rating.const'
@@ -18,11 +17,10 @@ export class RatingService {
   constructor(
     @InjectModel(Rating)
     private readonly ratingModel: ReturnModelType<typeof Rating>,
+
     @InjectModel(Lesson)
     private readonly lessonModel: ReturnModelType<typeof Lesson>,
 
-    @Inject(forwardRef(() => OrgService))
-    private readonly orgService: OrgService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) {}

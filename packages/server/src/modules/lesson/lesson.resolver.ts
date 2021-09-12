@@ -7,10 +7,9 @@ import { CurrentOrg, UseAuthGuard, CurrentAccount } from 'core/auth'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
 import { Org } from 'modules/org/models/Org'
-import { RatingService } from 'modules/rating/rating.service'
 import { Nullable, PageOptionsInput } from 'types'
 
-import { AcademicService } from './academic.service'
+import { LessonService } from './lesson.service'
 import {
   CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
@@ -19,7 +18,7 @@ import {
   LessonsPayload,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
-} from './academic.type'
+} from './lesson.type'
 import { Lesson } from './models/Lesson'
 
 @Resolver((_of) => Lesson)
@@ -27,11 +26,8 @@ export class LessonResolver {
   private readonly logger = new Logger(LessonResolver.name)
 
   constructor(
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
-
-    @Inject(forwardRef(() => RatingService))
-    private readonly ratingService: RatingService,
+    @Inject(forwardRef(() => LessonService))
+    private readonly lessonService: LessonService,
   ) {}
 
   @Mutation((_returns) => Lesson)
@@ -43,7 +39,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.createLesson(
+    return this.lessonService.createLesson(
       org.id,
       account.id,
       createLessonInput,
@@ -61,7 +57,7 @@ export class LessonResolver {
     account: Account,
     @CurrentOrg() org: Org,
   ): Promise<LessonsPayload> {
-    return this.academicService.findAndPaginateLessons(
+    return this.lessonService.findAndPaginateLessons(
       pageOptions,
       filter,
       account.id,
@@ -80,7 +76,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.updateLessonById(
+    return this.lessonService.updateLessonById(
       {
         lessonId,
         orgId: org.id,
@@ -102,7 +98,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.addAbsentStudentsToLesson(
+    return this.lessonService.addAbsentStudentsToLesson(
       {
         lessonId,
         orgId: org.id,
@@ -124,7 +120,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.removeAbsentStudentsFromLesson(
+    return this.lessonService.removeAbsentStudentsFromLesson(
       {
         lessonId,
         orgId: org.id,
@@ -143,7 +139,7 @@ export class LessonResolver {
     input: UpdateLessonPublicationByIdInput,
     @CurrentAccount() account: Account,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.updateLessonPublicationById(input, account.id)
+    return this.lessonService.updateLessonPublicationById(input, account.id)
   }
 
   @Query((_returns) => Lesson)
@@ -153,7 +149,7 @@ export class LessonResolver {
     @Args('lessonId', { type: () => ID }) lessonId: string,
     @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<Lesson>>> {
-    return this.academicService.findLessonById(lessonId, org.id)
+    return this.lessonService.findLessonById(lessonId, org.id)
   }
 
   @Mutation((_returns) => Lesson)
@@ -171,7 +167,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.academicService.commentsForTheLessonByLecturer(
+    return this.lessonService.commentsForTheLessonByLecturer(
       org.id,
       account.id,
       commentsForTheLessonByLecturerQuery,
