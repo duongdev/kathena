@@ -85,6 +85,9 @@ export class UpdateLessonInput {
   @Field({ nullable: true })
   description?: string
 
+  @Field((_type) => [String], { nullable: true })
+  absentStudentIds?: string[]
+
   @Field((_type) => Publication, { nullable: true })
   publicationState?: Publication
 }

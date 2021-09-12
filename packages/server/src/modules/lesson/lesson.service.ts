@@ -304,7 +304,13 @@ export class LessonService {
     updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
     const { lessonId, orgId, courseId } = query
-    const { startTime, endTime, description, publicationState } = updateInput
+    const {
+      startTime,
+      endTime,
+      description,
+      publicationState,
+      absentStudentIds,
+    } = updateInput
     const { lessonModel } = this
 
     if (
@@ -324,6 +330,10 @@ export class LessonService {
 
     if (!lesson) {
       throw new Error('Lesson not found')
+    }
+
+    if (absentStudentIds) {
+      lesson.absentStudentIds = absentStudentIds
     }
 
     if (startTime) {
