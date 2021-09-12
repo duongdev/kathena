@@ -669,6 +669,7 @@ input UpdateLessonInput {
   startTime: DateTime
   endTime: DateTime
   description: String
+  absentStudentIds: [String!]
   publicationState: Publication
 }
 
