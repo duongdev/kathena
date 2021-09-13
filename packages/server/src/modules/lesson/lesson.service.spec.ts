@@ -4,7 +4,6 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { CourseService } from 'modules/course/course.service'
@@ -17,7 +16,6 @@ import { Lesson } from './models/Lesson'
 
 describe('lesson.service', () => {
   let module: TestingModule
-  let academicService: AcademicService
   let orgService: OrgService
   let authService: AuthService
   let lessonService: LessonService
@@ -31,7 +29,6 @@ describe('lesson.service', () => {
 
     module = await createTestingModule(testDb.uri)
 
-    academicService = module.get<AcademicService>(AcademicService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
     lessonService = module.get<LessonService>(LessonService)
