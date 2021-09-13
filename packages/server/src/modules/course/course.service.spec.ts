@@ -1595,7 +1595,7 @@ describe('course.service', () => {
       expect.assertions(1)
 
       jest
-        .spyOn(academicService['orgService'], 'validateOrgId')
+        .spyOn(orgService, 'validateOrgId')
         .mockResolvedValueOnce(false as ANY)
 
       await expect(
@@ -1610,9 +1610,7 @@ describe('course.service', () => {
     it('throws error if course not found', async () => {
       expect.assertions(1)
 
-      jest
-        .spyOn(academicService['orgService'], 'validateOrgId')
-        .mockResolvedValueOnce(true as ANY)
+      jest.spyOn(orgService, 'validateOrgId').mockResolvedValueOnce(true as ANY)
 
       await expect(
         courseService.calculateAvgGradeOfClassworkAssignmentInCourse(
