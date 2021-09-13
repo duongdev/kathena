@@ -33,7 +33,7 @@ export class CourseService {
     @InjectModel(Course)
     private readonly courseModel: ReturnModelType<typeof Course>,
 
-    @InjectModel(Course)
+    @InjectModel(ClassworkAssignment)
     private readonly classworkAssignmentModel: ReturnModelType<
       typeof ClassworkAssignment
     >,
