@@ -10,10 +10,9 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
-import { Course } from 'modules/academic/models/Course'
-import { AccountService } from 'modules/account/account.service'
 import { Account } from 'modules/account/models/Account'
 import { AuthService } from 'modules/auth/auth.service'
+import { Course } from 'modules/course/models/Course'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
@@ -76,9 +75,6 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
-
-    @Inject(forwardRef(() => AccountService))
-    private readonly accountService: AccountService,
 
     @Inject(forwardRef(() => MailService))
     private readonly mailService: MailService,

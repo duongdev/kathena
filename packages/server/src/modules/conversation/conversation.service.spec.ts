@@ -7,6 +7,7 @@ import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { ClassworkService } from 'modules/classwork/classwork.service'
+import { CourseService } from 'modules/course/course.service'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
@@ -22,6 +23,7 @@ describe('conversation.service', () => {
   let authService: AuthService
   let academicService: AcademicService
   let orgOfficeService: OrgOfficeService
+  let courseService: CourseService
   let classworkService: ClassworkService
 
   beforeAll(async () => {
@@ -38,6 +40,7 @@ describe('conversation.service', () => {
     academicService = module.get<AcademicService>(AcademicService)
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     classworkService = module.get<ClassworkService>(ClassworkService)
+    courseService = module.get<CourseService>(CourseService)
   })
 
   afterAll(async () => {
@@ -103,7 +106,7 @@ describe('conversation.service', () => {
         .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
-      const courseTest = await academicService.createCourse(
+      const courseTest = await courseService.createCourse(
         objectId(),
         accountLecturer.orgId,
         {
@@ -194,7 +197,7 @@ describe('conversation.service', () => {
         .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
-      const courseTest = await academicService.createCourse(
+      const courseTest = await courseService.createCourse(
         objectId(),
         accountLecturer.orgId,
         {

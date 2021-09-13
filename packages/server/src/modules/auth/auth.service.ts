@@ -4,9 +4,9 @@ import * as jwt from 'jsonwebtoken'
 import { keyBy, uniq } from 'lodash'
 
 import { config, Logger, Service } from 'core'
-import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { Account } from 'modules/account/models/Account'
+import { CourseService } from 'modules/course/course.service'
 import { Org } from 'modules/org/models/Org'
 import { OrgService } from 'modules/org/org.service'
 
@@ -22,8 +22,10 @@ export class AuthService {
   constructor(
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
+
+    @Inject(forwardRef(() => CourseService))
+    private readonly courseService: CourseService,
+
     private readonly orgService: OrgService,
   ) {}
 
@@ -189,7 +191,7 @@ export class AuthService {
     const account = await this.accountService.findAccountById(accountId)
     if (account === null) return false
 
-    const course = await this.academicService.findCourseById(
+    const course = await this.courseService.findCourseById(
       courseId,
       account.orgId,
     )
@@ -205,7 +207,7 @@ export class AuthService {
     courseId: string,
     orgId: string,
   ): Promise<boolean> {
-    const course = await this.academicService.findCourseById(courseId, orgId)
+    const course = await this.courseService.findCourseById(courseId, orgId)
     if (!course) {
       return false
     }

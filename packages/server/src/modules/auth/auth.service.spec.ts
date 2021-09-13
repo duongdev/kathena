@@ -6,6 +6,8 @@ import { Connection } from 'mongoose'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
+import { AccountService } from 'modules/account/account.service'
+import { CourseService } from 'modules/course/course.service'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
@@ -20,6 +22,8 @@ describe('auth.service', () => {
   let mongooseConnection: Connection
   let academicService: AcademicService
   let orgOfficeService: OrgOfficeService
+  let courseService: CourseService
+  let accountService: AccountService
   let orgService: OrgService
 
   beforeAll(async () => {
@@ -35,6 +39,10 @@ describe('auth.service', () => {
     orgService = module.get<OrgService>(OrgService)
 
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
+
+    courseService = module.get<CourseService>(CourseService)
+
+    accountService = module.get<AccountService>(AccountService)
   })
 
   afterAll(async () => {
@@ -705,7 +713,7 @@ describe('auth.service', () => {
         .spyOn(orgOfficeService, 'findOrgOfficeById')
         .mockResolvedValueOnce(true as never)
 
-      const course = await academicService.createCourse(
+      const course = await courseService.createCourse(
         objectId(),
         objectId(),
         courseInpust,
@@ -722,7 +730,7 @@ describe('auth.service', () => {
         .mockResolvedValueOnce({ id: courseEdited.lecturerIds[2] } as ANY)
 
       jest
-        .spyOn(authService['academicService'], 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(courseEdited as ANY)
         .mockResolvedValueOnce(courseEdited as ANY)
         .mockResolvedValueOnce(courseEdited as ANY)
@@ -761,11 +769,11 @@ describe('auth.service', () => {
       }
 
       jest
-        .spyOn(authService['accountService'], 'findAccountById')
+        .spyOn(accountService, 'findAccountById')
         .mockResolvedValueOnce(account as ANY)
 
       jest
-        .spyOn(authService['academicService'], 'findCourseById')
+        .spyOn(courseService, 'findCourseById')
         .mockResolvedValueOnce(academic as ANY)
 
       await expect(
