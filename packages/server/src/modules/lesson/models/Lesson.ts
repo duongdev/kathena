@@ -49,4 +49,28 @@ export class Lesson extends BaseModel {
   @Field({ defaultValue: 0 })
   @prop({ type: Number, default: 0 })
   avgNumberOfStars: number
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkMaterialListBeforeClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkMaterialListInClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkMaterialListAfterClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkAssignmentListBeforeClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkAssignmentListInClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  classworkAssignmentListAfterClass: string[]
 }
