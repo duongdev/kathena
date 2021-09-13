@@ -42,6 +42,32 @@ enum AccountAvailability {
   Away
 }
 
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
+}
+
+type AcademicSubject implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  code: String!
+  description: String!
+  publication: Publication!
+  imageFileId: String!
+}
+
+enum Publication {
+  Draft
+  Published
+}
+
 type Course implements BaseModel {
   id: ID!
   orgId: ID!
@@ -58,11 +84,6 @@ type Course implements BaseModel {
   lecturerIds: [ID!]!
   studentIds: [ID!]!
   createdByAccountId: ID!
-}
-
-enum Publication {
-  Draft
-  Published
 }
 
 type File implements BaseModel {
@@ -96,15 +117,6 @@ type ClassworkAssignment implements BaseModel {
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
-}
-
-type Org implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  namespace: String!
-  name: String!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -259,18 +271,6 @@ type OrgAccountsPayload {
   count: Int!
 }
 
-type AcademicSubject implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  code: String!
-  description: String!
-  publication: Publication!
-  imageFileId: String!
-}
-
 type AcademicSubjectsPayload {
   academicSubjects: [AcademicSubject!]!
   count: Int!
@@ -313,6 +313,12 @@ type Lesson implements BaseModel {
   courseId: ID!
   publicationState: Publication!
   avgNumberOfStars: Float!
+  classworkMaterialListBeforeClass: [ID!]
+  classworkMaterialListInClass: [ID!]
+  classworkMaterialListAfterClass: [ID!]
+  classworkAssignmentListBeforeClass: [ID!]
+  classworkAssignmentListInClass: [ID!]
+  classworkAssignmentListAfterClass: [ID!]
 }
 
 type LessonsPayload {
