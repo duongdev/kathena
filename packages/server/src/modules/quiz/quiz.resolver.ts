@@ -6,6 +6,8 @@ import { CurrentAccount, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { Nullable, PageOptionsInput } from 'types'
 
+import { Publication } from '../../core/models/PublicationState'
+
 import { Quiz } from './models/Quiz'
 import { QuizService } from './quiz.service'
 import {
@@ -30,6 +32,20 @@ export class QuizResolver {
       createdByAccountId: account.id,
     })
 
+    return quiz
+  }
+
+  @Mutation((_returns) => Quiz)
+  @UseAuthGuard()
+  @UsePipes(ValidationPipe)
+  async updatePublicationQuiz(
+    @Args('id') quizId: string,
+    @Args('publicationState') publicationState: Publication,
+  ): Promise<Quiz | null> {
+    const quiz = await this.quizService.updatePublicationQuiz(
+      quizId,
+      publicationState,
+    )
     return quiz
   }
 
