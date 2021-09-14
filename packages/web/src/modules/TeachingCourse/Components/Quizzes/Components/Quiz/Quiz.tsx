@@ -15,7 +15,9 @@ import {
   SectionCard,
   Typography,
 } from '@kathena/ui'
+import { WithAuth } from 'common/auth'
 import {
+  Permission,
   Publication,
   QuizDocument,
   useQuizQuery,
@@ -126,4 +128,10 @@ const Quiz: FC<QuizProps> = () => {
   )
 }
 
-export default Quiz
+const WithPermissionTeachingCourse = () => (
+  <WithAuth permission={Permission.Teaching_Course_Access}>
+    <Quiz />
+  </WithAuth>
+)
+
+export default WithPermissionTeachingCourse
