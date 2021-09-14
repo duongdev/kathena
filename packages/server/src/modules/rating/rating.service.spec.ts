@@ -4,8 +4,8 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
-import { AcademicService } from 'modules/academic/academic.service'
 import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
 import { LessonService } from 'modules/lesson/lesson.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY } from 'types'
@@ -15,7 +15,7 @@ import { RatingService } from './rating.service'
 describe('rating.service', () => {
   let module: TestingModule
   let ratingService: RatingService
-  let academicService: AcademicService
+  let courseService: CourseService
   let orgService: OrgService
   let authService: AuthService
   let lessonService: LessonService
@@ -28,7 +28,7 @@ describe('rating.service', () => {
     module = await createTestingModule(testDb.uri)
 
     ratingService = module.get<RatingService>(RatingService)
-    academicService = module.get<AcademicService>(AcademicService)
+    courseService = module.get<CourseService>(CourseService)
     orgService = module.get<OrgService>(OrgService)
     authService = module.get<AuthService>(AuthService)
     lessonService = module.get<LessonService>(LessonService)
@@ -160,7 +160,7 @@ describe('rating.service', () => {
         .spyOn(orgService, 'validateOrgId')
         .mockResolvedValueOnce(true as never)
       jest
-        .spyOn(academicService['courseModel'], 'findById')
+        .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
       jest
         .spyOn(ratingService['ratingModel'], 'countDocuments')

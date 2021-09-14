@@ -2,6 +2,72 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Account implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  username: String!
+  email: String!
+  displayName: String
+  otp: String
+  otpExpired: DateTime
+  status: AccountStatus!
+  roles: [String!]!
+  availability: AccountAvailability!
+}
+
+interface BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Status of an account."""
+enum AccountStatus {
+  Pending
+  Active
+  Deactivated
+}
+
+enum AccountAvailability {
+  Online
+  Offline
+  Away
+}
+
+type Org implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  namespace: String!
+  name: String!
+}
+
+type AcademicSubject implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  code: String!
+  description: String!
+  publication: Publication!
+  imageFileId: String!
+}
+
+enum Publication {
+  Draft
+  Published
+}
+
 type Course implements BaseModel {
   id: ID!
   orgId: ID!
@@ -18,51 +84,6 @@ type Course implements BaseModel {
   lecturerIds: [ID!]!
   studentIds: [ID!]!
   createdByAccountId: ID!
-}
-
-interface BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-enum Publication {
-  Draft
-  Published
-}
-
-type Account implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  username: String!
-  email: String!
-  displayName: String
-  otp: String
-  otpExpired: DateTime
-  status: AccountStatus!
-  roles: [String!]!
-  availability: AccountAvailability!
-}
-
-"""Status of an account."""
-enum AccountStatus {
-  Pending
-  Active
-  Deactivated
-}
-
-enum AccountAvailability {
-  Online
-  Offline
-  Away
 }
 
 type File implements BaseModel {
@@ -96,15 +117,6 @@ type ClassworkAssignment implements BaseModel {
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
-}
-
-type Org implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  namespace: String!
-  name: String!
 }
 
 type ClassworkMaterial implements BaseModel {
@@ -183,18 +195,6 @@ type OrgOffice implements BaseModel {
   phone: String!
 }
 
-type AcademicSubject implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  code: String!
-  description: String!
-  publication: Publication!
-  imageFileId: String!
-}
-
 type AuthenticatePayload {
   account: Account!
   org: Org!
@@ -261,6 +261,11 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
+}
+
 type OrgAccountsPayload {
   accounts: [Account!]!
   count: Int!
@@ -268,11 +273,6 @@ type OrgAccountsPayload {
 
 type AcademicSubjectsPayload {
   academicSubjects: [AcademicSubject!]!
-  count: Int!
-}
-
-type CoursesPayload {
-  courses: [Course!]!
   count: Int!
 }
 
@@ -313,6 +313,12 @@ type Lesson implements BaseModel {
   courseId: ID!
   publicationState: Publication!
   avgNumberOfStars: Float!
+  classworkMaterialListBeforeClass: [ID!]
+  classworkMaterialListInClass: [ID!]
+  classworkMaterialListAfterClass: [ID!]
+  classworkAssignmentListBeforeClass: [ID!]
+  classworkAssignmentListInClass: [ID!]
+  classworkAssignmentListAfterClass: [ID!]
 }
 
 type LessonsPayload {
@@ -396,12 +402,11 @@ type Query {
   canAccountManageRoles(roles: [String!]!): Boolean!
   academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
+  orgOffices: [OrgOffice!]!
+  orgOffice(id: ID!): OrgOffice!
   findCourseById(id: ID!): Course!
   courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
   calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
-  orgOffices: [OrgOffice!]!
-  orgOffice(id: ID!): OrgOffice!
-  file(id: ID!): File
   classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
@@ -412,6 +417,7 @@ type Query {
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
+  file(id: ID!): File
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
@@ -510,16 +516,15 @@ type Mutation {
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
   updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
   updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
+  updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
+  findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
-  createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
-  updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
-  findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
-  updateFile(newFile: Upload!, id: ID!): File!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
@@ -532,6 +537,7 @@ type Mutation {
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
+  updateFile(newFile: Upload!, id: ID!): File!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
@@ -575,6 +581,18 @@ input UpdateAcademicSubjectInput {
   description: String
 }
 
+input CreateOrgOfficeInput {
+  name: String!
+  address: String!
+  phone: String!
+}
+
+input UpdateOrgOfficeInput {
+  name: String
+  address: String
+  phone: String
+}
+
 input CreateCourseInput {
   academicSubjectId: String!
   orgOfficeId: String!
@@ -590,18 +608,6 @@ input UpdateCourseInput {
   tuitionFee: Float
   startDate: String
   lecturerIds: [ID!]
-}
-
-input CreateOrgOfficeInput {
-  name: String!
-  address: String!
-  phone: String!
-}
-
-input UpdateOrgOfficeInput {
-  name: String
-  address: String
-  phone: String
 }
 
 input CreateClassworkMaterialInput {

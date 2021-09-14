@@ -13,13 +13,13 @@ import {
 import { Org } from 'modules/org/models/Org'
 import { PageOptionsInput } from 'types'
 
-import { AcademicService } from './academic.service'
+import { CourseService } from './course.service'
 import {
   CoursesFilterInput,
   CoursesPayload,
   CreateCourseInput,
   UpdateCourseInput,
-} from './academic.type'
+} from './course.type'
 import { Course } from './models/Course'
 
 @Resolver((_of) => Course)
@@ -27,8 +27,8 @@ export class CourseResolver {
   private readonly logger = new Logger(CourseResolver.name)
 
   constructor(
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
+    @Inject(forwardRef(() => CourseService))
+    private readonly courseService: CourseService,
   ) {}
 
   @Mutation((_returns) => Course)
@@ -39,7 +39,7 @@ export class CourseResolver {
     @CurrentAccount() account: Account,
     @CurrentOrg() org: Org,
   ): Promise<Course> {
-    return this.academicService.createCourse(
+    return this.courseService.createCourse(
       account.id,
       org.id,
       createCourseInput,
@@ -54,7 +54,7 @@ export class CourseResolver {
     @Args('updateInput') updateInput: UpdateCourseInput,
     @CurrentOrg() currentOrg: Org,
   ): Promise<Course> {
-    return this.academicService.updateCourse(
+    return this.courseService.updateCourse(
       {
         id: courseId,
         orgId: currentOrg.id,
@@ -69,7 +69,7 @@ export class CourseResolver {
     @Args('id', { type: () => ID }) courseId: string,
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.findCourseById(courseId, org.id)
+    return this.courseService.findCourseById(courseId, org.id)
   }
 
   @Mutation((_returns) => Course)
@@ -81,7 +81,7 @@ export class CourseResolver {
     @Args('lecturerIds', { type: () => [ID] })
     lecturerIds: string[],
   ): Promise<Course | null> {
-    return this.academicService.addLecturersToCourse(
+    return this.courseService.addLecturersToCourse(
       {
         orgId: org.id,
         courseId,
@@ -100,7 +100,7 @@ export class CourseResolver {
     if (org.id !== filter.orgId) {
       throw new ForbiddenError()
     }
-    return this.academicService.findAndPaginateCourses(pageOptions, filter)
+    return this.courseService.findAndPaginateCourses(pageOptions, filter)
   }
 
   @Mutation((_returns) => Course)
@@ -111,7 +111,7 @@ export class CourseResolver {
     @Args('studentIds', { type: () => [ID] })
     studentIds: string[],
   ): Promise<Course | null> {
-    return this.academicService.addStudentsToCourse(
+    return this.courseService.addStudentsToCourse(
       {
         orgId: org.id,
         courseId,
@@ -128,7 +128,7 @@ export class CourseResolver {
     @Args('studentIds', { type: () => [ID] }) studentIds: string[],
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.removeStudentsFromCourse(
+    return this.courseService.removeStudentsFromCourse(
       {
         id,
         orgId: org.id,
@@ -145,7 +145,7 @@ export class CourseResolver {
     @Args('lecturerIds', { type: () => [ID] }) lecturerIds: string[],
     @CurrentOrg() org: Org,
   ): Promise<Course | null> {
-    return this.academicService.removeLecturersFromCourse(
+    return this.courseService.removeLecturersFromCourse(
       {
         id,
         orgId: org.id,
@@ -161,7 +161,7 @@ export class CourseResolver {
     @CurrentOrg() org: Org,
     @Args('optionInput') optionInput: AvgGradeOfClassworkByCourseOptionInput,
   ): Promise<AvgGradeOfClassworkByCourse[]> {
-    return this.academicService.calculateAvgGradeOfClassworkAssignmentInCourse(
+    return this.courseService.calculateAvgGradeOfClassworkAssignmentInCourse(
       courseId,
       org.id,
       optionInput,

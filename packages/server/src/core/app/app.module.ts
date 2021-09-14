@@ -10,6 +10,7 @@ import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { ClassworkModule } from 'modules/classwork/classwork.module'
 import { ConversationModule } from 'modules/conversation/conversation.module'
+import { CourseModule } from 'modules/course/course.module'
 import { DevtoolModule } from 'modules/devtool/devtool.module'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { LessonModule } from 'modules/lesson/lesson.module'
@@ -35,6 +36,7 @@ export const appModules = [
   RatingModule,
   LessonModule,
   QuizModule,
+  CourseModule,
 ]
 
 @Module({
