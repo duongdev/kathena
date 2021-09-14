@@ -9,6 +9,8 @@ import {
 import { IsNotEmpty } from 'class-validator'
 
 import { Publication } from 'core'
+import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
+import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 
 import { Lesson } from './models/Lesson'
 
@@ -76,12 +78,6 @@ export class LessonsPayload {
 
 @InputType()
 export class UpdateLessonInput {
-  @Field((_type) => Date, { nullable: true })
-  startTime?: Date
-
-  @Field((_type) => Date, { nullable: true })
-  endTime?: Date
-
   @Field({ nullable: true })
   description?: string
 
@@ -90,6 +86,24 @@ export class UpdateLessonInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: Publication
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListBeforeClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListInClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListAfterClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListBeforeClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListInClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListAfterClass: string[]
 }
 
 @InputType()
