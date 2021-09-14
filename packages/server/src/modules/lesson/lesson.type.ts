@@ -9,8 +9,6 @@ import {
 import { IsNotEmpty } from 'class-validator'
 
 import { Publication } from 'core'
-import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
-import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 
 import { Lesson } from './models/Lesson'
 
