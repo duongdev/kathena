@@ -5,6 +5,7 @@ import Rating from '@material-ui/lab/Rating'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import format from 'date-fns/format'
+import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -19,7 +20,13 @@ import {
   Typography,
 } from '@kathena/ui'
 import { WithAuth, RequiredPermission } from 'common/auth'
-import { Permission, useFindLessonByIdQuery } from 'graphql/generated'
+import {
+  Permission,
+  useFindLessonByIdQuery,
+  useUpdateLessonMutation,
+  FindLessonByIdDocument,
+  Publication,
+} from 'graphql/generated'
 
 import Attendance from './Attendance'
 import UpdateClassworkLessonDialog from './UpdateClassworkLessonDialog'
@@ -37,7 +44,15 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   const { data, loading } = useFindLessonByIdQuery({
     variables: { lessonId },
   })
-
+  const [updateLesson] = useUpdateLessonMutation({
+    refetchQueries: [
+      {
+        query: FindLessonByIdDocument,
+        variables: { lessonId },
+      },
+    ],
+  })
+  const { enqueueSnackbar } = useSnackbar()
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
 
   if (loading && !data) {
@@ -53,6 +68,24 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
       </PageContainer>
     )
   }
+
+  const updatePublication = async (publicationState: Publication) => {
+    const updated = await updateLesson({
+      variables: {
+        courseId: classworkLesson.courseId,
+        lessonId: classworkLesson.id,
+        updateInput: {
+          publicationState,
+        },
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
+
   return (
     <div className={classes.root}>
       <PageContainer
@@ -61,6 +94,20 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
         maxWidth="lg"
         title={classworkLesson.description as ANY}
         actions={[
+          <Button
+            onClick={() =>
+              updatePublication(
+                classworkLesson.publicationState === Publication.Draft
+                  ? Publication.Published
+                  : Publication.Draft,
+              )
+            }
+            variant="contained"
+          >
+            {classworkLesson.publicationState === Publication.Draft
+              ? 'Public'
+              : 'Draft'}
+          </Button>,
           <Button onClick={handleOpenAttendance} variant="contained">
             Điểm danh
           </Button>,

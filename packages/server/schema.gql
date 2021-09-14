@@ -546,6 +546,7 @@ type Mutation {
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createQuiz(input: CreateQuizInput!): Quiz!
+  updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!

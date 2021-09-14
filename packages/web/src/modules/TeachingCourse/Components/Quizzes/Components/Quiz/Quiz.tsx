@@ -2,18 +2,25 @@ import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
+import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
+  Button,
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
   Typography,
 } from '@kathena/ui'
-import { useQuizQuery } from 'graphql/generated'
+import {
+  Publication,
+  QuizDocument,
+  useQuizQuery,
+  useUpdatePublicationQuizMutation,
+} from 'graphql/generated'
 import { buildPath, TEACHING_COURSE_QUIZZES } from 'utils/path-builder'
 
 import Question from './Question'
@@ -26,7 +33,15 @@ const Quiz: FC<QuizProps> = () => {
   const { data, loading } = useQuizQuery({
     variables: { id },
   })
-
+  const { enqueueSnackbar } = useSnackbar()
+  const [updatePublicationQuiz] = useUpdatePublicationQuizMutation({
+    refetchQueries: [
+      {
+        query: QuizDocument,
+        variables: { id },
+      },
+    ],
+  })
   const quiz = useMemo(() => data?.quiz, [data])
 
   if (loading && !data) {
@@ -41,6 +56,20 @@ const Quiz: FC<QuizProps> = () => {
     )
   }
 
+  const handleChangePublication = async (publicationState: Publication) => {
+    const updated = await updatePublicationQuiz({
+      variables: {
+        id,
+        publicationState,
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
+
   return (
     <PageContainer
       backButtonLabel="Danh sách trắc nghiệm"
@@ -50,11 +79,18 @@ const Quiz: FC<QuizProps> = () => {
       maxWidth="md"
       title={quiz.title}
       actions={[
-        <PublicationChip
-          publication={quiz?.publicationState as ANY}
-          variant="outlined"
-          size="medium"
-        />,
+        <Button
+          variant="contained"
+          onClick={() =>
+            handleChangePublication(
+              quiz?.publicationState === Publication.Draft
+                ? Publication.Published
+                : Publication.Draft,
+            )
+          }
+        >
+          {quiz?.publicationState === Publication.Draft ? 'Public' : 'Draft'}
+        </Button>,
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -62,6 +98,13 @@ const Quiz: FC<QuizProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin trắc nghiệm"
+          action={
+            <PublicationChip
+              publication={quiz?.publicationState as ANY}
+              variant="outlined"
+              size="medium"
+            />
+          }
         >
           <CardContent>
             <Grid container spacing={2}>
