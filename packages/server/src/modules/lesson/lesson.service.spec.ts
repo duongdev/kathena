@@ -778,7 +778,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkMaterialListBeforeClass.map(
             (el): string => el.toString(),
           )
@@ -827,7 +827,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkMaterialListAfterClass.map(
             (el): string => el.toString(),
           )
@@ -872,7 +872,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkMaterialListInClass.map((el): string =>
             el.toString(),
           )
@@ -921,7 +921,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkAssignmentListAfterClass.map(
             (el): string => el.toString(),
           )
@@ -970,7 +970,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkAssignmentListInClass.map(
             (el): string => el.toString(),
           )
@@ -1019,7 +1019,7 @@ describe('lesson.service', () => {
       )
 
       await expect(
-        (async () => {
+        (async (): Promise<string[]> => {
           return updatedLesson.classworkAssignmentListBeforeClass.map(
             (el): string => el.toString(),
           )
