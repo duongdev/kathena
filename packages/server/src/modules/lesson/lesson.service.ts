@@ -303,13 +303,24 @@ export class LessonService {
     updateInput: UpdateLessonInput,
     updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.updateLessonById.name}] updating...`)
+    this.logger.log({
+      query,
+      updateInput,
+      updatedByAccountId,
+    })
+
     const { lessonId, orgId, courseId } = query
     const {
-      startTime,
-      endTime,
       description,
       publicationState,
       absentStudentIds,
+      classworkMaterialListBeforeClass,
+      classworkMaterialListInClass,
+      classworkMaterialListAfterClass,
+      classworkAssignmentListBeforeClass,
+      classworkAssignmentListInClass,
+      classworkAssignmentListAfterClass,
     } = updateInput
     const { lessonModel } = this
 
@@ -336,55 +347,47 @@ export class LessonService {
       lesson.absentStudentIds = absentStudentIds
     }
 
-    if (startTime) {
-      lesson.startTime = new Date(startTime)
-    }
-
-    if (endTime) {
-      lesson.endTime = endTime
-    }
-
-    if (lesson.endTime < lesson.startTime) {
-      throw new Error('endTime or startTime invalid')
-    }
-
-    const lessons = await lessonModel.find({
-      orgId,
-      courseId,
-    })
-
-    const checkLessonDate = lessons.map((data) => {
-      if (data.id !== lesson.id) {
-        if (
-          (lesson.startTime >= data.startTime &&
-            lesson.startTime <= data.endTime) ||
-          (lesson.endTime >= data.startTime &&
-            lesson.endTime <= data.endTime) ||
-          (data.startTime >= lesson.startTime && data.endTime <= lesson.endTime)
-        ) {
-          return Promise.reject(
-            new Error(`THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME`),
-          )
-        }
-      }
-
-      return lesson
-    })
-
-    await Promise.all(checkLessonDate).catch((err) => {
-      throw new Error(err)
-    })
-
     if (description) {
       lesson.description = description
     }
 
     if (publicationState) {
       lesson.publicationState = publicationState
-      lesson.updatedByAccountId = updatedByAccountId
     }
 
+    if (classworkMaterialListBeforeClass) {
+      lesson.classworkMaterialListBeforeClass = classworkMaterialListBeforeClass
+    }
+
+    if (classworkMaterialListInClass) {
+      lesson.classworkMaterialListInClass = classworkMaterialListInClass
+    }
+
+    if (classworkMaterialListAfterClass) {
+      lesson.classworkMaterialListAfterClass = classworkMaterialListAfterClass
+    }
+
+    if (classworkAssignmentListBeforeClass) {
+      lesson.classworkAssignmentListBeforeClass =
+        classworkAssignmentListBeforeClass
+    }
+
+    if (classworkAssignmentListInClass) {
+      lesson.classworkAssignmentListInClass = classworkAssignmentListInClass
+    }
+
+    if (classworkAssignmentListAfterClass) {
+      lesson.classworkAssignmentListAfterClass =
+        classworkAssignmentListAfterClass
+    }
+
+    lesson.updatedByAccountId = updatedByAccountId
+
     const update = await lesson.save()
+
+    this.logger.log(`[${this.updateLessonById.name}] updating...`)
+    this.logger.verbose(update)
+
     return update
   }
 
