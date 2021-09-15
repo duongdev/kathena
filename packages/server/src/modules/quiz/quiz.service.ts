@@ -171,6 +171,31 @@ export class QuizService {
     return { quizzes, count }
   }
 
+  async findAndPaginateQuizSubmit(
+    pageOptions: {
+      limit: number
+      skip: number
+    },
+    filter: {
+      quizId: string
+    },
+  ): Promise<{
+    quizSubmits: DocumentType<QuizSubmit>[]
+    count: number
+  }> {
+    const { limit, skip } = pageOptions
+    const { quizId } = filter
+
+    const quizSubmitModel = this.quizSubmitModel.find({
+      quizId,
+    })
+
+    quizSubmitModel.sort({ _id: -1 }).skip(skip).limit(limit)
+    const quizSubmits = await quizSubmitModel
+    const count = await this.quizModel.countDocuments({ quizId })
+    return { quizSubmits, count }
+  }
+
   async findQuizById(id: string): Promise<Nullable<DocumentType<Quiz>>> {
     return this.quizModel.findById(id)
   }
@@ -204,6 +229,12 @@ export class QuizService {
       quizId,
       createdByAccountId,
     })
+  }
+
+  async findQuizSubmitById(
+    quizSubmitId: string,
+  ): Promise<Nullable<DocumentType<QuizSubmit>>> {
+    return this.quizSubmitModel.findById(quizSubmitId)
   }
 
   async updatePublicationQuiz(

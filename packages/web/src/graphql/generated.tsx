@@ -779,6 +779,8 @@ export type Query = {
   question: Question
   questionChoices: QuestionChoicesPayload
   quizSubmit: QuizSubmit
+  findQuizSubmitById: QuizSubmit
+  quizSubmits: QuizSubmitsPayload
 }
 
 export type QueryAccountArgs = {
@@ -919,6 +921,15 @@ export type QueryQuizSubmitArgs = {
   quizId: Scalars['ID']
 }
 
+export type QueryFindQuizSubmitByIdArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryQuizSubmitsArgs = {
+  filter: QuizSubmitsFilterInput
+  pageOptions: PageOptionsInput
+}
+
 export type Question = BaseModel & {
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -970,6 +981,15 @@ export type QuizSubmit = BaseModel & {
   questionIds?: Maybe<Array<Scalars['String']>>
   questionChoiceIds?: Maybe<Array<Scalars['String']>>
   createdByAccountId: Scalars['ID']
+}
+
+export type QuizSubmitsFilterInput = {
+  quizId: Scalars['ID']
+}
+
+export type QuizSubmitsPayload = {
+  quizSubmits: Array<QuizSubmit>
+  count: Scalars['Int']
 }
 
 export type QuizzesFilterInput = {
@@ -1065,11 +1085,15 @@ export type UpdateCourseInput = {
 }
 
 export type UpdateLessonInput = {
-  startTime?: Maybe<Scalars['DateTime']>
-  endTime?: Maybe<Scalars['DateTime']>
   description?: Maybe<Scalars['String']>
   absentStudentIds?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
+  classworkMaterialListBeforeClass?: Maybe<Array<Scalars['String']>>
+  classworkMaterialListInClass?: Maybe<Array<Scalars['String']>>
+  classworkMaterialListAfterClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListBeforeClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListInClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListAfterClass?: Maybe<Array<Scalars['String']>>
 }
 
 export type UpdateLessonPublicationByIdInput = {
@@ -2185,6 +2209,42 @@ export type UpdatePublicationQuizMutationVariables = Exact<{
 
 export type UpdatePublicationQuizMutation = {
   updatePublicationQuiz: { id: string; publicationState: Publication }
+}
+
+export type QuizSubmitsByQuizIdQueryVariables = Exact<{
+  filter: QuizSubmitsFilterInput
+  pageOptions: PageOptionsInput
+}>
+
+export type QuizSubmitsByQuizIdQuery = {
+  quizSubmits: {
+    count: number
+    quizSubmits: Array<{
+      id: string
+      quizId: string
+      scores: number
+      startTime?: Maybe<any>
+      questionIds?: Maybe<Array<string>>
+      questionChoiceIds?: Maybe<Array<string>>
+      createdByAccountId: string
+    }>
+  }
+}
+
+export type FindQuizSubmitByIdQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type FindQuizSubmitByIdQuery = {
+  findQuizSubmitById: {
+    id: string
+    quizId: string
+    scores: number
+    startTime?: Maybe<any>
+    questionIds?: Maybe<Array<string>>
+    questionChoiceIds?: Maybe<Array<string>>
+    createdByAccountId: string
+  }
 }
 
 export type TeachingCourseListQueryVariables = Exact<{
@@ -13430,6 +13490,337 @@ export type UpdatePublicationQuizMutationResult =
 export type UpdatePublicationQuizMutationOptions = Apollo.BaseMutationOptions<
   UpdatePublicationQuizMutation,
   UpdatePublicationQuizMutationVariables
+>
+export const QuizSubmitsByQuizIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'QuizSubmitsByQuizId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'QuizSubmitsFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'pageOptions' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PageOptionsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quizSubmits' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'pageOptions' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizSubmits' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'quizId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'scores' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionChoiceIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizSubmitsByQuizIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >
+} &
+  TChildProps
+export function withQuizSubmitsByQuizId<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables,
+    QuizSubmitsByQuizIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables,
+    QuizSubmitsByQuizIdProps<TChildProps, TDataName>
+  >(QuizSubmitsByQuizIdDocument, {
+    alias: 'quizSubmitsByQuizId',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizSubmitsByQuizIdQuery__
+ *
+ * To run a query within a React component, call `useQuizSubmitsByQuizIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizSubmitsByQuizIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizSubmitsByQuizIdQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      pageOptions: // value for 'pageOptions'
+ *   },
+ * });
+ */
+export function useQuizSubmitsByQuizIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >(QuizSubmitsByQuizIdDocument, options)
+}
+export function useQuizSubmitsByQuizIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >(QuizSubmitsByQuizIdDocument, options)
+}
+export type QuizSubmitsByQuizIdQueryHookResult = ReturnType<
+  typeof useQuizSubmitsByQuizIdQuery
+>
+export type QuizSubmitsByQuizIdLazyQueryHookResult = ReturnType<
+  typeof useQuizSubmitsByQuizIdLazyQuery
+>
+export type QuizSubmitsByQuizIdQueryResult = Apollo.QueryResult<
+  QuizSubmitsByQuizIdQuery,
+  QuizSubmitsByQuizIdQueryVariables
+>
+export const FindQuizSubmitByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindQuizSubmitById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findQuizSubmitById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'quizId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoiceIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindQuizSubmitByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindQuizSubmitById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables,
+    FindQuizSubmitByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables,
+    FindQuizSubmitByIdProps<TChildProps, TDataName>
+  >(FindQuizSubmitByIdDocument, {
+    alias: 'findQuizSubmitById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindQuizSubmitByIdQuery__
+ *
+ * To run a query within a React component, call `useFindQuizSubmitByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindQuizSubmitByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindQuizSubmitByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindQuizSubmitByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >(FindQuizSubmitByIdDocument, options)
+}
+export function useFindQuizSubmitByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >(FindQuizSubmitByIdDocument, options)
+}
+export type FindQuizSubmitByIdQueryHookResult = ReturnType<
+  typeof useFindQuizSubmitByIdQuery
+>
+export type FindQuizSubmitByIdLazyQueryHookResult = ReturnType<
+  typeof useFindQuizSubmitByIdLazyQuery
+>
+export type FindQuizSubmitByIdQueryResult = Apollo.QueryResult<
+  FindQuizSubmitByIdQuery,
+  FindQuizSubmitByIdQueryVariables
 >
 export const TeachingCourseListDocument = {
   kind: 'Document',

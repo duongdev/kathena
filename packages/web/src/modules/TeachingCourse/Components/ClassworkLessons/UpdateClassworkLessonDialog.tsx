@@ -81,8 +81,6 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
             lessonId: classworkLesson.id,
             updateInput: {
               description: input.description,
-              startTime: TimeStart,
-              endTime: TimeEnd,
               publicationState: classworkLesson.publicationState,
             },
           },

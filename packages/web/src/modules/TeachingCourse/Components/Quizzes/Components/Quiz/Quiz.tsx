@@ -1,6 +1,8 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Stack } from '@material-ui/core'
+import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
+import AccountDisplayName from 'components/AccountDisplayName'
 import PublicationChip from 'components/PublicationChip'
 import { useSnackbar } from 'notistack'
 import { useParams } from 'react-router-dom'
@@ -10,6 +12,7 @@ import { ANY } from '@kathena/types'
 import {
   Button,
   InfoBlock,
+  Link,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
@@ -22,8 +25,13 @@ import {
   QuizDocument,
   useQuizQuery,
   useUpdatePublicationQuizMutation,
+  useQuizSubmitsByQuizIdQuery,
 } from 'graphql/generated'
-import { buildPath, TEACHING_COURSE_QUIZZES } from 'utils/path-builder'
+import {
+  buildPath,
+  TEACHING_COURSE_QUIZSUBMIT,
+  TEACHING_COURSE_QUIZZES,
+} from 'utils/path-builder'
 
 import Question from './Question'
 
@@ -35,6 +43,18 @@ const Quiz: FC<QuizProps> = () => {
   const { data, loading } = useQuizQuery({
     variables: { id },
   })
+  const { data: dataQuizSubmits } = useQuizSubmitsByQuizIdQuery({
+    variables: {
+      pageOptions: {
+        limit: 100000,
+        skip: 0,
+      },
+      filter: {
+        quizId: id,
+      },
+    },
+  })
+
   const { enqueueSnackbar } = useSnackbar()
   const [updatePublicationQuiz] = useUpdatePublicationQuizMutation({
     refetchQueries: [
@@ -45,6 +65,11 @@ const Quiz: FC<QuizProps> = () => {
     ],
   })
   const quiz = useMemo(() => data?.quiz, [data])
+
+  const quizSubmits = useMemo(
+    () => dataQuizSubmits?.quizSubmits.quizSubmits,
+    [dataQuizSubmits?.quizSubmits.quizSubmits],
+  )
 
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -96,33 +121,66 @@ const Quiz: FC<QuizProps> = () => {
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item container xs={9} spacing={DASHBOARD_SPACING}>
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Thông tin trắc nghiệm"
+            action={
+              <PublicationChip
+                publication={quiz?.publicationState as ANY}
+                variant="outlined"
+                size="medium"
+              />
+            }
+          >
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Stack spacing={2}>
+                    <InfoBlock label="Tiêu đề">{quiz.title}</InfoBlock>
+                    <InfoBlock label="Mô tả">{quiz.description}</InfoBlock>
+                    <InfoBlock label="Duration">{quiz.duration} phút</InfoBlock>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </SectionCard>
+          {quiz.questionIds.map((item, index) => (
+            <Question id={item} index={index} />
+          ))}
+        </Grid>
         <SectionCard
-          maxContentHeight={false}
-          gridItem={{ xs: 12 }}
-          title="Thông tin trắc nghiệm"
-          action={
-            <PublicationChip
-              publication={quiz?.publicationState as ANY}
-              variant="outlined"
-              size="medium"
-            />
-          }
+          fullHeight={false}
+          gridItem={{ xs: 3 }}
+          title={`SV đã nộp: ${quizSubmits?.length ?? 0}`}
         >
           <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Stack spacing={2}>
-                  <InfoBlock label="Tiêu đề">{quiz.title}</InfoBlock>
-                  <InfoBlock label="Mô tả">{quiz.description}</InfoBlock>
-                  <InfoBlock label="Duration">{quiz.duration} phút</InfoBlock>
-                </Stack>
-              </Grid>
-            </Grid>
+            {quizSubmits && quizSubmits?.length > 0 ? (
+              quizSubmits?.map((item) => (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '5px',
+                  }}
+                >
+                  <AccountAvatar accountId={item.createdByAccountId} />
+                  <Link
+                    to={buildPath(TEACHING_COURSE_QUIZSUBMIT, { id: item.id })}
+                  >
+                    <AccountDisplayName
+                      style={{ cursor: 'pointer', paddingLeft: '0.5em' }}
+                      accountId={item.createdByAccountId}
+                    />
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <Typography>Chưa có học viên nộp bài</Typography>
+            )}
           </CardContent>
         </SectionCard>
-        {quiz.questionIds.map((item, index) => (
-          <Question id={item} index={index} />
-        ))}
       </Grid>
     </PageContainer>
   )
