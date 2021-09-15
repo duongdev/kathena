@@ -326,6 +326,11 @@ type LessonsPayload {
   count: Int!
 }
 
+type ListLessons {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
 type Question implements BaseModel {
   id: ID!
   orgId: ID!
@@ -545,6 +550,7 @@ type Mutation {
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  generateLessons(generateLessonsInput: GenerateLessonsInput!, courseId: ID!): ListLessons!
   createQuiz(input: CreateQuizInput!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
@@ -668,7 +674,7 @@ input CreateLessonInput {
   endTime: DateTime!
   description: String
   courseId: String!
-  publicationState: Publication!
+  publicationState: Publication = Draft
 }
 
 input UpdateLessonInput {
@@ -686,6 +692,18 @@ input CommentsForTheLessonByLecturerInput {
 input CommentsForTheLessonByLecturerQuery {
   lessonId: ID!
   courseId: ID!
+}
+
+input GenerateLessonsInput {
+  courseStartDate: DateTime!
+  totalNumberOfLessons: Float!
+  daysOfTheWeek: [DayOfTheWeek!]!
+}
+
+input DayOfTheWeek {
+  index: Float!
+  startTime: String!
+  endTime: String!
 }
 
 input CreateQuizInput {

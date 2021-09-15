@@ -29,7 +29,7 @@ export class CreateLessonInput {
   @IsNotEmpty({ message: 'CourseId can not be empty' })
   courseId: string
 
-  @Field((_type) => Publication)
+  @Field((_type) => Publication, { defaultValue: Publication.Draft })
   publicationState: Publication
 }
 
@@ -120,4 +120,45 @@ export class UpdateLessonPublicationByIdInput {
 
   @Field((_type) => ID)
   courseId: string
+}
+
+@InputType()
+class DayOfTheWeek {
+  @Field((_type) => Number)
+  @IsNotEmpty({ message: 'index can not be empty' })
+  index: number
+
+  @Field((_type) => String)
+  @IsNotEmpty({ message: 'startTime can not be empty' })
+  startTime: string
+
+  @Field((_type) => String)
+  @IsNotEmpty({ message: 'endTime can not be empty' })
+  endTime: string
+}
+
+@InputType()
+export class GenerateLessonsInput {
+  @Field((_type) => Date)
+  @IsNotEmpty({ message: 'courseStartDate can not be empty' })
+  courseStartDate: Date
+
+  @Field((_type) => Number)
+  @IsNotEmpty({ message: 'totalNumberOfLessons can not be empty' })
+  totalNumberOfLessons: number
+
+  // min = 0, max = 6
+  // There is no binding solution so I have to comment
+  @Field((_type) => [DayOfTheWeek])
+  @IsNotEmpty({ message: 'listOfLessonsForAWeek can not be empty' })
+  daysOfTheWeek: DayOfTheWeek[]
+}
+
+@ObjectType()
+export class ListLessons {
+  @Field((_type) => [Lesson])
+  lessons: Lesson[]
+
+  @Field((_type) => Int)
+  count: number
 }
