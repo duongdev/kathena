@@ -206,6 +206,19 @@ export class QuizService {
     })
   }
 
+  async updatePublicationQuiz(
+    id: string,
+    publicationState: Publication,
+  ): Promise<Nullable<DocumentType<Quiz>>> {
+    const quiz = await this.quizModel.findById(id)
+    if (quiz) {
+      quiz.publicationState = publicationState
+      const update = await quiz?.save()
+      return update
+    }
+    return quiz
+  }
+
   async submitQuiz(input: {
     quizSubmitId: string
     questionIds: string[]
