@@ -552,6 +552,7 @@ type Mutation {
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   generateLessons(generateLessonsInput: GenerateLessonsInput!, courseId: ID!): ListLessons!
   createQuiz(input: CreateQuizInput!): Quiz!
+  updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!
@@ -678,11 +679,15 @@ input CreateLessonInput {
 }
 
 input UpdateLessonInput {
-  startTime: DateTime
-  endTime: DateTime
   description: String
   absentStudentIds: [String!]
   publicationState: Publication
+  classworkMaterialListBeforeClass: [String!]
+  classworkMaterialListInClass: [String!]
+  classworkMaterialListAfterClass: [String!]
+  classworkAssignmentListBeforeClass: [String!]
+  classworkAssignmentListInClass: [String!]
+  classworkAssignmentListAfterClass: [String!]
 }
 
 input CommentsForTheLessonByLecturerInput {

@@ -69,3 +69,11 @@ query QuestionChoices($questionId: ID!){
     idRight
   }
 }
+
+mutation UpdatePublicationQuiz($id: String!, $publicationState: String!)
+{
+  updatePublicationQuiz(id: $id,publicationState: $publicationState){
+    id
+    publicationState
+  }
+}
