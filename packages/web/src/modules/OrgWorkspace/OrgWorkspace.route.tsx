@@ -34,6 +34,7 @@ import {
   STUDYING_COURSE_QUIZ,
   TEACHING_COURSE_DETAIL_CLASSWORK_LESSON,
   TEACHING_COURSE_CREATE_CLASSWORK_LESSON,
+  TEACHING_COURSE_QUIZSUBMIT,
 } from 'utils/path-builder'
 
 import ConversationPopupContainer from '../ConversationsPopupContainer/ConversationPopupContainer'
@@ -202,6 +203,12 @@ const CreateClassworkLesson = lazy(
       'modules/TeachingCourse/Components/ClassworkLessons/CreateClassworkLesson'
     ) /* webpackChunkName: "modules/TeachingCourse/Components/ClassworkLessons/CreateClassworkLesson" */,
 )
+const QuizSubmitTeaching = lazy(
+  () =>
+    import(
+      'modules/TeachingCourse/Components/Quizzes/Components/QuizSubmit'
+    ) /* webpackChunkName: 'modules/TeachingCourse/Components/Quizzes/Components/QuizSubmit' */,
+)
 export type OrgWorkspaceRouteProps = {}
 
 const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
@@ -287,6 +294,11 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       />
       <Route path={TEACHING_COURSE_CREATE_QUIZ} exact component={CreateQuiz} />
       <Route path={TEACHING_COURSE_QUIZ} exact component={Quiz} />
+      <Route
+        path={TEACHING_COURSE_QUIZSUBMIT}
+        exact
+        component={QuizSubmitTeaching}
+      />
       <Route path={STUDYING_COURSE_QUIZ} exact component={QuizStudying} />
       <Route
         path={TEACHING_COURSE_DETAIL_CLASSWORK_LESSON}

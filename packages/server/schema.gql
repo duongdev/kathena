@@ -379,6 +379,11 @@ type QuizzesPayload {
   count: Int!
 }
 
+type QuizSubmitsPayload {
+  quizSubmits: [QuizSubmit!]!
+  count: Int!
+}
+
 type QuestionChoicesPayload {
   questionChoices: [QuestionChoice!]!
   idRight: String!
@@ -428,6 +433,8 @@ type Query {
   question(id: ID!): Question!
   questionChoices(questionId: ID!): QuestionChoicesPayload!
   quizSubmit(quizId: ID!): QuizSubmit!
+  findQuizSubmitById(id: ID!): QuizSubmit!
+  quizSubmits(filter: QuizSubmitsFilterInput!, pageOptions: PageOptionsInput!): QuizSubmitsPayload!
 }
 
 input AccountsFilterInput {
@@ -498,6 +505,10 @@ input UpdateLessonPublicationByIdInput {
 input QuizzesFilterInput {
   courseId: ID!
   publicationState: Publication
+}
+
+input QuizSubmitsFilterInput {
+  quizId: ID!
 }
 
 type Mutation {
