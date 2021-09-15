@@ -673,11 +673,15 @@ input CreateLessonInput {
 }
 
 input UpdateLessonInput {
-  startTime: DateTime
-  endTime: DateTime
   description: String
   absentStudentIds: [String!]
   publicationState: Publication
+  classworkMaterialListBeforeClass: [String!]
+  classworkMaterialListInClass: [String!]
+  classworkMaterialListAfterClass: [String!]
+  classworkAssignmentListBeforeClass: [String!]
+  classworkAssignmentListInClass: [String!]
+  classworkAssignmentListAfterClass: [String!]
 }
 
 input CommentsForTheLessonByLecturerInput {
