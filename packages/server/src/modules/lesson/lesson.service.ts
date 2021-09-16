@@ -633,6 +633,32 @@ export class LessonService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
+    const currentDate = new Date()
+
+    const checkTime = daysOfTheWeek.map((day) => {
+      const startTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.startTime}`,
+      )
+      const endTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.endTime}`,
+      )
+
+      if (endTimeInput.getTime() < startTimeInput.getTime()) {
+        return Promise.reject(
+          new Error(`PLEASE_CHECK_START_AND_END_TIMES_OF_THE_WEEKDAYS`),
+        )
+      }
+      return day
+    })
+
+    await Promise.all(checkTime).catch((err) => {
+      throw new Error(err)
+    })
+
     // generate
     const days: ANY = []
     const date = new Date(courseStartDate)
