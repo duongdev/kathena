@@ -1,6 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType, mongoose } from '@typegoose/typegoose'
-import { daysToWeeks } from 'date-fns/esm'
 
 import { Service, InjectModel, Logger, Publication } from 'core'
 import { AccountService } from 'modules/account/account.service'
