@@ -13,9 +13,11 @@ import {
   CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
+  GenerateLessonsInput,
   LessonsFilterInput,
   LessonsFilterInputStatus,
   LessonsPayload,
+  ListLessons,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
 } from './lesson.type'
@@ -590,5 +592,138 @@ export class LessonService {
     this.logger.verbose(lesson)
 
     return lesson
+  }
+
+  async generateLessons(
+    orgId: string,
+    courseId: string,
+    createdByAccountId: string,
+    generateLessonsInput: GenerateLessonsInput,
+  ): Promise<ListLessons> {
+    this.logger.log(`[${this.generateLessons.name}] generating ...`)
+    this.logger.verbose({
+      orgId,
+      courseId,
+      createdByAccountId,
+      generateLessonsInput,
+    })
+
+    const { lessonModel, courseModel } = this
+
+    const { courseStartDate, totalNumberOfLessons, daysOfTheWeek } =
+      generateLessonsInput
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    const course = await courseModel.findById(courseId)
+
+    if (!course) {
+      throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        createdByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
+    }
+
+    const currentDate = new Date()
+
+    const checkTime = daysOfTheWeek.map((day) => {
+      const startTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.startTime}`,
+      )
+      const endTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.endTime}`,
+      )
+
+      if (endTimeInput.getTime() < startTimeInput.getTime()) {
+        return Promise.reject(
+          new Error(`PLEASE_CHECK_START_AND_END_TIMES_OF_THE_WEEKDAYS`),
+        )
+      }
+      return day
+    })
+
+    await Promise.all(checkTime).catch((err) => {
+      throw new Error(err)
+    })
+
+    // generate
+    const days: ANY = []
+    const date = new Date(courseStartDate)
+
+    while (days.length < totalNumberOfLessons) {
+      this.logger.log(`While days.length === totalNumberOfLessons`)
+      this.logger.verbose({
+        lengthDays: days.length,
+        totalNumberOfLessons,
+      })
+      const daysFilter = daysOfTheWeek.filter((day) => {
+        return day.index === date.getDay()
+      })
+      if (daysFilter.length > 0) {
+        const startTime = new Date(
+          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${
+            daysFilter[0].startTime
+          }`,
+        )
+        const endTime = new Date(
+          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${
+            daysFilter[0].endTime
+          }`,
+        )
+
+        this.logger.verbose({
+          date,
+          startTime,
+          endTime,
+        })
+
+        const timeOfDay = {
+          startTime,
+          endTime,
+        }
+        days.push(timeOfDay)
+
+        const createLessonInput: CreateLessonInput = {
+          ...timeOfDay,
+          courseId,
+          description: '',
+          publicationState: Publication.Draft,
+        }
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await this.createLesson(orgId, createdByAccountId, createLessonInput)
+        } catch (err) {
+          throw new Error(err)
+        }
+      }
+      date.setDate(date.getDate() + 1)
+    }
+
+    this.logger.verbose({ days, length: days.length })
+
+    const lessons = await lessonModel.find({ orgId, courseId })
+    const count = await lessonModel.countDocuments({ orgId, courseId })
+
+    this.logger.verbose({ lessons, count })
+
+    const results: ListLessons = {
+      lessons,
+      count,
+    }
+
+    return results
   }
 }
