@@ -5,6 +5,7 @@ import { Publication } from 'core'
 
 import { QuestionChoice } from './models/QuestionChoice'
 import { Quiz } from './models/Quiz'
+import { QuizSubmit } from './models/QuizSubmit'
 
 @InputType()
 export class CreateQuestionInput {
@@ -97,6 +98,21 @@ export class QuizzesFilterInput {
 export class QuizzesPayload {
   @Field((_type) => [Quiz])
   quizzes: Quiz[]
+
+  @Field((_type) => Int)
+  count: number
+}
+
+@InputType()
+export class QuizSubmitsFilterInput {
+  @Field((_type) => ID)
+  quizId: string
+}
+
+@ObjectType()
+export class QuizSubmitsPayload {
+  @Field((_type) => [QuizSubmit])
+  quizSubmits: QuizSubmit[]
 
   @Field((_type) => Int)
   count: number

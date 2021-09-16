@@ -4,6 +4,7 @@ import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
+import { P } from 'modules/auth/models'
 import { Nullable } from 'types'
 
 import { Question } from './models/Question'
@@ -15,7 +16,7 @@ export class QuestionResolver {
   constructor(private readonly quizService: QuizService) {}
 
   @Mutation((_returns) => Question)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Teaching_Course_Access)
   @UsePipes(ValidationPipe)
   async createQuestion(
     @Args('input') questionInput: CreateQuestionInput,
