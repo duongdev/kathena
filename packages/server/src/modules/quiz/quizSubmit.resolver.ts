@@ -4,11 +4,17 @@ import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
-import { Nullable } from 'types'
+import { P } from 'modules/auth/models'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { QuizSubmit } from './models/QuizSubmit'
 import { QuizService } from './quiz.service'
-import { CreateQuizSubmitInput, SubmitQuizInput } from './quiz.type'
+import {
+  CreateQuizSubmitInput,
+  QuizSubmitsFilterInput,
+  QuizSubmitsPayload,
+  SubmitQuizInput,
+} from './quiz.type'
 
 @Resolver((_of) => QuizSubmit)
 export class QuizSubmitResolver {
@@ -47,5 +53,22 @@ export class QuizSubmitResolver {
     @CurrentAccount() account: Account,
   ): Promise<Nullable<DocumentType<QuizSubmit>>> {
     return this.quizService.findOneQuizSubmit(quizId, account.id)
+  }
+
+  @Query((_return) => QuizSubmit)
+  @UseAuthGuard(P.Teaching_Course_Access)
+  async findQuizSubmitById(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<Nullable<DocumentType<QuizSubmit>>> {
+    return this.quizService.findQuizSubmitById(id)
+  }
+
+  @Query((_return) => QuizSubmitsPayload)
+  @UseAuthGuard(P.Teaching_Course_Access)
+  async quizSubmits(
+    @Args('pageOptions') pageOptions: PageOptionsInput,
+    @Args('filter') filter: QuizSubmitsFilterInput,
+  ): Promise<QuizSubmitsPayload> {
+    return this.quizService.findAndPaginateQuizSubmit(pageOptions, filter)
   }
 }

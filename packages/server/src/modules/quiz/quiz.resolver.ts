@@ -4,6 +4,7 @@ import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
+import { P } from 'modules/auth/models'
 import { Nullable, PageOptionsInput } from 'types'
 
 import { Publication } from '../../core/models/PublicationState'
@@ -21,7 +22,7 @@ export class QuizResolver {
   constructor(private readonly quizService: QuizService) {}
 
   @Mutation((_returns) => Quiz)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Teaching_Course_Access)
   @UsePipes(ValidationPipe)
   async createQuiz(
     @Args('input') quizInput: CreateQuizInput,
@@ -36,7 +37,7 @@ export class QuizResolver {
   }
 
   @Mutation((_returns) => Quiz)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Teaching_Course_Access)
   @UsePipes(ValidationPipe)
   async updatePublicationQuiz(
     @Args('id') quizId: string,
@@ -50,7 +51,7 @@ export class QuizResolver {
   }
 
   @Query((_return) => QuizzesPayload)
-  @UseAuthGuard()
+  @UseAuthGuard(P.Teaching_Course_Access)
   async quizzes(
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @Args('filter') filter: QuizzesFilterInput,
