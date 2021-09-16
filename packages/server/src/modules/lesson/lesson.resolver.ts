@@ -14,10 +14,8 @@ import {
   CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
-  GenerateLessonsInput,
   LessonsFilterInput,
   LessonsPayload,
-  ListLessons,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
 } from './lesson.type'
