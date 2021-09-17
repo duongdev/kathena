@@ -12,6 +12,7 @@ import { ANY } from 'types'
 
 import { LessonService } from './lesson.service'
 import {
+  DayOfWeek,
   GenerateLessonsInput,
   LessonsFilterInputStatus,
   UpdateLessonInput,
@@ -1531,17 +1532,17 @@ describe('lesson.service', () => {
       totalNumberOfLessons: 3,
       daysOfTheWeek: [
         {
-          index: 1, // Monday
+          dayOfWeek: DayOfWeek.Monday, // Monday
           startTime: '12:30',
           endTime: '14:00',
         },
         {
-          index: 3, // Wednesday
+          dayOfWeek: DayOfWeek.Wednesday, // Wednesday
           startTime: '14:30',
           endTime: '16:00',
         },
         {
-          index: 5, // Friday
+          dayOfWeek: DayOfWeek.Friday, // Friday
           startTime: '17:30',
           endTime: '19:00',
         },
@@ -1617,17 +1618,17 @@ describe('lesson.service', () => {
           ...generateLessonsInput,
           daysOfTheWeek: [
             {
-              index: 1, // Monday
+              dayOfWeek: DayOfWeek.Monday, // Monday
               startTime: '12:30',
               endTime: '09:00',
             },
             {
-              index: 3, // Wednesday
+              dayOfWeek: DayOfWeek.Wednesday, // Wednesday
               startTime: '14:30',
               endTime: '16:00',
             },
             {
-              index: 5, // Friday
+              dayOfWeek: DayOfWeek.Friday, // Friday
               startTime: '17:30',
               endTime: '19:00',
             },

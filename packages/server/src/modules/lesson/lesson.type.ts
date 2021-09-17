@@ -134,11 +134,23 @@ export class UpdateLessonPublicationByIdInput {
   courseId: string
 }
 
+export enum DayOfWeek {
+  Sunday = 0,
+  Monday = 1,
+  Tuesday = 2,
+  Wednesday = 3,
+  Thursday = 4,
+  Friday = 5,
+  Saturday = 6,
+}
+registerEnumType(DayOfWeek, {
+  name: 'DayOfWeek',
+})
 @InputType()
-class DayOfTheWeek {
-  @Field((_type) => Number)
+class DayOfTheWeekInput {
+  @Field((_type) => DayOfWeek)
   @IsNotEmpty({ message: 'index can not be empty' })
-  index: number
+  dayOfWeek: DayOfWeek
 
   @Field((_type) => String)
   @IsNotEmpty({ message: 'startTime can not be empty' })
@@ -161,9 +173,9 @@ export class GenerateLessonsInput {
 
   // min = 0, max = 6
   // There is no binding solution so I have to comment
-  @Field((_type) => [DayOfTheWeek])
+  @Field((_type) => [DayOfTheWeekInput])
   @IsNotEmpty({ message: 'listOfLessonsForAWeek can not be empty' })
-  daysOfTheWeek: DayOfTheWeek[]
+  daysOfTheWeek: DayOfTheWeekInput[]
 }
 
 @ObjectType()

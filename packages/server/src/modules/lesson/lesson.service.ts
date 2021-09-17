@@ -669,7 +669,7 @@ export class LessonService {
         totalNumberOfLessons,
       })
       const daysFilter = daysOfTheWeek.filter((day) => {
-        return day.index === date.getDay()
+        return day.dayOfWeek === date.getDay()
       })
       if (daysFilter.length > 0) {
         const startTime = new Date(
