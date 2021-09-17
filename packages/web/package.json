@@ -31,7 +31,7 @@
     "autosuggest-highlight": "3.1.1",
     "chart.js": "3.5.1",
     "clsx": "1.1.1",
-    "date-fns": "2.23.0",
+    "date-fns": "2.24.0",
     "formik": "2.2.9",
     "graphql": "15.5.3",
     "gravatar": "1.8.2",
