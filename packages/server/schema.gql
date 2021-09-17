@@ -68,6 +68,55 @@ enum Publication {
   Published
 }
 
+type Lesson implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: ID!
+  updatedByAccountId: ID!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  absentStudentIds: [ID!]!
+  lecturerComment: String
+  courseId: ID!
+  publicationState: Publication!
+  avgNumberOfStars: Float!
+  classworkMaterialListBeforeClass: [ID!]
+  classworkMaterialListInClass: [ID!]
+  classworkMaterialListAfterClass: [ID!]
+  classworkAssignmentListBeforeClass: [ID!]
+  classworkAssignmentListInClass: [ID!]
+  classworkAssignmentListAfterClass: [ID!]
+}
+
+type LessonsPayload {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
+type ListLessons {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
+type DayOfTheWeek {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
+}
+
+enum DayOfWeek {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+}
+
 type Course implements BaseModel {
   id: ID!
   orgId: ID!
@@ -83,6 +132,8 @@ type Course implements BaseModel {
   publishedAt: DateTime!
   lecturerIds: [ID!]!
   studentIds: [ID!]!
+  totalNumberOfLessons: Float!
+  listOfLessonsForAWeek: [DayOfTheWeek!]!
   createdByAccountId: ID!
 }
 
@@ -295,39 +346,6 @@ enum ConversationType {
 
 type ConversationsPayload {
   conversations: [Conversation!]!
-  count: Int!
-}
-
-type Lesson implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: ID!
-  updatedByAccountId: ID!
-  startTime: DateTime!
-  endTime: DateTime!
-  description: String
-  absentStudentIds: [ID!]!
-  lecturerComment: String
-  courseId: ID!
-  publicationState: Publication!
-  avgNumberOfStars: Float!
-  classworkMaterialListBeforeClass: [ID!]
-  classworkMaterialListInClass: [ID!]
-  classworkMaterialListAfterClass: [ID!]
-  classworkAssignmentListBeforeClass: [ID!]
-  classworkAssignmentListInClass: [ID!]
-  classworkAssignmentListAfterClass: [ID!]
-}
-
-type LessonsPayload {
-  lessons: [Lesson!]!
-  count: Int!
-}
-
-type ListLessons {
-  lessons: [Lesson!]!
   count: Int!
 }
 
@@ -713,11 +731,11 @@ input CommentsForTheLessonByLecturerQuery {
 input GenerateLessonsInput {
   courseStartDate: DateTime!
   totalNumberOfLessons: Float!
-  daysOfTheWeek: [DayOfTheWeek!]!
+  daysOfTheWeek: [DayOfTheWeekInput!]!
 }
 
-input DayOfTheWeek {
-  index: Float!
+input DayOfTheWeekInput {
+  dayOfWeek: DayOfWeek!
   startTime: String!
   endTime: String!
 }

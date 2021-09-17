@@ -174,4 +174,21 @@ export class LessonResolver {
       commentsForTheLessonByLecturerInput,
     )
   }
+
+  // @Mutation((_returns) => ListLessons)
+  // @UseAuthGuard(P.Academic_CreateLesson)
+  // async generateLessons(
+  //   @Args('courseId', { type: () => ID }) courseId: string,
+  //   @Args('generateLessonsInput', { type: () => GenerateLessonsInput })
+  //   generateLessonsInput: GenerateLessonsInput,
+  //   @CurrentOrg() org: Org,
+  //   @CurrentAccount() account: Account,
+  // ): Promise<ListLessons> {
+  //   return this.lessonService.generateLessons(
+  //     org.id,
+  //     courseId,
+  //     account.id,
+  //     generateLessonsInput,
+  //   )
+  // }
 }
