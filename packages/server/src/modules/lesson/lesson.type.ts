@@ -147,7 +147,7 @@ registerEnumType(DayOfWeek, {
   name: 'DayOfWeek',
 })
 @InputType()
-class DayOfTheWeekInput {
+export class DayOfTheWeekInput {
   @Field((_type) => DayOfWeek)
   @IsNotEmpty({ message: 'index can not be empty' })
   dayOfWeek: DayOfWeek

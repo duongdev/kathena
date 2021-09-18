@@ -1562,7 +1562,7 @@ describe('lesson.service', () => {
       ).rejects.toThrowError('Org ID is invalid')
     })
 
-    it('throws error if the account has no permissions', async () => {
+    it('throws error if course not found', async () => {
       expect.assertions(1)
 
       jest
@@ -1577,26 +1577,6 @@ describe('lesson.service', () => {
           generateLessonsInput,
         ),
       ).rejects.toThrowError(`THIS_COURSE_DOES_NOT_EXIST`)
-    })
-
-    it('throws error if course not exist', async () => {
-      expect.assertions(1)
-
-      jest
-        .spyOn(orgService, 'validateOrgId')
-        .mockResolvedValueOnce(true as never)
-      jest
-        .spyOn(authService, 'canAccountManageCourse')
-        .mockResolvedValueOnce(true)
-
-      await expect(
-        lessonService.generateLessons(
-          objectId(),
-          objectId(),
-          objectId(),
-          generateLessonsInput,
-        ),
-      ).rejects.toThrowError('THIS_COURSE_DOES_NOT_EXIST')
     })
 
     it('throws error if startTime and endTime invalid', async () => {

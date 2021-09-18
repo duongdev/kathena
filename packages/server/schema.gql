@@ -96,11 +96,6 @@ type LessonsPayload {
   count: Int!
 }
 
-type ListLessons {
-  lessons: [Lesson!]!
-  count: Int!
-}
-
 type DayOfTheWeek {
   dayOfWeek: DayOfWeek!
   startTime: String!
@@ -579,7 +574,6 @@ type Mutation {
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
-  generateLessons(generateLessonsInput: GenerateLessonsInput!, courseId: ID!): ListLessons!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
@@ -634,9 +628,17 @@ input CreateCourseInput {
   orgOfficeId: String!
   code: String!
   name: String!
-  startDate: String!
+  startDate: DateTime!
   tuitionFee: Float!
   lecturerIds: [String!] = []
+  daysOfTheWeek: [DayOfTheWeekInput!] = []
+  totalNumberOfLessons: Float!
+}
+
+input DayOfTheWeekInput {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
 }
 
 input UpdateCourseInput {
@@ -726,18 +728,6 @@ input CommentsForTheLessonByLecturerInput {
 input CommentsForTheLessonByLecturerQuery {
   lessonId: ID!
   courseId: ID!
-}
-
-input GenerateLessonsInput {
-  courseStartDate: DateTime!
-  totalNumberOfLessons: Float!
-  daysOfTheWeek: [DayOfTheWeekInput!]!
-}
-
-input DayOfTheWeekInput {
-  dayOfWeek: DayOfWeek!
-  startTime: String!
-  endTime: String!
 }
 
 input CreateQuizInput {
