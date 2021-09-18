@@ -57,13 +57,16 @@ describe('course.service', () => {
     expect(courseService).toBeDefined()
   })
 
-  const createCourseInput: ANY = {
+  const createCourseInput: CreateCourseInput = {
     academicSubjectId: objectId(),
     orgOfficeId: objectId(),
     code: 'NodeJS-12',
     name: 'Node Js Thang 12',
+    startDate: new Date(),
     tuitionFee: 5000000,
     lecturerIds: [],
+    daysOfTheWeek: [],
+    totalNumberOfLessons: 0,
   }
   describe('createCourse', () => {
     it(`throws error "Org ID is invalid" if org id is invalid`, async () => {
@@ -72,7 +75,6 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          startDate: '1618765200000',
         }),
       ).rejects.toThrowError('Org ID is invalid')
     })
@@ -87,7 +89,6 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          startDate: '1618765200000',
         }),
       ).rejects.toThrowError('ACCOUNT_HAS_NOT_PERMISSION')
     })
@@ -105,7 +106,6 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          startDate: '1618765200000',
         }),
       ).rejects.toThrowError('ACADEMIC_SUBJECT_NOT_FOUND')
     })
@@ -131,11 +131,13 @@ describe('course.service', () => {
         .mockResolvedValueOnce(true as never)
 
       const date = new Date()
+      date.setDate(date.getDate() - 1)
+
       // Start date less than the current date
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          startDate: date.setDate(date.getDate() - 1),
+          startDate: date,
         }),
       ).rejects.toThrowError('START_DATE_INVALID')
     })
@@ -178,7 +180,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), org.id, {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           lecturerIds: [id],
         }),
       ).rejects.toThrowError(`ID ${id} is not found`)
@@ -186,7 +188,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), org.id, {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           lecturerIds: [accountAdmin.id],
         }),
       ).rejects.toThrowError(`Thanh Canh Admin isn't a lecturer`)
@@ -214,7 +216,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(creatorId, orgId, {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
         }),
       ).resolves.toMatchObject({
         code: 'NODEJS-12',
@@ -267,7 +269,7 @@ describe('course.service', () => {
 
       const courseTest = await courseService.createCourse(creatorId, orgId, {
         ...createCourseInput,
-        startDate: Date.now(),
+        startDate: new Date(),
       })
 
       jest
@@ -312,7 +314,7 @@ describe('course.service', () => {
 
       const courseTest = await courseService.createCourse(creatorId, orgId, {
         ...createCourseInput,
-        startDate: Date.now(),
+        startDate: new Date(),
       })
 
       jest
@@ -375,7 +377,7 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
         },
       )
 
@@ -439,7 +441,7 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
         },
       )
 
@@ -509,15 +511,16 @@ describe('course.service', () => {
       })
 
       const listCreatedCourses: ANY[] = []
-      const date = new Date()
       const createCourse: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
         orgOfficeId: orgOffice.id,
         code: 'FEBCT1',
         name: 'Frontend cơ bản tháng 1',
-        startDate: date.toString(),
+        startDate: new Date(),
         tuitionFee: 5000000,
         lecturerIds: [lecturerAccount.id],
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       listCreatedCourses.push(
@@ -627,15 +630,16 @@ describe('course.service', () => {
       })
 
       const listCreatedCourses: ANY[] = []
-      const date = new Date()
       const createCourse: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
         orgOfficeId: orgOffice.id,
         code: 'FEBCT1',
         name: 'Frontend cơ bản tháng 1',
-        startDate: date.toString(),
+        startDate: new Date(),
         tuitionFee: 5000000,
         lecturerIds: [lecturerAccount1.id],
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       listCreatedCourses.push(
@@ -710,15 +714,17 @@ describe('course.service', () => {
       expect.assertions(2)
 
       const orgId = objectId()
-      const createrId = objectId()
-      const coutseInput: ANY = {
+      const creatorId = objectId()
+      const courseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [],
-        startDate: Date.now(),
+        startDate: new Date(),
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
       const testObject: ANY = {
         name: 'test',
@@ -749,15 +755,15 @@ describe('course.service', () => {
         .mockResolvedValueOnce(testObject)
 
       const courseCreated = await courseService.createCourse(
-        createrId,
+        creatorId,
         orgId,
-        coutseInput,
+        courseInput,
       )
       const courseCreated2 = await courseService.createCourse(
-        createrId,
+        creatorId,
         orgId,
         {
-          ...coutseInput,
+          ...courseInput,
           code: 'NodeJS-13',
           name: 'Node Js Thang 1',
           tuitionFee: 9000000,
@@ -952,7 +958,7 @@ describe('course.service', () => {
         org.id,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
         },
@@ -1148,7 +1154,7 @@ describe('course.service', () => {
         org.id,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
         },
@@ -1344,7 +1350,7 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           lecturerIds: [accountLecturer.id, accountLecturer2.id],
         },
       )
@@ -1544,15 +1550,16 @@ describe('course.service', () => {
         phone: '0704917152',
       })
 
-      const date = new Date()
       const createCourse: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
         orgOfficeId: orgOffice.id,
         code: 'FEBCT1',
         name: 'Frontend cơ bản tháng 1',
-        startDate: date.toString(),
+        startDate: new Date(),
         tuitionFee: 5000000,
         lecturerIds: [lecturerAccount.id],
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       const course = await courseService.createCourse(
@@ -1686,19 +1693,20 @@ describe('course.service', () => {
         phone: '0704917152',
       })
 
-      const createCourseInput1: ANY = {
+      const createCourseInput1: CreateCourseInput = {
         academicSubjectId: academicSubject.id,
         orgOfficeId: orgOffice.id,
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [accLecturer.id],
+        startDate: new Date(),
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       const course = await courseService.createCourse(accAdmin.id, org.id, {
         ...createCourseInput1,
-        startDate: Date.now(),
-        lecturerIds: [accLecturer.id],
       })
 
       course.studentIds = [accStudent.id, accStudent2.id]

@@ -188,6 +188,21 @@ export class AuthService {
     accountId: string,
     courseId: string,
   ): Promise<boolean> {
+    const roles = await this.getAccountRoles(accountId)
+    const LecturerPriority = 4
+
+    if (roles.length === 0) {
+      return false
+    }
+
+    const higherLecturerPermission = !roles.every(
+      (role): boolean => role.priority >= LecturerPriority,
+    )
+
+    if (higherLecturerPermission) {
+      return true
+    }
+
     const account = await this.accountService.findAccountById(accountId)
     if (account === null) return false
 

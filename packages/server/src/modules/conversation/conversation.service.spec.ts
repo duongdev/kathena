@@ -8,9 +8,9 @@ import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { ClassworkService } from 'modules/classwork/classwork.service'
 import { CourseService } from 'modules/course/course.service'
+import { CreateCourseInput } from 'modules/course/course.type'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
-import { ANY } from 'types'
 
 import { ConversationService } from './conversation.service'
 
@@ -73,13 +73,16 @@ describe('conversation.service', () => {
     it(`return a conversation`, async () => {
       expect.assertions(1)
 
-      const createCourseInput: ANY = {
+      const createCourseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [],
+        startDate: new Date(),
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       const org = await orgService.createOrg({
@@ -111,7 +114,7 @@ describe('conversation.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: Date.now(),
+          startDate: new Date(),
           lecturerIds: [accountLecturer.id],
         },
       )
@@ -164,13 +167,16 @@ describe('conversation.service', () => {
     it(`returns an array of conversations`, async () => {
       expect.assertions(3)
 
-      const createCourseInput: ANY = {
+      const createCourseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [],
+        startDate: new Date(),
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
 
       const org = await orgService.createOrg({
@@ -202,7 +208,6 @@ describe('conversation.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: Date.now(),
           lecturerIds: [accountLecturer.id],
         },
       )

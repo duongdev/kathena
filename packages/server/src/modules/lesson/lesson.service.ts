@@ -623,15 +623,6 @@ export class LessonService {
       throw new Error('THIS_COURSE_DOES_NOT_EXIST')
     }
 
-    if (
-      !(await this.authService.canAccountManageCourse(
-        createdByAccountId,
-        courseId,
-      ))
-    ) {
-      throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
-    }
-
     const currentDate = new Date()
 
     const checkTime = daysOfTheWeek.map((day) => {
