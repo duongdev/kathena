@@ -90,6 +90,17 @@ const OrgSidebar: FC<OrgSidebarProps> = () => {
                 strict: false,
               }),
             },
+            {
+              key: 'academicSubjectList',
+              label: 'Môn học',
+              link: ACADEMIC_SUBJECT_LIST,
+              hidden: !permissions.includes(Permission.Teaching_Course_Access),
+              active: !!matchPath(window.location.pathname, {
+                path: ACADEMIC_SUBJECT_LIST,
+                exact: false,
+                strict: false,
+              }),
+            },
           ],
         },
         {

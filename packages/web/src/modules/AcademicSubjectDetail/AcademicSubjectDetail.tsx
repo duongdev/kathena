@@ -14,7 +14,7 @@ import {
   Typography,
   useDialogState,
 } from '@kathena/ui'
-import { WithAuth } from 'common/auth'
+import { WithAuth, RequiredPermission } from 'common/auth'
 import { Permission, useAcademicSubjectDetailQuery } from 'graphql/generated'
 import {
   buildPath,
@@ -63,20 +63,26 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
       maxWidth="md"
       title={subject.name}
       actions={[
-        <Button
-          variant="contained"
-          link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
+        <RequiredPermission
+          permission={Permission.Academic_AcademicSubject_Access}
         >
-          Sửa môn học
-        </Button>,
-        <Button
-          variant="contained"
-          link={buildPath(CREATE_ACADEMIC_COURSE, {
-            idSubject: subject.id,
-          })}
-        >
-          Thêm khóa học
-        </Button>,
+          <Button
+            variant="contained"
+            link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
+          >
+            Sửa môn học
+          </Button>
+          ,
+          <Button
+            variant="contained"
+            link={buildPath(CREATE_ACADEMIC_COURSE, {
+              idSubject: subject.id,
+            })}
+          >
+            Thêm khóa học
+          </Button>
+          ,
+        </RequiredPermission>,
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -128,7 +134,12 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionAcademicSubjectDetail = () => (
-  <WithAuth permission={Permission.Academic_AcademicSubject_Access}>
+  <WithAuth
+    permission={
+      Permission.Academic_ListAcademicSubjects ||
+      Permission.Teaching_Course_Access
+    }
+  >
     <AcademicSubjectDetail />
   </WithAuth>
 )
