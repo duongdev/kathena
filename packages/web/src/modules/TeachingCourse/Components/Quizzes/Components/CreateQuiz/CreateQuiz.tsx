@@ -22,6 +22,7 @@ import {
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import {
+  Permission,
   Publication,
   QuizzesDocument,
   useCreateQuestionMutation,
@@ -304,7 +305,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionCreateQuiz = () => (
-  <WithAuth>
+  <WithAuth permission={Permission.Teaching_Course_Access}>
     <CreateQuiz />
   </WithAuth>
 )

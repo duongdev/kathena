@@ -68,6 +68,50 @@ enum Publication {
   Published
 }
 
+type Lesson implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  createdByAccountId: ID!
+  updatedByAccountId: ID!
+  startTime: DateTime!
+  endTime: DateTime!
+  description: String
+  absentStudentIds: [ID!]!
+  lecturerComment: String
+  courseId: ID!
+  publicationState: Publication!
+  avgNumberOfStars: Float!
+  classworkMaterialListBeforeClass: [ID!]
+  classworkMaterialListInClass: [ID!]
+  classworkMaterialListAfterClass: [ID!]
+  classworkAssignmentListBeforeClass: [ID!]
+  classworkAssignmentListInClass: [ID!]
+  classworkAssignmentListAfterClass: [ID!]
+}
+
+type LessonsPayload {
+  lessons: [Lesson!]!
+  count: Int!
+}
+
+type DayOfTheWeek {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
+}
+
+enum DayOfWeek {
+  Sunday
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+}
+
 type Course implements BaseModel {
   id: ID!
   orgId: ID!
@@ -83,6 +127,8 @@ type Course implements BaseModel {
   publishedAt: DateTime!
   lecturerIds: [ID!]!
   studentIds: [ID!]!
+  totalNumberOfLessons: Float!
+  listOfLessonsForAWeek: [DayOfTheWeek!]!
   createdByAccountId: ID!
 }
 
@@ -298,34 +344,6 @@ type ConversationsPayload {
   count: Int!
 }
 
-type Lesson implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  createdByAccountId: ID!
-  updatedByAccountId: ID!
-  startTime: DateTime!
-  endTime: DateTime!
-  description: String
-  absentStudentIds: [ID!]!
-  lecturerComment: String
-  courseId: ID!
-  publicationState: Publication!
-  avgNumberOfStars: Float!
-  classworkMaterialListBeforeClass: [ID!]
-  classworkMaterialListInClass: [ID!]
-  classworkMaterialListAfterClass: [ID!]
-  classworkAssignmentListBeforeClass: [ID!]
-  classworkAssignmentListInClass: [ID!]
-  classworkAssignmentListAfterClass: [ID!]
-}
-
-type LessonsPayload {
-  lessons: [Lesson!]!
-  count: Int!
-}
-
 type Question implements BaseModel {
   id: ID!
   orgId: ID!
@@ -379,6 +397,11 @@ type QuizzesPayload {
   count: Int!
 }
 
+type QuizSubmitsPayload {
+  quizSubmits: [QuizSubmit!]!
+  count: Int!
+}
+
 type QuestionChoicesPayload {
   questionChoices: [QuestionChoice!]!
   idRight: String!
@@ -428,6 +451,8 @@ type Query {
   question(id: ID!): Question!
   questionChoices(questionId: ID!): QuestionChoicesPayload!
   quizSubmit(quizId: ID!): QuizSubmit!
+  findQuizSubmitById(id: ID!): QuizSubmit!
+  quizSubmits(filter: QuizSubmitsFilterInput!, pageOptions: PageOptionsInput!): QuizSubmitsPayload!
 }
 
 input AccountsFilterInput {
@@ -500,6 +525,10 @@ input QuizzesFilterInput {
   publicationState: Publication
 }
 
+input QuizSubmitsFilterInput {
+  quizId: ID!
+}
+
 type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
@@ -546,6 +575,7 @@ type Mutation {
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
   createQuiz(input: CreateQuizInput!): Quiz!
+  updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!
@@ -598,9 +628,17 @@ input CreateCourseInput {
   orgOfficeId: String!
   code: String!
   name: String!
-  startDate: String!
+  startDate: DateTime!
   tuitionFee: Float!
   lecturerIds: [String!] = []
+  daysOfTheWeek: [DayOfTheWeekInput!] = []
+  totalNumberOfLessons: Float!
+}
+
+input DayOfTheWeekInput {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
 }
 
 input UpdateCourseInput {
@@ -668,15 +706,19 @@ input CreateLessonInput {
   endTime: DateTime!
   description: String
   courseId: String!
-  publicationState: Publication!
+  publicationState: Publication = Draft
 }
 
 input UpdateLessonInput {
-  startTime: DateTime
-  endTime: DateTime
   description: String
   absentStudentIds: [String!]
   publicationState: Publication
+  classworkMaterialListBeforeClass: [String!]
+  classworkMaterialListInClass: [String!]
+  classworkMaterialListAfterClass: [String!]
+  classworkAssignmentListBeforeClass: [String!]
+  classworkAssignmentListInClass: [String!]
+  classworkAssignmentListAfterClass: [String!]
 }
 
 input CommentsForTheLessonByLecturerInput {

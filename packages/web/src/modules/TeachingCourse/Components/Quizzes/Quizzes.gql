@@ -69,3 +69,38 @@ query QuestionChoices($questionId: ID!){
     idRight
   }
 }
+
+mutation UpdatePublicationQuiz($id: String!, $publicationState: String!)
+{
+  updatePublicationQuiz(id: $id,publicationState: $publicationState){
+    id
+    publicationState
+  }
+}
+
+query QuizSubmitsByQuizId($filter: QuizSubmitsFilterInput!,$pageOptions: PageOptionsInput!){
+  quizSubmits(filter: $filter, pageOptions: $pageOptions){
+    quizSubmits{
+      id
+      quizId
+      scores
+      startTime
+      questionIds
+      questionChoiceIds
+      createdByAccountId
+    }
+    count
+  }
+}
+
+query FindQuizSubmitById($id: ID!){
+  findQuizSubmitById(id: $id){
+      id
+      quizId
+      scores
+      startTime
+      questionIds
+      questionChoiceIds
+      createdByAccountId
+  }
+}

@@ -69,6 +69,12 @@ describe('classwork.service', () => {
    * START CLASSWORK MATERIAL
    */
   describe('ClassWorkMaterial', () => {
+    beforeEach(async () => {
+      await mongooseConnection.dropDatabase()
+      jest.resetAllMocks()
+      jest.restoreAllMocks()
+    })
+
     describe('CreateClassworkMaterial', () => {
       const createClassworkMaterialInput: CreateClassworkMaterialInput = {
         title: 'NodeJs tutorial',
@@ -494,9 +500,12 @@ describe('classwork.service', () => {
           academicSubjectId: objectId(),
           code: 'FECBT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: Date.now().toString(),
+          startDate: new Date(),
           tuitionFee: 5000000,
           lecturerIds: [objectId()],
+          daysOfTheWeek: [],
+          orgOfficeId: objectId(),
+          totalNumberOfLessons: 0,
         }
 
         jest
@@ -562,7 +571,6 @@ describe('classwork.service', () => {
         })
 
         const listCreateClassWorkMaterial: ANY[] = []
-        const date = new Date()
         const createdByAccountId = lecturerAccount.id
 
         const createCourse: CreateCourseInput = {
@@ -570,9 +578,11 @@ describe('classwork.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FECBT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: date.toString(),
+          startDate: new Date(),
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(
@@ -700,7 +710,6 @@ describe('classwork.service', () => {
         })
 
         const listCreateClassWorkMaterial: ANY[] = []
-        const date = new Date()
         const createdByAccountId = lecturerAccount.id
 
         const createCourse: CreateCourseInput = {
@@ -708,9 +717,11 @@ describe('classwork.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FECBT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: date.toString(),
+          startDate: new Date(),
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(
@@ -796,6 +807,12 @@ describe('classwork.service', () => {
    */
 
   describe('ClassworkAssignment', () => {
+    beforeEach(async () => {
+      await mongooseConnection.dropDatabase()
+      jest.resetAllMocks()
+      jest.restoreAllMocks()
+    })
+
     describe('createClassworkAssignment', () => {
       const classworkAssignmentInput: ANY = {
         createdByAccountId: objectId(),
@@ -931,13 +948,16 @@ describe('classwork.service', () => {
       it(`returns the Classwork Assignment`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -972,7 +992,7 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
+            startDate: new Date(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1057,13 +1077,16 @@ describe('classwork.service', () => {
       it(`throw error if DUE_DATE_INVALID`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1095,7 +1118,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1137,13 +1159,16 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new title`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1175,7 +1200,7 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
+            startDate: new Date(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1214,13 +1239,16 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new description`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1252,7 +1280,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1292,13 +1319,16 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new dueDate`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1330,7 +1360,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1374,13 +1403,16 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new dueDate if dueDate of classworkAssignment is null`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1412,7 +1444,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1528,9 +1559,11 @@ describe('classwork.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: date.toString(),
+          startDate: new Date(),
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(
@@ -1699,9 +1732,11 @@ describe('classwork.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: date.toString(),
+          startDate: new Date(),
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(
@@ -1866,13 +1901,16 @@ describe('classwork.service', () => {
       it(`throws error if account can't manage course`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1907,7 +1945,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1942,13 +1979,16 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with new publication`, async () => {
         expect.assertions(1)
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const org = await orgService.createOrg({
@@ -1980,7 +2020,6 @@ describe('classwork.service', () => {
           org.id,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -2064,13 +2103,16 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accountLecturer.id],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const courseTest = await courseService.createCourse(
@@ -2078,7 +2120,6 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: Date.now(),
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -2198,18 +2239,20 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
-          startDate: Date.now(),
           lecturerIds: [accLecturer.id],
         })
 
@@ -2604,6 +2647,12 @@ describe('classwork.service', () => {
    */
 
   describe('ClassWorkSubmission', () => {
+    beforeEach(async () => {
+      await mongooseConnection.dropDatabase()
+      jest.resetAllMocks()
+      jest.restoreAllMocks()
+    })
+
     describe('CreateClassWorkSubmission', () => {
       const createClassWorkSubmissionInput: CreateClassworkSubmissionInput = {
         classworkId: objectId(),
@@ -3320,18 +3369,20 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
-          startDate: Date.now(),
           lecturerIds: [accLecturer.id],
         })
 
@@ -3479,18 +3530,20 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
-        const createCourseInput: ANY = {
+        const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'NodeJS-12',
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
+          startDate: new Date(),
+          daysOfTheWeek: [],
+          totalNumberOfLessons: 0,
         }
 
         const course = await courseService.createCourse(accAdmin.id, org.id, {
           ...createCourseInput,
-          startDate: Date.now(),
           lecturerIds: [accLecturer.id],
         })
 

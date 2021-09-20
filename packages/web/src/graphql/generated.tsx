@@ -8,13 +8,9 @@ export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  {
-    [SubKey in K]?: Maybe<T[SubKey]>
-  }
+  { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  {
-    [SubKey in K]: Maybe<T[SubKey]>
-  }
+  { [SubKey in K]: Maybe<T[SubKey]> }
 const defaultOptions = {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -246,6 +242,8 @@ export type Course = BaseModel & {
   publishedAt: Scalars['DateTime']
   lecturerIds: Array<Scalars['ID']>
   studentIds: Array<Scalars['ID']>
+  totalNumberOfLessons: Scalars['Float']
+  listOfLessonsForAWeek: Array<DayOfTheWeek>
   createdByAccountId: Scalars['ID']
 }
 
@@ -308,9 +306,11 @@ export type CreateCourseInput = {
   orgOfficeId: Scalars['String']
   code: Scalars['String']
   name: Scalars['String']
-  startDate: Scalars['String']
+  startDate: Scalars['DateTime']
   tuitionFee: Scalars['Float']
   lecturerIds?: Maybe<Array<Scalars['String']>>
+  daysOfTheWeek?: Maybe<Array<DayOfTheWeekInput>>
+  totalNumberOfLessons: Scalars['Float']
 }
 
 export type CreateLessonInput = {
@@ -318,7 +318,7 @@ export type CreateLessonInput = {
   endTime: Scalars['DateTime']
   description?: Maybe<Scalars['String']>
   courseId: Scalars['String']
-  publicationState: Publication
+  publicationState?: Maybe<Publication>
 }
 
 export type CreateOrgOfficeInput = {
@@ -346,6 +346,28 @@ export type CreateQuizInput = {
 export type CreateQuizSubmitInput = {
   quizId: Scalars['String']
   startTime: Scalars['DateTime']
+}
+
+export type DayOfTheWeek = {
+  dayOfWeek: DayOfWeek
+  startTime: Scalars['String']
+  endTime: Scalars['String']
+}
+
+export type DayOfTheWeekInput = {
+  dayOfWeek: DayOfWeek
+  startTime: Scalars['String']
+  endTime: Scalars['String']
+}
+
+export enum DayOfWeek {
+  Sunday = 'Sunday',
+  Monday = 'Monday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday',
+  Thursday = 'Thursday',
+  Friday = 'Friday',
+  Saturday = 'Saturday',
 }
 
 export type File = BaseModel & {
@@ -380,6 +402,12 @@ export type Lesson = BaseModel & {
   courseId: Scalars['ID']
   publicationState: Publication
   avgNumberOfStars: Scalars['Float']
+  classworkMaterialListBeforeClass?: Maybe<Array<Scalars['ID']>>
+  classworkMaterialListInClass?: Maybe<Array<Scalars['ID']>>
+  classworkMaterialListAfterClass?: Maybe<Array<Scalars['ID']>>
+  classworkAssignmentListBeforeClass?: Maybe<Array<Scalars['ID']>>
+  classworkAssignmentListInClass?: Maybe<Array<Scalars['ID']>>
+  classworkAssignmentListAfterClass?: Maybe<Array<Scalars['ID']>>
 }
 
 export type LessonsFilterInput = {
@@ -412,21 +440,15 @@ export type Mutation = {
   createAcademicSubject: AcademicSubject
   updateAcademicSubjectPublication: AcademicSubject
   updateAcademicSubject: AcademicSubject
+  createOrgOffice: OrgOffice
+  updateOrgOffice: OrgOffice
+  findOrgOffices: Array<OrgOffice>
   createCourse: Course
   updateCourse: Course
   addLecturesToCourse: Course
   addStudentsToCourse: Course
   removeStudentsFromCourse: Course
   removeLecturersFromCourse: Course
-  createLesson: Lesson
-  updateLesson: Lesson
-  addAbsentStudentsToLesson: Lesson
-  removeAbsentStudentsFromLesson: Lesson
-  commentsByLecturer: Lesson
-  createOrgOffice: OrgOffice
-  updateOrgOffice: OrgOffice
-  findOrgOffices: Array<OrgOffice>
-  updateFile: File
   createClassworkMaterial: ClassworkMaterial
   updateClassworkMaterial: ClassworkMaterial
   updateClassworkMaterialPublication: ClassworkMaterial
@@ -439,9 +461,16 @@ export type Mutation = {
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
   createClassworkSubmission: ClassworkSubmission
   setGradeForClassworkSubmission: ClassworkSubmission
+  updateFile: File
   createConversation: Conversation
   createRatingForTheLesson: Rating
+  createLesson: Lesson
+  updateLesson: Lesson
+  addAbsentStudentsToLesson: Lesson
+  removeAbsentStudentsFromLesson: Lesson
+  commentsByLecturer: Lesson
   createQuiz: Quiz
+  updatePublicationQuiz: Quiz
   createQuestion: Question
   createQuizSubmit: QuizSubmit
   submitQuiz: QuizSubmit
@@ -492,6 +521,20 @@ export type MutationUpdateAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type MutationCreateOrgOfficeArgs = {
+  input: CreateOrgOfficeInput
+}
+
+export type MutationUpdateOrgOfficeArgs = {
+  input: UpdateOrgOfficeInput
+  id: Scalars['ID']
+}
+
+export type MutationFindOrgOfficesArgs = {
+  searchText?: Maybe<Scalars['String']>
+  orgId?: Maybe<Scalars['ID']>
+}
+
 export type MutationCreateCourseArgs = {
   input: CreateCourseInput
 }
@@ -518,52 +561,6 @@ export type MutationRemoveStudentsFromCourseArgs = {
 
 export type MutationRemoveLecturersFromCourseArgs = {
   lecturerIds: Array<Scalars['ID']>
-  id: Scalars['ID']
-}
-
-export type MutationCreateLessonArgs = {
-  createLessonInput: CreateLessonInput
-}
-
-export type MutationUpdateLessonArgs = {
-  updateInput: UpdateLessonInput
-  lessonId: Scalars['ID']
-  courseId: Scalars['ID']
-}
-
-export type MutationAddAbsentStudentsToLessonArgs = {
-  absentStudentIds: Array<Scalars['String']>
-  lessonId: Scalars['ID']
-  courseId: Scalars['ID']
-}
-
-export type MutationRemoveAbsentStudentsFromLessonArgs = {
-  absentStudentIds: Array<Scalars['String']>
-  lessonId: Scalars['ID']
-  courseId: Scalars['ID']
-}
-
-export type MutationCommentsByLecturerArgs = {
-  commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput
-  commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery
-}
-
-export type MutationCreateOrgOfficeArgs = {
-  input: CreateOrgOfficeInput
-}
-
-export type MutationUpdateOrgOfficeArgs = {
-  input: UpdateOrgOfficeInput
-  id: Scalars['ID']
-}
-
-export type MutationFindOrgOfficesArgs = {
-  searchText?: Maybe<Scalars['String']>
-  orgId?: Maybe<Scalars['ID']>
-}
-
-export type MutationUpdateFileArgs = {
-  newFile: Scalars['Upload']
   id: Scalars['ID']
 }
 
@@ -626,6 +623,11 @@ export type MutationSetGradeForClassworkSubmissionArgs = {
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
 }
 
+export type MutationUpdateFileArgs = {
+  newFile: Scalars['Upload']
+  id: Scalars['ID']
+}
+
 export type MutationCreateConversationArgs = {
   conversationInput: CreateConversationInput
 }
@@ -634,8 +636,40 @@ export type MutationCreateRatingForTheLessonArgs = {
   ratingInput: RatingInput
 }
 
+export type MutationCreateLessonArgs = {
+  createLessonInput: CreateLessonInput
+}
+
+export type MutationUpdateLessonArgs = {
+  updateInput: UpdateLessonInput
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationAddAbsentStudentsToLessonArgs = {
+  absentStudentIds: Array<Scalars['String']>
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationRemoveAbsentStudentsFromLessonArgs = {
+  absentStudentIds: Array<Scalars['String']>
+  lessonId: Scalars['ID']
+  courseId: Scalars['ID']
+}
+
+export type MutationCommentsByLecturerArgs = {
+  commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput
+  commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery
+}
+
 export type MutationCreateQuizArgs = {
   input: CreateQuizInput
+}
+
+export type MutationUpdatePublicationQuizArgs = {
+  publicationState: Scalars['String']
+  id: Scalars['String']
 }
 
 export type MutationCreateQuestionArgs = {
@@ -745,15 +779,11 @@ export type Query = {
   canAccountManageRoles: Scalars['Boolean']
   academicSubjects: AcademicSubjectsPayload
   academicSubject: AcademicSubject
+  orgOffices: Array<OrgOffice>
+  orgOffice: OrgOffice
   findCourseById: Course
   courses: CoursesPayload
   calculateAvgGradeOfClassworkAssignmentInCourse: Array<AvgGradeOfClassworkByCourse>
-  lessons: LessonsPayload
-  updateLessonPublicationById: Lesson
-  findLessonById: Lesson
-  orgOffices: Array<OrgOffice>
-  orgOffice: OrgOffice
-  file?: Maybe<File>
   classworkMaterials: ClassworkMaterialPayload
   classworkMaterial: ClassworkMaterial
   classworkAssignment: ClassworkAssignment
@@ -764,13 +794,19 @@ export type Query = {
   findOneClassworkSubmission: ClassworkSubmission
   getListOfStudentsSubmitAssignmentsByStatus: ClassworkSubmissionStatusPayload
   submissionStatusStatistics: Array<SubmissionStatusStatistics>
+  file?: Maybe<File>
   conversations: ConversationsPayload
+  lessons: LessonsPayload
+  updateLessonPublicationById: Lesson
+  findLessonById: Lesson
   quizzes: QuizzesPayload
   quizzesStudying: QuizzesPayload
   quiz: Quiz
   question: Question
   questionChoices: QuestionChoicesPayload
   quizSubmit: QuizSubmit
+  findQuizSubmitById: QuizSubmit
+  quizSubmits: QuizSubmitsPayload
 }
 
 export type QueryAccountArgs = {
@@ -799,6 +835,10 @@ export type QueryAcademicSubjectArgs = {
   id: Scalars['ID']
 }
 
+export type QueryOrgOfficeArgs = {
+  id: Scalars['ID']
+}
+
 export type QueryFindCourseByIdArgs = {
   id: Scalars['ID']
 }
@@ -811,27 +851,6 @@ export type QueryCoursesArgs = {
 export type QueryCalculateAvgGradeOfClassworkAssignmentInCourseArgs = {
   optionInput: AvgGradeOfClassworkByCourseOptionInput
   courseId: Scalars['ID']
-}
-
-export type QueryLessonsArgs = {
-  filter: LessonsFilterInput
-  pageOptions: PageOptionsInput
-}
-
-export type QueryUpdateLessonPublicationByIdArgs = {
-  input: UpdateLessonPublicationByIdInput
-}
-
-export type QueryFindLessonByIdArgs = {
-  lessonId: Scalars['ID']
-}
-
-export type QueryOrgOfficeArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryFileArgs = {
-  id: Scalars['ID']
 }
 
 export type QueryClassworkMaterialsArgs = {
@@ -879,10 +898,27 @@ export type QuerySubmissionStatusStatisticsArgs = {
   classworkAssignmentId: Scalars['ID']
 }
 
+export type QueryFileArgs = {
+  id: Scalars['ID']
+}
+
 export type QueryConversationsArgs = {
   conversationPageOptionInput: ConversationPageOptionInput
   lastId?: Maybe<Scalars['ID']>
   roomId: Scalars['String']
+}
+
+export type QueryLessonsArgs = {
+  filter: LessonsFilterInput
+  pageOptions: PageOptionsInput
+}
+
+export type QueryUpdateLessonPublicationByIdArgs = {
+  input: UpdateLessonPublicationByIdInput
+}
+
+export type QueryFindLessonByIdArgs = {
+  lessonId: Scalars['ID']
 }
 
 export type QueryQuizzesArgs = {
@@ -909,6 +945,15 @@ export type QueryQuestionChoicesArgs = {
 
 export type QueryQuizSubmitArgs = {
   quizId: Scalars['ID']
+}
+
+export type QueryFindQuizSubmitByIdArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryQuizSubmitsArgs = {
+  filter: QuizSubmitsFilterInput
+  pageOptions: PageOptionsInput
 }
 
 export type Question = BaseModel & {
@@ -962,6 +1007,15 @@ export type QuizSubmit = BaseModel & {
   questionIds?: Maybe<Array<Scalars['String']>>
   questionChoiceIds?: Maybe<Array<Scalars['String']>>
   createdByAccountId: Scalars['ID']
+}
+
+export type QuizSubmitsFilterInput = {
+  quizId: Scalars['ID']
+}
+
+export type QuizSubmitsPayload = {
+  quizSubmits: Array<QuizSubmit>
+  count: Scalars['Int']
 }
 
 export type QuizzesFilterInput = {
@@ -1057,11 +1111,15 @@ export type UpdateCourseInput = {
 }
 
 export type UpdateLessonInput = {
-  startTime?: Maybe<Scalars['DateTime']>
-  endTime?: Maybe<Scalars['DateTime']>
   description?: Maybe<Scalars['String']>
   absentStudentIds?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
+  classworkMaterialListBeforeClass?: Maybe<Array<Scalars['String']>>
+  classworkMaterialListInClass?: Maybe<Array<Scalars['String']>>
+  classworkMaterialListAfterClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListBeforeClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListInClass?: Maybe<Array<Scalars['String']>>
+  classworkAssignmentListAfterClass?: Maybe<Array<Scalars['String']>>
 }
 
 export type UpdateLessonPublicationByIdInput = {
@@ -2167,6 +2225,51 @@ export type QuestionChoicesQuery = {
       questionId: string
       createdByAccountId: string
     }>
+  }
+}
+
+export type UpdatePublicationQuizMutationVariables = Exact<{
+  id: Scalars['String']
+  publicationState: Scalars['String']
+}>
+
+export type UpdatePublicationQuizMutation = {
+  updatePublicationQuiz: { id: string; publicationState: Publication }
+}
+
+export type QuizSubmitsByQuizIdQueryVariables = Exact<{
+  filter: QuizSubmitsFilterInput
+  pageOptions: PageOptionsInput
+}>
+
+export type QuizSubmitsByQuizIdQuery = {
+  quizSubmits: {
+    count: number
+    quizSubmits: Array<{
+      id: string
+      quizId: string
+      scores: number
+      startTime?: Maybe<any>
+      questionIds?: Maybe<Array<string>>
+      questionChoiceIds?: Maybe<Array<string>>
+      createdByAccountId: string
+    }>
+  }
+}
+
+export type FindQuizSubmitByIdQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type FindQuizSubmitByIdQuery = {
+  findQuizSubmitById: {
+    id: string
+    quizId: string
+    scores: number
+    startTime?: Maybe<any>
+    questionIds?: Maybe<Array<string>>
+    questionChoiceIds?: Maybe<Array<string>>
+    createdByAccountId: string
   }
 }
 
@@ -13263,6 +13366,487 @@ export type QuestionChoicesLazyQueryHookResult = ReturnType<
 export type QuestionChoicesQueryResult = Apollo.QueryResult<
   QuestionChoicesQuery,
   QuestionChoicesQueryVariables
+>
+export const UpdatePublicationQuizDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdatePublicationQuiz' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationState' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updatePublicationQuiz' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publicationState' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdatePublicationQuizMutationFn = Apollo.MutationFunction<
+  UpdatePublicationQuizMutation,
+  UpdatePublicationQuizMutationVariables
+>
+export type UpdatePublicationQuizProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdatePublicationQuizMutation,
+    UpdatePublicationQuizMutationVariables
+  >
+} &
+  TChildProps
+export function withUpdatePublicationQuiz<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdatePublicationQuizMutation,
+    UpdatePublicationQuizMutationVariables,
+    UpdatePublicationQuizProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdatePublicationQuizMutation,
+    UpdatePublicationQuizMutationVariables,
+    UpdatePublicationQuizProps<TChildProps, TDataName>
+  >(UpdatePublicationQuizDocument, {
+    alias: 'updatePublicationQuiz',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdatePublicationQuizMutation__
+ *
+ * To run a mutation, you first call `useUpdatePublicationQuizMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePublicationQuizMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePublicationQuizMutation, { data, loading, error }] = useUpdatePublicationQuizMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      publicationState: // value for 'publicationState'
+ *   },
+ * });
+ */
+export function useUpdatePublicationQuizMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdatePublicationQuizMutation,
+    UpdatePublicationQuizMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdatePublicationQuizMutation,
+    UpdatePublicationQuizMutationVariables
+  >(UpdatePublicationQuizDocument, options)
+}
+export type UpdatePublicationQuizMutationHookResult = ReturnType<
+  typeof useUpdatePublicationQuizMutation
+>
+export type UpdatePublicationQuizMutationResult =
+  Apollo.MutationResult<UpdatePublicationQuizMutation>
+export type UpdatePublicationQuizMutationOptions = Apollo.BaseMutationOptions<
+  UpdatePublicationQuizMutation,
+  UpdatePublicationQuizMutationVariables
+>
+export const QuizSubmitsByQuizIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'QuizSubmitsByQuizId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'QuizSubmitsFilterInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'pageOptions' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'PageOptionsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'quizSubmits' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'filter' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'pageOptions' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'pageOptions' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizSubmits' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'quizId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'scores' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'questionChoiceIds' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdByAccountId' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type QuizSubmitsByQuizIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >
+} &
+  TChildProps
+export function withQuizSubmitsByQuizId<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables,
+    QuizSubmitsByQuizIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables,
+    QuizSubmitsByQuizIdProps<TChildProps, TDataName>
+  >(QuizSubmitsByQuizIdDocument, {
+    alias: 'quizSubmitsByQuizId',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useQuizSubmitsByQuizIdQuery__
+ *
+ * To run a query within a React component, call `useQuizSubmitsByQuizIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuizSubmitsByQuizIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuizSubmitsByQuizIdQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      pageOptions: // value for 'pageOptions'
+ *   },
+ * });
+ */
+export function useQuizSubmitsByQuizIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >(QuizSubmitsByQuizIdDocument, options)
+}
+export function useQuizSubmitsByQuizIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    QuizSubmitsByQuizIdQuery,
+    QuizSubmitsByQuizIdQueryVariables
+  >(QuizSubmitsByQuizIdDocument, options)
+}
+export type QuizSubmitsByQuizIdQueryHookResult = ReturnType<
+  typeof useQuizSubmitsByQuizIdQuery
+>
+export type QuizSubmitsByQuizIdLazyQueryHookResult = ReturnType<
+  typeof useQuizSubmitsByQuizIdLazyQuery
+>
+export type QuizSubmitsByQuizIdQueryResult = Apollo.QueryResult<
+  QuizSubmitsByQuizIdQuery,
+  QuizSubmitsByQuizIdQueryVariables
+>
+export const FindQuizSubmitByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindQuizSubmitById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findQuizSubmitById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'quizId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'scores' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'startTime' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'questionIds' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'questionChoiceIds' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindQuizSubmitByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >
+} &
+  TChildProps
+export function withFindQuizSubmitById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables,
+    FindQuizSubmitByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables,
+    FindQuizSubmitByIdProps<TChildProps, TDataName>
+  >(FindQuizSubmitByIdDocument, {
+    alias: 'findQuizSubmitById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindQuizSubmitByIdQuery__
+ *
+ * To run a query within a React component, call `useFindQuizSubmitByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindQuizSubmitByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindQuizSubmitByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindQuizSubmitByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >(FindQuizSubmitByIdDocument, options)
+}
+export function useFindQuizSubmitByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    FindQuizSubmitByIdQuery,
+    FindQuizSubmitByIdQueryVariables
+  >(FindQuizSubmitByIdDocument, options)
+}
+export type FindQuizSubmitByIdQueryHookResult = ReturnType<
+  typeof useFindQuizSubmitByIdQuery
+>
+export type FindQuizSubmitByIdLazyQueryHookResult = ReturnType<
+  typeof useFindQuizSubmitByIdLazyQuery
+>
+export type FindQuizSubmitByIdQueryResult = Apollo.QueryResult<
+  FindQuizSubmitByIdQuery,
+  FindQuizSubmitByIdQueryVariables
 >
 export const TeachingCourseListDocument = {
   kind: 'Document',

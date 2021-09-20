@@ -1,6 +1,8 @@
 import { Field, InputType, ID, Int, ObjectType } from '@nestjs/graphql'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 
+import { DayOfTheWeekInput } from 'modules/lesson/lesson.type'
+
 import { Course } from './models/Course'
 
 @InputType()
@@ -21,9 +23,9 @@ export class CreateCourseInput {
   @IsNotEmpty({ message: 'Name cannot be empty' })
   name: string
 
-  @Field()
+  @Field((_type) => Date)
   @IsNotEmpty({ message: 'Start date cannot be empty' })
-  startDate: string
+  startDate: Date
 
   @Field()
   @IsNotEmpty({ message: 'Tuition fee cannot be empty' })
@@ -31,6 +33,13 @@ export class CreateCourseInput {
 
   @Field((_type) => [String], { defaultValue: [] })
   lecturerIds?: string[]
+
+  @Field((_type) => [DayOfTheWeekInput], { defaultValue: [] })
+  daysOfTheWeek: DayOfTheWeekInput[]
+
+  @Field()
+  @IsNotEmpty({ message: 'Total number of lessons cannot be empty' })
+  totalNumberOfLessons: number
 }
 
 @InputType()

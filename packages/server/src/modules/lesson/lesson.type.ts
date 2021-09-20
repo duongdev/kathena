@@ -29,7 +29,7 @@ export class CreateLessonInput {
   @IsNotEmpty({ message: 'CourseId can not be empty' })
   courseId: string
 
-  @Field((_type) => Publication)
+  @Field((_type) => Publication, { defaultValue: Publication.Draft })
   publicationState: Publication
 }
 
@@ -76,12 +76,6 @@ export class LessonsPayload {
 
 @InputType()
 export class UpdateLessonInput {
-  @Field((_type) => Date, { nullable: true })
-  startTime?: Date
-
-  @Field((_type) => Date, { nullable: true })
-  endTime?: Date
-
   @Field({ nullable: true })
   description?: string
 
@@ -90,6 +84,24 @@ export class UpdateLessonInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: Publication
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListBeforeClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListInClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkMaterialListAfterClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListBeforeClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListInClass: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  classworkAssignmentListAfterClass: string[]
 }
 
 @InputType()
@@ -120,4 +132,57 @@ export class UpdateLessonPublicationByIdInput {
 
   @Field((_type) => ID)
   courseId: string
+}
+
+export enum DayOfWeek {
+  Sunday = 0,
+  Monday = 1,
+  Tuesday = 2,
+  Wednesday = 3,
+  Thursday = 4,
+  Friday = 5,
+  Saturday = 6,
+}
+registerEnumType(DayOfWeek, {
+  name: 'DayOfWeek',
+})
+@InputType()
+export class DayOfTheWeekInput {
+  @Field((_type) => DayOfWeek)
+  @IsNotEmpty({ message: 'index can not be empty' })
+  dayOfWeek: DayOfWeek
+
+  @Field((_type) => String)
+  @IsNotEmpty({ message: 'startTime can not be empty' })
+  startTime: string
+
+  @Field((_type) => String)
+  @IsNotEmpty({ message: 'endTime can not be empty' })
+  endTime: string
+}
+
+@InputType()
+export class GenerateLessonsInput {
+  @Field((_type) => Date)
+  @IsNotEmpty({ message: 'courseStartDate can not be empty' })
+  courseStartDate: Date
+
+  @Field((_type) => Number)
+  @IsNotEmpty({ message: 'totalNumberOfLessons can not be empty' })
+  totalNumberOfLessons: number
+
+  // min = 0, max = 6
+  // There is no binding solution so I have to comment
+  @Field((_type) => [DayOfTheWeekInput])
+  @IsNotEmpty({ message: 'listOfLessonsForAWeek can not be empty' })
+  daysOfTheWeek: DayOfTheWeekInput[]
+}
+
+@ObjectType()
+export class ListLessons {
+  @Field((_type) => [Lesson])
+  lessons: Lesson[]
+
+  @Field((_type) => Int)
+  count: number
 }

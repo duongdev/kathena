@@ -8,6 +8,22 @@ import {
   normalizeCodeField,
   removeExtraSpaces,
 } from 'core'
+import { DayOfWeek } from 'modules/lesson/lesson.type'
+
+@ObjectType()
+class DayOfTheWeek {
+  @Field((_type) => DayOfWeek)
+  @prop({ require: true })
+  dayOfWeek: DayOfWeek
+
+  @Field((_type) => String)
+  @prop({ require: true })
+  startTime: string
+
+  @Field((_type) => String)
+  @prop({ require: true })
+  endTime: string
+}
 
 @index({ code: 1, orgId: 1 }, { unique: true })
 @index({ name: 1, orgId: 1 })
@@ -67,6 +83,14 @@ export class Course extends BaseModel {
   @Field((_type) => [ID])
   @prop({ type: [Types.ObjectId], default: [] })
   studentIds: string[]
+
+  @Field((_type) => Number)
+  @prop({ require: true, min: 0 })
+  totalNumberOfLessons: number
+
+  @Field((_type) => [DayOfTheWeek])
+  @prop({ type: [DayOfTheWeek], required: true, default: [] })
+  listOfLessonsForAWeek: DayOfTheWeek[]
 
   @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true })

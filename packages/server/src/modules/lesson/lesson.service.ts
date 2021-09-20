@@ -13,9 +13,11 @@ import {
   CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
+  GenerateLessonsInput,
   LessonsFilterInput,
   LessonsFilterInputStatus,
   LessonsPayload,
+  ListLessons,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
 } from './lesson.type'
@@ -303,13 +305,24 @@ export class LessonService {
     updateInput: UpdateLessonInput,
     updatedByAccountId: string,
   ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.updateLessonById.name}] updating...`)
+    this.logger.log({
+      query,
+      updateInput,
+      updatedByAccountId,
+    })
+
     const { lessonId, orgId, courseId } = query
     const {
-      startTime,
-      endTime,
       description,
       publicationState,
       absentStudentIds,
+      classworkMaterialListBeforeClass,
+      classworkMaterialListInClass,
+      classworkMaterialListAfterClass,
+      classworkAssignmentListBeforeClass,
+      classworkAssignmentListInClass,
+      classworkAssignmentListAfterClass,
     } = updateInput
     const { lessonModel } = this
 
@@ -336,55 +349,47 @@ export class LessonService {
       lesson.absentStudentIds = absentStudentIds
     }
 
-    if (startTime) {
-      lesson.startTime = new Date(startTime)
-    }
-
-    if (endTime) {
-      lesson.endTime = endTime
-    }
-
-    if (lesson.endTime < lesson.startTime) {
-      throw new Error('endTime or startTime invalid')
-    }
-
-    const lessons = await lessonModel.find({
-      orgId,
-      courseId,
-    })
-
-    const checkLessonDate = lessons.map((data) => {
-      if (data.id !== lesson.id) {
-        if (
-          (lesson.startTime >= data.startTime &&
-            lesson.startTime <= data.endTime) ||
-          (lesson.endTime >= data.startTime &&
-            lesson.endTime <= data.endTime) ||
-          (data.startTime >= lesson.startTime && data.endTime <= lesson.endTime)
-        ) {
-          return Promise.reject(
-            new Error(`THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME`),
-          )
-        }
-      }
-
-      return lesson
-    })
-
-    await Promise.all(checkLessonDate).catch((err) => {
-      throw new Error(err)
-    })
-
     if (description) {
       lesson.description = description
     }
 
     if (publicationState) {
       lesson.publicationState = publicationState
-      lesson.updatedByAccountId = updatedByAccountId
     }
 
+    if (classworkMaterialListBeforeClass) {
+      lesson.classworkMaterialListBeforeClass = classworkMaterialListBeforeClass
+    }
+
+    if (classworkMaterialListInClass) {
+      lesson.classworkMaterialListInClass = classworkMaterialListInClass
+    }
+
+    if (classworkMaterialListAfterClass) {
+      lesson.classworkMaterialListAfterClass = classworkMaterialListAfterClass
+    }
+
+    if (classworkAssignmentListBeforeClass) {
+      lesson.classworkAssignmentListBeforeClass =
+        classworkAssignmentListBeforeClass
+    }
+
+    if (classworkAssignmentListInClass) {
+      lesson.classworkAssignmentListInClass = classworkAssignmentListInClass
+    }
+
+    if (classworkAssignmentListAfterClass) {
+      lesson.classworkAssignmentListAfterClass =
+        classworkAssignmentListAfterClass
+    }
+
+    lesson.updatedByAccountId = updatedByAccountId
+
     const update = await lesson.save()
+
+    this.logger.log(`[${this.updateLessonById.name}] updating...`)
+    this.logger.verbose(update)
+
     return update
   }
 
@@ -587,5 +592,129 @@ export class LessonService {
     this.logger.verbose(lesson)
 
     return lesson
+  }
+
+  async generateLessons(
+    orgId: string,
+    courseId: string,
+    createdByAccountId: string,
+    generateLessonsInput: GenerateLessonsInput,
+  ): Promise<ListLessons> {
+    this.logger.log(`[${this.generateLessons.name}] generating ...`)
+    this.logger.verbose({
+      orgId,
+      courseId,
+      createdByAccountId,
+      generateLessonsInput,
+    })
+
+    const { lessonModel, courseModel } = this
+
+    const { courseStartDate, totalNumberOfLessons, daysOfTheWeek } =
+      generateLessonsInput
+
+    if (!(await this.orgService.validateOrgId(orgId))) {
+      throw new Error(`Org ID is invalid`)
+    }
+
+    const course = await courseModel.findById(courseId)
+
+    if (!course) {
+      throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    const currentDate = new Date()
+
+    const checkTime = daysOfTheWeek.map((day) => {
+      const startTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.startTime}`,
+      )
+      const endTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.endTime}`,
+      )
+
+      if (endTimeInput.getTime() < startTimeInput.getTime()) {
+        return Promise.reject(
+          new Error(`PLEASE_CHECK_START_AND_END_TIMES_OF_THE_WEEKDAYS`),
+        )
+      }
+      return day
+    })
+
+    await Promise.all(checkTime).catch((err) => {
+      throw new Error(err)
+    })
+
+    // generate
+    const days: ANY = []
+    const date = new Date(courseStartDate)
+
+    while (days.length < totalNumberOfLessons) {
+      this.logger.log(`While days.length === totalNumberOfLessons`)
+      this.logger.verbose({
+        lengthDays: days.length,
+        totalNumberOfLessons,
+      })
+      const daysFilter = daysOfTheWeek.filter((day) => {
+        return day.dayOfWeek === date.getDay()
+      })
+      if (daysFilter.length > 0) {
+        const startTime = new Date(
+          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${
+            daysFilter[0].startTime
+          }`,
+        )
+        const endTime = new Date(
+          `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${
+            daysFilter[0].endTime
+          }`,
+        )
+
+        this.logger.verbose({
+          date,
+          startTime,
+          endTime,
+        })
+
+        const timeOfDay = {
+          startTime,
+          endTime,
+        }
+        days.push(timeOfDay)
+
+        const createLessonInput: CreateLessonInput = {
+          ...timeOfDay,
+          courseId,
+          description: '',
+          publicationState: Publication.Draft,
+        }
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await this.createLesson(orgId, createdByAccountId, createLessonInput)
+        } catch (err) {
+          throw new Error(err)
+        }
+      }
+      date.setDate(date.getDate() + 1)
+    }
+
+    this.logger.verbose({ days, length: days.length })
+
+    const lessons = await lessonModel.find({ orgId, courseId })
+    const count = await lessonModel.countDocuments({ orgId, courseId })
+
+    this.logger.verbose({ lessons, count })
+
+    const results: ListLessons = {
+      lessons,
+      count,
+    }
+
+    return results
   }
 }

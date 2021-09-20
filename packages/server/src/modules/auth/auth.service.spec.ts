@@ -8,6 +8,7 @@ import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { CourseService } from 'modules/course/course.service'
+import { CreateCourseInput } from 'modules/course/course.type'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
@@ -228,7 +229,7 @@ describe('auth.service', () => {
       await expect(
         authService.accountHasPermission({
           accountId: objectId().toString(),
-          permission: 'awdawdawd',
+          permission: 'NoPermission',
         }),
       ).resolves.toBe(false)
 
@@ -666,6 +667,8 @@ describe('auth.service', () => {
     it('returns false if account is not found', async () => {
       expect.assertions(1)
 
+      jest.spyOn(authService, 'getAccountRoles').mockResolvedValueOnce([])
+
       await expect(
         authService.canAccountManageCourse(objectId(), objectId()),
       ).resolves.toBeFalsy()
@@ -682,6 +685,10 @@ describe('auth.service', () => {
         .spyOn(authService['accountService'], 'findAccountById')
         .mockResolvedValueOnce(account as ANY)
 
+      jest
+        .spyOn(authService, 'getAccountRoles')
+        .mockResolvedValueOnce([{ priority: 4 }] as ANY)
+
       await expect(
         authService.canAccountManageCourse(objectId(), account.orgId),
       ).resolves.toBeFalsy()
@@ -690,15 +697,23 @@ describe('auth.service', () => {
     it('returns true if account can manage course', async () => {
       expect.assertions(3)
 
-      const courseInpust: ANY = {
+      const courseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'string',
         name: 'string',
-        startDate: Date.now(),
+        startDate: new Date(),
         tuitionFee: 123123,
         lecturerIds: [],
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 0,
       }
+
+      jest
+        .spyOn(authService, 'getAccountRoles')
+        .mockResolvedValueOnce([{ priority: 4 }] as ANY)
+        .mockResolvedValueOnce([{ priority: 4 }] as ANY)
+        .mockResolvedValueOnce([{ priority: 4 }] as ANY)
 
       jest
         .spyOn(orgService, 'validateOrgId')
@@ -716,7 +731,7 @@ describe('auth.service', () => {
       const course = await courseService.createCourse(
         objectId(),
         objectId(),
-        courseInpust,
+        courseInput,
       )
 
       const courseEdited = {
@@ -767,6 +782,8 @@ describe('auth.service', () => {
       const academic: ANY = {
         lecturerIds: [account.orgId],
       }
+
+      jest.spyOn(authService, 'getAccountRoles').mockResolvedValueOnce([])
 
       jest
         .spyOn(accountService, 'findAccountById')

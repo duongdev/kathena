@@ -18,6 +18,8 @@ import {
   AvgGradeOfClassworkByCourseOptionInput,
 } from 'modules/classwork/classwork.type'
 import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
+import { LessonService } from 'modules/lesson/lesson.service'
+import { GenerateLessonsInput } from 'modules/lesson/lesson.type'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
@@ -37,6 +39,9 @@ export class CourseService {
     private readonly classworkAssignmentModel: ReturnModelType<
       typeof ClassworkAssignment
     >,
+
+    @Inject(forwardRef(() => LessonService))
+    private readonly lessonService: LessonService,
 
     @Inject(forwardRef(() => AcademicService))
     private readonly academicService: AcademicService,
@@ -62,6 +67,9 @@ export class CourseService {
     orgId: string,
     createCourseInput: CreateCourseInput,
   ): Promise<DocumentType<Course>> {
+    this.logger.log(`[${this.createCourse.name}] creating ...`)
+    this.logger.verbose(createCourseInput)
+
     const {
       academicSubjectId,
       orgOfficeId,
@@ -70,6 +78,8 @@ export class CourseService {
       startDate,
       tuitionFee,
       lecturerIds,
+      daysOfTheWeek,
+      totalNumberOfLessons,
     } = createCourseInput
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
@@ -131,13 +141,14 @@ export class CourseService {
 
     const currentDate = new Date()
     const startDateInput = new Date(startDate)
+
     if (
       startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
     ) {
       throw new Error('START_DATE_INVALID')
     }
 
-    const course = this.courseModel.create({
+    const course = await this.courseModel.create({
       createdByAccountId: creatorId,
       orgId,
       name,
@@ -150,6 +161,24 @@ export class CourseService {
       publication: Publication.Draft,
     })
 
+    if (daysOfTheWeek.length !== 0 && totalNumberOfLessons !== 0) {
+      const generateLessonsInput: GenerateLessonsInput = {
+        courseStartDate: course.startDate,
+        daysOfTheWeek,
+        totalNumberOfLessons,
+      }
+      await Promise.all([
+        this.lessonService.generateLessons(
+          orgId,
+          course.id,
+          creatorId,
+          generateLessonsInput,
+        ),
+      ])
+    }
+
+    this.logger.log(`[${this.createCourse.name}] created ...`)
+    this.logger.verbose(course)
     return course
   }
 
