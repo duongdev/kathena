@@ -41,7 +41,7 @@
     "dotenv": "10.0.0",
     "fastify-static": "4.2.3",
     "file-type": "16.5.3",
-    "graphql": "15.5.3",
+    "graphql": "15.6.0",
     "graphql-subscriptions": "1.2.1",
     "graphql-tools": "8.2.0",
     "graphql-upload": "12.0.0",
