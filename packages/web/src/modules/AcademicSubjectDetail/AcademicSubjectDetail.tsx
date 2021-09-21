@@ -58,7 +58,7 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
 
   return (
     <PageContainer
-      backButtonLabel="Danh sách khóa học"
+      backButtonLabel="Danh sách môn học"
       withBackButton={ACADEMIC_SUBJECTS}
       maxWidth="md"
       title={subject.name}
