@@ -45,7 +45,9 @@ const OrgSidebar: FC<OrgSidebarProps> = () => {
           key: 'academicSubject',
           title: 'Học vụ',
           icon: Book,
-          hidden: !permissions.includes(Permission.Hr_Access),
+          hidden: !permissions.includes(
+            Permission.Academic_ListAcademicSubjects,
+          ),
           items: [
             {
               key: 'academicSubjectList',
@@ -86,17 +88,6 @@ const OrgSidebar: FC<OrgSidebarProps> = () => {
               hidden: !permissions.includes(Permission.Teaching_Course_Access),
               active: !!matchPath(window.location.pathname, {
                 path: TEACHING_COURSE_LIST,
-                exact: false,
-                strict: false,
-              }),
-            },
-            {
-              key: 'academicSubjectList',
-              label: 'Môn học',
-              link: ACADEMIC_SUBJECT_LIST,
-              hidden: !permissions.includes(Permission.Teaching_Course_Access),
-              active: !!matchPath(window.location.pathname, {
-                path: ACADEMIC_SUBJECT_LIST,
                 exact: false,
                 strict: false,
               }),
