@@ -14,6 +14,7 @@ query Courses($orgId: ID!, $skip: Int!, $limit: Int!, $searchText: String) {
       tuitionFee
       lecturerIds
       orgOfficeId
+      publicationState
     }
     count
   }
