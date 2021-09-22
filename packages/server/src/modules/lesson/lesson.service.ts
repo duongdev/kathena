@@ -20,6 +20,7 @@ import {
   ListLessons,
   UpdateLessonInput,
   UpdateLessonPublicationByIdInput,
+  UpdateLessonTimeOptions,
 } from './lesson.type'
 import { Lesson } from './models/Lesson'
 
@@ -315,8 +316,12 @@ export class LessonService {
     const { lessonId, orgId, courseId } = query
     const {
       description,
+      options,
+      numberOfLessonsPostponed,
       publicationState,
       absentStudentIds,
+      startTime,
+      endTime,
       classworkMaterialListBeforeClass,
       classworkMaterialListInClass,
       classworkMaterialListAfterClass,
@@ -324,7 +329,7 @@ export class LessonService {
       classworkAssignmentListInClass,
       classworkAssignmentListAfterClass,
     } = updateInput
-    const { lessonModel } = this
+    const { lessonModel, courseModel } = this
 
     if (
       !(await this.authService.canAccountManageCourse(
@@ -348,6 +353,121 @@ export class LessonService {
     if (absentStudentIds) {
       lesson.absentStudentIds = absentStudentIds
     }
+
+    // Start update startTime and endTime
+    const lessons = lessonModel.find({
+      orgId,
+      courseId,
+    })
+
+    if (options === UpdateLessonTimeOptions.ArbitraryChange) {
+      if (startTime) {
+        lesson.startTime = new Date(startTime)
+      }
+
+      if (endTime) {
+        lesson.endTime = endTime
+      }
+
+      if (lesson.endTime < lesson.startTime) {
+        throw new Error('endTime or startTime invalid')
+      }
+
+      const lessonsData = await lessons
+
+      const checkLessonDate = lessonsData.map((data) => {
+        if (data.id !== lesson.id) {
+          if (
+            (lesson.startTime >= data.startTime &&
+              lesson.startTime <= data.endTime) ||
+            (lesson.endTime >= data.startTime &&
+              lesson.endTime <= data.endTime) ||
+            (data.startTime >= lesson.startTime &&
+              data.endTime <= lesson.endTime)
+          ) {
+            return Promise.reject(
+              new Error(`THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME`),
+            )
+          }
+        }
+
+        return lesson
+      })
+
+      await Promise.all(checkLessonDate).catch((err) => {
+        throw new Error(err)
+      })
+    } else if (
+      options === UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons
+    ) {
+      const lessonsData = await lessons.find({
+        $and: [
+          {
+            startTime: {
+              $gte: lesson.startTime,
+            },
+          },
+        ],
+      })
+
+      const course = await courseModel.findOne({ _id: courseId, orgId })
+
+      if (!course) {
+        throw new Error(`Course not found`)
+      }
+
+      const updateTime = lessonsData.map(async (lessonData) => {
+        const lessonStartTime = new Date(lessonData.startTime)
+        const lessonEndTime = new Date(lessonData.endTime)
+
+        let count = 0
+        if (numberOfLessonsPostponed) {
+          while (count < numberOfLessonsPostponed) {
+            if (!course.listOfLessonsForAWeek.length) break
+
+            lessonStartTime.setDate(lessonStartTime.getDate() + 1)
+            lessonEndTime.setDate(lessonEndTime.getDate() + 1)
+
+            const daysFilter = course.listOfLessonsForAWeek.filter((day) => {
+              this.logger.verbose({
+                dayOfWeek: day.dayOfWeek,
+                day: lessonStartTime.getDay(),
+              })
+              return day.dayOfWeek === lessonStartTime.getDay()
+            })
+
+            this.logger.verbose({
+              daysFilter,
+            })
+
+            if (daysFilter.length > 0) {
+              count += 1
+            }
+
+            this.logger.verbose({
+              count,
+              length: daysFilter.length,
+              lessonStartTime,
+              lessonEndTime,
+            })
+          }
+        }
+
+        // eslint-disable-next-line no-param-reassign
+        lessonData.startTime = lessonStartTime
+        // eslint-disable-next-line no-param-reassign
+        lessonData.endTime = lessonEndTime
+        lessonData.save()
+        return lessonData
+      })
+      await Promise.all(updateTime).catch((err) => {
+        throw new Error(err)
+      })
+
+      lesson.startTime = lessonsData[0].startTime
+      lesson.endTime = lessonsData[0].endTime
+    }
+    // End update startTime and endTime
 
     if (description) {
       lesson.description = description
@@ -386,9 +506,6 @@ export class LessonService {
     lesson.updatedByAccountId = updatedByAccountId
 
     const update = await lesson.save()
-
-    this.logger.log(`[${this.updateLessonById.name}] updating...`)
-    this.logger.verbose(update)
 
     return update
   }

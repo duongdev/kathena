@@ -710,6 +710,10 @@ input CreateLessonInput {
 }
 
 input UpdateLessonInput {
+  options: UpdateLessonTimeOptions = ArbitraryChange
+  numberOfLessonsPostponed: Float = 0
+  startTime: DateTime
+  endTime: DateTime
   description: String
   absentStudentIds: [String!]
   publicationState: Publication
@@ -719,6 +723,11 @@ input UpdateLessonInput {
   classworkAssignmentListBeforeClass: [String!]
   classworkAssignmentListInClass: [String!]
   classworkAssignmentListAfterClass: [String!]
+}
+
+enum UpdateLessonTimeOptions {
+  DoNotChangeTheOrderOfTheLessons
+  ArbitraryChange
 }
 
 input CommentsForTheLessonByLecturerInput {
