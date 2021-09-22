@@ -16,6 +16,7 @@ import {
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
+  Link,
   Typography,
   useDialogState,
 } from '@kathena/ui'
@@ -27,8 +28,13 @@ import {
   useFindLessonByIdQuery,
   useUpdateLessonMutation,
 } from 'graphql/generated'
+import {
+  buildPath,
+  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+} from 'utils/path-builder'
 
 import Attendance from './Attendance'
+import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
 import UpdateClassworkLessonDialog from './UpdateClassworkLessonDialog'
 
 export type DetailClassworkLessonProps = {}
@@ -85,7 +91,6 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
   }
-
   return (
     <div className={classes.root}>
       <PageContainer
@@ -199,13 +204,13 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             <SectionCard
               maxContentHeight={false}
               gridItem={{ xs: 12, md: 12 }}
-              title="Thông tin trước buổi học"
+              title="Thông tin trong buổi học"
             >
               <CardContent>
                 <Grid item xs={12}>
                   <Stack spacing={2} style={{ display: 'flex' }}>
                     <Typography variant="subtitle2">
-                      Danh sách Bài tập
+                      Danh sách tài liệu
                     </Typography>
                   </Stack>
                 </Grid>
@@ -213,16 +218,21 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                   <CardContent>
                     {classworkLesson.classworkMaterialListInClass?.length
                       ? classworkLesson.classworkMaterialListInClass.map(
-                          (classworkLessona) => (
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                marginBottom: '5px',
-                              }}
-                            >
-                              <Typography>{classworkLessona}</Typography>
-                            </div>
+                          (classworkLessonMaterialInClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                  {
+                                    id: classworkLessonMaterialInClass,
+                                  },
+                                )}
+                              >
+                                <MaterialDisplayName
+                                  materialId={classworkLessonMaterialInClass}
+                                />
+                              </Link>
+                            </>
                           ),
                         )
                       : 'Không có bài tập'}
