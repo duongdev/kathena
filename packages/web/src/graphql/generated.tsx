@@ -1901,6 +1901,12 @@ export type FindLessonByIdQuery = {
     | 'courseId'
     | 'publicationState'
     | 'avgNumberOfStars'
+    | 'classworkMaterialListBeforeClass'
+    | 'classworkMaterialListInClass'
+    | 'classworkMaterialListAfterClass'
+    | 'classworkAssignmentListBeforeClass'
+    | 'classworkAssignmentListInClass'
+    | 'classworkAssignmentListAfterClass'
   >
 }
 
@@ -10733,6 +10739,45 @@ export const FindLessonByIdDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'avgNumberOfStars' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'classworkMaterialListBeforeClass',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'classworkMaterialListInClass' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'classworkMaterialListAfterClass',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'classworkAssignmentListBeforeClass',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'classworkAssignmentListInClass',
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'classworkAssignmentListAfterClass',
+                  },
                 },
               ],
             },

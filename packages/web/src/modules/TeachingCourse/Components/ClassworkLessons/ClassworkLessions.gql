@@ -55,6 +55,12 @@ query FindLessonById($lessonId: ID!) {
     courseId
     publicationState
     avgNumberOfStars
+    classworkMaterialListBeforeClass
+    classworkMaterialListInClass
+    classworkMaterialListAfterClass
+    classworkAssignmentListBeforeClass
+    classworkAssignmentListInClass
+    classworkAssignmentListAfterClass
   }
 }
 
