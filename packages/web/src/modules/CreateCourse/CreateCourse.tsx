@@ -21,6 +21,7 @@ import {
   useCreateCourseMutation,
   CoursesDocument,
   Permission,
+  DayOfWeek,
 } from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
 
@@ -35,6 +36,12 @@ export type CourseFormInput = {
   lecturerIds: Array<Account>
   startDate: string
   orgOfficeId: string
+  totalNumberOfLessons: number
+  daysOfTheWeek: {
+    dayOfWeek: DayOfWeek
+    startTime: string
+    endTime: string
+  }[]
 }
 
 const labels: { [k in keyof CourseFormInput]: string } = {
@@ -44,6 +51,8 @@ const labels: { [k in keyof CourseFormInput]: string } = {
   lecturerIds: 'Giảng viên',
   startDate: 'Ngày bắt đầu',
   orgOfficeId: 'Chi nhánh',
+  totalNumberOfLessons: 'Tống số buổi học',
+  daysOfTheWeek: 'Buổi học trong tuần',
 }
 
 const validationSchema = yup.object({
@@ -53,6 +62,11 @@ const validationSchema = yup.object({
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
   orgOfficeId: yup.string().label(labels.orgOfficeId).trim().required(),
+  totalNumberOfLessons: yup
+    .number()
+    .label(labels.totalNumberOfLessons)
+    .min(1)
+    .required(),
 })
 
 const CreateCourse: FC<CreateCourseProps> = (props) => {
@@ -86,6 +100,8 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
     lecturerIds: [],
     startDate: '',
     orgOfficeId: '',
+    totalNumberOfLessons: 1,
+    daysOfTheWeek: [],
   }
 
   const handleSubmitForm = useCallback(
@@ -105,6 +121,8 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
               tuitionFee: input.tuitionFee,
               orgOfficeId: input.orgOfficeId,
               lecturerIds,
+              totalNumberOfLessons: input.totalNumberOfLessons,
+              daysOfTheWeek: input.daysOfTheWeek,
             },
           },
         })

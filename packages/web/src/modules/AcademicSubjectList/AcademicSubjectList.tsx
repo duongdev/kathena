@@ -15,7 +15,7 @@ import {
   useLocationQuery,
   usePagination,
 } from '@kathena/ui'
-import { useAuth, WithAuth } from 'common/auth'
+import { useAuth, WithAuth, RequiredPermission } from 'common/auth'
 import { Permission, useAcademicSubjectListQuery } from 'graphql/generated'
 import {
   buildPath,
@@ -54,14 +54,19 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
       title="Danh sách môn học"
       actions={[
         <Search />,
-        <Button
-          variant="contained"
-          color="primary"
-          link={CREATE_ACADEMIC_SUBJECT}
-          startIcon={<PlusCircle />}
+        <RequiredPermission
+          permission={Permission.Academic_AcademicSubject_Access}
         >
-          Thêm môn học
-        </Button>,
+          <Button
+            variant="contained"
+            color="primary"
+            link={CREATE_ACADEMIC_SUBJECT}
+            startIcon={<PlusCircle />}
+          >
+            Thêm môn học
+          </Button>
+          ,
+        </RequiredPermission>,
       ]}
     >
       <Paper>
@@ -139,7 +144,12 @@ const useStyles = makeStyles(() => ({
 }))
 
 const WithPermissionAcademicSubjectList = () => (
-  <WithAuth permission={Permission.Academic_ListAcademicSubjects}>
+  <WithAuth
+    permission={
+      Permission.Academic_ListAcademicSubjects ||
+      Permission.Teaching_Course_Access
+    }
+  >
     <AcademicSubjectList />
   </WithAuth>
 )
