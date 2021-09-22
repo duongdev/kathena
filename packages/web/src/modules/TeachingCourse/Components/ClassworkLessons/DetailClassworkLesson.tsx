@@ -355,7 +355,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             <SectionCard
               maxContentHeight={false}
               gridItem={{ xs: 12, md: 12 }}
-              title="Thông tin trong buổi học"
+              title="Thông tin sau buổi học"
             >
               <CardContent>
                 {/* Danh sách tài liệu sau buổi học */}
