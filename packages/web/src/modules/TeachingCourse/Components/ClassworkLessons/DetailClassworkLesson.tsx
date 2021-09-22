@@ -15,20 +15,28 @@ import {
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
-  useDialogState,
   SectionCard,
+  Link,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
-import { WithAuth, RequiredPermission } from 'common/auth'
+import { RequiredPermission, WithAuth } from 'common/auth'
 import {
+  FindLessonByIdDocument,
   Permission,
+  Publication,
   useFindLessonByIdQuery,
   useUpdateLessonMutation,
-  FindLessonByIdDocument,
-  Publication,
 } from 'graphql/generated'
+import {
+  buildPath,
+  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+} from 'utils/path-builder'
 
 import Attendance from './Attendance'
+import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
+import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
 import UpdateClassworkLessonDialog from './UpdateClassworkLessonDialog'
 
 export type DetailClassworkLessonProps = {}
@@ -85,7 +93,6 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
   }
-
   return (
     <div className={classes.root}>
       <PageContainer
@@ -132,95 +139,327 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           onClose={handleCloseAttendance}
         />
         <Grid container spacing={DASHBOARD_SPACING}>
-          <SectionCard
-            maxContentHeight={false}
-            gridItem={{ xs: 12, md: 9 }}
-            title="Thông tin buổi học"
-          >
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item container xs={12}>
-                  <Grid item xs={4}>
-                    <Stack spacing={2}>
-                      <InfoBlock label="Tiêu đề">
-                        {classworkLesson.description}
-                      </InfoBlock>
-                      <InfoBlock label="Thời gian tạo">
-                        <Typography>
-                          {format(
-                            new Date(classworkLesson.createdAt),
-                            'dd/MM/yyyy - h:mm a',
-                          )}
-                        </Typography>
-                      </InfoBlock>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Stack spacing={2}>
-                      <InfoBlock label="Trạng thái">
-                        {classworkLesson.publicationState}
-                      </InfoBlock>
-                      <InfoBlock label="Thời gian bắt đầu">
-                        <Typography>
-                          {format(
-                            new Date(classworkLesson.startTime),
-                            'dd/MM/yyyy - h:mm a',
-                          )}
-                        </Typography>
-                      </InfoBlock>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Stack spacing={2}>
-                      <InfoBlock label="Đánh giá sao">
-                        <Rating
-                          name="customized-empty"
-                          readOnly
-                          defaultValue={classworkLesson.avgNumberOfStars}
-                          precision={0.5}
-                        />
-                      </InfoBlock>
-                      <InfoBlock label="Thời gian kêt thúc">
-                        <Typography>
-                          {format(
-                            new Date(classworkLesson.endTime),
-                            'dd/MM/yyyy - h:mm a',
-                          )}
-                        </Typography>
-                      </InfoBlock>
-                    </Stack>
+          {/* Thông tin buổi học */}
+          <Grid container item xs={9} spacing={2}>
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12, md: 12 }}
+              title="Thông tin buổi học"
+            >
+              <CardContent>
+                <Grid container spacing={2}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={4}>
+                      <Stack spacing={2}>
+                        <InfoBlock label="Tiêu đề">
+                          {classworkLesson.description}
+                        </InfoBlock>
+                        <InfoBlock label="Thời gian tạo">
+                          <Typography>
+                            {format(
+                              new Date(classworkLesson.createdAt),
+                              'dd/MM/yyyy - h:mm a',
+                            )}
+                          </Typography>
+                        </InfoBlock>
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Stack spacing={2}>
+                        <InfoBlock label="Trạng thái">
+                          {classworkLesson.publicationState}
+                        </InfoBlock>
+                        <InfoBlock label="Thời gian bắt đầu">
+                          <Typography>
+                            {format(
+                              new Date(classworkLesson.startTime),
+                              'dd/MM/yyyy - h:mm a',
+                            )}
+                          </Typography>
+                        </InfoBlock>
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Stack spacing={2}>
+                        <InfoBlock label="Đánh giá sao">
+                          <Rating
+                            name="customized-empty"
+                            readOnly
+                            defaultValue={classworkLesson.avgNumberOfStars}
+                            precision={0.5}
+                          />
+                        </InfoBlock>
+                        <InfoBlock label="Thời gian kêt thúc">
+                          <Typography>
+                            {format(
+                              new Date(classworkLesson.endTime),
+                              'dd/MM/yyyy - h:mm a',
+                            )}
+                          </Typography>
+                        </InfoBlock>
+                      </Stack>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-          </SectionCard>
-          <SectionCard
-            maxContentHeight={false}
-            gridItem={{ xs: 12, md: 3 }}
-            title={`SV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
-          >
-            <CardContent>
-              {classworkLesson.absentStudentIds.length ? (
-                classworkLesson.absentStudentIds.map((classworkSubmission) => (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginBottom: '5px',
-                    }}
-                  >
-                    <AccountAvatar accountId={classworkSubmission} />
-                    <AccountDisplayName
-                      style={{ cursor: 'pointer', paddingLeft: '0.5em' }}
-                      accountId={classworkSubmission}
-                    />
-                  </div>
-                ))
-              ) : (
-                <Typography>Không có học viên nào vắng</Typography>
-              )}
-            </CardContent>
-          </SectionCard>
+              </CardContent>
+            </SectionCard>
+            {/* Trước buổi học */}
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12, md: 12 }}
+              title="Thông tin trước buổi học"
+            >
+              <CardContent>
+                {/* Danh sách tài liệu trước buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách tài liệu
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkMaterialListBeforeClass?.length
+                      ? classworkLesson.classworkMaterialListBeforeClass.map(
+                          (classworkMaterialListBeforeClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                  {
+                                    id: classworkMaterialListBeforeClass,
+                                  },
+                                )}
+                              >
+                                <MaterialDisplayName
+                                  materialId={classworkMaterialListBeforeClass}
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có tài liệu'}
+                  </CardContent>
+                </Grid>
+                {/* Danh sách bài tập trước buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách bài tập
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkAssignmentListBeforeClass?.length
+                      ? classworkLesson.classworkAssignmentListBeforeClass.map(
+                          (classworkAssignmentListBeforeClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                  {
+                                    id: classworkAssignmentListBeforeClass,
+                                  },
+                                )}
+                              >
+                                <AssignmentDisplayName
+                                  assignmentId={
+                                    classworkAssignmentListBeforeClass
+                                  }
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có bài tập'}
+                  </CardContent>
+                </Grid>
+              </CardContent>
+            </SectionCard>
+            {/* Thông tin trong buổi học */}
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12, md: 12 }}
+              title="Thông tin trong buổi học"
+            >
+              <CardContent>
+                {/* Danh sách tài liệu trong buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách tài liệu
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkMaterialListInClass?.length
+                      ? classworkLesson.classworkMaterialListInClass.map(
+                          (classworkLessonMaterialInClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                  {
+                                    id: classworkLessonMaterialInClass,
+                                  },
+                                )}
+                              >
+                                <MaterialDisplayName
+                                  materialId={classworkLessonMaterialInClass}
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có tài liệu'}
+                  </CardContent>
+                </Grid>
+                {/* Danh sách bài tập trong buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách bài tập
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkAssignmentListInClass?.length
+                      ? classworkLesson.classworkAssignmentListInClass.map(
+                          (classworkAssignmentListInClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                  {
+                                    id: classworkAssignmentListInClass,
+                                  },
+                                )}
+                              >
+                                <AssignmentDisplayName
+                                  assignmentId={classworkAssignmentListInClass}
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có bài tập'}
+                  </CardContent>
+                </Grid>
+              </CardContent>
+            </SectionCard>
+            {/* Danh sách sau buổi học */}
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12, md: 12 }}
+              title="Thông tin sau buổi học"
+            >
+              <CardContent>
+                {/* Danh sách tài liệu sau buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách tài liệu
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkMaterialListAfterClass?.length
+                      ? classworkLesson.classworkMaterialListAfterClass.map(
+                          (classworkMaterialListAfterClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                  {
+                                    id: classworkMaterialListAfterClass,
+                                  },
+                                )}
+                              >
+                                <MaterialDisplayName
+                                  materialId={classworkMaterialListAfterClass}
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có tài liệu'}
+                  </CardContent>
+                </Grid>
+                {/* Danh sách bài tập sau buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Typography variant="subtitle2">
+                      Danh sách bài tập
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.classworkAssignmentListAfterClass?.length
+                      ? classworkLesson.classworkAssignmentListAfterClass.map(
+                          (classworkAssignmentListAfterClass) => (
+                            <>
+                              <Link
+                                to={buildPath(
+                                  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                  {
+                                    id: classworkAssignmentListAfterClass,
+                                  },
+                                )}
+                              >
+                                <AssignmentDisplayName
+                                  assignmentId={
+                                    classworkAssignmentListAfterClass
+                                  }
+                                />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có bài tập'}
+                  </CardContent>
+                </Grid>
+              </CardContent>
+            </SectionCard>
+          </Grid>
+
+          {/* Thông tin học viên vắng */}
+          <Grid container item xs={3}>
+            <SectionCard
+              fullHeight={false}
+              gridItem={{ xs: 12, md: 12 }}
+              title={`SV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
+            >
+              <CardContent>
+                {classworkLesson.absentStudentIds.length ? (
+                  classworkLesson.absentStudentIds.map(
+                    (classworkSubmission) => (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginBottom: '5px',
+                        }}
+                      >
+                        <AccountAvatar accountId={classworkSubmission} />
+                        <AccountDisplayName
+                          style={{ cursor: 'pointer', paddingLeft: '0.5em' }}
+                          accountId={classworkSubmission}
+                        />
+                      </div>
+                    ),
+                  )
+                ) : (
+                  <Typography>Không có học viên nào vắng</Typography>
+                )}
+              </CardContent>
+            </SectionCard>
+          </Grid>
         </Grid>
       </PageContainer>
     </div>

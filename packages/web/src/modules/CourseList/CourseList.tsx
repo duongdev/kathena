@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react'
 import { makeStyles, Paper, Skeleton } from '@material-ui/core'
 import AccountDisplayName from 'components/AccountDisplayName'
 import OrgOfficeName from 'components/OrgOfficeName'
+import PublicationChip from 'components/PublicationChip'
 import Search from 'components/Search'
 import { format } from 'date-fns'
 
@@ -115,6 +116,12 @@ const CourseList: FC<CourseListProps> = (props) => {
                   lecturerIds.map((lecturerId) => (
                     <AccountDisplayName accountId={lecturerId} />
                   )),
+              },
+              {
+                label: 'Trạng thái',
+                render: ({ publicationState }) => (
+                  <PublicationChip publication={publicationState} />
+                ),
               },
             ]}
             pagination={{
