@@ -1,6 +1,6 @@
 import { ClassworkMaterial } from 'graphql/generated'
 
-export const getDisplayName = (
+export const getDescription = (
   material: Partial<ClassworkMaterial>,
   opts?: {
     uppercase?: boolean
@@ -10,31 +10,31 @@ export const getDisplayName = (
     forceAtSign?: boolean
   },
 ) => {
-  let displayName =
+  let materialDescription =
     material.description ||
     `${opts?.noAtSign ? '' : '@'}${material.description}`
 
   if (opts?.uppercase) {
-    displayName = displayName?.toUpperCase()
+    materialDescription = materialDescription?.toUpperCase()
   }
 
   if (opts?.forceAtSign) {
-    displayName = `@${displayName.replace(/^@+/, '')}`
+    materialDescription = `@${materialDescription.replace(/^@+/, '')}`
   }
 
-  return displayName || ''
+  return materialDescription || ''
 }
-export const getUserName = (
+export const getTitle = (
   material: Partial<ClassworkMaterial>,
   opts?: {
     noAtSign?: boolean
   },
 ) => {
-  const title =
+  const materialTitle =
     material?.title || `${opts?.noAtSign ? '' : '@'}${material.title}`
-  return title || ''
+  return materialTitle || ''
 }
 
-const useClassworkMaterialUtils = () => ({ getDisplayName, getUserName })
+const useClassworkMaterialUtils = () => ({ getDescription, getTitle })
 
 export default useClassworkMaterialUtils

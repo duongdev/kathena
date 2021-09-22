@@ -29,7 +29,7 @@ const MaterialDisplayName: FC<MaterialDisplayNameProps> = (props) => {
   const { material: materialProp } = props as MaterialDisplayNameWithAccount
 
   const classes = useStyles(props)
-  const { getUserName } = useClassworkMaterialUtils()
+  const { getTitle } = useClassworkMaterialUtils()
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: materialId },
     skip: !!materialProp,
@@ -40,8 +40,8 @@ const MaterialDisplayName: FC<MaterialDisplayNameProps> = (props) => {
     [materialProp, data?.classworkMaterial],
   )
   const title = useMemo(
-    () => (material ? getUserName(material) : ''),
-    [material, getUserName],
+    () => (material ? getTitle(material) : ''),
+    [material, getTitle],
   )
 
   if (loading) return <Skeleton variant="text" className={classes.skeleton} />
