@@ -51,7 +51,7 @@
     "mongodb-memory-server": "6.9.6",
     "mongoose": "5.13.9",
     "nestjs-typegoose": "7.1.38",
-    "nodemailer": "6.6.3",
+    "nodemailer": "6.6.4",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.3.0",
