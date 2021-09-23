@@ -429,27 +429,12 @@ export class LessonService {
             lessonEndTime.setDate(lessonEndTime.getDate() + 1)
 
             const daysFilter = course.listOfLessonsForAWeek.filter((day) => {
-              this.logger.verbose({
-                dayOfWeek: day.dayOfWeek,
-                day: lessonStartTime.getDay(),
-              })
               return day.dayOfWeek === lessonStartTime.getDay()
-            })
-
-            this.logger.verbose({
-              daysFilter,
             })
 
             if (daysFilter.length > 0) {
               count += 1
             }
-
-            this.logger.verbose({
-              count,
-              length: daysFilter.length,
-              lessonStartTime,
-              lessonEndTime,
-            })
           }
         }
 
@@ -506,6 +491,10 @@ export class LessonService {
     lesson.updatedByAccountId = updatedByAccountId
 
     const update = await lesson.save()
+
+    this.logger.log({
+      update,
+    })
 
     return update
   }
