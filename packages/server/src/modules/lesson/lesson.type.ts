@@ -74,8 +74,30 @@ export class LessonsPayload {
   count: number
 }
 
+export enum UpdateLessonTimeOptions {
+  DoNotChangeTheOrderOfTheLessons = 'DoNotChangeTheOrderOfTheLessons',
+  ArbitraryChange = 'ArbitraryChange',
+}
+registerEnumType(UpdateLessonTimeOptions, {
+  name: 'UpdateLessonTimeOptions',
+})
+
 @InputType()
 export class UpdateLessonInput {
+  @Field((_type) => UpdateLessonTimeOptions, {
+    defaultValue: UpdateLessonTimeOptions.ArbitraryChange,
+  })
+  options?: UpdateLessonTimeOptions
+
+  @Field((_type) => Number, { nullable: true, defaultValue: 0 })
+  numberOfLessonsPostponed?: number
+
+  @Field((_type) => Date, { nullable: true })
+  startTime?: Date
+
+  @Field((_type) => Date, { nullable: true })
+  endTime?: Date
+
   @Field({ nullable: true })
   description?: string
 
