@@ -40,6 +40,10 @@ export class Classwork extends BaseModel {
   @prop({ type: [Types.ObjectId] })
   attachments?: string[]
 
+  @Field((_type) => [String])
+  @prop({ type: [String] })
+  iframeVideo?: string[]
+
   @Field((_type) => Publication)
   @prop({ required: true, index: true, default: Publication.Draft })
   publicationState: Publication
