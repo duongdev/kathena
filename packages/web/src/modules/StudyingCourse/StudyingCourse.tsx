@@ -11,20 +11,21 @@ import {
   buildPath,
   STUDYING_COURSE,
   STUDYING_COURSE_LIST,
-  // STUDYING_COURSE_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_CLASSWORK_MATERIALS,
   STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS,
+  STUDYING_COURSE_CLASSWORK_LESSONS,
   STUDYING_COURSE_QUIZZES,
 } from 'utils/path-builder'
 
 import TabMenu from './Components/TabMenu'
 
 const General = lazy(() => import('./Components/General'))
-// const ClassworkAssignments = lazy(
-//   () => import('./Components/ClassworkAssignments'),
-// )
+
 const ListOfSubmittedAssignments = lazy(
   () => import('./Components/ListOfSubmittedAssignments'),
+)
+const ClassworkLessons = lazy(
+  () => import('./Components/ClassworkLessons/ClassworkLessons'),
 )
 const ClassworkMaterials = lazy(() => import('./Components/ClassworkMaterials'))
 const Quizzes = lazy(() => import('./Components/Quizzes'))
@@ -64,13 +65,11 @@ const StudyingCourse: FC<StudyingCourseProps> = () => {
             to: buildPath(STUDYING_COURSE, { id: params.id }),
             exact: true,
           },
-          // {
-          //   title: 'Bài tập',
-          //   to: buildPath(STUDYING_COURSE_CLASSWORK_ASSIGNMENTS, {
-          //     id: params.id,
-          //   }),
-          //   exact: true,
-          // },
+          {
+            title: 'Lộ trình',
+            to: buildPath(STUDYING_COURSE_CLASSWORK_LESSONS, { id: params.id }),
+            exact: true,
+          },
           {
             title: 'Danh sách Bài tập',
             to: buildPath(STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS, {
@@ -97,11 +96,11 @@ const StudyingCourse: FC<StudyingCourseProps> = () => {
       <Suspense fallback={<Spinner p={4} center />}>
         <Switch>
           <Route path={STUDYING_COURSE} exact component={General} />
-          {/* <Route
-            path={STUDYING_COURSE_CLASSWORK_ASSIGNMENTS}
+          <Route
+            path={STUDYING_COURSE_CLASSWORK_LESSONS}
             exact
-            component={ClassworkAssignments}
-          /> */}
+            component={ClassworkLessons}
+          />
           <Route
             path={STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS}
             exact
