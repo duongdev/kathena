@@ -35,6 +35,7 @@ import {
   useConversationCreatedSubscription,
   Conversation as CommentModel,
   ConversationType,
+  useSubmissionStatusStatisticsQuery,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
@@ -47,27 +48,6 @@ import {
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
 
 export type ClassworkAssignmentDetailProps = {}
-
-const data1 = {
-  labels: ['Không nộp', 'Nộp muộn', 'Nộp đúng hạn'],
-  datasets: [
-    {
-      label: '# of Votes',
-      data: [12, 3, 5],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-      ],
-      borderWidth: 1,
-    },
-  ],
-}
 
 const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const params: { id: string } = useParams()
@@ -95,6 +75,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     variables: { roomId: id },
   })
 
+  const { data: dataSubmissionStatus } = useSubmissionStatusStatisticsQuery({
+    variables: { id },
+  })
   const [removeAttachmentsFromClassworkAssignment] =
     useRemoveAttachmentsFromClassworkAssignmentMutation({
       refetchQueries: [
@@ -114,6 +97,48 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     () => dataSubmissions?.classworkSubmissions,
     [dataSubmissions],
   )
+
+  const classworkSubmissionChart = useMemo(() => {
+    const arr = dataSubmissionStatus?.submissionStatusStatistics ?? []
+    const labels: ANY[] = []
+    const numbers: ANY[] = []
+    // eslint-disable-next-line
+    arr.map((item) => {
+      if (item.label === 'On Time') {
+        labels.push('Nộp đúng hạn')
+        numbers.push(item.number)
+      } else if (item.label === 'Late') {
+        labels.push('Nộp muộn')
+        numbers.push(item.number)
+      } else {
+        labels.push('Chưa nộp')
+        numbers.push(item.number)
+      }
+    })
+
+    const data1 = {
+      labels,
+      datasets: [
+        {
+          label: '# of Votes',
+          data: numbers,
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+          ],
+          borderColor: [
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(255, 99, 132, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    }
+
+    return data1
+  }, [dataSubmissionStatus?.submissionStatusStatistics])
 
   useEffect(() => {
     const newListComment = dataComments?.conversations.conversations ?? []
@@ -301,7 +326,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                 >
                   <Typography>Tỷ lệ nộp bài</Typography>
                   <div>
-                    <Pie data={data1} type="pie" />
+                    <Pie data={classworkSubmissionChart} type="pie" />
                   </div>
                 </Grid>
               </Grid>

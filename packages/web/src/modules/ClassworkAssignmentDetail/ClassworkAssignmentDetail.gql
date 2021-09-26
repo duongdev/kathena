@@ -48,3 +48,9 @@ query ListClassworkSubmission($classworkAssignmentId: ID!){
   }
 }
 
+query SubmissionStatusStatistics($id: ID!){
+  submissionStatusStatistics(classworkAssignmentId: $id) {
+    label
+    number
+  }
+}
