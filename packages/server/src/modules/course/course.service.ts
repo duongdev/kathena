@@ -19,12 +19,13 @@ import {
 } from 'modules/classwork/classwork.type'
 import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
 import { LessonService } from 'modules/lesson/lesson.service'
-import { GenerateLessonsInput } from 'modules/lesson/lesson.type'
+import { GenerateLessonsInput, ListLessons } from 'modules/lesson/lesson.type'
+import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
-import { ANY } from 'types'
+import { ANY, Nullable } from 'types'
 
-import { CreateCourseInput } from './course.type'
+import { CloneCourseInput, CreateCourseInput } from './course.type'
 import { Course } from './models/Course'
 
 @Service()
@@ -39,6 +40,9 @@ export class CourseService {
     private readonly classworkAssignmentModel: ReturnModelType<
       typeof ClassworkAssignment
     >,
+
+    @InjectModel(Lesson)
+    private readonly lessonModel: ReturnModelType<typeof Lesson>,
 
     @Inject(forwardRef(() => LessonService))
     private readonly lessonService: LessonService,
@@ -538,5 +542,183 @@ export class CourseService {
       classworkAssignmentsMap,
     )
     return dataList
+  }
+
+  async CloneTheCourse(
+    creatorId: string,
+    orgId: string,
+    cloneCourseInput: CloneCourseInput,
+  ): Promise<DocumentType<Course>> {
+    this.logger.log(`[${this.CloneTheCourse.name}] cloning ...`)
+    this.logger.verbose(creatorId, orgId, cloneCourseInput)
+
+    const {
+      courseIdMustCopy,
+      code,
+      orgOfficeId,
+      tuitionFee,
+      startDate,
+      name,
+      lecturerIds,
+      daysOfTheWeek,
+    } = cloneCourseInput
+
+    const courseMustClone = await this.findCourseById(courseIdMustCopy, orgId)
+
+    if (!courseMustClone) {
+      throw new Error('COURSE_MUST_COPY_NOT_FOUND')
+    }
+
+    const academicSubjectIsExist =
+      (await this.academicService.findAcademicSubjectById(
+        courseMustClone.academicSubjectId,
+      )) !== null
+
+    if (!academicSubjectIsExist) {
+      throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
+    }
+
+    const orgOfficeIsExist =
+      (await this.orgOfficeService.findOrgOfficeById(orgOfficeId)) !== null
+
+    if (!orgOfficeIsExist) {
+      throw new Error('ORG_OFFICE_NOT_FOUND')
+    }
+
+    if (lecturerIds) {
+      // Must be an array lecturer
+      const argsLecturer = lecturerIds.map(async (id) => {
+        const account = await this.accountService.findOneAccount({
+          id,
+          orgId,
+        })
+
+        if (!account) {
+          return Promise.reject(new Error(`ID ${id} is not found`))
+        }
+        if (!account.roles.includes('lecturer')) {
+          return Promise.reject(
+            new Error(`${account?.displayName} isn't a lecturer`),
+          )
+        }
+
+        return id
+      })
+
+      await Promise.all(argsLecturer).catch((err) => {
+        throw new Error(err)
+      })
+    }
+
+    const currentDate = new Date()
+    const startDateInput = new Date(startDate)
+
+    if (
+      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error('START_DATE_INVALID')
+    }
+
+    const createCloneCourseInput = {
+      createdByAccountId: creatorId,
+      orgId,
+      name,
+      code,
+      lecturerIds: !lecturerIds ? courseMustClone.lecturerIds : lecturerIds,
+      academicSubjectId: courseMustClone.academicSubjectId,
+      orgOfficeId,
+      startDate: startDateInput,
+      tuitionFee: !tuitionFee ? courseMustClone.tuitionFee : tuitionFee,
+      listOfLessonsForAWeek: !daysOfTheWeek
+        ? courseMustClone.listOfLessonsForAWeek
+        : daysOfTheWeek,
+      totalNumberOfLessons: courseMustClone.totalNumberOfLessons,
+      publication: Publication.Draft,
+    }
+
+    const CloneCourse = await this.courseModel.create(createCloneCourseInput)
+
+    const ascending = 1
+    const listLessonInCourseMustClone = await this.lessonModel.find(
+      { orgId, courseId: courseMustClone.id },
+      null,
+      { sort: { startTime: ascending } },
+    )
+
+    let generateLessonsInput: GenerateLessonsInput = {
+      courseStartDate: startDateInput,
+      daysOfTheWeek: CloneCourse.listOfLessonsForAWeek,
+      totalNumberOfLessons: listLessonInCourseMustClone.length,
+    }
+
+    if (daysOfTheWeek) {
+      generateLessonsInput = {
+        ...generateLessonsInput,
+        daysOfTheWeek,
+      }
+    }
+
+    const listLessonInCloneCourse: ListLessons =
+      await this.lessonService.generateLessons(
+        orgId,
+        CloneCourse.id,
+        creatorId,
+        generateLessonsInput,
+      )
+
+    const mapClassworkMaterial: Map<string, string> = new Map()
+    const mapClassworkAssignment: Map<string, string> = new Map()
+
+    const eachClassworkMaterial = (classworkMaterialId): ANY => {
+      if (!mapClassworkMaterial.get(classworkMaterialId)) {
+        this.classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+          classworkMaterialId,
+          orgId,
+          CloneCourse.id.toString(),
+          creatorId,
+        )
+      }
+    }
+
+    const eachClassworkAssignment = (classworkAssignmentId): ANY => {
+      if (!mapClassworkAssignment.get(classworkAssignmentId)) {
+        this.classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+          classworkAssignmentId,
+          orgId,
+          CloneCourse.id.toString(),
+          creatorId,
+        )
+      }
+    }
+
+    const eachLesson = (lessonInCourseMustClone): ANY => {
+      lessonInCourseMustClone.classworkMaterialListBeforeClass.map(
+        eachClassworkMaterial,
+      )
+      lessonInCourseMustClone.classworkMaterialListInClass.map(
+        eachClassworkMaterial,
+      )
+      lessonInCourseMustClone.classworkMaterialListAfterClass.map(
+        eachClassworkMaterial,
+      )
+
+      lessonInCourseMustClone.classworkAssignmentListBeforeClass.map(
+        eachClassworkAssignment,
+      )
+      lessonInCourseMustClone.classworkAssignmentListInClass.map(
+        eachClassworkAssignment,
+      )
+      lessonInCourseMustClone.classworkMaterialListAfterClass.map(
+        eachClassworkAssignment,
+      )
+    }
+
+    this.logger.debug(mapClassworkMaterial, mapClassworkAssignment)
+
+    Promise.all(listLessonInCourseMustClone.map(eachLesson))
+
+    this.logger.log(`[${this.CloneTheCourse.name}] cloned ...`)
+    this.logger.verbose(CloneCourse)
+    return CloneCourse
   }
 }

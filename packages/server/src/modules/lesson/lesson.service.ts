@@ -823,4 +823,48 @@ export class LessonService {
 
     return results
   }
+
+  async copyFormLessonIdToLessonId(
+    formLessonId: string,
+    toLessonId: string,
+    orgId: string,
+    courseId: string,
+    accountId: string,
+  ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.findAndPaginateLessons.name}] done ! `)
+    this.logger.verbose(formLessonId, toLessonId, orgId, courseId, accountId)
+
+    const formLesson = await this.findLessonById(formLessonId, orgId)
+
+    if (!formLesson) throw new Error('FORMLESSON_NOT_FOUND')
+
+    this.logger.log(`[${this.findAndPaginateLessons.name}] done ! `)
+    this.logger.verbose(formLessonId, toLessonId, orgId, courseId, accountId)
+
+    const lessonUpdated = await this.updateLessonById(
+      {
+        lessonId: formLessonId,
+        orgId,
+        courseId,
+      },
+      {
+        absentStudentIds: [],
+        description: formLesson.description,
+        classworkMaterialListBeforeClass:
+          formLesson.classworkMaterialListBeforeClass,
+        classworkMaterialListInClass: formLesson.classworkMaterialListInClass,
+        classworkMaterialListAfterClass:
+          formLesson.classworkMaterialListAfterClass,
+        classworkAssignmentListBeforeClass:
+          formLesson.classworkAssignmentListBeforeClass,
+        classworkAssignmentListInClass:
+          formLesson.classworkAssignmentListInClass,
+        classworkAssignmentListAfterClass:
+          formLesson.classworkAssignmentListAfterClass,
+      },
+      accountId,
+    )
+
+    return lessonUpdated
+  }
 }

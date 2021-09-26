@@ -535,6 +535,46 @@ export class ClassworkService {
       attachments,
     ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
   }
+
+  async cloneClassworkMaterialFromClassworkMaterialId(
+    formClassworkMaterialId: string,
+    orgId: string,
+    toCourseId: string,
+    accountId: string,
+  ): Promise<ClassworkMaterial> {
+    this.logger.log(
+      `[${this.cloneClassworkMaterialFromClassworkMaterialId.name}] doing ... `,
+    )
+    this.logger.verbose(formClassworkMaterialId, orgId, toCourseId, accountId)
+
+    const formClassworkMaterial = await this.findClassworkMaterialById(
+      orgId,
+      formClassworkMaterialId,
+    )
+
+    if (!formClassworkMaterial)
+      throw new Error('FORMCLASSWORKMATERIAL_NOT_FOUND')
+
+    const toClassworkMaterial = await this.createClassworkMaterial(
+      accountId,
+      orgId,
+      toCourseId,
+      {
+        title: formClassworkMaterial.title,
+        description: formClassworkMaterial.description,
+        publicationState: formClassworkMaterial.publicationState,
+      },
+    )
+
+    toClassworkMaterial.attachments = formClassworkMaterial.attachments
+    toClassworkMaterial.save()
+
+    this.logger.log(
+      `[${this.cloneClassworkMaterialFromClassworkMaterialId.name}] done ! `,
+    )
+    this.logger.verbose(toClassworkMaterial)
+    return toClassworkMaterial
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -1033,6 +1073,45 @@ export class ClassworkService {
     return res
   }
 
+  async cloneClassworkAssignmentFromClassworkAssignmentId(
+    formClassworkAssignmentId: string,
+    orgId: string,
+    toCourseId: string,
+    accountId: string,
+  ): Promise<ClassworkAssignment> {
+    this.logger.log(
+      `[${this.cloneClassworkAssignmentFromClassworkAssignmentId.name}] doing ... `,
+    )
+    this.logger.verbose(formClassworkAssignmentId, orgId, toCourseId, accountId)
+
+    const formClassworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      formClassworkAssignmentId,
+    )
+
+    if (!formClassworkAssignment)
+      throw new Error('FORMCLASSWORKASSIGNMENT_NOT_FOUND')
+
+    const toClassworkAssignment = await this.createClassworkAssignment(
+      accountId,
+      orgId,
+      toCourseId,
+      {
+        title: formClassworkAssignment.title,
+        description: formClassworkAssignment.description,
+        publicationState: formClassworkAssignment.publicationState,
+      },
+    )
+
+    toClassworkAssignment.attachments = formClassworkAssignment.attachments
+    toClassworkAssignment.save()
+
+    this.logger.log(
+      `[${this.cloneClassworkAssignmentFromClassworkAssignmentId.name}] done ! `,
+    )
+    this.logger.verbose(toClassworkAssignment)
+    return toClassworkAssignment
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

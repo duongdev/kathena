@@ -15,6 +15,7 @@ import { PageOptionsInput } from 'types'
 
 import { CourseService } from './course.service'
 import {
+  CloneCourseInput,
   CoursesFilterInput,
   CoursesPayload,
   CreateCourseInput,
@@ -165,6 +166,23 @@ export class CourseResolver {
       courseId,
       org.id,
       optionInput,
+    )
+  }
+
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_CreateCourse)
+  async CloneTheCourse(
+    @Args('cloneCourseInput')
+    cloneCourseInput: CloneCourseInput,
+    @CurrentAccount()
+    account: Account,
+    @CurrentOrg()
+    org: Org,
+  ): Promise<Course> {
+    return this.courseService.CloneTheCourse(
+      account.id,
+      org.id,
+      cloneCourseInput,
     )
   }
 }

@@ -6,6 +6,7 @@ import { AccountModule } from 'modules/account/account.module'
 import { AuthModule } from 'modules/auth/auth.module'
 import { ClassworkModule } from 'modules/classwork/classwork.module'
 import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
+import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
 
 import { CourseResolver } from './course.resolver'
@@ -15,7 +16,7 @@ import { Course } from './models/Course'
 @Global()
 @Module({
   imports: [
-    TypegooseModule.forFeature([ClassworkAssignment, Course]),
+    TypegooseModule.forFeature([ClassworkAssignment, Course, Lesson]),
     forwardRef(() => ClassworkModule),
     forwardRef(() => AuthModule),
     forwardRef(() => AccountModule),
