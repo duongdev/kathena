@@ -552,6 +552,7 @@ type Mutation {
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
   createCourse(input: CreateCourseInput!): Course!
   updateCourse(updateInput: UpdateCourseInput!, id: ID!): Course!
+  updateCoursePublicationById(publication: Publication!, courseId: ID!): Course!
   addLecturesToCourse(lecturerIds: [ID!]!, courseId: ID!): Course!
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
