@@ -2,7 +2,7 @@ import { forwardRef, Inject, UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ForbiddenError } from 'type-graphql'
 
-import { Logger, UseAuthGuard } from 'core'
+import { Logger, Publication, UseAuthGuard } from 'core'
 import { CurrentAccount, CurrentOrg } from 'core/auth'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
@@ -61,6 +61,25 @@ export class CourseResolver {
         orgId: currentOrg.id,
       },
       updateInput,
+    )
+  }
+
+  @Mutation((_returns) => Course)
+  @UseAuthGuard(P.Academic_UpdateCourse)
+  @UsePipes(ValidationPipe)
+  async updateCoursePublicationById(
+    @Args('courseId', { type: () => ID }) courseId: string,
+    @Args('publication', { type: () => Publication }) publication: Publication,
+    @CurrentOrg() currentOrg: Org,
+  ): Promise<Course> {
+    return this.courseService.updateCoursePublicationById(
+      {
+        courseId,
+        orgId: currentOrg.id,
+      },
+      {
+        publication,
+      },
     )
   }
 

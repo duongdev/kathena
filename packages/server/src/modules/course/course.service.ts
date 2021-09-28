@@ -231,6 +231,33 @@ export class CourseService {
     return updated
   }
 
+  async updateCoursePublicationById(
+    query: {
+      courseId: string
+      orgId: string
+    },
+    updateInput: {
+      publication: Publication
+    },
+  ): Promise<DocumentType<Course>> {
+    const { courseId, orgId } = query
+    const { publication } = updateInput
+
+    const course = await this.courseModel.findOne({
+      _id: courseId,
+      orgId,
+    })
+
+    if (!course) {
+      throw new Error('Course is not found')
+    }
+
+    course.publicationState = publication
+    const update = await course.save()
+
+    return update
+  }
+
   async findCourseById(
     id: string,
     orgId: string,
