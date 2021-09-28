@@ -171,7 +171,7 @@ export class CourseResolver {
 
   @Mutation((_returns) => Course)
   @UseAuthGuard(P.Academic_CreateCourse)
-  async CloneTheCourse(
+  async cloneTheCourse(
     @Args('cloneCourseInput')
     cloneCourseInput: CloneCourseInput,
     @CurrentAccount()
@@ -179,7 +179,7 @@ export class CourseResolver {
     @CurrentOrg()
     org: Org,
   ): Promise<Course> {
-    return this.courseService.CloneTheCourse(
+    return this.courseService.cloneTheCourse(
       account.id,
       org.id,
       cloneCourseInput,

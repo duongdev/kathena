@@ -443,10 +443,10 @@ type Query {
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   file(id: ID!): File
-  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
+  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quiz(id: ID!): Quiz!
@@ -497,10 +497,6 @@ enum ClassworkAssignmentByStudentIdInCourseInputStatus {
   HaveNotSubmission
 }
 
-input ConversationPageOptionInput {
-  limit: Int!
-}
-
 input LessonsFilterInput {
   courseId: ID!
   startTime: DateTime = null
@@ -520,6 +516,10 @@ input UpdateLessonPublicationByIdInput {
   lessonId: ID!
   publicationState: Publication!
   courseId: ID!
+}
+
+input ConversationPageOptionInput {
+  limit: Int!
 }
 
 input QuizzesFilterInput {
@@ -570,13 +570,13 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
-  createConversation(conversationInput: CreateConversationInput!): Conversation!
-  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
@@ -703,18 +703,6 @@ input SetGradeForClassworkSubmissionInput {
   grade: Float!
 }
 
-input CreateConversationInput {
-  createdByAccountId: ID!
-  roomId: ID!
-  content: String!
-  type: String
-}
-
-input RatingInput {
-  targetId: ID!
-  numberOfStars: Float = 1
-}
-
 input CreateLessonInput {
   startTime: DateTime!
   endTime: DateTime!
@@ -751,6 +739,18 @@ input CommentsForTheLessonByLecturerInput {
 input CommentsForTheLessonByLecturerQuery {
   lessonId: ID!
   courseId: ID!
+}
+
+input CreateConversationInput {
+  createdByAccountId: ID!
+  roomId: ID!
+  content: String!
+  type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 input CreateQuizInput {

@@ -12,11 +12,11 @@ import {
 } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
 import { Course } from 'modules/course/models/Course'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
-// eslint-disable-next-line import/order
 import { ANY, Nullable, PageOptionsInput } from 'types'
 
 import { GRADE_MAX, GRADE_MIN } from './classwork.const'
@@ -78,6 +78,9 @@ export class ClassworkService {
 
     @Inject(forwardRef(() => MailService))
     private readonly mailService: MailService,
+
+    @Inject(forwardRef(() => CourseService))
+    private readonly courseService: CourseService,
   ) {}
 
   /**
@@ -489,9 +492,10 @@ export class ClassworkService {
         },
       })
     }
+
     classworkMaterialModels.sort({ _id: -1 }).skip(skip).limit(limit)
     const listClassworkMaterials = await classworkMaterialModels
-    const count = await this.classworkMaterialModel.countDocuments({ orgId })
+    const count = await this.classworkMaterialModel.count(findInput)
 
     this.logger.log(
       `[${this.updateClassworkMaterial.name}] Find classworkMaterial successfully`,
@@ -541,7 +545,7 @@ export class ClassworkService {
     orgId: string,
     toCourseId: string,
     accountId: string,
-  ): Promise<ClassworkMaterial> {
+  ): Promise<Nullable<ClassworkMaterial>> {
     this.logger.log(
       `[${this.cloneClassworkMaterialFromClassworkMaterialId.name}] doing ... `,
     )
@@ -555,6 +559,15 @@ export class ClassworkService {
     if (!formClassworkMaterial)
       throw new Error('FORMCLASSWORKMATERIAL_NOT_FOUND')
 
+    const toCourse = await this.courseService.findCourseById(toCourseId, orgId)
+
+    if (!toCourse) throw new Error('TOCOURSE_NOT_FOUND')
+
+    const canAccountManageCourse =
+      await this.authService.canAccountManageCourse(accountId, toCourseId)
+
+    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGECOURSE`)
+
     const toClassworkMaterial = await this.createClassworkMaterial(
       accountId,
       orgId,
@@ -566,14 +579,22 @@ export class ClassworkService {
       },
     )
 
-    toClassworkMaterial.attachments = formClassworkMaterial.attachments
-    toClassworkMaterial.save()
+    const newCloneClassworkMaterial =
+      await this.classworkMaterialModel.findByIdAndUpdate(
+        toClassworkMaterial.id,
+        {
+          attachments: formClassworkMaterial.attachments,
+        },
+        {
+          new: true,
+        },
+      )
 
     this.logger.log(
       `[${this.cloneClassworkMaterialFromClassworkMaterialId.name}] done ! `,
     )
-    this.logger.verbose(toClassworkMaterial)
-    return toClassworkMaterial
+    this.logger.verbose(newCloneClassworkMaterial)
+    return newCloneClassworkMaterial
   }
   /**
    * END CLASSWORK MATERIAL
@@ -666,7 +687,7 @@ export class ClassworkService {
 
     classworkAssignmentModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const classworkAssignments = await classworkAssignmentModel
-    const count = await this.classworkAssignmentsModel.countDocuments({ orgId })
+    const count = await this.classworkAssignmentsModel.count(findInput)
 
     this.logger.log(
       `[${this.updateClassworkAssignment.name}] Find classworkAssignment successfully`,
@@ -1078,7 +1099,7 @@ export class ClassworkService {
     orgId: string,
     toCourseId: string,
     accountId: string,
-  ): Promise<ClassworkAssignment> {
+  ): Promise<Nullable<ClassworkAssignment>> {
     this.logger.log(
       `[${this.cloneClassworkAssignmentFromClassworkAssignmentId.name}] doing ... `,
     )
@@ -1092,10 +1113,19 @@ export class ClassworkService {
     if (!formClassworkAssignment)
       throw new Error('FORMCLASSWORKASSIGNMENT_NOT_FOUND')
 
+    const toCourse = await this.courseService.findCourseById(toCourseId, orgId)
+
+    if (!toCourse) throw new Error('TOCOURSE_NOT_FOUND')
+
+    const canAccountManageCourse =
+      await this.authService.canAccountManageCourse(accountId, toCourseId)
+
+    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGECOURSE`)
+
     const toClassworkAssignment = await this.createClassworkAssignment(
       accountId,
-      orgId,
       toCourseId,
+      orgId,
       {
         title: formClassworkAssignment.title,
         description: formClassworkAssignment.description,
@@ -1103,14 +1133,22 @@ export class ClassworkService {
       },
     )
 
-    toClassworkAssignment.attachments = formClassworkAssignment.attachments
-    toClassworkAssignment.save()
+    const newCloneClassworkAssignment =
+      await this.classworkAssignmentsModel.findByIdAndUpdate(
+        toClassworkAssignment.id,
+        {
+          attachments: formClassworkAssignment.attachments,
+        },
+        {
+          new: true,
+        },
+      )
 
     this.logger.log(
       `[${this.cloneClassworkAssignmentFromClassworkAssignmentId.name}] done ! `,
     )
-    this.logger.verbose(toClassworkAssignment)
-    return toClassworkAssignment
+    this.logger.verbose(newCloneClassworkAssignment)
+    return newCloneClassworkAssignment
   }
   /**
    * END CLASSWORK ASSIGNMENT
