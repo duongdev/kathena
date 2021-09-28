@@ -27,7 +27,6 @@ import { ANY } from 'types'
 
 import { CourseService } from './course.service'
 import { CloneCourseInput, CreateCourseInput } from './course.type'
-import { Course } from './models/Course'
 
 describe('course.service', () => {
   let module: TestingModule
