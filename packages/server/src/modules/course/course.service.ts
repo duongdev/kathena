@@ -18,13 +18,15 @@ import {
   AvgGradeOfClassworkByCourseOptionInput,
 } from 'modules/classwork/classwork.type'
 import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
+import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 import { LessonService } from 'modules/lesson/lesson.service'
 import { GenerateLessonsInput } from 'modules/lesson/lesson.type'
+import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
-import { CreateCourseInput } from './course.type'
+import { CloneCourseInput, CreateCourseInput } from './course.type'
 import { Course } from './models/Course'
 
 @Service()
@@ -32,34 +34,42 @@ export class CourseService {
   private readonly logger = new Logger(CourseService.name)
 
   constructor(
-    @InjectModel(Course)
-    private readonly courseModel: ReturnModelType<typeof Course>,
-
     @InjectModel(ClassworkAssignment)
     private readonly classworkAssignmentModel: ReturnModelType<
       typeof ClassworkAssignment
     >,
 
-    @Inject(forwardRef(() => LessonService))
-    private readonly lessonService: LessonService,
+    @InjectModel(ClassworkMaterial)
+    private readonly classworkMaterialModel: ReturnModelType<
+      typeof ClassworkMaterial
+    >,
 
-    @Inject(forwardRef(() => AcademicService))
-    private readonly academicService: AcademicService,
+    @InjectModel(Course)
+    private readonly courseModel: ReturnModelType<typeof Course>,
 
-    @Inject(forwardRef(() => OrgService))
-    private readonly orgService: OrgService,
+    @InjectModel(Lesson)
+    private readonly lessonModel: ReturnModelType<typeof Lesson>,
 
     @Inject(forwardRef(() => ClassworkService))
     private readonly classworkService: ClassworkService,
-
-    @Inject(forwardRef(() => OrgOfficeService))
-    private readonly orgOfficeService: OrgOfficeService,
 
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
 
     @Inject(forwardRef(() => AccountService))
     private readonly accountService: AccountService,
+
+    @Inject(forwardRef(() => OrgOfficeService))
+    private readonly orgOfficeService: OrgOfficeService,
+
+    @Inject(forwardRef(() => AcademicService))
+    private readonly academicService: AcademicService,
+
+    @Inject(forwardRef(() => LessonService))
+    private readonly lessonService: LessonService,
+
+    @Inject(forwardRef(() => OrgService))
+    private readonly orgService: OrgService,
   ) {}
 
   async createCourse(
@@ -157,8 +167,10 @@ export class CourseService {
       academicSubjectId,
       orgOfficeId,
       startDate: startDateInput,
+      listOfLessonsForAWeek: daysOfTheWeek,
       tuitionFee,
       publication: Publication.Draft,
+      totalNumberOfLessons,
     })
 
     if (daysOfTheWeek.length !== 0 && totalNumberOfLessons !== 0) {
@@ -565,5 +577,276 @@ export class CourseService {
       classworkAssignmentsMap,
     )
     return dataList
+  }
+
+  async cloneTheCourse(
+    creatorId: string,
+    orgId: string,
+    cloneCourseInput: CloneCourseInput,
+  ): Promise<DocumentType<Course>> {
+    this.logger.log(`[${this.cloneTheCourse.name}] cloning ...`)
+    this.logger.verbose(creatorId, orgId, cloneCourseInput)
+
+    const {
+      courseIdMustCopy,
+      code,
+      orgOfficeId,
+      tuitionFee,
+      startDate,
+      name,
+      lecturerIds,
+      daysOfTheWeek,
+    } = cloneCourseInput
+
+    const courseMustClone = await this.findCourseById(courseIdMustCopy, orgId)
+
+    if (!courseMustClone) {
+      throw new Error('COURSE_MUST_COPY_NOT_FOUND')
+    }
+
+    const academicSubjectIsExist =
+      await this.academicService.findAcademicSubjectById(
+        courseMustClone.academicSubjectId,
+      )
+
+    if (!academicSubjectIsExist) {
+      throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
+    }
+
+    const orgOfficeIsExist = await this.orgOfficeService.findOrgOfficeById(
+      orgOfficeId,
+    )
+
+    if (!orgOfficeIsExist) {
+      throw new Error('ORG_OFFICE_NOT_FOUND')
+    }
+
+    if (lecturerIds) {
+      // Must be an array lecturer
+      const argsLecturer = lecturerIds.map(async (id) => {
+        const account = await this.accountService.findOneAccount({
+          id,
+          orgId,
+        })
+
+        if (!account) {
+          return Promise.reject(new Error(`ID ${id} is not found`))
+        }
+        if (!account.roles.includes('lecturer')) {
+          return Promise.reject(
+            new Error(`${account?.displayName} isn't a lecturer`),
+          )
+        }
+
+        return id
+      })
+
+      await Promise.all(argsLecturer).catch((err) => {
+        throw new Error(err)
+      })
+    }
+
+    const currentDate = new Date()
+    const startDateInput = new Date(startDate)
+
+    if (
+      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error('START_DATE_INVALID')
+    }
+
+    const createCloneCourseInput: CreateCourseInput = {
+      name,
+      code,
+      lecturerIds: !lecturerIds ? courseMustClone.lecturerIds : lecturerIds,
+      academicSubjectId: courseMustClone.academicSubjectId,
+      orgOfficeId,
+      startDate: startDateInput,
+      tuitionFee: !tuitionFee ? courseMustClone.tuitionFee : tuitionFee,
+      daysOfTheWeek: !daysOfTheWeek
+        ? courseMustClone.listOfLessonsForAWeek
+        : daysOfTheWeek,
+      totalNumberOfLessons: courseMustClone.totalNumberOfLessons,
+    }
+
+    const cloneCourse = await this.createCourse(
+      creatorId,
+      orgId,
+      createCloneCourseInput,
+    )
+
+    const ascending = 1
+    const listLessonInCloneCourse = await this.lessonModel.find(
+      {
+        orgId,
+        courseId: cloneCourse.id,
+      },
+      null,
+      { sort: { startTime: ascending } },
+    )
+
+    const listLessonInCourseMustClone = await this.lessonModel.find(
+      {
+        orgId,
+        courseId: courseMustClone.id,
+      },
+      null,
+      { sort: { startTime: ascending } },
+    )
+
+    const listClassworkMaterialInCourseMustClone =
+      await this.classworkMaterialModel.find({
+        courseId: courseIdMustCopy,
+      })
+
+    const listClassworkAssignmentInCourseMustClone =
+      await this.classworkAssignmentModel.find({
+        courseId: courseIdMustCopy,
+      })
+
+    const mapLessonId: Map<string, string> = new Map()
+    const mapClassworkMaterial: Map<string, string> = new Map()
+    const mapClassworkAssignment: Map<string, string> = new Map()
+
+    // Mapping lessonId form course must clone and lessonId form clone course
+    listLessonInCourseMustClone.forEach((lesson, index): void => {
+      mapLessonId.set(lesson.id, listLessonInCloneCourse[index].id)
+    })
+
+    const eachClassworkMaterial = async (
+      classworkMaterialId: string,
+    ): Promise<void> => {
+      if (!mapClassworkMaterial.get(classworkMaterialId)) {
+        const newClasswork =
+          await this.classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+            classworkMaterialId,
+            orgId,
+            cloneCourse.id,
+            creatorId,
+          )
+        if (newClasswork)
+          mapClassworkMaterial.set(classworkMaterialId, newClasswork.id)
+      }
+    }
+
+    const eachClassworkAssignment = async (
+      classworkAssignmentId: string,
+    ): Promise<void> => {
+      if (!mapClassworkAssignment.get(classworkAssignmentId)) {
+        const newClasswork =
+          await this.classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+            classworkAssignmentId,
+            orgId,
+            cloneCourse.id,
+            creatorId,
+          )
+        if (newClasswork)
+          mapClassworkMaterial.set(classworkAssignmentId, newClasswork.id)
+      }
+    }
+
+    const mappingClassworkMaterialId =
+      listClassworkMaterialInCourseMustClone.map(
+        async (classworkMaterial): Promise<void> => {
+          await eachClassworkMaterial(classworkMaterial.id)
+        },
+      )
+
+    const mappingClassworkAssignmentId =
+      listClassworkAssignmentInCourseMustClone.map(
+        async (classworkAssignment): Promise<void> => {
+          await eachClassworkAssignment(classworkAssignment.id)
+        },
+      )
+
+    const getListClassworkMaterialIdAfterClone = (
+      listClassworkMaterialIdIdInLesson: string[],
+    ): string[] => {
+      const newList: string[] = []
+      listClassworkMaterialIdIdInLesson.forEach(
+        (classworkMaterialIdId): ANY => {
+          const newClassworkMaterialIdId = mapClassworkMaterial.get(
+            classworkMaterialIdId,
+          )
+          if (newClassworkMaterialIdId) newList.push(newClassworkMaterialIdId)
+        },
+      )
+      return newList
+    }
+
+    const getListClassworkAssignmentAfterClone = (
+      listClassworkAssignmentIdInLesson: string[],
+    ): string[] => {
+      const newList: string[] = []
+      listClassworkAssignmentIdInLesson.forEach(
+        (classworkAssignmentId): ANY => {
+          const newClassworkAssignmentId = mapClassworkAssignment.get(
+            classworkAssignmentId,
+          )
+          if (newClassworkAssignmentId) newList.push(newClassworkAssignmentId)
+        },
+      )
+      return newList
+    }
+
+    await Promise.all([
+      mappingClassworkMaterialId,
+      mappingClassworkAssignmentId,
+    ])
+
+    await Promise.all(
+      listLessonInCourseMustClone.map(async (lesson): Promise<void> => {
+        const lessonIdToUpdate = mapLessonId.get(lesson.id)
+        if (!lessonIdToUpdate) return
+
+        const classworkMaterialListBeforeClass =
+          getListClassworkMaterialIdAfterClone(
+            lesson.classworkMaterialListBeforeClass,
+          )
+        const classworkMaterialListInClass =
+          getListClassworkMaterialIdAfterClone(
+            lesson.classworkMaterialListInClass,
+          )
+        const classworkMaterialListAfterClass =
+          getListClassworkMaterialIdAfterClone(
+            lesson.classworkMaterialListAfterClass,
+          )
+
+        const classworkAssignmentListBeforeClass =
+          getListClassworkAssignmentAfterClone(
+            lesson.classworkAssignmentListBeforeClass,
+          )
+        const classworkAssignmentListInClass =
+          getListClassworkAssignmentAfterClone(
+            lesson.classworkAssignmentListInClass,
+          )
+        const classworkAssignmentListAfterClass =
+          getListClassworkAssignmentAfterClone(
+            lesson.classworkAssignmentListAfterClass,
+          )
+
+        await this.lessonService.updateLessonById(
+          {
+            lessonId: lessonIdToUpdate,
+            orgId,
+            courseId: cloneCourse.id,
+          },
+          {
+            classworkAssignmentListAfterClass,
+            classworkAssignmentListBeforeClass,
+            classworkAssignmentListInClass,
+            classworkMaterialListAfterClass,
+            classworkMaterialListBeforeClass,
+            classworkMaterialListInClass,
+            description: lesson.description,
+          },
+          creatorId,
+        )
+      }),
+    )
+
+    this.logger.log(`[${this.cloneTheCourse.name}] cloned ...`)
+    this.logger.verbose(cloneCourse)
+    return cloneCourse
   }
 }

@@ -4,6 +4,7 @@ import { TypegooseModule } from 'nestjs-typegoose'
 import { AccountModule } from 'modules/account/account.module'
 import { Account } from 'modules/account/models/Account'
 import { AuthModule } from 'modules/auth/auth.module'
+import { CourseModule } from 'modules/course/course.module'
 import { Course } from 'modules/course/models/Course'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { MailModule } from 'modules/mail/mail.module'
@@ -32,6 +33,7 @@ import { ClassworkSubmission } from './models/ClassworkSubmission'
     forwardRef(() => FileStorageModule),
     forwardRef(() => OrgModule),
     forwardRef(() => MailModule),
+    forwardRef(() => CourseModule),
   ],
   providers: [
     ClassworkService,

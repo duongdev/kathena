@@ -108,22 +108,22 @@ export class UpdateLessonInput {
   publicationState?: Publication
 
   @Field((_type) => [String], { nullable: true })
-  classworkMaterialListBeforeClass: string[]
+  classworkMaterialListBeforeClass?: string[]
 
   @Field((_type) => [String], { nullable: true })
-  classworkMaterialListInClass: string[]
+  classworkMaterialListInClass?: string[]
 
   @Field((_type) => [String], { nullable: true })
-  classworkMaterialListAfterClass: string[]
+  classworkMaterialListAfterClass?: string[]
 
   @Field((_type) => [String], { nullable: true })
-  classworkAssignmentListBeforeClass: string[]
+  classworkAssignmentListBeforeClass?: string[]
 
   @Field((_type) => [String], { nullable: true })
-  classworkAssignmentListInClass: string[]
+  classworkAssignmentListInClass?: string[]
 
   @Field((_type) => [String], { nullable: true })
-  classworkAssignmentListAfterClass: string[]
+  classworkAssignmentListAfterClass?: string[]
 }
 
 @InputType()
