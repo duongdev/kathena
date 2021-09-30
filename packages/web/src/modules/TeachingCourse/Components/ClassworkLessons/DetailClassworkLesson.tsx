@@ -6,7 +6,7 @@ import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import format from 'date-fns/format'
 import { useSnackbar } from 'notistack'
-import { FilePlus } from 'phosphor-react'
+import { FilePlus, FileText } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -35,7 +35,9 @@ import {
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
 } from 'utils/path-builder'
 
-import AddAttachmentMaterial from './AddAttachmentMaterial'
+import AddClassworkAssignmentListAfterClass from './AddClassworkAssignmentListAfterClass'
+import AddClassworkAssignmentListBeforeClass from './AddClassworkAssignmentListBeforeClass'
+import AddClassworkAssignmentListInClass from './AddClassworkAssignmentListInClass'
 import Attendance from './Attendance'
 import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
@@ -51,11 +53,27 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
     useDialogState()
   const [attendanceOpen, handleOpenAttendance, handleCloseAttendance] =
     useDialogState()
+
+  // Thêm bài tập trước/ trong/ sau buổi học
+  // Trước
   const [
-    addAttachmentMaterial,
-    handleOpenAddAttachmentMaterial,
-    handleCloseAddAttachmentMaterial,
+    addClassworkAssignmentListBeforeClass,
+    handleOpenAddClassworkAssignmentListBeforeClass,
+    handleCloseAddClassworkAssignmentListBeforeClass,
   ] = useDialogState()
+  // Trong
+  const [
+    addClassworkAssignmentListInClass,
+    handleOpenAddClassworkAssignmentListInClass,
+    handleCloseAddClassworkAssignmentListInClass,
+  ] = useDialogState()
+  // Sau
+  const [
+    addclassworkAssignmentListAfterClass,
+    handleOpenAddClassworkAssignmentListAfterClass,
+    handleCloseAddClassworkAssignmentListAfterClass,
+  ] = useDialogState()
+
   const { data, loading } = useFindLessonByIdQuery({
     variables: { lessonId },
   })
@@ -138,17 +156,33 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             classworkLesson={classworkLesson as ANY}
           />
         </RequiredPermission>
+        {/* Điểm danh */}
         <Attendance
           lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
           open={attendanceOpen}
           onClose={handleCloseAttendance}
         />
-        <AddAttachmentMaterial
+        {/* Modal Thêm bài tập trước buổi học */}
+        <AddClassworkAssignmentListBeforeClass
           lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
-          open={addAttachmentMaterial}
-          onClose={handleCloseAddAttachmentMaterial}
+          open={addClassworkAssignmentListBeforeClass}
+          onClose={handleCloseAddClassworkAssignmentListBeforeClass}
+        />
+        {/* Modal Thêm bài tập trong buổi học */}
+        <AddClassworkAssignmentListInClass
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={addClassworkAssignmentListInClass}
+          onClose={handleCloseAddClassworkAssignmentListInClass}
+        />
+        {/* Modal Thêm bài tập sau buổi học */}
+        <AddClassworkAssignmentListAfterClass
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={addclassworkAssignmentListAfterClass}
+          onClose={handleCloseAddClassworkAssignmentListAfterClass}
         />
         <Grid container spacing={DASHBOARD_SPACING}>
           {/* Thông tin buổi học */}
@@ -244,8 +278,10 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
-                            endIcon={<FilePlus />}
-                            onClick={handleOpenAddAttachmentMaterial}
+                            endIcon={<FileText />}
+                            onClick={
+                              handleOpenAddClassworkAssignmentListBeforeClass
+                            }
                           >
                             Thêm
                           </Button>
@@ -281,9 +317,35 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                 {/* Danh sách bài tập trước buổi học */}
                 <Grid item xs={12}>
                   <Stack spacing={2} style={{ display: 'flex' }}>
-                    <Typography variant="subtitle2">
-                      Danh sách bài tập
-                    </Typography>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            endIcon={<FilePlus />}
+                            onClick={
+                              handleOpenAddClassworkAssignmentListBeforeClass
+                            }
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -356,9 +418,35 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                 {/* Danh sách bài tập trong buổi học */}
                 <Grid item xs={12}>
                   <Stack spacing={2} style={{ display: 'flex' }}>
-                    <Typography variant="subtitle2">
-                      Danh sách bài tập
-                    </Typography>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            endIcon={<FilePlus />}
+                            onClick={
+                              handleOpenAddClassworkAssignmentListInClass
+                            }
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -429,9 +517,35 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                 {/* Danh sách bài tập sau buổi học */}
                 <Grid item xs={12}>
                   <Stack spacing={2} style={{ display: 'flex' }}>
-                    <Typography variant="subtitle2">
-                      Danh sách bài tập
-                    </Typography>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            endIcon={<FilePlus />}
+                            onClick={
+                              handleOpenAddClassworkAssignmentListAfterClass
+                            }
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
