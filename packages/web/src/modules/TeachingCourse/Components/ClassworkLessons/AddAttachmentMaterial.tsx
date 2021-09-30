@@ -1,47 +1,55 @@
 import { FC, useEffect, useState } from 'react'
 
-import { makeStyles } from '@material-ui/core'
-import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
-import AccountDisplayName from 'components/AccountDisplayName'
+import { makeStyles, Grid } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 
-import { ANY } from '@kathena/types'
-import { Dialog } from '@kathena/ui'
+import { DASHBOARD_SPACING } from '@kathena/theme'
+import { Dialog, usePagination, SectionCardSkeleton, Button } from '@kathena/ui'
 import {
-  Maybe,
-  Publication,
-  Lesson,
-  useFindCourseByIdQuery,
-  useUpdateLessonMutation,
   FindLessonByIdDocument,
+  Lesson,
+  useUpdateLessonMutation,
+  useClassworkAssignmentListQuery,
 } from 'graphql/generated'
+
+import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
 
 export type AddAttachmentMaterialProps = {
   open: boolean
   onClose: () => void
   idCourse: string
-  lesson:
-    | {
-        id: string
-        orgId: string
-        createdAt: ANY
-        updatedAt: ANY
-        createdByAccountId: string
-        startTime: ANY
-        endTime: ANY
-        description?: Maybe<string> | undefined
-        absentStudentIds: string[]
-        courseId: string
-        publicationState: Publication
-        avgNumberOfStars: number
-        // classworkMaterialListBeforeClass: string[] | null | undefined
-      }
-    | undefined
+  lesson: Pick<
+    Lesson,
+    | 'description'
+    | 'startTime'
+    | 'endTime'
+    | 'courseId'
+    | 'id'
+    | 'publicationState'
+    | 'absentStudentIds'
+    | 'classworkMaterialListBeforeClass'
+    | 'classworkMaterialListInClass'
+    | 'classworkMaterialListAfterClass'
+    | 'classworkAssignmentListBeforeClass'
+    | 'classworkAssignmentListInClass'
+    | 'classworkAssignmentListAfterClass'
+  >
 }
 
 const AddAttachmentMaterial: FC<AddAttachmentMaterialProps> = (props) => {
   const { open, onClose, lesson, idCourse } = props
   const classes = useStyles(props)
+  const [attachments, setAttachments] = useState<string[]>([])
+  const [
+    classworkMaterialListBeforeClass,
+    setClassworkMaterialListBeforeClass,
+  ] = useState<string[]>(lesson.classworkMaterialListBeforeClass ?? [])
+  const [
+    classworkAssignmentListBeforeClass,
+    setClassworkAssignmentListBeforeClass,
+  ] = useState<string[]>(lesson.classworkAssignmentListBeforeClass ?? [])
+
+  // Cập nhật buổi học (Lesson)
   const [loading, setLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const [updateLesson] = useUpdateLessonMutation({
@@ -52,35 +60,64 @@ const AddAttachmentMaterial: FC<AddAttachmentMaterialProps> = (props) => {
       },
     ],
   })
-  const [students, setStudents] = useState<string[]>([])
-  const [absentStudentIds, setAbsentStudentIds] = useState<string[]>(
-    lesson?.absentStudentIds ?? [],
-  )
-  const { data: dataCourse } = useFindCourseByIdQuery({
-    variables: {
-      id: idCourse,
-    },
-  })
+  // Lấy danh sách bài tập từ có sở dữ liệu
+  const { page, perPage } = usePagination()
+  const { data: dataClasswork, loading: loadingClasswork } =
+    useClassworkAssignmentListQuery({
+      variables: {
+        courseId: lesson.courseId,
+        limit: perPage,
+        skip: page * perPage,
+      },
+    })
+  // Lấy ID bài tập từ danh sách bài tập
   useEffect(() => {
-    setAbsentStudentIds(lesson?.absentStudentIds ?? [])
-  }, [open, lesson?.absentStudentIds])
-  useEffect(() => {
-    const course = dataCourse?.findCourseById
-    if (course?.studentIds && course.studentIds.length > 0) {
-      setStudents(course.studentIds)
+    const course = dataClasswork?.classworkAssignments
+    if (
+      course?.classworkAssignments &&
+      course.classworkAssignments.length > 0
+    ) {
+      const listAssignment = course.classworkAssignments.map((item) => item.id)
+      setAttachments(listAssignment)
     } else {
-      setStudents([])
+      setAttachments([])
     }
-  }, [dataCourse])
+  }, [dataClasswork])
+
+  // Lấy Danh sách Tài liệu trước khóa học
+  useEffect(() => {
+    setClassworkMaterialListBeforeClass(
+      lesson?.classworkMaterialListBeforeClass ?? [],
+    )
+  }, [open, lesson?.classworkMaterialListBeforeClass])
+
+  // Lấy Danh sách bài tập trước khóa học
+  useEffect(() => {
+    setClassworkAssignmentListBeforeClass(
+      lesson.classworkAssignmentListBeforeClass ?? [],
+    )
+  }, [open, lesson?.classworkAssignmentListBeforeClass])
+
   const toggleClick = (id: string) => {
-    const arr = [...absentStudentIds]
+    const arr = [...classworkAssignmentListBeforeClass]
     const index = arr.findIndex((i) => i === id)
     if (index > -1) {
       arr.splice(index, 1)
     } else {
       arr.push(id)
     }
-    setAbsentStudentIds(arr)
+    setClassworkAssignmentListBeforeClass(arr)
+  }
+
+  // Kiểm tra bên phía loading
+  if (loadingClasswork) {
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
+        <Grid item xs={12}>
+          <SectionCardSkeleton />
+        </Grid>
+      </Grid>
+    )
   }
   const handleUpdate = async () => {
     if (lesson) {
@@ -90,46 +127,52 @@ const AddAttachmentMaterial: FC<AddAttachmentMaterialProps> = (props) => {
           courseId: idCourse,
           lessonId: lesson.id,
           updateInput: {
-            absentStudentIds,
+            classworkAssignmentListBeforeClass,
           },
         },
       })
       if (lessonUpdate) {
-        enqueueSnackbar(`Lưu thành công`, { variant: 'success' })
+        enqueueSnackbar(`Thêm thành công`, { variant: 'success' })
       } else {
-        enqueueSnackbar(`Lưu thất bại`, { variant: 'error' })
+        enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
       }
       setLoading(false)
     } else {
-      enqueueSnackbar(`Lưu thất bại`, { variant: 'error' })
+      enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
     }
   }
+
   return (
     <Dialog
       open={open}
       onClose={onClose}
       width={770}
       dialogTitle="Danh sách bài tập"
-      // extraDialogActions={
-      //   <Button onClick={handleUpdate} loading={loading}>
-      //     Lưu
-      //   </Button>
-      // }
+      extraDialogActions={
+        <Button onClick={handleUpdate} loading={loading}>
+          Lưu
+        </Button>
+      }
     >
-      <div className={classes.root}>
-        {students.map((item) => {
-          const absent = absentStudentIds.findIndex((i) => i === item) > -1
-          return (
-            <div
-              onClick={() => toggleClick(item)}
-              className={`${classes.item} ${absent ? classes.active : ''}`}
-            >
-              <AccountAvatar accountId={item} />
-              <AccountDisplayName maxWidth={100} accountId={item} />
-            </div>
-          )
-        })}
-      </div>
+      <>
+        <div className={classes.root}>
+          {attachments.map((item) => {
+            const inTheListAssignment =
+              classworkAssignmentListBeforeClass.findIndex((i) => i === item) >
+              -1
+            return (
+              <div
+                onClick={() => toggleClick(item)}
+                className={`${classes.item} ${
+                  inTheListAssignment ? classes.active : ''
+                }`}
+              >
+                <AssignmentDisplayName assignmentId={item} />
+              </div>
+            )
+          })}
+        </div>
+      </>
     </Dialog>
   )
 }
@@ -143,11 +186,12 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'left',
     justifyContent: 'center',
-    width: 110,
-    height: 80,
+    width: '100%',
+    height: '40px',
     margin: '5px',
+    paddingLeft: '1em',
     borderRadius: '5px',
     background: '#f2f2f2  ',
   },

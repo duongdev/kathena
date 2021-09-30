@@ -69,7 +69,6 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   })
   const { enqueueSnackbar } = useSnackbar()
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
-  console.log(classworkLesson)
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
