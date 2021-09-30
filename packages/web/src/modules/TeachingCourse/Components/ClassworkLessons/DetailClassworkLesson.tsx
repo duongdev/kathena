@@ -6,6 +6,7 @@ import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import format from 'date-fns/format'
 import { useSnackbar } from 'notistack'
+import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -34,6 +35,7 @@ import {
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
 } from 'utils/path-builder'
 
+import AddAttachmentMaterial from './AddAttachmentMaterial'
 import Attendance from './Attendance'
 import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
@@ -49,6 +51,11 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
     useDialogState()
   const [attendanceOpen, handleOpenAttendance, handleCloseAttendance] =
     useDialogState()
+  const [
+    addAttachmentMaterial,
+    handleOpenAddAttachmentMaterial,
+    handleCloseAddAttachmentMaterial,
+  ] = useDialogState()
   const { data, loading } = useFindLessonByIdQuery({
     variables: { lessonId },
   })
@@ -62,7 +69,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   })
   const { enqueueSnackbar } = useSnackbar()
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
-
+  console.log(classworkLesson)
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -137,6 +144,12 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           idCourse={classworkLesson.courseId}
           open={attendanceOpen}
           onClose={handleCloseAttendance}
+        />
+        <AddAttachmentMaterial
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={addAttachmentMaterial}
+          onClose={handleCloseAddAttachmentMaterial}
         />
         <Grid container spacing={DASHBOARD_SPACING}>
           {/* Thông tin buổi học */}
@@ -213,9 +226,33 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                 {/* Danh sách tài liệu trước buổi học */}
                 <Grid item xs={12}>
                   <Stack spacing={2} style={{ display: 'flex' }}>
-                    <Typography variant="subtitle2">
-                      Danh sách tài liệu
-                    </Typography>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách tài liệu
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            endIcon={<FilePlus />}
+                            onClick={handleOpenAddAttachmentMaterial}
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
