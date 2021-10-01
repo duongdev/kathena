@@ -301,28 +301,13 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
-    const input = { ...updateClassworkMaterialInput }
-
-    if (updateClassworkMaterialInput.title) {
-      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
-      if (title) {
-        input.title = title
-      }
-    }
-
-    if (updateClassworkMaterialInput.description) {
-      input.description = removeExtraSpaces(
-        updateClassworkMaterialInput.description,
-      )
-    }
-
     const classworkMaterialUpdated =
       await this.classworkMaterialModel.findOneAndUpdate(
         {
           _id: classworkMaterialId,
           orgId,
         },
-        input,
+        updateClassworkMaterialInput,
         { new: true },
       )
 
@@ -334,11 +319,7 @@ export class ClassworkService {
       `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
     )
 
-    this.logger.verbose({
-      orgId,
-      accountId,
-      updateClassworkMaterialInput,
-    })
+    this.logger.verbose(classworkMaterialUpdated)
 
     return classworkMaterialUpdated
   }

@@ -295,18 +295,22 @@ describe('classwork.service', () => {
           title: 'Đặng Hiếu Liêm',
         })
 
-        await expect(
-          classworkService.updateClassworkMaterial(
+        const classworkMaterialWithIframeVideos =
+          await classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
             objectId(),
             classworkMaterial.id,
             {
-              description: 'Đặng  Hiếu Liêm',
+              description: 'Đặng Hiếu Liêm',
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
             },
-          ),
-        ).resolves.toMatchObject({
-          description: 'Đặng Hiếu Liêm',
-        })
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
     })
 
