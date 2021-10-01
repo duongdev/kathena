@@ -4132,16 +4132,16 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
-"@typegoose/typegoose@8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-8.3.0.tgz#cdcec5afc8cc90bc719c57bb9729914ef628df76"
-  integrity sha512-KlnVD8NE/n0fLI8Fv3+9Iu8N72NUbyFX61ejhTsPq6F+w0KAjRYVRECkorqiAeuL5qnyILlOgthjNjQOXOvONQ==
+"@typegoose/typegoose@9.0.1":
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@typegoose/typegoose/-/typegoose-9.0.1.tgz#f8f4f02f727f0fd855241444065d92e831c1bd98"
+  integrity sha512-0yzUWeTKB/BDhdKuzkwdPDXqWp3f7Gp5u3tgFpHqmEGkGjTnXNxFOp8+QjwTb+0KXUXi8043VP07R6qSMOe2YA==
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
     reflect-metadata "^0.1.13"
     semver "^7.3.2"
-    tslib "^2.3.0"
+    tslib "^2.3.1"
 
 "@types/accepts@*", "@types/accepts@^1.3.5":
   version "1.3.5"
