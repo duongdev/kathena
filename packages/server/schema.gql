@@ -668,6 +668,7 @@ input CreateClassworkMaterialInput {
   description: String
   publicationState: Publication
   attachments: [Upload!]
+  iframeVideos: [String!]
 }
 
 input UpdateClassworkMaterialInput {

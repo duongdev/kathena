@@ -142,10 +142,11 @@ describe('classwork.service', () => {
       })
 
       it(`returns the created classworkMaterial`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
@@ -153,14 +154,7 @@ describe('classwork.service', () => {
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService, 'addAttachmentsToClassworkMaterial')
-          .mockResolvedValueOnce(createClassworkMaterialInput as ANY)
-          .mockResolvedValueOnce({
-            ...createClassworkMaterialInput,
-            title: 'test 123',
-          } as ANY)
+          .mockResolvedValueOnce(true as never)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -169,9 +163,7 @@ describe('classwork.service', () => {
             objectId(),
             createClassworkMaterialInput,
           ),
-        ).resolves.toMatchObject({
-          ...createClassworkMaterialInput,
-        })
+        ).resolves.toMatchObject(createClassworkMaterialInput)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -180,11 +172,31 @@ describe('classwork.service', () => {
             objectId(),
             {
               title: 'test    123',
+              publicationState: Publication.Published,
             },
           ),
         ).resolves.toMatchObject({
           title: 'test 123',
+          publicationState: Publication.Published,
         })
+
+        const classworkMaterialIframeVideos =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              iframeVideos: ['iframe1', 'iframe2'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 
