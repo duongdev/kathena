@@ -36,7 +36,7 @@
     "graphql": "15.6.0",
     "gravatar": "1.8.2",
     "lodash": "4.17.21",
-    "notistack": "1.0.10",
+    "notistack": "2.0.2",
     "phosphor-react": "1.3.1",
     "query-string": "7.0.1",
     "react": "17.0.2",
