@@ -23,7 +23,7 @@
     "@nestjs-modules/mailer": "1.6.0",
     "@nestjs/common": "8.0.9",
     "@nestjs/core": "8.0.9",
-    "@nestjs/graphql": "7.11.0",
+    "@nestjs/graphql": "9.0.5",
     "@nestjs/platform-express": "8.0.9",
     "@nestjs/platform-fastify": "8.0.9",
     "@nestjs/serve-static": "2.2.2",
