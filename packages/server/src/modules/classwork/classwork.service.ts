@@ -706,8 +706,23 @@ export class ClassworkService {
     orgId: string,
     classworkAssignmentInput: CreateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
-    const { title, description, attachments, dueDate, publicationState } =
-      classworkAssignmentInput
+    this.logger.log(`[${this.createClassworkAssignment.name}] creating...`)
+
+    this.logger.verbose({
+      createdByAccountId,
+      courseId,
+      orgId,
+      classworkAssignmentInput,
+    })
+
+    const {
+      title,
+      description,
+      attachments,
+      dueDate,
+      publicationState,
+      iframeVideos,
+    } = classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
@@ -740,10 +755,11 @@ export class ClassworkService {
       createdByAccountId,
       courseId,
       orgId,
-      title,
-      description,
+      title: removeExtraSpaces(title),
+      description: removeExtraSpaces(description),
       publicationState,
       dueDate: dueDateInput,
+      iframeVideos,
     })
 
     if (attachments?.length) {
@@ -782,6 +798,11 @@ export class ClassworkService {
         })
       }
     }
+
+    this.logger.log(`[${this.createClassworkAssignment.name}] created !`)
+
+    this.logger.verbose(classworkAssignment)
+
     return classworkAssignment
   }
 

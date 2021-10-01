@@ -91,6 +91,9 @@ export class CreateClassworkAssignmentInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()
