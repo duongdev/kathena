@@ -84,7 +84,7 @@ const AddClassworkAssignmentListBeforeClass: FC<AddClassworkAssignmentListBefore
       }
     }, [dataClasswork])
 
-    // Lấy Danh sách bài tập trước khóa học
+    // Lấy Danh sách bài tập trước buổi học
     useEffect(() => {
       setClassworkAssignmentListBeforeClass(
         lesson.classworkAssignmentListBeforeClass ?? [],

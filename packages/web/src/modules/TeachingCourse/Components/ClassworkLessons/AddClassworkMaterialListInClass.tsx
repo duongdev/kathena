@@ -9,12 +9,12 @@ import {
   FindLessonByIdDocument,
   Lesson,
   useUpdateLessonMutation,
-  useClassworkAssignmentListQuery,
+  useClassworkMaterialsListQuery,
 } from 'graphql/generated'
 
-import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
+import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
 
-export type AddClassworkAssignmentListAfterClassProps = {
+export type AddClassworkMaterialListInClassProps = {
   open: boolean
   onClose: () => void
   idCourse: string
@@ -36,16 +36,14 @@ export type AddClassworkAssignmentListAfterClassProps = {
   >
 }
 
-const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterClassProps> =
+const AddClassworkMaterialListInClass: FC<AddClassworkMaterialListInClassProps> =
   (props) => {
     const { open, onClose, lesson, idCourse } = props
     const classes = useStyles(props)
-    const [attachments, setAttachments] = useState<string[]>([])
+    const [materials, setMaterials] = useState<string[]>([])
 
-    const [
-      classworkAssignmentListAfterClass,
-      setClassworkAssignmentListAfterClass,
-    ] = useState<string[]>(lesson.classworkAssignmentListAfterClass ?? [])
+    const [classworkMaterialListInClass, setClassworkMaterialListInClass] =
+      useState<string[]>(lesson.classworkMaterialListInClass ?? [])
 
     // Cập nhật buổi học (Lesson)
     const [loading, setLoading] = useState(false)
@@ -58,48 +56,41 @@ const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterCl
         },
       ],
     })
-    // Lấy danh sách bài tập từ có sở dữ liệu
+    // Lấy danh sách tài liệu từ có sở dữ liệu
     const { page, perPage } = usePagination()
     const { data: dataClasswork, loading: loadingClasswork } =
-      useClassworkAssignmentListQuery({
+      useClassworkMaterialsListQuery({
         variables: {
           courseId: lesson.courseId,
           limit: perPage,
           skip: page * perPage,
         },
       })
-    // Lấy ID bài tập từ danh sách bài tập
+    // Lấy ID tài liệu từ danh sách tài liệu
     useEffect(() => {
-      const course = dataClasswork?.classworkAssignments
-      if (
-        course?.classworkAssignments &&
-        course.classworkAssignments.length > 0
-      ) {
-        const listAssignment = course.classworkAssignments.map(
-          (item) => item.id,
-        )
-        setAttachments(listAssignment)
+      const course = dataClasswork?.classworkMaterials
+      if (course?.classworkMaterials && course.classworkMaterials.length > 0) {
+        const listMaterial = course.classworkMaterials.map((item) => item.id)
+        setMaterials(listMaterial)
       } else {
-        setAttachments([])
+        setMaterials([])
       }
     }, [dataClasswork])
 
-    // Lấy Danh sách bài tập sau buổi học
+    // Lấy Danh sách tài liệu trong buổi học
     useEffect(() => {
-      setClassworkAssignmentListAfterClass(
-        lesson.classworkAssignmentListAfterClass ?? [],
-      )
-    }, [open, lesson?.classworkAssignmentListAfterClass])
+      setClassworkMaterialListInClass(lesson.classworkMaterialListInClass ?? [])
+    }, [open, lesson?.classworkMaterialListInClass])
 
     const toggleClick = (id: string) => {
-      const arr = [...classworkAssignmentListAfterClass]
+      const arr = [...classworkMaterialListInClass]
       const index = arr.findIndex((i) => i === id)
       if (index > -1) {
         arr.splice(index, 1)
       } else {
         arr.push(id)
       }
-      setClassworkAssignmentListAfterClass(arr)
+      setClassworkMaterialListInClass(arr)
     }
 
     // Kiểm tra bên phía loading
@@ -120,7 +111,7 @@ const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterCl
             courseId: idCourse,
             lessonId: lesson.id,
             updateInput: {
-              classworkAssignmentListAfterClass,
+              classworkMaterialListInClass,
             },
           },
         })
@@ -140,7 +131,7 @@ const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterCl
         open={open}
         onClose={onClose}
         width={770}
-        dialogTitle="Danh sách bài tập"
+        dialogTitle="Danh sách tài liệu"
         extraDialogActions={
           <Button onClick={handleUpdate} loading={loading}>
             Lưu
@@ -149,18 +140,17 @@ const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterCl
       >
         <>
           <div className={classes.root}>
-            {attachments.map((item) => {
-              const inTheListAssignment =
-                classworkAssignmentListAfterClass.findIndex((i) => i === item) >
-                -1
+            {materials.map((item) => {
+              const inTheListMaterial =
+                classworkMaterialListInClass.findIndex((i) => i === item) > -1
               return (
                 <div
                   onClick={() => toggleClick(item)}
                   className={`${classes.item} ${
-                    inTheListAssignment ? classes.active : ''
+                    inTheListMaterial ? classes.active : ''
                   }`}
                 >
-                  <AssignmentDisplayName assignmentId={item} />
+                  <MaterialDisplayName materialId={item} />
                 </div>
               )
             })}
@@ -193,4 +183,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default AddClassworkAssignmentListAfterClass
+export default AddClassworkMaterialListInClass

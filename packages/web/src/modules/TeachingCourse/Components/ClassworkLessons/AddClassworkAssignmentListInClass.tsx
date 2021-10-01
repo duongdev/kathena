@@ -42,10 +42,8 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
     const classes = useStyles(props)
     const [attachments, setAttachments] = useState<string[]>([])
 
-    const [
-      classworkAssignmentListInClass,
-      setClassworkAssignmentListBeforeClass,
-    ] = useState<string[]>(lesson.classworkAssignmentListInClass ?? [])
+    const [classworkAssignmentListInClass, setClassworkAssignmentListInClass] =
+      useState<string[]>(lesson.classworkAssignmentListInClass ?? [])
 
     // Cập nhật buổi học (Lesson)
     const [loading, setLoading] = useState(false)
@@ -84,9 +82,9 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
       }
     }, [dataClasswork])
 
-    // Lấy Danh sách bài tập trước khóa học
+    // Lấy Danh sách bài tập trong buổi học
     useEffect(() => {
-      setClassworkAssignmentListBeforeClass(
+      setClassworkAssignmentListInClass(
         lesson.classworkAssignmentListInClass ?? [],
       )
     }, [open, lesson?.classworkAssignmentListInClass])
@@ -99,7 +97,7 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
       } else {
         arr.push(id)
       }
-      setClassworkAssignmentListBeforeClass(arr)
+      setClassworkAssignmentListInClass(arr)
     }
 
     // Kiểm tra bên phía loading
