@@ -12,9 +12,9 @@ import {
   useClassworkAssignmentListQuery,
 } from 'graphql/generated'
 
-import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
+import AssignmentDisplayName from '../LessonDisplayName/AssignmentDisplayName'
 
-export type AddClassworkAssignmentListInClassProps = {
+export type AddClassworkAssignmentListAfterClassProps = {
   open: boolean
   onClose: () => void
   idCourse: string
@@ -36,14 +36,16 @@ export type AddClassworkAssignmentListInClassProps = {
   >
 }
 
-const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassProps> =
+const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterClassProps> =
   (props) => {
     const { open, onClose, lesson, idCourse } = props
     const classes = useStyles(props)
     const [attachments, setAttachments] = useState<string[]>([])
 
-    const [classworkAssignmentListInClass, setClassworkAssignmentListInClass] =
-      useState<string[]>(lesson.classworkAssignmentListInClass ?? [])
+    const [
+      classworkAssignmentListAfterClass,
+      setClassworkAssignmentListAfterClass,
+    ] = useState<string[]>(lesson.classworkAssignmentListAfterClass ?? [])
 
     // Cập nhật buổi học (Lesson)
     const [loading, setLoading] = useState(false)
@@ -82,22 +84,22 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
       }
     }, [dataClasswork])
 
-    // Lấy Danh sách bài tập trong buổi học
+    // Lấy Danh sách bài tập sau buổi học
     useEffect(() => {
-      setClassworkAssignmentListInClass(
-        lesson.classworkAssignmentListInClass ?? [],
+      setClassworkAssignmentListAfterClass(
+        lesson.classworkAssignmentListAfterClass ?? [],
       )
-    }, [open, lesson?.classworkAssignmentListInClass])
+    }, [open, lesson?.classworkAssignmentListAfterClass])
 
     const toggleClick = (id: string) => {
-      const arr = [...classworkAssignmentListInClass]
+      const arr = [...classworkAssignmentListAfterClass]
       const index = arr.findIndex((i) => i === id)
       if (index > -1) {
         arr.splice(index, 1)
       } else {
         arr.push(id)
       }
-      setClassworkAssignmentListInClass(arr)
+      setClassworkAssignmentListAfterClass(arr)
     }
 
     // Kiểm tra bên phía loading
@@ -118,7 +120,7 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
             courseId: idCourse,
             lessonId: lesson.id,
             updateInput: {
-              classworkAssignmentListInClass,
+              classworkAssignmentListAfterClass,
             },
           },
         })
@@ -149,7 +151,8 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
           <div className={classes.root}>
             {attachments.map((item) => {
               const inTheListAssignment =
-                classworkAssignmentListInClass.findIndex((i) => i === item) > -1
+                classworkAssignmentListAfterClass.findIndex((i) => i === item) >
+                -1
               return (
                 <div
                   onClick={() => toggleClick(item)}
@@ -190,4 +193,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default AddClassworkAssignmentListInClass
+export default AddClassworkAssignmentListAfterClass

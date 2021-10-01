@@ -12,9 +12,9 @@ import {
   useClassworkMaterialsListQuery,
 } from 'graphql/generated'
 
-import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
+import MaterialDisplayName from '../LessonDisplayName/MaterialDisplayName'
 
-export type AddClassworkMaterialListInClassProps = {
+export type AddClassworkMaterialListBeforeClassProps = {
   open: boolean
   onClose: () => void
   idCourse: string
@@ -36,14 +36,16 @@ export type AddClassworkMaterialListInClassProps = {
   >
 }
 
-const AddClassworkMaterialListInClass: FC<AddClassworkMaterialListInClassProps> =
+const AddClassworkMaterialListBeforeClass: FC<AddClassworkMaterialListBeforeClassProps> =
   (props) => {
     const { open, onClose, lesson, idCourse } = props
     const classes = useStyles(props)
     const [materials, setMaterials] = useState<string[]>([])
 
-    const [classworkMaterialListInClass, setClassworkMaterialListInClass] =
-      useState<string[]>(lesson.classworkMaterialListInClass ?? [])
+    const [
+      classworkMaterialListBeforeClass,
+      setClassworkMaterialListBeforeClass,
+    ] = useState<string[]>(lesson.classworkMaterialListBeforeClass ?? [])
 
     // Cập nhật buổi học (Lesson)
     const [loading, setLoading] = useState(false)
@@ -77,20 +79,22 @@ const AddClassworkMaterialListInClass: FC<AddClassworkMaterialListInClassProps> 
       }
     }, [dataClasswork])
 
-    // Lấy Danh sách tài liệu trong buổi học
+    // Lấy Danh sách tài liệu trước buổi học
     useEffect(() => {
-      setClassworkMaterialListInClass(lesson.classworkMaterialListInClass ?? [])
-    }, [open, lesson?.classworkMaterialListInClass])
+      setClassworkMaterialListBeforeClass(
+        lesson.classworkMaterialListBeforeClass ?? [],
+      )
+    }, [open, lesson?.classworkMaterialListBeforeClass])
 
     const toggleClick = (id: string) => {
-      const arr = [...classworkMaterialListInClass]
+      const arr = [...classworkMaterialListBeforeClass]
       const index = arr.findIndex((i) => i === id)
       if (index > -1) {
         arr.splice(index, 1)
       } else {
         arr.push(id)
       }
-      setClassworkMaterialListInClass(arr)
+      setClassworkMaterialListBeforeClass(arr)
     }
 
     // Kiểm tra bên phía loading
@@ -111,7 +115,7 @@ const AddClassworkMaterialListInClass: FC<AddClassworkMaterialListInClassProps> 
             courseId: idCourse,
             lessonId: lesson.id,
             updateInput: {
-              classworkMaterialListInClass,
+              classworkMaterialListBeforeClass,
             },
           },
         })
@@ -142,7 +146,8 @@ const AddClassworkMaterialListInClass: FC<AddClassworkMaterialListInClassProps> 
           <div className={classes.root}>
             {materials.map((item) => {
               const inTheListMaterial =
-                classworkMaterialListInClass.findIndex((i) => i === item) > -1
+                classworkMaterialListBeforeClass.findIndex((i) => i === item) >
+                -1
               return (
                 <div
                   onClick={() => toggleClick(item)}
@@ -183,4 +188,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default AddClassworkMaterialListInClass
+export default AddClassworkMaterialListBeforeClass

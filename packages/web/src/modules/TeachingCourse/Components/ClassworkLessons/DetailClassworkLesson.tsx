@@ -35,12 +35,12 @@ import {
   TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
 } from 'utils/path-builder'
 
-import AddClassworkAssignmentListAfterClass from './AddClassworkAssignmentListAfterClass'
-import AddClassworkAssignmentListBeforeClass from './AddClassworkAssignmentListBeforeClass'
-import AddClassworkAssignmentListInClass from './AddClassworkAssignmentListInClass'
-import AddClassworkMaterialListAfterClass from './AddClassworkMaterialListAfterClass'
-import AddClassworkMaterialListBeforeClass from './AddClassworkMaterialListBeforeClass'
-import AddClassworkMaterialListInClass from './AddClassworkMaterialListInClass'
+import AddClassworkAssignmentListAfterClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkAssignmentListAfterClass'
+import AddClassworkAssignmentListBeforeClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkAssignmentListBeforeClass'
+import AddClassworkAssignmentListInClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkAssignmentListInClass'
+import AddClassworkMaterialListAfterClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListAfterClass'
+import AddClassworkMaterialListBeforeClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListBeforeClass'
+import AddClassworkMaterialListInClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListInClass'
 import Attendance from './Attendance'
 import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
