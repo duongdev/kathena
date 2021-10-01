@@ -1,5 +1,5 @@
 import { Field, InputType, ID, Int, ObjectType } from '@nestjs/graphql'
-import { IsNotEmpty, IsOptional } from 'class-validator'
+import { IsNotEmpty, IsOptional, Min } from 'class-validator'
 
 import { DayOfTheWeekInput } from 'modules/lesson/lesson.type'
 
@@ -82,4 +82,37 @@ export class CoursesFilterInput {
 
   @Field((_type) => [ID], { nullable: true })
   studentIds: string[]
+}
+
+@InputType()
+export class CloneCourseInput {
+  @Field((_Type) => ID)
+  @IsNotEmpty({ message: 'courseIdMustCopy id cannot be empty' })
+  courseIdMustCopy: string
+
+  @Field()
+  @IsNotEmpty({ message: 'OrgOffice id cannot be empty' })
+  orgOfficeId: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Code cannot be empty' })
+  code: string
+
+  @Field()
+  @IsNotEmpty({ message: 'Name cannot be empty' })
+  name: string
+
+  @Field((_type) => Date)
+  @IsNotEmpty({ message: 'Start date cannot be empty' })
+  startDate: Date
+
+  @Field((_type) => Number, { nullable: true })
+  @Min(0)
+  tuitionFee?: number
+
+  @Field((_type) => [String], { nullable: true })
+  lecturerIds?: string[]
+
+  @Field((_type) => [DayOfTheWeekInput], { nullable: true })
+  daysOfTheWeek?: DayOfTheWeekInput[]
 }

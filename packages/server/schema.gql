@@ -160,7 +160,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideo: [String!]!
+  iframeVideos: [String!]!
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
@@ -177,7 +177,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideo: [String!]!
+  iframeVideos: [String!]!
   publicationState: Publication!
 }
 
@@ -443,10 +443,10 @@ type Query {
   getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
   submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
   file(id: ID!): File
-  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
+  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quiz(id: ID!): Quiz!
@@ -497,10 +497,6 @@ enum ClassworkAssignmentByStudentIdInCourseInputStatus {
   HaveNotSubmission
 }
 
-input ConversationPageOptionInput {
-  limit: Int!
-}
-
 input LessonsFilterInput {
   courseId: ID!
   startTime: DateTime = null
@@ -520,6 +516,10 @@ input UpdateLessonPublicationByIdInput {
   lessonId: ID!
   publicationState: Publication!
   courseId: ID!
+}
+
+input ConversationPageOptionInput {
+  limit: Int!
 }
 
 input QuizzesFilterInput {
@@ -557,6 +557,7 @@ type Mutation {
   addStudentsToCourse(studentIds: [ID!]!, courseId: ID!): Course!
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
+  cloneTheCourse(cloneCourseInput: CloneCourseInput!): Course!
   createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
   updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
@@ -570,13 +571,13 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
-  createConversation(conversationInput: CreateConversationInput!): Conversation!
-  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
@@ -651,11 +652,23 @@ input UpdateCourseInput {
   lecturerIds: [ID!]
 }
 
+input CloneCourseInput {
+  courseIdMustCopy: ID!
+  orgOfficeId: String!
+  code: String!
+  name: String!
+  startDate: DateTime!
+  tuitionFee: Float
+  lecturerIds: [String!]
+  daysOfTheWeek: [DayOfTheWeekInput!]
+}
+
 input CreateClassworkMaterialInput {
   title: String!
   description: String
   publicationState: Publication
   attachments: [Upload!]
+  iframeVideos: [String!]
 }
 
 input UpdateClassworkMaterialInput {
@@ -673,6 +686,7 @@ input CreateClassworkAssignmentInput {
   attachments: [Upload!] = []
   dueDate: DateTime
   publicationState: Publication
+  iframeVideos: [String!]
 }
 
 input UpdateClassworkAssignmentInput {
@@ -690,18 +704,6 @@ input CreateClassworkSubmissionInput {
 input SetGradeForClassworkSubmissionInput {
   submissionId: ID!
   grade: Float!
-}
-
-input CreateConversationInput {
-  createdByAccountId: ID!
-  roomId: ID!
-  content: String!
-  type: String
-}
-
-input RatingInput {
-  targetId: ID!
-  numberOfStars: Float = 1
 }
 
 input CreateLessonInput {
@@ -740,6 +742,18 @@ input CommentsForTheLessonByLecturerInput {
 input CommentsForTheLessonByLecturerQuery {
   lessonId: ID!
   courseId: ID!
+}
+
+input CreateConversationInput {
+  createdByAccountId: ID!
+  roomId: ID!
+  content: String!
+  type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 input CreateQuizInput {

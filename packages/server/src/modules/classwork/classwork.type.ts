@@ -37,6 +37,9 @@ export class CreateClassworkMaterialInput {
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[]
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @ObjectType()
@@ -91,6 +94,9 @@ export class CreateClassworkAssignmentInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()

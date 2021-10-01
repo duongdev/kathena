@@ -6,16 +6,27 @@ import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
+import { CreateAccountServiceInput } from 'modules/account/account.type'
 import { AccountStatus } from 'modules/account/models/Account'
 import { AuthService } from 'modules/auth/auth.service'
 import { ClassworkService } from 'modules/classwork/classwork.service'
-import { AvgGradeOfClassworkByCourseOptionInput } from 'modules/classwork/classwork.type'
+import {
+  AvgGradeOfClassworkByCourseOptionInput,
+  CreateClassworkAssignmentInput,
+  CreateClassworkMaterialInput,
+} from 'modules/classwork/classwork.type'
+import { LessonService } from 'modules/lesson/lesson.service'
+import {
+  DayOfTheWeekInput,
+  DayOfWeek,
+  LessonsFilterInputStatus,
+} from 'modules/lesson/lesson.type'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
 import { CourseService } from './course.service'
-import { CreateCourseInput } from './course.type'
+import { CloneCourseInput, CreateCourseInput } from './course.type'
 
 describe('course.service', () => {
   let module: TestingModule
@@ -26,6 +37,7 @@ describe('course.service', () => {
   let courseService: CourseService
   let orgOfficeService: OrgOfficeService
   let classworkService: ClassworkService
+  let lessonService: LessonService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -41,6 +53,7 @@ describe('course.service', () => {
     accountService = module.get<AccountService>(AccountService)
     orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
     classworkService = module.get<ClassworkService>(ClassworkService)
+    lessonService = module.get<LessonService>(LessonService)
   })
 
   afterAll(async () => {
@@ -1847,6 +1860,590 @@ describe('course.service', () => {
           { avgGrade: 55, classworkTitle: 'Bai tap 1' },
         ])
       })
+    })
+  })
+
+  describe('cloneTheCourse', () => {
+    beforeEach(async () => {
+      await mongooseConnection.dropDatabase()
+      jest.resetAllMocks()
+      jest.restoreAllMocks()
+    })
+    it('throws error if course must copy no found', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: tomorrow,
+        daysOfTheWeek,
+      }
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError('COURSE_MUST_COPY_NOT_FOUND')
+    })
+
+    it('throws error if academic subject not found', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: tomorrow,
+        daysOfTheWeek,
+      }
+
+      jest
+        .spyOn(courseService, 'findCourseById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError('ACADEMIC_SUBJECT_NOT_FOUND')
+    })
+
+    it('throws error if org office not found', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: tomorrow,
+        daysOfTheWeek,
+      }
+
+      jest
+        .spyOn(courseService, 'findCourseById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError('ORG_OFFICE_NOT_FOUND')
+    })
+
+    it('throws error if lecturer not found', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const lecturerId = objectId()
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: tomorrow,
+        daysOfTheWeek,
+        lecturerIds: [lecturerId],
+      }
+
+      jest
+        .spyOn(courseService, 'findCourseById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError(`ID ${lecturerId} is not found`)
+    })
+
+    it('throws error if account is not lecturer', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const lecturer = {
+        id: objectId(),
+        displayName: 'Liêm Đặng',
+        roles: 'student',
+      }
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: tomorrow,
+        daysOfTheWeek,
+        lecturerIds: [lecturer.id],
+      }
+
+      jest
+        .spyOn(courseService, 'findCourseById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(accountService, 'findOneAccount')
+        .mockResolvedValueOnce(lecturer as ANY)
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError(`${lecturer.displayName} isn't a lecturer`)
+    })
+
+    it('throws error if startTime invalid', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const yesterday = new Date(today)
+      yesterday.setDate(yesterday.getDate() - 1)
+
+      const lecturer = {
+        id: objectId(),
+        displayName: 'Liêm Đặng',
+        roles: 'lecturer',
+      }
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'TEST_1',
+        courseIdMustCopy: objectId(),
+        name: 'name',
+        orgOfficeId: objectId(),
+        startDate: yesterday,
+        daysOfTheWeek,
+        lecturerIds: [lecturer.id],
+      }
+
+      jest
+        .spyOn(courseService, 'findCourseById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+      jest
+        .spyOn(accountService, 'findOneAccount')
+        .mockResolvedValueOnce(lecturer as ANY)
+
+      await expect(
+        courseService.cloneTheCourse(objectId(), objectId(), cloneCourseInput),
+      ).rejects.toThrowError(`START_DATE_INVALID`)
+    })
+
+    it('returns new course after cloned', async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin_academic',
+        name: 'kmin academic',
+      })
+
+      const createAccountInput: CreateAccountServiceInput = {
+        email: 'academy@kmin.edu.vn',
+        orgId: org.id,
+        roles: ['owner', 'admin', 'lecturer', 'student', 'staff'],
+        username: 'kminAcademic',
+        createdByAccountId: objectId(),
+        displayName: 'kmin academic',
+        password: '123123',
+        status: AccountStatus.Active,
+      }
+
+      const account = await accountService.createAccount(createAccountInput)
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        address: '25A Mai Thị Lựu, P. Đa Kao, Quận 1, TP. HCM',
+        createdByAccountId: account.id,
+        name: 'Cơ sở 1',
+        orgId: org.id,
+        phone: '0816020416',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'nodejs-basic',
+        name: 'nodejs căn bản',
+        createdByAccountId: account.id,
+        description: 'nodejs căn bản cho người mới bắt đầu',
+        imageFileId: objectId(),
+      })
+
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const createCourseInput1: CreateCourseInput = {
+        academicSubjectId: academicSubject.id,
+        code: 'nodejs-basic-k1',
+        name: 'nodejs basic k1',
+        daysOfTheWeek,
+        orgOfficeId: orgOffice.id,
+        startDate: tomorrow,
+        totalNumberOfLessons: 3,
+        tuitionFee: 100000,
+        lecturerIds: [account.id],
+      }
+
+      const courseMustClone = await courseService.createCourse(
+        account.id,
+        org.id,
+        createCourseInput1,
+      )
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'nodejs-basic-k2',
+        courseIdMustCopy: courseMustClone.id,
+        name: 'nodejs basic k2',
+        orgOfficeId: orgOffice.id,
+        startDate: tomorrow,
+        daysOfTheWeek,
+        lecturerIds: [account.id],
+      }
+
+      await expect(
+        courseService.cloneTheCourse(account.id, org.id, cloneCourseInput),
+      ).resolves.toMatchObject({
+        code: 'NODEJS-BASIC-K2',
+        name: 'nodejs basic k2',
+      })
+    })
+
+    it('returns new course after cloned with lesson have classwork', async () => {
+      expect.assertions(4)
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin_academic_2',
+        name: 'kmin academic 2',
+      })
+
+      const createAccountInput: CreateAccountServiceInput = {
+        email: 'academy@kmin.edu.vn',
+        orgId: org.id,
+        roles: ['owner', 'admin', 'lecturer', 'student', 'staff'],
+        username: 'kminAcademic',
+        createdByAccountId: objectId(),
+        displayName: 'kmin academic',
+        password: '123123',
+        status: AccountStatus.Active,
+      }
+
+      const account = await accountService.createAccount(createAccountInput)
+
+      const orgOffice = await orgOfficeService.createOrgOffice({
+        address: '25A Mai Thị Lựu, P. Đa Kao, Quận 1, TP. HCM',
+        createdByAccountId: account.id,
+        name: 'Cơ sở 1',
+        orgId: org.id,
+        phone: '0816020416',
+      })
+
+      const academicSubject = await academicService.createAcademicSubject({
+        orgId: org.id,
+        code: 'nodejs-basic',
+        name: 'nodejs căn bản',
+        createdByAccountId: account.id,
+        description: 'nodejs căn bản cho người mới bắt đầu',
+        imageFileId: objectId(),
+      })
+
+      const daysOfTheWeek: DayOfTheWeekInput[] = [
+        {
+          dayOfWeek: DayOfWeek.Monday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Thursday,
+          startTime: '10:00',
+          endTime: '11:00',
+        },
+      ]
+
+      const createCourseInput1: CreateCourseInput = {
+        academicSubjectId: academicSubject.id,
+        code: 'nodejs-basic-k1',
+        name: 'nodejs basic k1',
+        daysOfTheWeek,
+        orgOfficeId: orgOffice.id,
+        startDate: tomorrow,
+        totalNumberOfLessons: 3,
+        tuitionFee: 100000,
+        lecturerIds: [account.id],
+      }
+
+      const courseMustClone = await courseService.createCourse(
+        account.id,
+        org.id,
+        createCourseInput1,
+      )
+
+      const createClassworkAssignmentInput: CreateClassworkAssignmentInput = {
+        title: 'bài 1',
+        description: 'bài 1 nốt',
+        publicationState: Publication.Published,
+      }
+
+      const classworkAssignment =
+        await classworkService.createClassworkAssignment(
+          account.id,
+          courseMustClone.id,
+          org.id,
+          createClassworkAssignmentInput,
+        )
+
+      const createClassworkMaterialInput: CreateClassworkMaterialInput = {
+        title: 'tài liệu bài 1',
+        description: 'tài liệu bài 1 nốt',
+        publicationState: Publication.Published,
+      }
+
+      const classworkMaterial = await classworkService.createClassworkMaterial(
+        account.id,
+        org.id,
+        courseMustClone.id,
+        createClassworkMaterialInput,
+      )
+
+      const listLessonInCourseMustClone =
+        await lessonService.findAndPaginateLessons(
+          {
+            limit: 3,
+            skip: 0,
+          },
+          {
+            courseId: courseMustClone.id,
+            status: LessonsFilterInputStatus.academic,
+          },
+          account.id,
+          org.id,
+        )
+
+      await lessonService.updateLessonById(
+        {
+          courseId: courseMustClone.id,
+          orgId: org.id,
+          lessonId: listLessonInCourseMustClone.lessons[0].id,
+        },
+        {
+          classworkAssignmentListAfterClass: [classworkAssignment.id],
+          classworkAssignmentListInClass: [classworkAssignment.id],
+        },
+        account.id,
+      )
+
+      await lessonService.updateLessonById(
+        {
+          courseId: courseMustClone.id,
+          orgId: org.id,
+          lessonId: listLessonInCourseMustClone.lessons[0].id,
+        },
+        {
+          classworkAssignmentListBeforeClass: [classworkAssignment.id],
+          classworkMaterialListInClass: [classworkMaterial.id],
+          classworkMaterialListAfterClass: [classworkMaterial.id],
+        },
+        account.id,
+      )
+
+      const cloneCourseInput: CloneCourseInput = {
+        code: 'nodejs-basic-k2',
+        courseIdMustCopy: courseMustClone.id,
+        name: 'nodejs basic k2',
+        orgOfficeId: orgOffice.id,
+        startDate: tomorrow,
+        daysOfTheWeek,
+        lecturerIds: [account.id],
+      }
+
+      const cloneCourse = await courseService.cloneTheCourse(
+        account.id,
+        org.id,
+        cloneCourseInput,
+      )
+
+      const listClassworkAssignmentInCourseMustClone =
+        await classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 10,
+            skip: 0,
+          },
+          {
+            accountId: account.id,
+            courseId: courseMustClone.id,
+            orgId: org.id,
+          },
+        )
+
+      const listClassworkMaterialInCourseMustClone =
+        await classworkService.findAndPaginateClassworkMaterials(
+          {
+            limit: 10,
+            skip: 0,
+          },
+          {
+            accountId: account.id,
+            courseId: courseMustClone.id,
+            orgId: org.id,
+          },
+        )
+      const listClassworkAssignmentInCloneCourse =
+        await classworkService.findAndPaginateClassworkAssignments(
+          {
+            limit: 10,
+            skip: 0,
+          },
+          {
+            accountId: account.id,
+            courseId: cloneCourse.id,
+            orgId: org.id,
+          },
+        )
+
+      const listClassworkMaterialInCloneCourse =
+        await classworkService.findAndPaginateClassworkMaterials(
+          {
+            limit: 10,
+            skip: 0,
+          },
+          {
+            accountId: account.id,
+            courseId: cloneCourse.id,
+            orgId: org.id,
+          },
+        )
+
+      await expect(
+        listClassworkAssignmentInCloneCourse.count ===
+          listClassworkAssignmentInCourseMustClone.count,
+      ).toBeTruthy()
+
+      await expect(
+        listClassworkMaterialInCloneCourse.count ===
+          listClassworkMaterialInCourseMustClone.count,
+      ).toBeTruthy()
+
+      await expect(
+        listClassworkAssignmentInCloneCourse.classworkAssignments[0].id.toString() ===
+          listClassworkAssignmentInCourseMustClone.classworkAssignments[0].id.toString(),
+      ).toBeFalsy()
+
+      await expect(
+        listClassworkMaterialInCloneCourse.classworkMaterials[0].id.toString() ===
+          listClassworkMaterialInCourseMustClone.classworkMaterials[0].id.toString(),
+      ).toBeFalsy()
     })
   })
 })
