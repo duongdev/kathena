@@ -19,8 +19,8 @@ import { WithAuth } from 'common/auth'
 import { Permission, useFindLessonByIdQuery } from 'graphql/generated'
 import {
   buildPath,
-  TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
-  TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
 
 import AssignmentDisplayName from '../../../TeachingCourse/Components/ClassworkLessons/LessonDisplayName/AssignmentDisplayName'
@@ -145,7 +145,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
                                 {
                                   id: classworkMaterialListBeforeClass,
                                 },
@@ -175,7 +175,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
                                 {
                                   id: classworkAssignmentListBeforeClass,
                                 },
@@ -218,7 +218,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
                                 {
                                   id: classworkLessonMaterialInClass,
                                 },
@@ -248,7 +248,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
                                 {
                                   id: classworkAssignmentListInClass,
                                 },
@@ -289,7 +289,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_DETAIL_CLASSWORK_MATERIALS,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
                                 {
                                   id: classworkMaterialListAfterClass,
                                 },
@@ -319,7 +319,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                           <>
                             <Link
                               to={buildPath(
-                                TEACHING_COURSE_CLASSWORK_ASSIGNMENT,
+                                STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
                                 {
                                   id: classworkAssignmentListAfterClass,
                                 },
