@@ -693,6 +693,7 @@ input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
+  iframeVideos: [String!]
 }
 
 input CreateClassworkSubmissionInput {

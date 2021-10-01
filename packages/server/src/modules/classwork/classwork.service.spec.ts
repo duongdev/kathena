@@ -1279,7 +1279,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1356,6 +1356,24 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
+
+        const classworkAssignmentWithIframeVideos =
+          await classworkService.updateClassworkAssignment(
+            {
+              id: classworkAssignmentUpdate.id,
+              accountId: accountLecturer.id,
+              orgId: org.id,
+            },
+            {
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {

@@ -112,6 +112,9 @@ export class UpdateClassworkAssignmentInput {
   @Field({ nullable: true })
   @IsOptional()
   dueDate?: Date
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()
