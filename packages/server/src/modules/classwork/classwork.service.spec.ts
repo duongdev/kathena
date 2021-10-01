@@ -1044,7 +1044,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the Classwork Assignment`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1075,14 +1075,18 @@ describe('classwork.service', () => {
         jest
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
         jest
           .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
         jest
           .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
         const courseTest = await courseService.createCourse(
@@ -1097,6 +1101,7 @@ describe('classwork.service', () => {
 
         jest
           .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
         const date = new Date()
@@ -1115,6 +1120,25 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Bai Tap Nay Moi Nhat',
         })
+
+        const classworkAssignmentWithIframeVideos =
+          await classworkService.createClassworkAssignment(
+            accountLecturer.id,
+            courseTest.id,
+            org.id,
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              dueDate: date,
+              iframeVideos: ['iframe1', 'iframe2'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 

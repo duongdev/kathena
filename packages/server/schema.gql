@@ -686,6 +686,7 @@ input CreateClassworkAssignmentInput {
   attachments: [Upload!] = []
   dueDate: DateTime
   publicationState: Publication
+  iframeVideos: [String!]
 }
 
 input UpdateClassworkAssignmentInput {
