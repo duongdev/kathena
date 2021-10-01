@@ -721,7 +721,7 @@ export class ClassworkService {
       attachments,
       dueDate,
       publicationState,
-      iframeVideo,
+      iframeVideos,
     } = classworkAssignmentInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
@@ -759,7 +759,7 @@ export class ClassworkService {
       description,
       publicationState,
       dueDate: dueDateInput,
-      iframeVideo,
+      iframeVideos,
     })
 
     if (attachments?.length) {
@@ -798,6 +798,11 @@ export class ClassworkService {
         })
       }
     }
+
+    this.logger.log(`[${this.createClassworkAssignment.name}] created !`)
+
+    this.logger.verbose(classworkAssignment)
+
     return classworkAssignment
   }
 

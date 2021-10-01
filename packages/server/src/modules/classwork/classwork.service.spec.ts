@@ -1109,7 +1109,7 @@ describe('classwork.service', () => {
           title: 'Bai Tap Nay Moi Nhat',
         })
 
-        const classworkAssignmentWithIfame =
+        const classworkAssignmentWithIframeVideos =
           await classworkService.createClassworkAssignment(
             accountLecturer.id,
             courseTest.id,
@@ -1118,13 +1118,13 @@ describe('classwork.service', () => {
               title: 'Bai Tap Nay Moi Nhat 1',
               description: '',
               dueDate: date,
-              iframeVideo: ['iframe1', 'iframe2'],
+              iframeVideos: ['iframe1', 'iframe2'],
             },
           )
 
         await expect(
           (async (): Promise<ANY> => {
-            return classworkAssignmentWithIfame.iframeVideo?.length
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
           })(),
         ).resolves.toBe(2)
       })

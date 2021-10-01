@@ -93,7 +93,7 @@ export class CreateClassworkAssignmentInput {
   publicationState?: string
 
   @Field((_type) => [String], { nullable: true })
-  iframeVideo?: string[]
+  iframeVideos?: string[]
 }
 
 @InputType()
