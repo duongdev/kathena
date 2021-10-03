@@ -674,6 +674,7 @@ input CreateClassworkMaterialInput {
 input UpdateClassworkMaterialInput {
   title: String
   description: String
+  iframeVideos: [String!]
 }
 
 input AddAttachmentsToClassworkInput {
@@ -693,6 +694,7 @@ input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
+  iframeVideos: [String!]
 }
 
 input CreateClassworkSubmissionInput {

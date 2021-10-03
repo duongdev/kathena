@@ -295,18 +295,22 @@ describe('classwork.service', () => {
           title: 'Đặng Hiếu Liêm',
         })
 
-        await expect(
-          classworkService.updateClassworkMaterial(
+        const classworkMaterialWithIframeVideos =
+          await classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
             objectId(),
             classworkMaterial.id,
             {
-              description: 'Đặng  Hiếu Liêm',
+              description: 'Đặng Hiếu Liêm',
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
             },
-          ),
-        ).resolves.toMatchObject({
-          description: 'Đặng Hiếu Liêm',
-        })
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
     })
 
@@ -1279,7 +1283,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1356,6 +1360,24 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
+
+        const classworkAssignmentWithIframeVideos =
+          await classworkService.updateClassworkAssignment(
+            {
+              id: classworkAssignmentUpdate.id,
+              accountId: accountLecturer.id,
+              orgId: org.id,
+            },
+            {
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {

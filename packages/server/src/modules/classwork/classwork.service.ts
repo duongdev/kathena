@@ -32,6 +32,7 @@ import {
   SubmissionStatusStatistics,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
+  UpdateClassworkAssignmentInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -283,6 +284,8 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
+    const { description, iframeVideos, title } = updateClassworkMaterialInput
+
     const classworkMaterial = await this.classworkMaterialModel.findOne({
       _id: classworkMaterialId,
       orgId,
@@ -301,19 +304,28 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
-    const input = { ...updateClassworkMaterialInput }
+    let updateInput = {}
 
-    if (updateClassworkMaterialInput.title) {
-      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
-      if (title) {
-        input.title = title
+    this.logger.log('updateInput')
+    this.logger.log({ updateInput })
+
+    if (title) {
+      updateInput = {
+        ...updateInput,
+        title: removeExtraSpaces(title),
       }
     }
-
-    if (updateClassworkMaterialInput.description) {
-      input.description = removeExtraSpaces(
-        updateClassworkMaterialInput.description,
-      )
+    if (description) {
+      updateInput = {
+        ...updateInput,
+        description: removeExtraSpaces(description),
+      }
+    }
+    if (iframeVideos) {
+      updateInput = {
+        ...updateInput,
+        iframeVideos,
+      }
     }
 
     const classworkMaterialUpdated =
@@ -322,7 +334,7 @@ export class ClassworkService {
           _id: classworkMaterialId,
           orgId,
         },
-        input,
+        updateInput,
         { new: true },
       )
 
@@ -334,11 +346,7 @@ export class ClassworkService {
       `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
     )
 
-    this.logger.verbose({
-      orgId,
-      accountId,
-      updateClassworkMaterialInput,
-    })
+    this.logger.verbose(classworkMaterialUpdated)
 
     return classworkMaterialUpdated
   }
@@ -798,9 +806,10 @@ export class ClassworkService {
       accountId: string
       orgId: string
     },
-    update: { title?: string; description?: string; dueDate?: Date },
+    update: UpdateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { id, orgId, accountId } = query
+    const { description, dueDate, iframeVideos, title } = update
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
@@ -821,17 +830,17 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
-    if (update.title) {
-      classworkAssignmentUpdate.title = update.title
+    if (title) {
+      classworkAssignmentUpdate.title = title
     }
 
-    if (update.description) {
-      classworkAssignmentUpdate.description = update.description
+    if (description) {
+      classworkAssignmentUpdate.description = description
     }
 
-    if (update.dueDate) {
+    if (dueDate) {
       const currentDate = new Date()
-      const dueDateInput = new Date(update.dueDate)
+      const dueDateInput = new Date(dueDate)
       if (classworkAssignmentUpdate.dueDate === null) {
         if (
           dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
@@ -851,6 +860,8 @@ export class ClassworkService {
         classworkAssignmentUpdate.dueDate = dueDateInput
       }
     }
+
+    if (iframeVideos) classworkAssignmentUpdate.iframeVideos = iframeVideos
 
     const updated = await classworkAssignmentUpdate.save()
     return updated
