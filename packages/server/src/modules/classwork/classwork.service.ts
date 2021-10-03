@@ -32,6 +32,7 @@ import {
   SubmissionStatusStatistics,
   ClassworkAssignmentByStudentIdInCourseInputStatus,
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
+  UpdateClassworkAssignmentInput,
 } from './classwork.type'
 import { Classwork, ClassworkType } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -805,9 +806,10 @@ export class ClassworkService {
       accountId: string
       orgId: string
     },
-    update: { title?: string; description?: string; dueDate?: Date },
+    update: UpdateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { id, orgId, accountId } = query
+    const { description, dueDate, iframeVideos, title } = update
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
@@ -828,17 +830,17 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
-    if (update.title) {
-      classworkAssignmentUpdate.title = update.title
+    if (title) {
+      classworkAssignmentUpdate.title = title
     }
 
-    if (update.description) {
-      classworkAssignmentUpdate.description = update.description
+    if (description) {
+      classworkAssignmentUpdate.description = description
     }
 
-    if (update.dueDate) {
+    if (dueDate) {
       const currentDate = new Date()
-      const dueDateInput = new Date(update.dueDate)
+      const dueDateInput = new Date(dueDate)
       if (classworkAssignmentUpdate.dueDate === null) {
         if (
           dueDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
@@ -858,6 +860,8 @@ export class ClassworkService {
         classworkAssignmentUpdate.dueDate = dueDateInput
       }
     }
+
+    if (iframeVideos) classworkAssignmentUpdate.iframeVideos = iframeVideos
 
     const updated = await classworkAssignmentUpdate.save()
     return updated
