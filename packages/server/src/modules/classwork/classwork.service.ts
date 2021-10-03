@@ -284,6 +284,8 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
+    const { description, iframeVideos, title } = updateClassworkMaterialInput
+
     const classworkMaterial = await this.classworkMaterialModel.findOne({
       _id: classworkMaterialId,
       orgId,
@@ -302,19 +304,28 @@ export class ClassworkService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
-    const input = { ...updateClassworkMaterialInput }
+    let updateInput = {}
 
-    if (updateClassworkMaterialInput.title) {
-      const title = removeExtraSpaces(updateClassworkMaterialInput.title)
-      if (title) {
-        input.title = title
+    this.logger.log('updateInput')
+    this.logger.log({ updateInput })
+
+    if (title) {
+      updateInput = {
+        ...updateInput,
+        title: removeExtraSpaces(title),
       }
     }
-
-    if (updateClassworkMaterialInput.description) {
-      input.description = removeExtraSpaces(
-        updateClassworkMaterialInput.description,
-      )
+    if (description) {
+      updateInput = {
+        ...updateInput,
+        description: removeExtraSpaces(description),
+      }
+    }
+    if (iframeVideos) {
+      updateInput = {
+        ...updateInput,
+        iframeVideos,
+      }
     }
 
     const classworkMaterialUpdated =
@@ -323,7 +334,7 @@ export class ClassworkService {
           _id: classworkMaterialId,
           orgId,
         },
-        input,
+        updateInput,
         { new: true },
       )
 
@@ -335,11 +346,7 @@ export class ClassworkService {
       `[${this.updateClassworkMaterial.name}] Updated classworkMaterial successfully`,
     )
 
-    this.logger.verbose({
-      orgId,
-      accountId,
-      updateClassworkMaterialInput,
-    })
+    this.logger.verbose(classworkMaterialUpdated)
 
     return classworkMaterialUpdated
   }

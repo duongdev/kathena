@@ -22,6 +22,9 @@ export class UpdateClassworkMaterialInput {
 
   @Field({ nullable: true })
   description?: string
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()
