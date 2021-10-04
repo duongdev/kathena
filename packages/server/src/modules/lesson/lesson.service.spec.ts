@@ -1652,17 +1652,17 @@ describe('lesson.service', () => {
           {
             startTime: new Date('2021-09-17 17:30'),
             endTime: new Date('2021-09-17 19:00'),
-            description: '',
+            description: 'Tiêu đề',
           },
           {
             startTime: new Date('2021-09-20 12:30'),
             endTime: new Date('2021-09-20 14:00'),
-            description: '',
+            description: 'Tiêu đề',
           },
           {
             startTime: new Date('2021-09-22 14:30'),
             endTime: new Date('2021-09-22 16:00'),
-            description: '',
+            description: 'Tiêu đề',
           },
         ],
         count: generateLessonsInput.totalNumberOfLessons,
