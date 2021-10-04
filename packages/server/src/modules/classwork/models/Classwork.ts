@@ -42,7 +42,7 @@ export class Classwork extends BaseModel {
 
   @Field((_type) => [String])
   @prop({ type: [String] })
-  iframeVideo?: string[]
+  iframeVideos?: string[]
 
   @Field((_type) => Publication)
   @prop({ required: true, index: true, default: Publication.Draft })

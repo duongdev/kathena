@@ -247,7 +247,7 @@ export class LessonService {
       })
     }
 
-    if (ratingStar !== null) {
+    if (ratingStar) {
       pipeline.push({
         $match: {
           $expr: {

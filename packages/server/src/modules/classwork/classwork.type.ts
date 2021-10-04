@@ -22,6 +22,9 @@ export class UpdateClassworkMaterialInput {
 
   @Field({ nullable: true })
   description?: string
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()
@@ -37,6 +40,9 @@ export class CreateClassworkMaterialInput {
 
   @Field((_type) => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[]
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @ObjectType()
@@ -91,6 +97,9 @@ export class CreateClassworkAssignmentInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()
@@ -106,6 +115,9 @@ export class UpdateClassworkAssignmentInput {
   @Field({ nullable: true })
   @IsOptional()
   dueDate?: Date
+
+  @Field((_type) => [String], { nullable: true })
+  iframeVideos?: string[]
 }
 
 @InputType()

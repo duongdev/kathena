@@ -142,10 +142,11 @@ describe('classwork.service', () => {
       })
 
       it(`returns the created classworkMaterial`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
@@ -153,14 +154,7 @@ describe('classwork.service', () => {
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
-
-        jest
-          .spyOn(classworkService, 'addAttachmentsToClassworkMaterial')
-          .mockResolvedValueOnce(createClassworkMaterialInput as ANY)
-          .mockResolvedValueOnce({
-            ...createClassworkMaterialInput,
-            title: 'test 123',
-          } as ANY)
+          .mockResolvedValueOnce(true as never)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -169,9 +163,7 @@ describe('classwork.service', () => {
             objectId(),
             createClassworkMaterialInput,
           ),
-        ).resolves.toMatchObject({
-          ...createClassworkMaterialInput,
-        })
+        ).resolves.toMatchObject(createClassworkMaterialInput)
 
         await expect(
           classworkService.createClassworkMaterial(
@@ -180,11 +172,31 @@ describe('classwork.service', () => {
             objectId(),
             {
               title: 'test    123',
+              publicationState: Publication.Published,
             },
           ),
         ).resolves.toMatchObject({
           title: 'test 123',
+          publicationState: Publication.Published,
         })
+
+        const classworkMaterialIframeVideos =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              iframeVideos: ['iframe1', 'iframe2'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 
@@ -283,18 +295,22 @@ describe('classwork.service', () => {
           title: 'Đặng Hiếu Liêm',
         })
 
-        await expect(
-          classworkService.updateClassworkMaterial(
+        const classworkMaterialWithIframeVideos =
+          await classworkService.updateClassworkMaterial(
             classworkMaterial.orgId,
             objectId(),
             classworkMaterial.id,
             {
-              description: 'Đặng  Hiếu Liêm',
+              description: 'Đặng Hiếu Liêm',
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
             },
-          ),
-        ).resolves.toMatchObject({
-          description: 'Đặng Hiếu Liêm',
-        })
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
     })
 
@@ -661,8 +677,8 @@ describe('classwork.service', () => {
         expect.assertions(1)
 
         const org = await orgService.createOrg({
-          name: 'kmin',
-          namespace: 'kmin-edu',
+          name: 'kmin 2',
+          namespace: 'kmin-edu-2',
         })
 
         const creatorAccount = await accountService.createAccount({
@@ -727,9 +743,7 @@ describe('classwork.service', () => {
         const course = await courseService.createCourse(
           creatorAccount.id,
           org.id,
-          {
-            ...createCourse,
-          },
+          createCourse,
         )
 
         course.studentIds = [studentAccount.id]
@@ -775,6 +789,8 @@ describe('classwork.service', () => {
           ),
         )
 
+        const countClassworkPublic = 1
+
         await expect(
           classworkService.findAndPaginateClassworkMaterials(
             {
@@ -793,8 +809,94 @@ describe('classwork.service', () => {
               title: 'Bai Tap So 01',
             },
           ],
-          count: listCreateClassWorkMaterial.length,
+          count: countClassworkPublic,
         })
+      })
+    })
+
+    describe('cloneClassworkMaterialFromClassworkMaterialId', () => {
+      it(`throws error if from classwork material not found`, async () => {
+        expect.assertions(1)
+        await expect(
+          classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`FORMCLASSWORKMATERIAL_NOT_FOUND`)
+      })
+
+      it(`throws error if to course not found`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService, 'findClassworkMaterialById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+        await expect(
+          classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`TOCOURSE_NOT_FOUND`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService, 'findClassworkMaterialById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        await expect(
+          classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGECOURSE`)
+      })
+
+      it(`returns new clone ClassworkMaterial`, async () => {
+        expect.assertions(1)
+        const classwork = {
+          id: objectId(),
+          title: 'classwork 1',
+          description: 'description classwork 1',
+          publicationState: Publication.Draft,
+          attachments: [objectId(), objectId()],
+        }
+        jest
+          .spyOn(classworkService, 'findClassworkMaterialById')
+          .mockResolvedValueOnce(classwork as ANY)
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(classworkService, 'createClassworkMaterial')
+          .mockResolvedValueOnce(classwork as ANY)
+        jest
+          .spyOn(
+            classworkService['classworkMaterialModel'],
+            'findByIdAndUpdate',
+          )
+          .mockResolvedValueOnce(classwork as ANY)
+
+        await expect(
+          classworkService.cloneClassworkMaterialFromClassworkMaterialId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject(classwork)
       })
     })
   })
@@ -946,7 +1048,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the Classwork Assignment`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -977,14 +1079,18 @@ describe('classwork.service', () => {
         jest
           .spyOn(orgService, 'validateOrgId')
           .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
         jest
           .spyOn(authService, 'accountHasPermission')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
         jest
           .spyOn(academicService, 'findAcademicSubjectById')
           .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
         jest
           .spyOn(orgOfficeService, 'findOrgOfficeById')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
         const courseTest = await courseService.createCourse(
@@ -999,6 +1105,7 @@ describe('classwork.service', () => {
 
         jest
           .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
         const date = new Date()
@@ -1017,6 +1124,25 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Bai Tap Nay Moi Nhat',
         })
+
+        const classworkAssignmentWithIframeVideos =
+          await classworkService.createClassworkAssignment(
+            accountLecturer.id,
+            courseTest.id,
+            org.id,
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              dueDate: date,
+              iframeVideos: ['iframe1', 'iframe2'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 
@@ -1157,7 +1283,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1234,6 +1360,24 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
+
+        const classworkAssignmentWithIframeVideos =
+          await classworkService.updateClassworkAssignment(
+            {
+              id: classworkAssignmentUpdate.id,
+              accountId: accountLecturer.id,
+              orgId: org.id,
+            },
+            {
+              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithIframeVideos.iframeVideos?.length
+          })(),
+        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {
@@ -1675,8 +1819,8 @@ describe('classwork.service', () => {
         expect.assertions(1)
 
         const org = await orgService.createOrg({
-          name: 'kmin',
-          namespace: 'kmin-edu',
+          name: 'kmin 2',
+          namespace: 'kmin-edu-2',
         })
 
         const creatorAccount = await accountService.createAccount({
@@ -1821,6 +1965,8 @@ describe('classwork.service', () => {
           ),
         )
 
+        const countClassworkPublic = 2
+
         await expect(
           classworkService.findAndPaginateClassworkAssignments(
             {
@@ -1844,7 +1990,7 @@ describe('classwork.service', () => {
               description: 'Bai tap 1',
             },
           ],
-          count: listCreateClassworkAssignment.length,
+          count: countClassworkPublic,
         })
       })
 
@@ -2634,6 +2780,92 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toMatchObject({ count: 0, list: [] })
+      })
+    })
+
+    describe('cloneClassworkAssignmentFromClassworkAssignmentId', () => {
+      it(`throws error if from classwork assignment not found`, async () => {
+        expect.assertions(1)
+        await expect(
+          classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`FORMCLASSWORKASSIGNMENT_NOT_FOUND`)
+      })
+
+      it(`throws error if to course not found`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService, 'findClassworkAssignmentById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+        await expect(
+          classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`TOCOURSE_NOT_FOUND`)
+      })
+
+      it(`throws error if account can't manage course`, async () => {
+        expect.assertions(1)
+        jest
+          .spyOn(classworkService, 'findClassworkAssignmentById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        await expect(
+          classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGECOURSE`)
+      })
+
+      it(`returns new clone ClassworkAssignment`, async () => {
+        expect.assertions(1)
+        const classwork = {
+          id: objectId(),
+          title: 'classwork 1',
+          description: 'description classwork 1',
+          publicationState: Publication.Draft,
+          attachments: [objectId(), objectId()],
+        }
+        jest
+          .spyOn(classworkService, 'findClassworkAssignmentById')
+          .mockResolvedValueOnce(classwork as ANY)
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce({ id: objectId() } as ANY)
+        jest
+          .spyOn(authService, 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+        jest
+          .spyOn(classworkService, 'createClassworkAssignment')
+          .mockResolvedValueOnce(classwork as ANY)
+        jest
+          .spyOn(
+            classworkService['classworkAssignmentsModel'],
+            'findByIdAndUpdate',
+          )
+          .mockResolvedValueOnce(classwork as ANY)
+
+        await expect(
+          classworkService.cloneClassworkAssignmentFromClassworkAssignmentId(
+            objectId(),
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject(classwork)
       })
     })
   })
