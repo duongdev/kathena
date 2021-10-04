@@ -795,7 +795,7 @@ export class LessonService {
         const createLessonInput: CreateLessonInput = {
           ...timeOfDay,
           courseId,
-          description: '',
+          description: 'Tiêu đề',
           publicationState: Publication.Draft,
         }
 
