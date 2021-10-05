@@ -208,3 +208,12 @@ export class ListLessons {
   @Field((_type) => Int)
   count: number
 }
+
+@ObjectType()
+export class GenerateArrayDateTimeOfTheLessonsOutput {
+  @Field((_type) => Date)
+  startTime: Date
+
+  @Field((_type) => Date)
+  endTime: Date
+}

@@ -1669,4 +1669,82 @@ describe('lesson.service', () => {
       })
     })
   })
+
+  describe('generateArrayDateTimeOfTheLessons', () => {
+    const generateLessonsInput: GenerateLessonsInput = {
+      courseStartDate: course.startDate,
+      totalNumberOfLessons: 3,
+      daysOfTheWeek: [
+        {
+          dayOfWeek: DayOfWeek.Monday, // Monday
+          startTime: '12:30',
+          endTime: '14:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Wednesday, // Wednesday
+          startTime: '14:30',
+          endTime: '16:00',
+        },
+        {
+          dayOfWeek: DayOfWeek.Friday, // Friday
+          startTime: '17:30',
+          endTime: '19:00',
+        },
+      ],
+    }
+
+    it('throws error if startTime and endTime invalid', async () => {
+      expect.assertions(1)
+
+      const input = {
+        ...generateLessonsInput,
+        daysOfTheWeek: [
+          {
+            dayOfWeek: DayOfWeek.Monday, // Monday
+            startTime: '12:30',
+            endTime: '09:00',
+          },
+          {
+            dayOfWeek: DayOfWeek.Wednesday, // Wednesday
+            startTime: '14:30',
+            endTime: '16:00',
+          },
+          {
+            dayOfWeek: DayOfWeek.Friday, // Friday
+            startTime: '17:30',
+            endTime: '19:00',
+          },
+        ],
+      }
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      await expect(
+        lessonService.generateArrayDateTimeOfTheLessons(input),
+      ).rejects.toThrowError('PLEASE_CHECK_START_AND_END_TIMES_OF_THE_WEEKDAYS')
+    })
+
+    it('returns a list date time', async () => {
+      expect.assertions(1)
+
+      await expect(
+        lessonService.generateArrayDateTimeOfTheLessons(generateLessonsInput),
+      ).resolves.toMatchObject([
+        {
+          startTime: new Date('2021-09-17 17:30'),
+          endTime: new Date('2021-09-17 19:00'),
+        },
+        {
+          startTime: new Date('2021-09-20 12:30'),
+          endTime: new Date('2021-09-20 14:00'),
+        },
+        {
+          startTime: new Date('2021-09-22 14:30'),
+          endTime: new Date('2021-09-22 16:00'),
+        },
+      ])
+    })
+  })
 })
