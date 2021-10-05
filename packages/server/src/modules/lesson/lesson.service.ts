@@ -789,6 +789,7 @@ export class LessonService {
       count,
     }
 
+    this.logger.log(`[${this.generateLessons.name}] generated !`)
     this.logger.verbose({ results })
 
     return results
@@ -836,7 +837,6 @@ export class LessonService {
     const date = new Date(courseStartDate)
 
     while (days.length < totalNumberOfLessons) {
-      this.logger.log(`While days.length === totalNumberOfLessons`)
       const daysFilter = daysOfTheWeek.filter((day) => {
         return day.dayOfWeek === date.getDay()
       })
@@ -861,6 +861,7 @@ export class LessonService {
       date.setDate(date.getDate() + 1)
     }
 
+    this.logger.log(`[${this.generateLessons.name}] generated !`)
     this.logger.verbose({
       days,
     })
