@@ -13,6 +13,7 @@ import {
   CommentsForTheLessonByLecturerInput,
   CommentsForTheLessonByLecturerQuery,
   CreateLessonInput,
+  GenerateArrayDateTimeOfTheLessonsOutput,
   GenerateLessonsInput,
   LessonsFilterInput,
   LessonsFilterInputStatus,
@@ -716,8 +717,7 @@ export class LessonService {
 
     const { lessonModel, courseModel } = this
 
-    const { courseStartDate, totalNumberOfLessons, daysOfTheWeek } =
-      generateLessonsInput
+    const { daysOfTheWeek } = generateLessonsInput
 
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
@@ -755,16 +755,88 @@ export class LessonService {
       throw new Error(err)
     })
 
+    // generate date time
+    const generateDateTime = await this.generateArrayDateTimeOfTheLessons(
+      generateLessonsInput,
+    )
+
+    await Promise.all(generateDateTime).catch((err) => {
+      throw new Error(err)
+    })
+
+    // generate lessons
+    const generateLessons = generateDateTime.map(async (dateTime) => {
+      const createLessonInput: CreateLessonInput = {
+        ...dateTime,
+        courseId,
+        description: 'Tiêu đề',
+        publicationState: Publication.Draft,
+      }
+      await this.createLesson(orgId, createdByAccountId, createLessonInput)
+    })
+
+    await Promise.all(generateLessons).catch((err) => {
+      throw new Error(err)
+    })
+
+    const lessons = await lessonModel
+      .find({ orgId, courseId })
+      .sort({ startTime: 1 })
+    const count = await lessonModel.countDocuments({ orgId, courseId })
+
+    const results: ListLessons = {
+      lessons,
+      count,
+    }
+
+    this.logger.log(`[${this.generateLessons.name}] generated !`)
+    this.logger.verbose({ results })
+
+    return results
+  }
+
+  async generateArrayDateTimeOfTheLessons(
+    generateLessonsInput: GenerateLessonsInput,
+  ): Promise<GenerateArrayDateTimeOfTheLessonsOutput[]> {
+    this.logger.log(`[${this.generateLessons.name}] generating ...`)
+    this.logger.verbose({
+      generateLessonsInput,
+    })
+
+    const { courseStartDate, totalNumberOfLessons, daysOfTheWeek } =
+      generateLessonsInput
+
+    const currentDate = new Date()
+
+    const checkTime = daysOfTheWeek.map((day) => {
+      const startTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.startTime}`,
+      )
+      const endTimeInput = new Date(
+        `${currentDate.getFullYear()}-${
+          currentDate.getMonth() + 1
+        }-${currentDate.getDate()} ${day.endTime}`,
+      )
+
+      if (endTimeInput.getTime() < startTimeInput.getTime()) {
+        return Promise.reject(
+          new Error(`PLEASE_CHECK_START_AND_END_TIMES_OF_THE_WEEKDAYS`),
+        )
+      }
+      return day
+    })
+
+    await Promise.all(checkTime).catch((err) => {
+      throw new Error(err)
+    })
+
     // generate
-    const days: ANY = []
+    const days: GenerateArrayDateTimeOfTheLessonsOutput[] = []
     const date = new Date(courseStartDate)
 
     while (days.length < totalNumberOfLessons) {
-      this.logger.log(`While days.length === totalNumberOfLessons`)
-      this.logger.verbose({
-        lengthDays: days.length,
-        totalNumberOfLessons,
-      })
       const daysFilter = daysOfTheWeek.filter((day) => {
         return day.dayOfWeek === date.getDay()
       })
@@ -780,47 +852,20 @@ export class LessonService {
           }`,
         )
 
-        this.logger.verbose({
-          date,
-          startTime,
-          endTime,
-        })
-
         const timeOfDay = {
           startTime,
           endTime,
         }
         days.push(timeOfDay)
-
-        const createLessonInput: CreateLessonInput = {
-          ...timeOfDay,
-          courseId,
-          description: 'Tiêu đề',
-          publicationState: Publication.Draft,
-        }
-
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          await this.createLesson(orgId, createdByAccountId, createLessonInput)
-        } catch (err) {
-          throw new Error(err)
-        }
       }
       date.setDate(date.getDate() + 1)
     }
 
-    this.logger.verbose({ days, length: days.length })
+    this.logger.log(`[${this.generateLessons.name}] generated !`)
+    this.logger.verbose({
+      days,
+    })
 
-    const lessons = await lessonModel.find({ orgId, courseId })
-    const count = await lessonModel.countDocuments({ orgId, courseId })
-
-    this.logger.verbose({ lessons, count })
-
-    const results: ListLessons = {
-      lessons,
-      count,
-    }
-
-    return results
+    return days
   }
 }
