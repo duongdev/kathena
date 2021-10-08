@@ -66,22 +66,26 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
         <RequiredPermission
           permission={Permission.Academic_AcademicSubject_Access}
         >
-          <Button
-            variant="contained"
-            link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
-          >
-            Sửa môn học
-          </Button>
-          ,
-          <Button
-            variant="contained"
-            link={buildPath(CREATE_ACADEMIC_COURSE, {
-              idSubject: subject.id,
-            })}
-          >
-            Thêm khóa học
-          </Button>
-          ,
+          <Grid container spacing={2}>
+            <Grid item>
+              <Button
+                variant="contained"
+                link={buildPath(UPDATE_ACADEMIC_SUBJECT, { id: subject.id })}
+              >
+                Sửa môn học
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                link={buildPath(CREATE_ACADEMIC_COURSE, {
+                  idSubject: subject.id,
+                })}
+              >
+                Thêm khóa học
+              </Button>
+            </Grid>
+          </Grid>
         </RequiredPermission>,
       ]}
     >
