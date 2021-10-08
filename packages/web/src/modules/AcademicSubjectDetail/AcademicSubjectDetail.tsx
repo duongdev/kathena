@@ -108,9 +108,13 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                   style={{ height: '100%', width: '100%' }}
                   variant="background"
                   actions={[
-                    <Button onClick={handleOpenUpdateImageDialog}>
-                      Sửa hình ảnh
-                    </Button>,
+                    <RequiredPermission
+                      permission={Permission.Academic_AcademicSubject_Access}
+                    >
+                      <Button onClick={handleOpenUpdateImageDialog}>
+                        Sửa hình ảnh
+                      </Button>
+                    </RequiredPermission>,
                   ]}
                 />
               </Grid>

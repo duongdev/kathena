@@ -13,6 +13,8 @@ import {
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
+  Button,
+  useDialogState,
   Typography,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
@@ -25,6 +27,7 @@ import {
 
 import AssignmentDisplayName from '../../../TeachingCourse/Components/ClassworkLessons/LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from '../../../TeachingCourse/Components/ClassworkLessons/LessonDisplayName/MaterialDisplayName'
+import RatingLesson from '../RatingLesson'
 
 export type DetailClassworkLessonProps = {}
 
@@ -35,7 +38,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
     variables: { lessonId },
   })
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
-
+  const [ratingOpen, handleOpenRating, handleCloseRating] = useDialogState()
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -57,6 +60,11 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
       maxWidth="lg"
       title={classworkLesson.description as ANY}
     >
+      <RatingLesson
+        lesson={classworkLesson}
+        open={ratingOpen}
+        onClose={handleCloseRating}
+      />
       <Grid container spacing={DASHBOARD_SPACING}>
         {/* Thông tin buổi học */}
         <Grid container item xs={12} spacing={2}>
@@ -64,6 +72,11 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
             maxContentHeight={false}
             gridItem={{ xs: 12, md: 12 }}
             title="Thông tin buổi học"
+            action={[
+              <Button onClick={handleOpenRating} variant="contained">
+                Đánh giá buổi học
+              </Button>,
+            ]}
           >
             <CardContent>
               <Grid container spacing={2}>
