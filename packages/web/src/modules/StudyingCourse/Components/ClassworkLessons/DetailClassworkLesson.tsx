@@ -25,6 +25,7 @@ import {
 
 import AssignmentDisplayName from '../../../TeachingCourse/Components/ClassworkLessons/LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from '../../../TeachingCourse/Components/ClassworkLessons/LessonDisplayName/MaterialDisplayName'
+import RatingLesson from '../RatingLesson'
 
 export type DetailClassworkLessonProps = {}
 
@@ -100,13 +101,14 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                   </Grid>
                   <Grid item xs={4}>
                     <Stack spacing={2}>
-                      <InfoBlock label="Đánh giá sao">
-                        <Rating
+                      <InfoBlock label="Đánh giá sao của bạn">
+                        <RatingLesson />
+                        {/* <Rating
                           name="customized-empty"
                           readOnly
                           defaultValue={classworkLesson.avgNumberOfStars}
                           precision={0.5}
-                        />
+                        /> */}
                       </InfoBlock>
                       <InfoBlock label="Thời gian kêt thúc">
                         <Typography>
