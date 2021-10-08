@@ -1,52 +1,93 @@
-import { FC } from 'react'
 import * as React from 'react'
+import { FC, useState } from 'react'
 
-import { makeStyles, Rating, Box } from '@material-ui/core'
+import { Box, Grid, makeStyles, Rating } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 import { Star } from 'phosphor-react'
 
-export type RatingLessonProps = {}
+import { Button, Dialog } from '@kathena/ui'
+import { Lesson, useCreateRatingForTheLessonMutation } from 'graphql/generated'
+
+export type RatingLessonProps = {
+  open: boolean
+  onClose: () => void
+  lesson: Pick<
+    Lesson,
+    'description' | 'startTime' | 'endTime' | 'courseId' | 'id'
+  >
+}
 
 const labels: { [index: string]: string } = {
-  0.5: 'Useless',
-  1: 'Useless+',
-  1.5: 'Poor',
-  2: 'Poor+',
-  2.5: 'Ok',
-  3: 'Ok+',
-  3.5: 'Good',
-  4: 'Good+',
-  4.5: 'Excellent',
-  5: 'Excellent+',
+  1: 'Rất tệ',
+  2: 'Tệ',
+  3: 'Bình thường',
+  4: 'Hài Lòng',
+  5: 'Rất hài lòng',
 }
 const RatingLesson: FC<RatingLessonProps> = (props) => {
   const classes = useStyles(props)
+  const { open, onClose, lesson } = props
   const [value, setValue] = React.useState<number | null>(3)
-  const [hover, setHover] = React.useState(-1)
+
+  const [loading, setLoading] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
+  const [updateRating] = useCreateRatingForTheLessonMutation()
+  const handleRating = async () => {
+    if (lesson) {
+      setLoading(true)
+      const lessonUpdate = await updateRating({
+        variables: {
+          ratingInput: {
+            targetId: lesson.id,
+            numberOfStars: value,
+          },
+        },
+      })
+      if (lessonUpdate) {
+        enqueueSnackbar(`Đánh giá thành công`, { variant: 'success' })
+      } else {
+        enqueueSnackbar(`Đánh giá thất bại`, { variant: 'error' })
+      }
+      setLoading(false)
+    } else {
+      enqueueSnackbar(`Đánh giá thất bại`, { variant: 'error' })
+    }
+  }
 
   return (
-    <Box
-      sx={{
-        width: 200,
-        display: 'flex',
-        alignItems: 'center',
-      }}
+    <Dialog
+      open={open}
+      onClose={onClose}
+      width={300}
+      dialogTitle="Đánh giá buổi học"
+      extraDialogActions={
+        <Button onClick={handleRating} loading={loading}>
+          Lưu
+        </Button>
+      }
     >
-      <Rating
-        name="hover-feedback"
-        value={value}
-        precision={0.5}
-        onChange={(event, newValue) => {
-          setValue(newValue)
-        }}
-        onChangeActive={(event, newHover) => {
-          setHover(newHover)
-        }}
-        emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
-      />
-      {value !== null && (
-        <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
-      )}
-    </Box>
+      <Grid xs={12} container className={classes.root}>
+        <Grid item xs={12}>
+          {value !== null && (
+            <Box sx={{ textAlign: 'center' }}>{labels[value]}</Box>
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Rating
+              name="hover-feedback"
+              size="large"
+              value={value}
+              precision={1}
+              onChange={(event, newValue) => {
+                setValue(newValue)
+              }}
+              emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+            />
+          </Box>
+        </Grid>
+      </Grid>
+    </Dialog>
   )
 }
 
