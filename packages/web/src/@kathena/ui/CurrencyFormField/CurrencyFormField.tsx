@@ -15,9 +15,10 @@ export type CurrencyFormFieldProps = {
 
 const CurrencyFormField: FC<CurrencyFormFieldProps> = (props) => {
   const { fastField, name, helperText: $helperText, disabled, ...rest } = props
-  const FieldComponent = useMemo(() => (fastField ? FastField : Field), [
-    fastField,
-  ])
+  const FieldComponent = useMemo(
+    () => (fastField ? FastField : Field),
+    [fastField],
+  )
 
   return (
     <FieldComponent name={name}>

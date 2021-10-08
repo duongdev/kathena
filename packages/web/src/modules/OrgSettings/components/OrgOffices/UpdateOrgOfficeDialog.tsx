@@ -41,14 +41,15 @@ const UpdateOrgOfficeDialog: FC<UpdateOrgOfficeDialogProps> = (props) => {
     skip: !!orgOfficeProp,
   })
 
-  const orgOffice = useMemo(() => orgOfficeProp || data?.orgOffice, [
-    data?.orgOffice,
-    orgOfficeProp,
-  ])
+  const orgOffice = useMemo(
+    () => orgOfficeProp || data?.orgOffice,
+    [data?.orgOffice, orgOfficeProp],
+  )
 
-  const initialValues: OrgOfficeEditorFormInput = useMemo(() => orgOffice, [
-    orgOffice,
-  ])
+  const initialValues: OrgOfficeEditorFormInput = useMemo(
+    () => orgOffice,
+    [orgOffice],
+  )
 
   const { enqueueSnackbar } = useSnackbar()
   const handleUpdateOrgOffice = useCallback(

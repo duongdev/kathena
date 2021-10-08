@@ -22,28 +22,23 @@ const ImagesUploadInput: FC<ImagesUploadInputProps> = (props) => {
   const { maxFiles, accept, hideDropzoneOnNotEmpty, onChange } = props
   const classes = useStyles(props)
   const [files, setFiles] = useState<FileItem[]>([])
-  const {
-    getRootProps,
-    getInputProps,
-    open,
-    isDragAccept,
-    isDragReject,
-  } = useDropzone({
-    accept,
-    maxFiles,
-    noClick: true,
-    noKeyboard: true,
-    multiple: !maxFiles || !!(maxFiles && maxFiles > 1),
-    onDrop: (acceptedDropFiles) => {
-      setFiles(
-        acceptedDropFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          }),
-        ),
-      )
-    },
-  })
+  const { getRootProps, getInputProps, open, isDragAccept, isDragReject } =
+    useDropzone({
+      accept,
+      maxFiles,
+      noClick: true,
+      noKeyboard: true,
+      multiple: !maxFiles || !!(maxFiles && maxFiles > 1),
+      onDrop: (acceptedDropFiles) => {
+        setFiles(
+          acceptedDropFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            }),
+          ),
+        )
+      },
+    })
 
   const isEmpty = useMemo(() => files.length === 0, [files])
 

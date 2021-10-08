@@ -14,10 +14,10 @@ export type RequiredPermissionProps = {
 export const RequiredPermission = (props: RequiredPermissionProps) => {
   const { permission, children, showDeniedMessage } = props
   const { permissions } = useAuth()
-  const hasPermission = useMemo(() => permissions.includes(permission), [
-    permission,
-    permissions,
-  ])
+  const hasPermission = useMemo(
+    () => permissions.includes(permission),
+    [permission, permissions],
+  )
 
   if (typeof children === 'function') {
     return children(hasPermission)

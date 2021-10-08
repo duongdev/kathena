@@ -28,18 +28,21 @@ const GridItemContainer: FC<GridItemContainerProps> = (props) => {
   return <>{props.children}</>
 }
 
-export const withGridItem = <BaseComponentProps extends object>(
-  BaseComponent: ComponentType<BaseComponentProps>,
-) => (
-  props: BaseComponentProps & GridItemContainerProps & { children?: ReactNode },
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { gridItem, gridProps, ...baseComponentProps } = props
-  return (
-    <GridItemContainer {...props}>
-      <BaseComponent {...(baseComponentProps as any)} />
-    </GridItemContainer>
-  )
-}
+export const withGridItem =
+  <BaseComponentProps extends object>(
+    BaseComponent: ComponentType<BaseComponentProps>,
+  ) =>
+  (
+    props: BaseComponentProps &
+      GridItemContainerProps & { children?: ReactNode },
+  ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { gridItem, gridProps, ...baseComponentProps } = props
+    return (
+      <GridItemContainer {...props}>
+        <BaseComponent {...(baseComponentProps as any)} />
+      </GridItemContainer>
+    )
+  }
 
 export default GridItemContainer

@@ -43,15 +43,15 @@ const AccountAvatar: FC<AccountAvatarProps> = (props) => {
     skip: !!accountProp,
   })
 
-  const account = useMemo(() => accountProp || data?.account, [
-    data?.account,
-    accountProp,
-  ])
+  const account = useMemo(
+    () => accountProp || data?.account,
+    [data?.account, accountProp],
+  )
 
-  const displayName = useMemo(() => (account ? getDisplayName(account) : ''), [
-    account,
-    getDisplayName,
-  ])
+  const displayName = useMemo(
+    () => (account ? getDisplayName(account) : ''),
+    [account, getDisplayName],
+  )
 
   const avatarUrl = useMemo(() => {
     if (!account?.email) return ''

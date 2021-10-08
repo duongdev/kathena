@@ -22,76 +22,80 @@ export type CreateUpdateAcademicSubjectFormProps = {
   createMode: boolean
 }
 
-const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> = (
-  props,
-) => {
-  const { createMode } = props
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const classes = useStyles(props)
-  const formik = useFormikContext<AcademicSubjectFormInput>()
+const CreateUpdateAcademicSubjectForm: FC<CreateUpdateAcademicSubjectFormProps> =
+  (props) => {
+    const { createMode } = props
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const classes = useStyles(props)
+    const formik = useFormikContext<AcademicSubjectFormInput>()
 
-  const handleImageSelect = useCallback(
-    (files: FileItem[]) => {
-      formik.setFieldValue('image', files[0] ?? null)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+    const handleImageSelect = useCallback(
+      (files: FileItem[]) => {
+        formik.setFieldValue('image', files[0] ?? null)
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    )
 
-  return (
-    <Grid container spacing={DASHBOARD_SPACING}>
-      <SectionCard
-        maxContentHeight={false}
-        gridItem={createMode ? { xs: 12, sm: 6 } : { xs: 12 }}
-        title="Thông tin môn học"
-      >
-        <CardContent>
-          <Stack spacing={2}>
-            <TextFormField required autoFocus name="name" label={labels.name} />
-            <TextFormField
-              required
-              name="code"
-              disabled={!createMode}
-              label={labels.code}
-              placeholder="VD: JSBASIC"
-            />
-            <TextFormField
-              required
-              name="description"
-              label={labels.description}
-              multiline
-              minRows={2}
-              maxRows={4}
-            />
-          </Stack>
-        </CardContent>
-      </SectionCard>
-
-      {createMode && (
+    return (
+      <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard
           maxContentHeight={false}
-          gridItem={{ xs: 12, sm: 6 }}
-          title="Hình ảnh"
-          classes={{ root: classes.imageCard }}
+          gridItem={createMode ? { xs: 12, sm: 6 } : { xs: 12 }}
+          title="Thông tin môn học"
         >
-          {formik.isSubmitting && <Spinner container="overlay" />}
-          <CardContent className={classes.imageCardContent}>
-            <ImagesUploadInput
-              maxFiles={1}
-              accept={['image/png', 'image/jpeg']}
-              onChange={handleImageSelect}
-            />
-            {formik.submitCount > 0 && formik.errors.image && (
-              <Typography color="error" className={classes.imageError}>
-                {formik.errors.image}
-              </Typography>
-            )}
+          <CardContent>
+            <Stack spacing={2}>
+              <TextFormField
+                required
+                autoFocus
+                name="name"
+                label={labels.name}
+              />
+              <TextFormField
+                required
+                name="code"
+                disabled={!createMode}
+                label={labels.code}
+                placeholder="VD: JSBASIC"
+              />
+              <TextFormField
+                required
+                name="description"
+                label={labels.description}
+                multiline
+                minRows={2}
+                maxRows={4}
+              />
+            </Stack>
           </CardContent>
         </SectionCard>
-      )}
-    </Grid>
-  )
-}
+
+        {createMode && (
+          <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12, sm: 6 }}
+            title="Hình ảnh"
+            classes={{ root: classes.imageCard }}
+          >
+            {formik.isSubmitting && <Spinner container="overlay" />}
+            <CardContent className={classes.imageCardContent}>
+              <ImagesUploadInput
+                maxFiles={1}
+                accept={['image/png', 'image/jpeg']}
+                onChange={handleImageSelect}
+              />
+              {formik.submitCount > 0 && formik.errors.image && (
+                <Typography color="error" className={classes.imageError}>
+                  {formik.errors.image}
+                </Typography>
+              )}
+            </CardContent>
+          </SectionCard>
+        )}
+      </Grid>
+    )
+  }
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {},

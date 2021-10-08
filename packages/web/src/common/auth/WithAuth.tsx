@@ -56,10 +56,12 @@ export const WithAuth: FC<WithAuthProps> = ({
   return children as ANY
 }
 
-export const withAuth = <Props extends OBJECT>(authProps?: {
-  options?: WithAuthOptions
-}) => (BaseComponent: ComponentType<Props>) => (props: Props) => (
-  <WithAuth {...authProps}>
-    <BaseComponent {...props} />
-  </WithAuth>
-)
+export const withAuth =
+  <Props extends OBJECT>(authProps?: { options?: WithAuthOptions }) =>
+  (BaseComponent: ComponentType<Props>) =>
+  (props: Props) =>
+    (
+      <WithAuth {...authProps}>
+        <BaseComponent {...props} />
+      </WithAuth>
+    )

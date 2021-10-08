@@ -63,15 +63,14 @@ const QuantityInput: FC<QuantityInputProps> = ($props) => {
   )
 
   const handleButtonClick = useCallback(
-    (delta: number) => (
-      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    ) => {
-      event.preventDefault()
-      const nextValue = value + delta
+    (delta: number) =>
+      (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault()
+        const nextValue = value + delta
 
-      setValue(nextValue)
-      onQuantityChange?.(nextValue)
-    },
+        setValue(nextValue)
+        onQuantityChange?.(nextValue)
+      },
     [onQuantityChange, setValue, value],
   )
 

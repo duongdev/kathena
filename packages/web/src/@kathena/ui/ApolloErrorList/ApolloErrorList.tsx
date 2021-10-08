@@ -53,17 +53,19 @@ export const getErrorMessage = (error: any): any => {
   return msg
 }
 
-export const renderApolloError = (error: ApolloErrorType | null) => (
-  renderer: (value: any, idx: number) => ReactNode = (msg, idx) => (
-    <div key={idx}>{msg}</div>
-  ),
-): ReactNode[] => {
-  const errorMessages = error?.graphQLErrors.length
-    ? error.graphQLErrors.map((graphQLError) => getErrorMessage(graphQLError))
-    : ['Oops. Something went wrong.']
+export const renderApolloError =
+  (error: ApolloErrorType | null) =>
+  (
+    renderer: (value: any, idx: number) => ReactNode = (msg, idx) => (
+      <div key={idx}>{msg}</div>
+    ),
+  ): ReactNode[] => {
+    const errorMessages = error?.graphQLErrors.length
+      ? error.graphQLErrors.map((graphQLError) => getErrorMessage(graphQLError))
+      : ['Oops. Something went wrong.']
 
-  return errorMessages.map(renderer)
-}
+    return errorMessages.map(renderer)
+  }
 
 const ApolloErrorList: FC<ApolloErrorListProps> = (props) => {
   const { error, spacing = 1 } = props

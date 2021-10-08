@@ -22,16 +22,10 @@ export type OrgOfficeListCardProps = {}
 const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
-  const [
-    createDialogOpen,
-    handleOpenCreateDialog,
-    handleCloseCreateDialog,
-  ] = useDialogState()
-  const [
-    updateDialogOpen,
-    handleOpenUpdateDialog,
-    handleCloseUpdateDialog,
-  ] = useDialogState()
+  const [createDialogOpen, handleOpenCreateDialog, handleCloseCreateDialog] =
+    useDialogState()
+  const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
   const [valueUpdate, setValueUpdate] = useState({ id: '' })
 
   const receiveValueUpdate = useCallback(
