@@ -65,7 +65,6 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           >
             Thêm môn học
           </Button>
-          ,
         </RequiredPermission>,
       ]}
     >
