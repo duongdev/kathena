@@ -10,7 +10,7 @@ import {
 import { DocumentType } from '@typegoose/typegoose'
 import { PubSub } from 'graphql-subscriptions'
 
-import { CurrentOrg, UseAuthGuard } from 'core'
+import { CurrentOrg, Logger, UseAuthGuard } from 'core'
 import { Org } from 'modules/org/models/Org'
 import { ANY } from 'types'
 
@@ -25,6 +25,8 @@ import { Conversation } from './model/Conversation'
 const pubSub = new PubSub()
 @Resolver((_of) => Conversation)
 export class ConversationResolver {
+  private readonly logger = new Logger(ConversationResolver.name)
+
   constructor(private readonly conversationService: ConversationService) {}
 
   @Mutation((_returns) => Conversation)
@@ -44,7 +46,7 @@ export class ConversationResolver {
 
   @Subscription((_returns) => Conversation, {
     filter: (payload, variables) =>
-      payload.conversationCreated.roomId === variables.roomId,
+      payload.conversationCreated.roomId.toString() === variables.roomId,
   })
   conversationCreated(
     @Args('roomId') _roomId: string,
