@@ -1,0 +1,10 @@
+mutation CreateRatingForTheLesson($ratingInput: RatingInput!) {
+  createRatingForTheLesson(ratingInput: $ratingInput) {
+    id
+    orgId
+    createdAt
+    updatedAt
+    createdByAccountId
+    targetId
+  }
+}
