@@ -44,7 +44,7 @@ export class ConversationResolver {
 
   @Subscription((_returns) => Conversation, {
     filter: (payload, variables) =>
-      payload.conversationCreated.roomId === variables.roomId,
+      payload.conversationCreated.roomId.toString() === variables.roomId,
   })
   conversationCreated(
     @Args('roomId') _roomId: string,
