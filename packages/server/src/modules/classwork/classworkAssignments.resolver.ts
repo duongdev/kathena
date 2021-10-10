@@ -8,7 +8,7 @@ import {
   Subscription,
 } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { PubSub } from 'graphql-subscriptions'
+import { Types } from 'mongoose'
 
 import {
   CurrentAccount,
@@ -17,8 +17,11 @@ import {
   Publication,
   UseAuthGuard,
 } from 'core'
+import pubSub from 'core/utils/pubSub'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import { NotificationPayload } from 'modules/conversation/notification.type'
+import { CourseService } from 'modules/course/course.service'
 import { Org } from 'modules/org/models/Org'
 import { ANY, Nullable, PageOptionsInput } from 'types'
 
@@ -33,12 +36,14 @@ import {
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
-const pubSub = new PubSub()
 @Resolver((_of) => ClassworkAssignment)
 export class ClassworkAssignmentsResolver {
   private readonly logger = new Logger(ClassworkAssignmentsResolver.name)
 
-  constructor(private readonly classworkService: ClassworkService) {}
+  constructor(
+    private readonly classworkService: ClassworkService,
+    private readonly courseService: CourseService,
+  ) {}
 
   /**
    *START ASSIGNMENTS RESOLVER
@@ -77,16 +82,6 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
-  @Subscription((_returns) => ClassworkAssignment, {
-    filter: (payload, variables) =>
-      payload.classworkAssignmentCreated.courseId === variables.courseId,
-  })
-  classworkAssignmentCreated(
-    @Args('courseId', { type: () => ID }) _courseId: string,
-  ): AsyncIterator<unknown, ANY, undefined> {
-    return pubSub.asyncIterator('classworkAssignmentCreated')
-  }
-
   @Mutation((_returns) => ClassworkAssignment)
   @UseAuthGuard(P.Classwork_CreateClassworkAssignment)
   @UsePipes(ValidationPipe)
@@ -105,9 +100,16 @@ export class ClassworkAssignmentsResolver {
         createClassworkAssignmentInput,
       )
 
-    pubSub.publish('classworkAssignmentCreated', {
-      classworkAssignmentCreated: classworkAssignment,
-    })
+    const course = await this.courseService.findCourseById(courseId, org.id)
+
+    if (classworkAssignment.publicationState === Publication.Published) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Bạn vừa có bài tập mới ở khóa học ${course?.name}`,
+          accountIds: course?.studentIds,
+        },
+      })
+    }
 
     return classworkAssignment
   }
@@ -140,14 +142,29 @@ export class ClassworkAssignmentsResolver {
     @CurrentOrg() currentOrg: Org,
     @CurrentAccount() currentAccount: Account,
   ): Promise<ClassworkAssignment> {
-    return this.classworkService.updateClassworkAssignmentPublication(
-      {
-        id: classworkAssignmentId,
-        accountId: currentAccount.id,
-        orgId: currentOrg.id,
-      },
-      publication,
+    const classworkAssignment =
+      await this.classworkService.updateClassworkAssignmentPublication(
+        {
+          id: classworkAssignmentId,
+          accountId: currentAccount.id,
+          orgId: currentOrg.id,
+        },
+        publication,
+      )
+
+    const course = await this.courseService.findCourseById(
+      classworkAssignment.courseId,
+      currentOrg.id,
     )
+
+    if (classworkAssignment.publicationState === Publication.Published) {
+      pubSub.publish('notification', {
+        title: `Bạn vừa có bài tập mới ở khóa học ${course?.name}`,
+        accountIds: course?.studentIds,
+      })
+    }
+
+    return classworkAssignment
   }
 
   @Mutation((_returns) => ClassworkAssignment)

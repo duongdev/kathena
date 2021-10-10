@@ -3,8 +3,10 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
+import pubSub from 'core/utils/pubSub'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import { CourseService } from 'modules/course/course.service'
 import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
@@ -19,7 +21,10 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
 
 @Resolver((_of) => ClassworkMaterial)
 export class ClassworkMaterialResolver {
-  constructor(private readonly classworkService: ClassworkService) {}
+  constructor(
+    private readonly classworkService: ClassworkService,
+    private readonly courseService: CourseService,
+  ) {}
 
   /**
    *START MATERIAL RESOLVER
@@ -58,12 +63,26 @@ export class ClassworkMaterialResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<ClassworkMaterial> {
-    return this.classworkService.createClassworkMaterial(
-      account.id,
-      org.id,
-      courseId,
-      createClassworkMaterialInput,
-    )
+    const classworkMaterial =
+      await this.classworkService.createClassworkMaterial(
+        account.id,
+        org.id,
+        courseId,
+        createClassworkMaterialInput,
+      )
+
+    const course = await this.courseService.findCourseById(courseId, org.id)
+
+    if (classworkMaterial.publicationState === Publication.Published) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Bạn vừa có tài liệu mới ở khóa học ${course?.name}`,
+          accountIds: course?.studentIds,
+        },
+      })
+    }
+
+    return classworkMaterial
   }
 
   @Mutation((_return) => ClassworkMaterial)
