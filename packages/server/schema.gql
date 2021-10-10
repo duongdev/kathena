@@ -309,10 +309,6 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
-type NotificationPayload {
-  title: String!
-}
-
 type CoursesPayload {
   courses: [Course!]!
   count: Int!
@@ -348,6 +344,10 @@ enum ConversationType {
 type ConversationsPayload {
   conversations: [Conversation!]!
   count: Int!
+}
+
+type NotificationPayload {
+  title: String!
 }
 
 type Question implements BaseModel {

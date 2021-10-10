@@ -9,6 +9,7 @@ query ClassworkAssignmentDetail($id: ID!) {
     publicationState
     attachments
     dueDate
+    iframeVideos
   }
 }
 
