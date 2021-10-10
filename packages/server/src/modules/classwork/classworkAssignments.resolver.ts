@@ -1,14 +1,6 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
-import {
-  Args,
-  ID,
-  Mutation,
-  Query,
-  Resolver,
-  Subscription,
-} from '@nestjs/graphql'
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
-import { Types } from 'mongoose'
 
 import {
   CurrentAccount,
@@ -20,10 +12,9 @@ import {
 import pubSub from 'core/utils/pubSub'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
-import { NotificationPayload } from 'modules/conversation/notification.type'
 import { CourseService } from 'modules/course/course.service'
 import { Org } from 'modules/org/models/Org'
-import { ANY, Nullable, PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
