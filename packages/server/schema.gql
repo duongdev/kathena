@@ -309,6 +309,10 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
+type NotificationPayload {
+  title: String!
+}
+
 type CoursesPayload {
   courses: [Course!]!
   count: Int!
@@ -786,6 +790,6 @@ input SubmitQuizInput {
 }
 
 type Subscription {
-  classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
   conversationCreated(roomId: String!): Conversation!
+  notification(targetId: String!): NotificationPayload!
 }
