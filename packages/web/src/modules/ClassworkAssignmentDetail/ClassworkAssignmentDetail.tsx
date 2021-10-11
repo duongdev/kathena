@@ -6,6 +6,7 @@ import AccountDisplayName from 'components/AccountDisplayName'
 import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
+import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { Pie } from 'react-chartjs-2'
@@ -48,6 +49,7 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
+import kminLogo from './kmin-logo.png'
 
 export type ClassworkAssignmentDetailProps = {}
 
@@ -58,6 +60,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<CommentModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
+  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
+  const [indexVideo, setIndexVideo] = useState(0)
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
@@ -316,6 +321,34 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                         }}
                       />
                     </InfoBlock>
+                    {classworkAssignment.iframeVideos.length > 0 && (
+                      <InfoBlock label="Danh sách video">
+                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                          {classworkAssignment.iframeVideos.map(
+                            (_item, index) => (
+                              <div
+                                onClick={() => {
+                                  setIndexVideo(index)
+                                  handleOpenVideoDialog()
+                                }}
+                                style={{
+                                  margin: '10px 10px 0px 0px',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <img
+                                  style={{ borderRadius: '10px' }}
+                                  src={kminLogo}
+                                  width={60}
+                                  height={60}
+                                  alt="video"
+                                />
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </InfoBlock>
+                    )}
                     <InfoBlock label="Tập tin đính kèm">
                       {classworkAssignment.attachments.length ? (
                         classworkAssignment.attachments.map((attachment) => (
@@ -467,6 +500,12 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           </CardContent>
         </SectionCard>
       </Grid>
+      <VideoPopup
+        iframeVideos={classworkAssignment.iframeVideos}
+        index={indexVideo}
+        open={openVideo}
+        onClose={handleCloseVideoDialog}
+      />
     </PageContainer>
   )
 }
