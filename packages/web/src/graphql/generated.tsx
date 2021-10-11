@@ -2207,6 +2207,22 @@ export type RemoveAttachmentsFromClassworkMaterialMutation = {
   }
 }
 
+export type UpdateClassworkMaterialPublicationMutationVariables = Exact<{
+  publicationState: Publication
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type UpdateClassworkMaterialPublicationMutation = {
+  updateClassworkMaterialPublication: {
+    id: string
+    createdAt: any
+    updatedAt: any
+    courseId: string
+    publicationState: Publication
+    type: string
+  }
+}
+
 export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
 }>
@@ -12684,6 +12700,161 @@ export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
   Apollo.BaseMutationOptions<
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export const UpdateClassworkMaterialPublicationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkMaterialPublication' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationState' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Publication' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkMaterialPublication' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publicationState' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateClassworkMaterialPublicationMutationFn =
+  Apollo.MutationFunction<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >
+export type UpdateClassworkMaterialPublicationProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >
+} & TChildProps
+export function withUpdateClassworkMaterialPublication<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables,
+    UpdateClassworkMaterialPublicationProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables,
+    UpdateClassworkMaterialPublicationProps<TChildProps, TDataName>
+  >(UpdateClassworkMaterialPublicationDocument, {
+    alias: 'updateClassworkMaterialPublication',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkMaterialPublicationMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkMaterialPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkMaterialPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkMaterialPublicationMutation, { data, loading, error }] = useUpdateClassworkMaterialPublicationMutation({
+ *   variables: {
+ *      publicationState: // value for 'publicationState'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useUpdateClassworkMaterialPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >(UpdateClassworkMaterialPublicationDocument, options)
+}
+export type UpdateClassworkMaterialPublicationMutationHookResult = ReturnType<
+  typeof useUpdateClassworkMaterialPublicationMutation
+>
+export type UpdateClassworkMaterialPublicationMutationResult =
+  Apollo.MutationResult<UpdateClassworkMaterialPublicationMutation>
+export type UpdateClassworkMaterialPublicationMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
   >
 export const SetGradeForClassworkSubmissionDocument = {
   kind: 'Document',

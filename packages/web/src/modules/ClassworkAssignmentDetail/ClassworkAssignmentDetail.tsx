@@ -224,14 +224,15 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       ])
     }
   }
-  const [updateLesson] = useUpdateClassworkAssignmentPublicationMutation({
-    refetchQueries: [
-      {
-        query: ClassworkAssignmentDetailDocument,
-        variables: { id },
-      },
-    ],
-  })
+  const [updateAssignmentPublication] =
+    useUpdateClassworkAssignmentPublicationMutation({
+      refetchQueries: [
+        {
+          query: ClassworkAssignmentDetailDocument,
+          variables: { id },
+        },
+      ],
+    })
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -247,7 +248,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   }
 
   const updatePublication = async (publicationState: Publication) => {
-    const updated = await updateLesson({
+    const updated = await updateAssignmentPublication({
       variables: {
         id,
         publication: publicationState,
