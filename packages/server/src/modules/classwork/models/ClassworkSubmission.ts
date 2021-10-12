@@ -5,6 +5,7 @@ import { Types } from 'mongoose'
 import { BaseModel } from 'core'
 
 export enum ClassworkSubmissionStatus {
+  Submitted = 'Submitted',
   OnTime = 'OnTime',
   Late = 'Late',
   DoNotSubmit = 'DoNotSubmit',
