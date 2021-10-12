@@ -4,10 +4,12 @@ import { Connection } from 'mongoose'
 import { Publication } from 'core'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
+import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
 import { CourseService } from 'modules/course/course.service'
 import { OrgService } from 'modules/org/org.service'
+import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
 import { ANY } from 'types'
 
 import { LessonService } from './lesson.service'
@@ -26,6 +28,8 @@ describe('lesson.service', () => {
   let lessonService: LessonService
   let accountService: AccountService
   let courseService: CourseService
+  let academicService: AcademicService
+  let orgOfficeService: OrgOfficeService
   let mongooseConnection: Connection
 
   beforeAll(async () => {
@@ -39,6 +43,8 @@ describe('lesson.service', () => {
     lessonService = module.get<LessonService>(LessonService)
     accountService = module.get<AccountService>(AccountService)
     courseService = module.get<CourseService>(CourseService)
+    academicService = module.get<AcademicService>(AcademicService)
+    orgOfficeService = module.get<OrgOfficeService>(OrgOfficeService)
   })
 
   afterAll(async () => {
@@ -81,7 +87,7 @@ describe('lesson.service', () => {
       ).rejects.toThrowError('Org ID is invalid')
     })
 
-    it('throws error if the account has no permissions', async () => {
+    it('throws error if course not exist', async () => {
       expect.assertions(1)
 
       jest
@@ -93,19 +99,19 @@ describe('lesson.service', () => {
       ).rejects.toThrowError(`THIS_COURSE_DOES_NOT_EXIST`)
     })
 
-    it('throws error if course not exist', async () => {
+    it('throws error if the account has no permissions', async () => {
       expect.assertions(1)
 
       jest
         .spyOn(orgService, 'validateOrgId')
         .mockResolvedValueOnce(true as never)
       jest
-        .spyOn(authService, 'canAccountManageCourse')
-        .mockResolvedValueOnce(true)
+        .spyOn(lessonService['courseModel'], 'findById')
+        .mockResolvedValueOnce(true as never)
 
       await expect(
         lessonService.createLesson(objectId(), objectId(), createLessonInput),
-      ).rejects.toThrowError('THIS_COURSE_DOES_NOT_EXIST')
+      ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
     it('throws error if startDate and endDate invalid', async () => {
@@ -1745,6 +1751,105 @@ describe('lesson.service', () => {
           endTime: new Date('2021-09-22 16:00'),
         },
       ])
+    })
+  })
+
+  describe('addLessonToCourse', () => {
+    it('throws error if course not exist', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+
+      await expect(
+        lessonService.addLessonToCourse(
+          objectId(),
+          objectId(),
+          createLessonInput,
+        ),
+      ).rejects.toThrowError('THIS_COURSE_DOES_NOT_EXIST')
+    })
+
+    it('returns a lesson', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+
+      const creatorId = objectId()
+      const orgId = objectId()
+
+      const courseData = await courseService.createCourse(creatorId, orgId, {
+        academicSubjectId: objectId(),
+        orgOfficeId: objectId(),
+        code: 'NodeJS-12',
+        name: 'Node Js Thang 12',
+        startDate: new Date(),
+        tuitionFee: 5000000,
+        lecturerIds: [],
+        daysOfTheWeek: [],
+        totalNumberOfLessons: 5,
+      })
+
+      const lesson: ANY = {
+        ...createLessonInput,
+        courseId: courseData.id,
+        startTime: new Date('2021-08-20 07:00'),
+        endTime: new Date('2021-08-20 08:30'),
+      }
+
+      jest.spyOn(lessonService, 'createLesson').mockResolvedValueOnce(lesson)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(courseData)
+        .mockResolvedValueOnce(courseData)
+
+      const expectLesson = await lessonService.addLessonToCourse(
+        objectId(),
+        objectId(),
+        lesson,
+      )
+
+      const resultForExpectLesson = {
+        courseId: expectLesson.courseId,
+        description: expectLesson.description,
+        startTime: expectLesson.startTime,
+        endTime: expectLesson.endTime,
+        publicationState: expectLesson.publicationState,
+      }
+
+      const data = {
+        courseId: courseData.id,
+        description: 'Day la buoi 1',
+        startTime: lesson.startTime,
+        endTime: lesson.endTime,
+        publicationState: 'Published',
+      }
+
+      let result = false
+      if (
+        JSON.stringify(resultForExpectLesson) === JSON.stringify(data) &&
+        courseData.totalNumberOfLessons === 6
+      ) {
+        result = true
+      }
+
+      expect(result).toBeTruthy()
     })
   })
 })

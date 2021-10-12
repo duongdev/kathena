@@ -3534,7 +3534,7 @@ describe('classwork.service', () => {
       })
 
       it('returns a list of classworkSubmissions and counts by status', async () => {
-        expect.assertions(3)
+        expect.assertions(4)
 
         const org = await orgService.createOrg({
           namespace: 'kmin-edu',
@@ -3660,6 +3660,20 @@ describe('classwork.service', () => {
           .mockResolvedValueOnce(classworkSubmissionData)
           .mockResolvedValueOnce(classworkSubmissionData)
           .mockResolvedValueOnce(classworkSubmissionData)
+          .mockResolvedValueOnce(classworkSubmissionData)
+
+        await expect(
+          classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+            classwork.id,
+            ClassworkSubmissionStatus.Submitted,
+          ),
+        ).resolves.toMatchObject({
+          classworkSubmissions: [
+            classworkSubmissionData[0],
+            classworkSubmissionData[1],
+          ],
+          count: 2,
+        })
 
         await expect(
           classworkService.getListOfStudentsSubmitAssignmentsByStatus(
