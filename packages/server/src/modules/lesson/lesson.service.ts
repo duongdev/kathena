@@ -493,6 +493,7 @@ export class LessonService {
 
     const update = await lesson.save()
 
+    this.logger.log(`[${this.updateLessonById.name}] updated !`)
     this.logger.log({
       update,
     })

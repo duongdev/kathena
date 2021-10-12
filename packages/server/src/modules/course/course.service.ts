@@ -1,5 +1,6 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
+import { reject, values } from 'lodash'
 
 import {
   Service,
@@ -11,7 +12,7 @@ import {
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
-import { Permission } from 'modules/auth/models'
+import { Permission, Role } from 'modules/auth/models'
 import { ClassworkService } from 'modules/classwork/classwork.service'
 import {
   AvgGradeOfClassworkByCourse,
@@ -24,9 +25,13 @@ import { GenerateLessonsInput } from 'modules/lesson/lesson.type'
 import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
-import { ANY } from 'types'
+import { ANY, Nullable } from 'types'
 
-import { CloneCourseInput, CreateCourseInput } from './course.type'
+import {
+  CloneCourseInput,
+  CreateCourseInput,
+  UpdateCourseInput,
+} from './course.type'
 import { Course } from './models/Course'
 
 @Service()
@@ -196,38 +201,129 @@ export class CourseService {
 
   async updateCourse(
     query: { id: string; orgId: string },
-    update: {
-      name?: string
-      tuitionFee?: number
-      startDate?: string
-      lecturerIds?: string[]
-    },
-  ): Promise<DocumentType<Course>> {
+    update: UpdateCourseInput,
+  ): Promise<Nullable<DocumentType<Course>>> {
+    this.logger.log(`[${this.updateCourse.name}] updating ...`)
+    this.logger.verbose({ query, update })
+
+    const { id, orgId } = query
+    const { daysOfTheWeek, lecturerIds, name, startDate, tuitionFee } = update
+
     const course = await this.courseModel.findOne({
-      _id: query.id,
-      orgId: query.orgId,
+      _id: id,
+      orgId,
     })
 
     if (!course) {
-      throw new Error(`Couldn't find course to update`)
-    }
-    if (update.name) {
-      course.name = update.name
-    }
-    if (update.startDate) {
-      const startDateInput = new Date(
-        new Date(update.startDate).setHours(7, 0, 0, 0),
-      )
-      course.startDate = startDateInput
-    }
-    if (update.tuitionFee) {
-      course.tuitionFee = update.tuitionFee
-    }
-    if (update.lecturerIds) {
-      course.lecturerIds = update.lecturerIds
+      throw new Error(`COURSE_NOT_POUND`)
     }
 
-    const updated = await course.save()
+    let updateInput = {}
+
+    if (name) {
+      updateInput = {
+        name,
+      }
+    }
+
+    if (tuitionFee) {
+      if (tuitionFee < 0) {
+        throw new Error('TUITION_FEE_MUST_BE_POSITIVE')
+      }
+      updateInput = {
+        ...updateInput,
+        tuitionFee,
+      }
+    }
+
+    if (lecturerIds) {
+      await Promise.all(
+        lecturerIds.map(async (lecturerId: string): Promise<void> => {
+          const roles = await this.authService.getAccountRoles(lecturerId)
+          const accountHaveNotLecturerRole = roles.every(
+            (role: Role): boolean => {
+              if (role.name !== 'lecturer') return true
+              return false
+            },
+          )
+
+          if (accountHaveNotLecturerRole) {
+            throw new Error('ACCOUNT_IS_NOT_LECTURER')
+          }
+        }),
+      )
+
+      updateInput = {
+        ...updateInput,
+        lecturerIds,
+      }
+    }
+
+    let changeTime = false
+
+    if (startDate || daysOfTheWeek) {
+      if (startDate) {
+        const currentDate = new Date()
+
+        if (startDate.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)) {
+          throw new Error('START_DATE_INVALID')
+        }
+
+        updateInput = {
+          ...updateInput,
+          startDate,
+        }
+      }
+
+      if (daysOfTheWeek) {
+        updateInput = {
+          ...updateInput,
+          listOfLessonsForAWeek: daysOfTheWeek,
+        }
+      }
+
+      changeTime = true
+    }
+
+    const updated = await this.courseModel.findByIdAndUpdate(
+      course.id,
+      updateInput,
+      { new: true },
+    )
+
+    if (updated && changeTime) {
+      const schedule =
+        await this.lessonService.generateArrayDateTimeOfTheLessons({
+          courseStartDate: updated.startDate,
+          daysOfTheWeek: updated.listOfLessonsForAWeek,
+          totalNumberOfLessons: updated.totalNumberOfLessons,
+        })
+
+      const ascending = 1
+      const listLesson = await this.lessonModel.find(
+        {
+          orgId,
+          courseId: id,
+        },
+        null,
+        { sort: { startTime: ascending } },
+      )
+
+      Promise.all(
+        listLesson.map(async (lesson, index): Promise<void> => {
+          this.logger.debug(schedule[index])
+
+          this.logger.debug(lesson.id)
+          await this.lessonModel.findByIdAndUpdate(lesson.id, {
+            startTime: schedule[index].startTime,
+            endTime: schedule[index].endTime,
+          })
+        }),
+      )
+    }
+
+    this.logger.log(`[${this.updateCourse.name}] updated ...`)
+    this.logger.verbose(updated)
     return updated
   }
 
