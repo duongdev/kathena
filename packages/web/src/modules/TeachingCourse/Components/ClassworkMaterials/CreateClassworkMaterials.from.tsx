@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useState } from 'react'
 
-import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import {
+  CardContent,
+  Grid,
+  IconButton,
+  makeStyles,
+  Stack,
+} from '@material-ui/core'
 import { useFormikContext } from 'formik'
+import { Plus, X } from 'phosphor-react'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import {
@@ -13,15 +20,23 @@ import {
   TextFormField,
   Typography,
   SelectFormField,
+  InputField,
+  useDialogState,
   UploadInput,
 } from '@kathena/ui'
+import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
 
 import {
   ClassworkMaterialFormInput,
   classworkMaterialLabels as labels,
 } from './CreateClassworkMaterials'
+import kminLogo from './kmin-logo.png'
 
-export type CreateClassworkMaterialFormProps = {}
+export type CreateClassworkMaterialFormProps = {
+  iframeVideos: string[]
+  addIframe: (iframe: string) => void
+  removeIframe: (index: number) => void
+}
 
 const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   props,
@@ -30,6 +45,12 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
+  // video
+  const [input, setInput] = useState<string>('')
+  const { iframeVideos, addIframe, removeIframe } = props
+  const [open, handleOpenDialog, handleCloseDialog] = useDialogState()
+  const [currentIndex, setCurrentIndex] = useState(0)
+  //--------
   const handleMaterialSelect = useCallback(
     (files: File[]) => {
       formik.setFieldValue('attachments', files ?? null)
@@ -43,7 +64,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
       <SectionCard
         maxContentHeight={false}
         gridItem={{ xs: 12, sm: 6 }}
-        title="Thông tin bài tập"
+        title="Thông tin tài liệu"
       >
         <CardContent>
           <Stack>
@@ -60,6 +81,55 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="description"
               label={labels.description}
             />
+            {/* Start Video */}
+            <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
+            <div className={classes.iframeContainer}>
+              {iframeVideos.map((item, index) => (
+                <div
+                  onClick={() => {
+                    handleOpenDialog()
+                    setCurrentIndex(index)
+                  }}
+                  className={classes.iframeWrapper}
+                >
+                  <img
+                    style={{ borderRadius: '5px' }}
+                    src={kminLogo}
+                    title={item}
+                    alt="Video"
+                    width={50}
+                    height={50}
+                  />
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      removeIframe(index)
+                    }}
+                    className={classes.removeWrapper}
+                  >
+                    <X width={14} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex' }}>
+              <InputField
+                fullWidth
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <IconButton
+                onClick={() => {
+                  if (input !== '') {
+                    addIframe(input)
+                    setInput('')
+                  }
+                }}
+              >
+                <Plus />
+              </IconButton>
+            </div>
+            {/* End Video---------------- */}
           </Stack>
         </CardContent>
       </SectionCard>
@@ -102,6 +172,28 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginTop: spacing(2),
     flexShrink: 0,
     display: 'block',
+  },
+  iframeContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  iframeWrapper: {
+    margin: '10px 10px 0px 0px',
+    position: 'relative',
+    cursor: 'pointer',
+  },
+  removeWrapper: {
+    position: 'absolute',
+    right: '-6px',
+    top: '-6px',
+    cursor: 'pointer',
+    width: 18,
+    height: 18,
+    background: '#f2f2f2',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
   },
 }))
 

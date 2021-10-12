@@ -4,6 +4,7 @@ import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import PublicationChip from 'components/PublicationChip'
+import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
@@ -37,6 +38,7 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
+import kminLogo from './kmin-logo.png'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
@@ -51,6 +53,11 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<ConversationModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
+  // Xem Popup video
+  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
+  const [indexVideo, setIndexVideo] = useState(0)
+  // -----------------
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
@@ -210,6 +217,32 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                       }}
                     />
                   </InfoBlock>
+                  {(classworkMaterial?.iframeVideos.length as ANY) > 0 && (
+                    <InfoBlock label="Danh sách video">
+                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {classworkMaterial?.iframeVideos.map((_item, index) => (
+                          <div
+                            onClick={() => {
+                              setIndexVideo(index)
+                              handleOpenVideoDialog()
+                            }}
+                            style={{
+                              margin: '10px 10px 0px 0px',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <img
+                              style={{ borderRadius: '10px' }}
+                              src={kminLogo}
+                              width={60}
+                              height={60}
+                              alt="video"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </InfoBlock>
+                  )}
                   <InfoBlock label="Tập tin đính kèm: ">
                     {classworkMaterial?.attachments.length ? (
                       classworkMaterial?.attachments.map((attachment) => (
@@ -303,6 +336,12 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           </CardContent>
         </SectionCard>
       </Grid>
+      <VideoPopup
+        iframeVideos={classworkMaterial?.iframeVideos as ANY}
+        index={indexVideo}
+        open={openVideo}
+        onClose={handleCloseVideoDialog}
+      />
     </PageContainer>
   )
 }

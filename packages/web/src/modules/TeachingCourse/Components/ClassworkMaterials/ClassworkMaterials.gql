@@ -47,6 +47,7 @@ query DetailClassworkMaterial($Id: ID!) {
     attachments
     publicationState
     courseId
+    iframeVideos
   }
 }
 
