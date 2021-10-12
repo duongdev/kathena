@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { Container } from '@material-ui/core'
+import useNotification from 'hooks/useNotification'
 import { Helmet } from 'react-helmet-async'
 
 import { Alert, DashboardContainer } from '@kathena/ui'
@@ -14,7 +15,7 @@ export type OrgWorkspaceProps = {}
 
 const OrgWorkspace: FC<OrgWorkspaceProps> = () => {
   const { org } = useAuth()
-
+  useNotification()
   if (!org) {
     return (
       <Container maxWidth="sm" sx={{ py: 2 }}>

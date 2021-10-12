@@ -47,6 +47,7 @@ query DetailClassworkMaterial($Id: ID!) {
     attachments
     publicationState
     courseId
+    iframeVideos
   }
 }
 
@@ -97,5 +98,22 @@ mutation RemoveAttachmentsFromClassworkMaterial(
     orgId
     title
     attachments
+  }
+}
+#Sửa publicationState Tài liệu
+mutation UpdateClassworkMaterialPublication(
+  $publicationState: Publication!
+  $classworkMaterialId: ID!
+) {
+  updateClassworkMaterialPublication(
+    publicationState: $publicationState
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
+    createdAt
+    updatedAt
+    courseId
+    publicationState
+    type
   }
 }

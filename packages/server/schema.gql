@@ -346,6 +346,10 @@ type ConversationsPayload {
   count: Int!
 }
 
+type NotificationPayload {
+  title: String!
+}
+
 type Question implements BaseModel {
   id: ID!
   orgId: ID!
@@ -571,7 +575,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
-  createLesson(createLessonInput: CreateLessonInput!): Lesson!
+  addLessonToCourse(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
@@ -787,6 +791,6 @@ input SubmitQuizInput {
 }
 
 type Subscription {
-  classworkAssignmentCreated(courseId: ID!): ClassworkAssignment!
   conversationCreated(roomId: String!): Conversation!
+  notification(targetId: String!): NotificationPayload!
 }

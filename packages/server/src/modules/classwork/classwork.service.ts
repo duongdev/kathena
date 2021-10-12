@@ -1441,9 +1441,12 @@ export class ClassworkService {
 
     let listFilter: ClassworkSubmission[] = []
     const numberOfStudent: number = course.studentIds.length
-    let count: ANY
+    let count = 0
 
-    if (classworkSubmissionStatus === ClassworkSubmissionStatus.OnTime) {
+    if (classworkSubmissionStatus === ClassworkSubmissionStatus.Submitted) {
+      listFilter = listClassworkSubmission
+      count = listFilter.length
+    } else if (classworkSubmissionStatus === ClassworkSubmissionStatus.OnTime) {
       listFilter = listClassworkSubmission.filter((classworkSubmission) => {
         const dueDate = new Date(classworkAssignment.dueDate).setHours(
           7,

@@ -9,11 +9,18 @@ query ClassworkAssignmentDetail($id: ID!) {
     publicationState
     attachments
     dueDate
+    iframeVideos
   }
 }
 
-mutation AddAttachmentsToClassworkAssignment($classworkAssignmentId: ID!, $attachmentsInput: AddAttachmentsToClassworkInput!){
-  addAttachmentsToClassworkAssignment(attachmentsInput: $attachmentsInput,classworkAssignmentId: $classworkAssignmentId){
+mutation AddAttachmentsToClassworkAssignment(
+  $classworkAssignmentId: ID!
+  $attachmentsInput: AddAttachmentsToClassworkInput!
+) {
+  addAttachmentsToClassworkAssignment(
+    attachmentsInput: $attachmentsInput
+    classworkAssignmentId: $classworkAssignmentId
+  ) {
     id
     orgId
     courseId
@@ -26,8 +33,14 @@ mutation AddAttachmentsToClassworkAssignment($classworkAssignmentId: ID!, $attac
   }
 }
 
-mutation RemoveAttachmentsFromClassworkAssignment($classworkAssignmentId: ID!, $attachments: [String!]!){
-  removeAttachmentsFromClassworkAssignments(attachments: $attachments,classworkAssignmentId: $classworkAssignmentId){
+mutation RemoveAttachmentsFromClassworkAssignment(
+  $classworkAssignmentId: ID!
+  $attachments: [String!]!
+) {
+  removeAttachmentsFromClassworkAssignments(
+    attachments: $attachments
+    classworkAssignmentId: $classworkAssignmentId
+  ) {
     id
     orgId
     courseId
@@ -40,17 +53,30 @@ mutation RemoveAttachmentsFromClassworkAssignment($classworkAssignmentId: ID!, $
   }
 }
 
-query ListClassworkSubmission($classworkAssignmentId: ID!){
-  classworkSubmissions(classworkAssignmentId: $classworkAssignmentId){
+query ListClassworkSubmission($classworkAssignmentId: ID!) {
+  classworkSubmissions(classworkAssignmentId: $classworkAssignmentId) {
     id
     createdByAccountId
     createdAt
   }
 }
 
-query SubmissionStatusStatistics($id: ID!){
+query SubmissionStatusStatistics($id: ID!) {
   submissionStatusStatistics(classworkAssignmentId: $id) {
     label
     number
+  }
+}
+mutation UpdateClassworkAssignmentPublication($publication: String!, $id: ID!) {
+  updateClassworkAssignmentPublication(id: $id, publication: $publication) {
+    id
+    createdAt
+    courseId
+    createdByAccountId
+    title
+    type
+    description
+    publicationState
+    dueDate
   }
 }
