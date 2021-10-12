@@ -33,13 +33,13 @@ export class LessonResolver {
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_CreateLesson)
   @UsePipes(ValidationPipe)
-  async createLesson(
+  async addLessonToCourse(
     @Args('createLessonInput', { type: () => CreateLessonInput })
     createLessonInput: CreateLessonInput,
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.lessonService.createLesson(
+    return this.lessonService.addLessonToCourse(
       org.id,
       account.id,
       createLessonInput,
