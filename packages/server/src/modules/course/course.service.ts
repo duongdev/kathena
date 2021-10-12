@@ -1,6 +1,5 @@
 import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
-import { reject, values } from 'lodash'
 
 import {
   Service,
