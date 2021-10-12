@@ -115,14 +115,31 @@ export class ClassworkMaterialResolver {
     @Args('publicationState', { type: () => Publication, nullable: false })
     publicationState: Publication,
   ): Promise<ClassworkMaterial> {
-    return this.classworkService.updateClassworkMaterialPublication(
-      {
-        orgId: org.id,
-        accountId: account.id,
-        classworkMaterialId,
-      },
-      publicationState,
+    const classworkMaterial =
+      await this.classworkService.updateClassworkMaterialPublication(
+        {
+          orgId: org.id,
+          accountId: account.id,
+          classworkMaterialId,
+        },
+        publicationState,
+      )
+
+    const course = await this.courseService.findCourseById(
+      classworkMaterial.courseId,
+      org.id,
     )
+
+    if (classworkMaterial.publicationState === Publication.Published) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Bạn vừa có tài liệu mới ở khóa học ${course?.name}`,
+          accountIds: course?.studentIds,
+        },
+      })
+    }
+
+    return classworkMaterial
   }
 
   @Query((_return) => ClassworkMaterial)
