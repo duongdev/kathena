@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
-import PublicationChip from 'components/PublicationChip'
 import { format } from 'date-fns'
 import { useSnackbar } from 'notistack'
 import { Pencil, Trash, UserPlus } from 'phosphor-react'
@@ -32,6 +31,8 @@ import {
   useRemoveStudentsFromCourseMutation,
   FindCourseByIdDocument,
   Permission,
+  Publication,
+  useUpdateCoursePublicationByIdMutation,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -157,7 +158,13 @@ const DetailCourse: FC<DetailCourseProps> = () => {
     [open],
   )
   const course = useMemo(() => data?.findCourseById, [data])
-
+  const [updateCoursePublication] = useUpdateCoursePublicationByIdMutation({
+    refetchQueries: [
+      {
+        query: FindCourseByIdDocument,
+      },
+    ],
+  })
   if (loading) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -165,7 +172,19 @@ const DetailCourse: FC<DetailCourseProps> = () => {
   if (!course) {
     return <div>Không có khóa học nào</div>
   }
-
+  const updatePublication = async (publicationState: Publication) => {
+    const updated = await updateCoursePublication({
+      variables: {
+        courseId: course.id,
+        publication: publicationState,
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
   return (
     <PageContainer
       backButtonLabel="Danh sách khóa học"
@@ -174,10 +193,18 @@ const DetailCourse: FC<DetailCourseProps> = () => {
       subtitle={course.code}
       title={course.name}
       actions={[
-        <PublicationChip
+        <Button
+          onClick={() =>
+            updatePublication(
+              course.publicationState === Publication.Draft
+                ? Publication.Published
+                : Publication.Draft,
+            )
+          }
           variant="contained"
-          publication={course.publicationState}
-        />,
+        >
+          {course.publicationState === Publication.Draft ? 'Public' : 'Draft'}
+        </Button>,
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -198,10 +225,14 @@ const DetailCourse: FC<DetailCourseProps> = () => {
         >
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <Stack spacing={2}>
                   <InfoBlock label="Mã môn học">{course.code}</InfoBlock>
                   <InfoBlock label="Tên khóa học">{course.name}</InfoBlock>
+                </Stack>
+              </Grid>
+              <Grid item xs={6}>
+                <Stack spacing={2}>
                   <InfoBlock label="Ngày bắt đầu">
                     {format(new Date(course.startDate), 'MM/dd/yyyy')}
                   </InfoBlock>
