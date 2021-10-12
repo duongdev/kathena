@@ -38,3 +38,17 @@ mutation RemoveStudentsFromCourse($studentIds: [ID!]!, $id: ID!) {
     name
   }
 }
+mutation UpdateCoursePublicationById(
+  $publication: Publication!
+  $courseId: ID!
+) {
+  updateCoursePublicationById(courseId: $courseId, publication: $publication) {
+    id
+    orgId
+    createdAt
+    updatedAt
+    academicSubjectId
+    code
+    publicationState
+  }
+}

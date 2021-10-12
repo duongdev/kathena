@@ -1771,6 +1771,23 @@ export type RemoveStudentsFromCourseMutation = {
   removeStudentsFromCourse: { id: string; code: string; name: string }
 }
 
+export type UpdateCoursePublicationByIdMutationVariables = Exact<{
+  publication: Publication
+  courseId: Scalars['ID']
+}>
+
+export type UpdateCoursePublicationByIdMutation = {
+  updateCoursePublicationById: {
+    id: string
+    orgId: string
+    createdAt: any
+    updatedAt: any
+    academicSubjectId: string
+    code: string
+    publicationState: Publication
+  }
+}
+
 export type OrgAccountListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
@@ -8523,6 +8540,164 @@ export type RemoveStudentsFromCourseMutationOptions =
   Apollo.BaseMutationOptions<
     RemoveStudentsFromCourseMutation,
     RemoveStudentsFromCourseMutationVariables
+  >
+export const UpdateCoursePublicationByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateCoursePublicationById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publication' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Publication' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateCoursePublicationById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publication' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publication' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'academicSubjectId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateCoursePublicationByIdMutationFn = Apollo.MutationFunction<
+  UpdateCoursePublicationByIdMutation,
+  UpdateCoursePublicationByIdMutationVariables
+>
+export type UpdateCoursePublicationByIdProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables
+  >
+} & TChildProps
+export function withUpdateCoursePublicationById<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables,
+    UpdateCoursePublicationByIdProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables,
+    UpdateCoursePublicationByIdProps<TChildProps, TDataName>
+  >(UpdateCoursePublicationByIdDocument, {
+    alias: 'updateCoursePublicationById',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateCoursePublicationByIdMutation__
+ *
+ * To run a mutation, you first call `useUpdateCoursePublicationByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCoursePublicationByIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCoursePublicationByIdMutation, { data, loading, error }] = useUpdateCoursePublicationByIdMutation({
+ *   variables: {
+ *      publication: // value for 'publication'
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useUpdateCoursePublicationByIdMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables
+  >(UpdateCoursePublicationByIdDocument, options)
+}
+export type UpdateCoursePublicationByIdMutationHookResult = ReturnType<
+  typeof useUpdateCoursePublicationByIdMutation
+>
+export type UpdateCoursePublicationByIdMutationResult =
+  Apollo.MutationResult<UpdateCoursePublicationByIdMutation>
+export type UpdateCoursePublicationByIdMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateCoursePublicationByIdMutation,
+    UpdateCoursePublicationByIdMutationVariables
   >
 export const OrgAccountListDocument = {
   kind: 'Document',
