@@ -1,9 +1,11 @@
-import { FC, useCallback } from 'react'
+import { FC, useCallback, useState } from 'react'
 
-import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
+import { CardContent, Grid, IconButton, makeStyles, Stack } from '@material-ui/core'
 import { useFormikContext } from 'formik'
+import { Plus, X } from 'phosphor-react'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
+import { ANY } from '@kathena/types'
 import {
   UploadInput,
   SectionCard,
@@ -11,22 +13,39 @@ import {
   TextFormField,
   Typography,
   EditorFormField,
+  InputField,
+  Dialog,
+  useDialogState,
+  Button,
 } from '@kathena/ui'
+import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
 
 import {
   ClassworkAssignmentFormInput,
   classworkAssignmentLabels as labels,
 } from './CreateClassworkAssignment'
+import kminLogo from './kmin-logo.png'
 
-export type CreateClassworkAssignmentFormProps = {}
+export type CreateClassworkAssignmentFormProps = {
+  iframeVideos: string[]
+  addIframe: (iframe: string) => void
+  removeIframe: (index: number) => void
+}
 
 const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
   props,
 ) => {
+  const { iframeVideos, addIframe, removeIframe } = props
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkAssignmentFormInput>()
-
+  const [input, setInput] = useState<string>('')
+  const [
+    open,
+    handleOpenDialog,
+    handleCloseDialog,
+  ] = useDialogState()
+  const [currentIndex, setCurrentIndex] = useState(0)
   const handleAttachmentsSelect = useCallback(
     (files: File[]) => {
       formik.setFieldValue('attachments', files ?? null)
@@ -57,6 +76,40 @@ const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
               name="dueDate"
               label={labels.dueDate}
             />
+            <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
+            <div className={classes.iframeContainer}>
+              {
+                iframeVideos.map((item, index) => (
+                  <div onClick={() => {
+                    handleOpenDialog()
+                    setCurrentIndex(index)
+                  }} className={classes.iframeWrapper}>
+                    <img style={{ borderRadius: '5px' }} src={kminLogo} title={item} alt="Video" width={50} height={50} />
+                    <div onClick={(e) => {
+                      e.stopPropagation()
+                      removeIframe(index)
+                    }} className={classes.removeWrapper} >
+                      <X width={14} />
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <div style={{ display: 'flex' }}>
+              <InputField
+                fullWidth
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <IconButton onClick={() => {
+                if (input !== '') {
+                  addIframe(input)
+                  setInput('')
+                }
+              }}>
+                <Plus />
+              </IconButton>
+            </div>
           </Stack>
         </CardContent>
       </SectionCard>
@@ -80,6 +133,16 @@ const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
           )}
         </CardContent>
       </SectionCard>
+      <Dialog open={open} onClose={handleCloseDialog} extraDialogActions={<Button variant='contained' onClick={() => {
+        handleCloseDialog()
+        removeIframe(currentIndex)
+        setCurrentIndex(0)
+      }}>Xóa</Button>} >
+        <div
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: iframeVideos[currentIndex] as ANY }}
+        />
+      </Dialog>
     </Grid>
   )
 }
@@ -100,6 +163,28 @@ const useStyles = makeStyles(({ spacing }) => ({
     flexShrink: 0,
     display: 'block',
   },
+  iframeContainer: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  iframeWrapper: {
+    margin: '10px 10px 0px 0px',
+    position: 'relative',
+    cursor: 'pointer'
+  },
+  removeWrapper: {
+    position: 'absolute',
+    right: '-6px',
+    top: '-6px',
+    cursor: 'pointer',
+    width: 18,
+    height: 18,
+    background: '#f2f2f2',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%'
+  }
 }))
 
 export default CreateClassworkAssignmentForm

@@ -869,4 +869,29 @@ export class LessonService {
 
     return days
   }
+
+  async addLessonToCourse(
+    orgId: string,
+    createdByAccountId: string,
+    createLessonInput: CreateLessonInput,
+  ): Promise<DocumentType<Lesson>> {
+    const { courseModel } = this
+    const { courseId } = createLessonInput
+
+    const course = await courseModel.findById(courseId)
+
+    if (!course) {
+      throw new Error('THIS_COURSE_DOES_NOT_EXIST')
+    }
+
+    const lesson = await this.createLesson(
+      orgId,
+      createdByAccountId,
+      createLessonInput,
+    )
+
+    course.totalNumberOfLessons += 1
+    await course.save()
+    return lesson
+  }
 }

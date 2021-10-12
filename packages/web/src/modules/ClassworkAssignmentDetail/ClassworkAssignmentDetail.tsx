@@ -6,6 +6,7 @@ import AccountDisplayName from 'components/AccountDisplayName'
 import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
+import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { Pie } from 'react-chartjs-2'
@@ -36,6 +37,8 @@ import {
   Conversation as CommentModel,
   ConversationType,
   useSubmissionStatusStatisticsQuery,
+  Publication,
+  useUpdateClassworkAssignmentPublicationMutation,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
@@ -46,6 +49,7 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
+import kminLogo from './kmin-logo.png'
 
 export type ClassworkAssignmentDetailProps = {}
 
@@ -56,6 +60,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<CommentModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
+  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
+  const [indexVideo, setIndexVideo] = useState(0)
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
@@ -217,7 +224,15 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       ])
     }
   }
-
+  const [updateAssignmentPublication] =
+    useUpdateClassworkAssignmentPublicationMutation({
+      refetchQueries: [
+        {
+          query: ClassworkAssignmentDetailDocument,
+          variables: { id },
+        },
+      ],
+    })
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -232,6 +247,19 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     )
   }
 
+  const updatePublication = async (publicationState: Publication) => {
+    const updated = await updateAssignmentPublication({
+      variables: {
+        id,
+        publication: publicationState,
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
   return (
     <PageContainer
       backButtonLabel="Danh sách bài tập"
@@ -241,6 +269,20 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       maxWidth="lg"
       title={classworkAssignment.title}
       actions={[
+        <Button
+          onClick={() =>
+            updatePublication(
+              classworkAssignment.publicationState === Publication.Draft
+                ? Publication.Published
+                : Publication.Draft,
+            )
+          }
+          variant="contained"
+        >
+          {classworkAssignment.publicationState === Publication.Draft
+            ? 'Public'
+            : 'Draft'}
+        </Button>,
         <Button onClick={handleOpenUpdateDialog} variant="contained">
           Sửa bài tập
         </Button>,
@@ -280,6 +322,34 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                         }}
                       />
                     </InfoBlock>
+                    {classworkAssignment.iframeVideos.length > 0 && (
+                      <InfoBlock label="Danh sách video">
+                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                          {classworkAssignment.iframeVideos.map(
+                            (_item, index) => (
+                              <div
+                                onClick={() => {
+                                  setIndexVideo(index)
+                                  handleOpenVideoDialog()
+                                }}
+                                style={{
+                                  margin: '10px 10px 0px 0px',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <img
+                                  style={{ borderRadius: '10px' }}
+                                  src={kminLogo}
+                                  width={60}
+                                  height={60}
+                                  alt="video"
+                                />
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </InfoBlock>
+                    )}
                     <InfoBlock label="Tập tin đính kèm">
                       {classworkAssignment.attachments.length ? (
                         classworkAssignment.attachments.map((attachment) => (
@@ -431,6 +501,12 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           </CardContent>
         </SectionCard>
       </Grid>
+      <VideoPopup
+        iframeVideos={classworkAssignment.iframeVideos}
+        index={indexVideo}
+        open={openVideo}
+        onClose={handleCloseVideoDialog}
+      />
     </PageContainer>
   )
 }
