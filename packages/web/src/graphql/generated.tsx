@@ -1579,6 +1579,25 @@ export type SubmissionStatusStatisticsQuery = {
   submissionStatusStatistics: Array<{ label: string; number: number }>
 }
 
+export type UpdateClassworkAssignmentPublicationMutationVariables = Exact<{
+  publication: Scalars['String']
+  id: Scalars['ID']
+}>
+
+export type UpdateClassworkAssignmentPublicationMutation = {
+  updateClassworkAssignmentPublication: {
+    id: string
+    createdAt: any
+    courseId: string
+    createdByAccountId: string
+    title: string
+    type: string
+    description?: string | null | undefined
+    publicationState: Publication
+    dueDate?: any | null | undefined
+  }
+}
+
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
   classworkSubmissionId: Scalars['ID']
 }>
@@ -2186,6 +2205,22 @@ export type RemoveAttachmentsFromClassworkMaterialMutation = {
     orgId: string
     title: string
     attachments: Array<string>
+  }
+}
+
+export type UpdateClassworkMaterialPublicationMutationVariables = Exact<{
+  publicationState: Publication
+  classworkMaterialId: Scalars['ID']
+}>
+
+export type UpdateClassworkMaterialPublicationMutation = {
+  updateClassworkMaterialPublication: {
+    id: string
+    createdAt: any
+    updatedAt: any
+    courseId: string
+    publicationState: Publication
+    type: string
   }
 }
 
@@ -6258,6 +6293,167 @@ export type SubmissionStatusStatisticsQueryResult = Apollo.QueryResult<
   SubmissionStatusStatisticsQuery,
   SubmissionStatusStatisticsQueryVariables
 >
+export const UpdateClassworkAssignmentPublicationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkAssignmentPublication' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publication' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'updateClassworkAssignmentPublication',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publication' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publication' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateClassworkAssignmentPublicationMutationFn =
+  Apollo.MutationFunction<
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables
+  >
+export type UpdateClassworkAssignmentPublicationProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables
+  >
+} & TChildProps
+export function withUpdateClassworkAssignmentPublication<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables,
+    UpdateClassworkAssignmentPublicationProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables,
+    UpdateClassworkAssignmentPublicationProps<TChildProps, TDataName>
+  >(UpdateClassworkAssignmentPublicationDocument, {
+    alias: 'updateClassworkAssignmentPublication',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkAssignmentPublicationMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkAssignmentPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkAssignmentPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkAssignmentPublicationMutation, { data, loading, error }] = useUpdateClassworkAssignmentPublicationMutation({
+ *   variables: {
+ *      publication: // value for 'publication'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateClassworkAssignmentPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables
+  >(UpdateClassworkAssignmentPublicationDocument, options)
+}
+export type UpdateClassworkAssignmentPublicationMutationHookResult = ReturnType<
+  typeof useUpdateClassworkAssignmentPublicationMutation
+>
+export type UpdateClassworkAssignmentPublicationMutationResult =
+  Apollo.MutationResult<UpdateClassworkAssignmentPublicationMutation>
+export type UpdateClassworkAssignmentPublicationMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkAssignmentPublicationMutation,
+    UpdateClassworkAssignmentPublicationMutationVariables
+  >
 export const FindClassworkSubmissionByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -12509,6 +12705,161 @@ export type RemoveAttachmentsFromClassworkMaterialMutationOptions =
   Apollo.BaseMutationOptions<
     RemoveAttachmentsFromClassworkMaterialMutation,
     RemoveAttachmentsFromClassworkMaterialMutationVariables
+  >
+export const UpdateClassworkMaterialPublicationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateClassworkMaterialPublication' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicationState' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Publication' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateClassworkMaterialPublication' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'publicationState' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'updatedAt' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type UpdateClassworkMaterialPublicationMutationFn =
+  Apollo.MutationFunction<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >
+export type UpdateClassworkMaterialPublicationProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >
+} & TChildProps
+export function withUpdateClassworkMaterialPublication<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables,
+    UpdateClassworkMaterialPublicationProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables,
+    UpdateClassworkMaterialPublicationProps<TChildProps, TDataName>
+  >(UpdateClassworkMaterialPublicationDocument, {
+    alias: 'updateClassworkMaterialPublication',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useUpdateClassworkMaterialPublicationMutation__
+ *
+ * To run a mutation, you first call `useUpdateClassworkMaterialPublicationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClassworkMaterialPublicationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClassworkMaterialPublicationMutation, { data, loading, error }] = useUpdateClassworkMaterialPublicationMutation({
+ *   variables: {
+ *      publicationState: // value for 'publicationState'
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *   },
+ * });
+ */
+export function useUpdateClassworkMaterialPublicationMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
+  >(UpdateClassworkMaterialPublicationDocument, options)
+}
+export type UpdateClassworkMaterialPublicationMutationHookResult = ReturnType<
+  typeof useUpdateClassworkMaterialPublicationMutation
+>
+export type UpdateClassworkMaterialPublicationMutationResult =
+  Apollo.MutationResult<UpdateClassworkMaterialPublicationMutation>
+export type UpdateClassworkMaterialPublicationMutationOptions =
+  Apollo.BaseMutationOptions<
+    UpdateClassworkMaterialPublicationMutation,
+    UpdateClassworkMaterialPublicationMutationVariables
   >
 export const SetGradeForClassworkSubmissionDocument = {
   kind: 'Document',

@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, useCallback, useEffect } from 'react'
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
@@ -15,21 +15,24 @@ import {
   Button,
   InfoBlock,
   PageContainer,
-  useDialogState,
   SectionCard,
   SectionCardSkeleton,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
-import { WithAuth, RequiredPermission } from 'common/auth'
+import { RequiredPermission, useAuth, WithAuth } from 'common/auth'
 import { listRoomChatVar } from 'common/cache'
 import {
-  useDetailClassworkMaterialQuery,
-  Permission,
-  useRemoveAttachmentsFromClassworkMaterialMutation,
-  useConversationsQuery,
+  ClassworkMaterialsListDocument,
   Conversation as ConversationModel,
-  useConversationCreatedSubscription,
   ConversationType,
+  Permission,
+  Publication,
+  useConversationCreatedSubscription,
+  useConversationsQuery,
+  useDetailClassworkMaterialQuery,
+  useRemoveAttachmentsFromClassworkMaterialMutation,
+  useUpdateClassworkMaterialPublicationMutation,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import {
@@ -45,9 +48,11 @@ export type DetailClassworkMaterialsProps = {}
 
 const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const classes = useStyles(props)
+
   const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
     useDialogState()
   const params: { id: string } = useParams()
+  const { $org: org } = useAuth()
   const id = useMemo(() => params.id, [params.id])
   const [openAddFile, setOpenAddFile] = useState(false)
   const [lastId, setLastId] = useState<string | null>(null)
@@ -153,7 +158,20 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       ])
     }
   }
-
+  const [updateMaterialPublication] =
+    useUpdateClassworkMaterialPublicationMutation({
+      refetchQueries: [
+        {
+          query: ClassworkMaterialsListDocument,
+          variables: {
+            orgId: org.id,
+            skip: 0,
+            limit: 10,
+            courseId: classworkMaterial?.courseId,
+          },
+        },
+      ],
+    })
   if (loading) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -166,6 +184,19 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       </Grid>
     )
   }
+  const updatePublication = async (publicationState: Publication) => {
+    const updated = await updateMaterialPublication({
+      variables: {
+        publicationState,
+        classworkMaterialId: classworkMaterial?.id as ANY,
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
   return (
     <PageContainer
       backButtonLabel="Danh sách tài liệu"
@@ -175,11 +206,23 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       maxWidth="md"
       title={`${classworkMaterial?.title}`}
       actions={[
-        <PublicationChip
-          publication={classworkMaterial?.publicationState as ANY}
-          variant="outlined"
-          size="medium"
-        />,
+        <Button
+          onClick={() =>
+            updatePublication(
+              classworkMaterial?.publicationState === Publication.Draft
+                ? Publication.Published
+                : Publication.Draft,
+            )
+          }
+          variant="contained"
+        >
+          {classworkMaterial?.publicationState === Publication.Draft
+            ? 'Public'
+            : 'Draft'}
+        </Button>,
+        <Button onClick={handleOpenUpdateDialog} variant="contained">
+          Sửa tài liệu
+        </Button>,
       ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -187,11 +230,6 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin tài liệu"
-          action={[
-            <Button onClick={handleOpenUpdateDialog} variant="contained">
-              Sửa tài liệu
-            </Button>,
-          ]}
         >
           <RequiredPermission
             permission={Permission.Classwork_UpdateClassworkMaterial}

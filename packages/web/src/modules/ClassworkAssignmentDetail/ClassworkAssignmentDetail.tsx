@@ -37,6 +37,8 @@ import {
   Conversation as CommentModel,
   ConversationType,
   useSubmissionStatusStatisticsQuery,
+  Publication,
+  useUpdateClassworkAssignmentPublicationMutation,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import UpdateClassworkAssignmentDialog from 'modules/UpdateClassworkAssignmentDialog/UpdateClassworkAssignmentDialog'
@@ -222,7 +224,15 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       ])
     }
   }
-
+  const [updateAssignmentPublication] =
+    useUpdateClassworkAssignmentPublicationMutation({
+      refetchQueries: [
+        {
+          query: ClassworkAssignmentDetailDocument,
+          variables: { id },
+        },
+      ],
+    })
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -237,6 +247,19 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     )
   }
 
+  const updatePublication = async (publicationState: Publication) => {
+    const updated = await updateAssignmentPublication({
+      variables: {
+        id,
+        publication: publicationState,
+      },
+    })
+    if (updated) {
+      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+    } else {
+      enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
+    }
+  }
   return (
     <PageContainer
       backButtonLabel="Danh sách bài tập"
@@ -246,6 +269,20 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       maxWidth="lg"
       title={classworkAssignment.title}
       actions={[
+        <Button
+          onClick={() =>
+            updatePublication(
+              classworkAssignment.publicationState === Publication.Draft
+                ? Publication.Published
+                : Publication.Draft,
+            )
+          }
+          variant="contained"
+        >
+          {classworkAssignment.publicationState === Publication.Draft
+            ? 'Public'
+            : 'Draft'}
+        </Button>,
         <Button onClick={handleOpenUpdateDialog} variant="contained">
           Sửa bài tập
         </Button>,

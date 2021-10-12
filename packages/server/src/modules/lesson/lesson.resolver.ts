@@ -39,7 +39,7 @@ export class LessonResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<DocumentType<Lesson>> {
-    return this.lessonService.createLesson(
+    return this.lessonService.addLessonToCourse(
       org.id,
       account.id,
       createLessonInput,
