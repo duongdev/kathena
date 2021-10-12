@@ -81,6 +81,8 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="description"
               label={labels.description}
             />
+          </Stack>
+          <Stack mt={3}>
             {/* Start Video */}
             <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
             <div className={classes.iframeContainer}>
