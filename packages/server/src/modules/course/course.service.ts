@@ -310,9 +310,6 @@ export class CourseService {
 
       Promise.all(
         listLesson.map(async (lesson, index): Promise<void> => {
-          this.logger.debug(schedule[index])
-
-          this.logger.debug(lesson.id)
           await this.lessonModel.findByIdAndUpdate(lesson.id, {
             startTime: schedule[index].startTime,
             endTime: schedule[index].endTime,
