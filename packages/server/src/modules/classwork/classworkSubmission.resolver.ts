@@ -2,8 +2,10 @@ import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
+import pubSub from 'core/utils/pubSub'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import { CourseService } from 'modules/course/course.service'
 import { Org } from 'modules/org/models/Org'
 import { Nullable } from 'types'
 
@@ -21,7 +23,10 @@ import {
 
 @Resolver((_of) => ClassworkSubmission)
 export class ClassworkSubmissionResolver {
-  constructor(private readonly classworkService: ClassworkService) {}
+  constructor(
+    private readonly classworkService: ClassworkService,
+    private readonly courseService: CourseService,
+  ) {}
 
   @Mutation((_return) => ClassworkSubmission)
   @UseAuthGuard(P.Classwork_CreateClassworkSubmission)
@@ -33,12 +38,58 @@ export class ClassworkSubmissionResolver {
     @CurrentOrg() org: Org,
     @CurrentAccount() account: Account,
   ): Promise<ClassworkSubmission> {
-    return this.classworkService.createClassworkSubmission(
-      org.id,
-      courseId,
-      account.id,
-      createClassworkSubmissionInput,
-    )
+    const classworkSubmission =
+      await this.classworkService.createClassworkSubmission(
+        org.id,
+        courseId,
+        account.id,
+        createClassworkSubmissionInput,
+      )
+
+    // Send notification
+    const course = await this.courseService.findCourseById(courseId, org.id)
+    let numberOfStudent = 0
+
+    if (course) {
+      numberOfStudent = course.studentIds.length
+    }
+
+    const classworkAssignment =
+      await this.classworkService.findClassworkAssignmentById(
+        org.id,
+        classworkSubmission.classworkId,
+      )
+
+    const listStudentsSubmitted =
+      await this.classworkService.getListOfStudentsSubmitAssignmentsByStatus(
+        classworkSubmission.classworkId,
+        ClassworkSubmissionStatus.Submitted,
+      )
+
+    if (listStudentsSubmitted.count === 1) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Vừa có 1 học viên nộp bài tập "${classworkAssignment?.title}" ở khóa học ${course?.name} của bạn.`,
+          accountIds: course?.lecturerIds,
+        },
+      })
+    } else if (listStudentsSubmitted.count === Math.ceil(numberOfStudent / 2)) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Đã có 50% học viên nộp bài tập "${classworkAssignment?.title}" ở khóa học ${course?.name} của bạn.`,
+          accountIds: course?.lecturerIds,
+        },
+      })
+    } else if (listStudentsSubmitted.count === numberOfStudent) {
+      pubSub.publish('notification', {
+        notification: {
+          title: `Tất cả học viên đã hoàn thành bài tập "${classworkAssignment?.title}" ở khóa học ${course?.name} của bạn.`,
+          accountIds: course?.lecturerIds,
+        },
+      })
+    }
+
+    return classworkSubmission
   }
 
   @Mutation((_return) => ClassworkSubmission)
