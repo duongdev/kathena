@@ -33,7 +33,7 @@ export class LessonResolver {
   @Mutation((_returns) => Lesson)
   @UseAuthGuard(P.Academic_CreateLesson)
   @UsePipes(ValidationPipe)
-  async addLessonToCourse(
+  async createLesson(
     @Args('createLessonInput', { type: () => CreateLessonInput })
     createLessonInput: CreateLessonInput,
     @CurrentOrg() org: Org,
