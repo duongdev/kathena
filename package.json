@@ -37,6 +37,6 @@
     "*.{js,jsx,ts,tsx}": "yarn lint --fix"
   },
   "dependencies": {
-    "@nestjs/common": "8.0.11"
+    "@nestjs/common": "8.1.0"
   }
 }
