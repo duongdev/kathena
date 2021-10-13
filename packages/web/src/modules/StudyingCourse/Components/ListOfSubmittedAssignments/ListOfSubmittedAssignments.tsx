@@ -113,9 +113,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
         title="Bài tập"
         gridItem={{ xs: 12 }}
         action={[
-          <>
+          <div className={classes.headerSearch}>
             {/* <Typography>Tìm kiếm:</Typography> */}
-            <InputLabel>Tìm kiếm</InputLabel>
+            <InputLabel className={classes.labelSearch}>Tìm kiếm</InputLabel>
             <Select
               className={classes.selectStatus}
               value={statusSubmit.valueStatusSubmit}
@@ -127,7 +127,7 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                 </MenuItem>
               ))}
             </Select>
-          </>,
+          </div>,
         ]}
       >
         <CardContent>
@@ -234,12 +234,26 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {
     width: '8em',
   },
   selectStatus: {
+    color: palette.background.paper,
     width: '13em',
+    '&:before': {
+      borderColor: 'red !important',
+    },
+  },
+  labelSearch: {
+    color: palette.background.paper,
+    marginRight: '1em',
+  },
+  headerSearch: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
   },
 }))
 const WithPermissionListOfSubmittedAssignments = () => (

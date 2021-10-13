@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 
-import { CardContent, Chip, Grid, Stack } from '@material-ui/core'
+import { CardContent, Chip, Grid, Stack, makeStyles } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import { useParams } from 'react-router-dom'
@@ -39,6 +39,7 @@ export type DetailContentClassworkAssignmentProps = {}
 
 const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps> =
   () => {
+    const classes = useStyles()
     const params: { id: string } = useParams()
     const [lastId, setLastId] = useState<string | null>(null)
     const [comments, setComments] = useState<ConversationModel[]>([])
@@ -216,11 +217,16 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
             title={
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={classes.headerComment}>
                 <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                   Bình luận
                 </Typography>
-                <Button onClick={pinRoomChat}>Ghim</Button>
+                <Button
+                  onClick={pinRoomChat}
+                  className={classes.buttonTextColor}
+                >
+                  Ghim
+                </Button>
               </div>
             }
           >
@@ -258,7 +264,20 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
       </PageContainer>
     )
   }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  headerComment: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
+  },
+}))
 const WithPermissionDetailContentClassworkAssignment = () => (
   <WithAuth permission={Permission.Studying_Course_Access}>
     <DetailContentClassworkAssignment />
