@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 import { FC, useMemo } from 'react'
 
-import { CardContent, Grid, Skeleton } from '@material-ui/core'
+import { CardContent, Grid, Skeleton, makeStyles } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { FilePlus } from 'phosphor-react'
@@ -33,6 +33,7 @@ import {
 export type ClassworkMaterialsProps = {}
 
 const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
+  const classes = useStyles()
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
   const { data, loading } = useCourseDetailQuery({
@@ -94,6 +95,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
               id: courseId,
             })}
             startIcon={<FilePlus size={24} />}
+            className={classes.buttonTextColor}
           >
             Thêm tài liệu
           </Button>
@@ -160,7 +162,6 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                 {
                   label: 'Trạng thái',
                   align: 'right',
-                  width: '10%',
                   skeleton: <Skeleton />,
                   render: ({ publicationState }) => (
                     <PublicationChip
@@ -187,5 +188,12 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
     </Grid>
   )
 }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+}))
 export default ClassworkMaterials

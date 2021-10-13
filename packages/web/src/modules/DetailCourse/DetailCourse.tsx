@@ -181,7 +181,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
     })
     if (updated) {
       enqueueSnackbar(
-        `Cập nhật thành công ${
+        `Cập nhật thành ${
           course.publicationState === Publication.Draft
             ? 'bản công khai'
             : 'bản nháp'
@@ -212,7 +212,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
         >
           {course.publicationState === Publication.Draft
             ? 'Bản nháp'
-            : 'Bản công khai'}
+            : 'Công khai'}
         </Button>,
       ]}
     >

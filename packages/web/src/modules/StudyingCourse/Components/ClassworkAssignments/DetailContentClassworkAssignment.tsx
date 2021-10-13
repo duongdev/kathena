@@ -255,7 +255,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                   </Button>
                 </div>
               ) : (
-                'Không có comment'
+                'Không có bình luận'
               )}
               <CreateComment roomId={id} />
             </CardContent>

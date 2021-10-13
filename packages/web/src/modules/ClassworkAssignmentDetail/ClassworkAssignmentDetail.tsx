@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, useCallback, useEffect } from 'react'
 
-import { CardContent, Grid, Stack } from '@material-ui/core'
+import { CardContent, Grid, Stack, makeStyles } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountDisplayName from 'components/AccountDisplayName'
 import Comment from 'components/Comment/Comment'
@@ -54,6 +54,7 @@ import kminLogo from './kmin-logo.png'
 export type ClassworkAssignmentDetailProps = {}
 
 const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
+  const classes = useStyles()
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params])
   const [openAddFile, setOpenAddFile] = useState(false)
@@ -255,7 +256,14 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       },
     })
     if (updated) {
-      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+      enqueueSnackbar(
+        `Cập nhật thành ${
+          classworkAssignment.publicationState === Publication.Draft
+            ? 'bản công khai'
+            : 'bản nháp'
+        }`,
+        { variant: 'success' },
+      )
     } else {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
@@ -280,8 +288,8 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           variant="contained"
         >
           {classworkAssignment.publicationState === Publication.Draft
-            ? 'Public'
-            : 'Draft'}
+            ? 'Bản nháp'
+            : 'Công khai'}
         </Button>,
         <Button onClick={handleOpenUpdateDialog} variant="contained">
           Sửa bài tập
@@ -406,11 +414,16 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
             title={
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={classes.headerComment}>
                 <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                   Bình luận
                 </Typography>
-                <Button onClick={pinRoomChat}>Ghim</Button>
+                <Button
+                  className={classes.buttonTextColor}
+                  onClick={pinRoomChat}
+                >
+                  Ghim
+                </Button>
               </div>
             }
           >
@@ -446,7 +459,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                     padding: '10px',
                   }}
                 >
-                  <Typography>Không có comment</Typography>
+                  <Typography>Không có bình luận</Typography>
                 </div>
               )}
               <CreateComment roomId={id} />
@@ -458,14 +471,9 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           title="Học viên đã nộp"
           fullHeight={false}
           action={[
-            <>
-              <InfoBlock label="Số lượng nộp:">
-                <Typography align="right">
-                  {' '}
-                  {classworkSubmissions?.length}
-                </Typography>
-              </InfoBlock>
-            </>,
+            <div className={classes.textSoLuong}>
+              <Typography>Số lượng: {classworkSubmissions?.length}</Typography>
+            </div>,
           ]}
         >
           <CardContent>
@@ -510,7 +518,23 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     </PageContainer>
   )
 }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  textSoLuong: {
+    padding: '0.25em 0em',
+  },
+  headerComment: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
+  },
+}))
 const WithPermissionClassworkAssignmentDetail = () => (
   <WithAuth permission={Permission.Teaching_Course_Access}>
     <ClassworkAssignmentDetail />

@@ -239,11 +239,10 @@ const useStyles = makeStyles(({ palette }) => ({
     width: '8em',
   },
   selectStatus: {
-    color: palette.background.paper,
+    color: 'black',
     width: '13em',
-    '&:before': {
-      borderColor: 'red !important',
-    },
+    height: '2.75em',
+    backgroundColor: palette.background.paper,
   },
   labelSearch: {
     color: palette.background.paper,
