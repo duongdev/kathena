@@ -22,7 +22,7 @@ export type SectionCardProps = {
   title: ReactNode
   titleIcon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>
   action?: CardHeaderProps['action']
-  classes?: Partial<Record<'root' | 'content', string>>
+  classes?: Partial<Record<'root' | 'content' | 'titleCss', string>>
   disableFade?: boolean
   fullHeight?: boolean
   maxContentHeight?: number | false
@@ -47,11 +47,22 @@ const SectionCard: React.FC<SectionCardProps> = (props) => {
   const card = useMemo(
     () => (
       <Card className={classes.root}>
-        <CardHeader title={title} action={props.action} />
+        <CardHeader
+          title={title}
+          action={props.action}
+          className={classes.titleCss}
+        />
         <div className={classes.content}>{props.children}</div>
       </Card>
     ),
-    [classes.content, classes.root, props.action, props.children, title],
+    [
+      classes.content,
+      classes.root,
+      classes.titleCss,
+      props.action,
+      props.children,
+      title,
+    ],
   )
 
   if (props.disableFade) {
@@ -74,23 +85,29 @@ export const SectionCardMoreAction: React.FC<SectionCardMoreActionProps> = (
   </Button>
 )
 
-const useStyles = makeStyles<Theme, SectionCardProps, 'root' | 'content'>(
-  () => ({
-    root: {
-      height: ({ fullHeight }) => (fullHeight ? '100%' : undefined),
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: ({ maxContentHeight }) =>
-      maxContentHeight
-        ? {
-            maxHeight: maxContentHeight,
-            overflow: 'auto',
-            height: '100%',
-          }
-        : { height: '100%' },
-  }),
-)
+const useStyles = makeStyles<
+  Theme,
+  SectionCardProps,
+  'root' | 'content' | 'titleCss'
+>(() => ({
+  root: {
+    height: ({ fullHeight }) => (fullHeight ? '100%' : undefined),
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  titleCss: {
+    backgroundColor: '#103955',
+    color: '#fff',
+  },
+  content: ({ maxContentHeight }) =>
+    maxContentHeight
+      ? {
+          maxHeight: maxContentHeight,
+          overflow: 'auto',
+          height: '100%',
+        }
+      : { height: '100%' },
+}))
 
 SectionCard.defaultProps = {
   fullHeight: true,

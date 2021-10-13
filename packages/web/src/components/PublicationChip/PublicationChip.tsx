@@ -22,7 +22,7 @@ const PublicationChip: FC<PublicationChipProps> = (props) => {
 
   return (
     <StatusChip variant={variant} color={color} size={size}>
-      {publication}
+      {publication === Publication.Draft ? 'Bản nháp' : 'Bản công khai'}
     </StatusChip>
   )
 }

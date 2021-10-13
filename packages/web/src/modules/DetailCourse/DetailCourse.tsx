@@ -180,7 +180,14 @@ const DetailCourse: FC<DetailCourseProps> = () => {
       },
     })
     if (updated) {
-      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+      enqueueSnackbar(
+        `Cập nhật thành công ${
+          course.publicationState === Publication.Draft
+            ? 'bản công khai'
+            : 'bản nháp'
+        }`,
+        { variant: 'success' },
+      )
     } else {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
@@ -203,7 +210,9 @@ const DetailCourse: FC<DetailCourseProps> = () => {
           }
           variant="contained"
         >
-          {course.publicationState === Publication.Draft ? 'Public' : 'Draft'}
+          {course.publicationState === Publication.Draft
+            ? 'Bản nháp'
+            : 'Bản công khai'}
         </Button>,
       ]}
     >
@@ -217,9 +226,12 @@ const DetailCourse: FC<DetailCourseProps> = () => {
               to={buildPath(UPDATE_ACADEMIC_COURSE, {
                 id: course.id,
               })}
+              className={classes.linkButtonHover}
             >
               {' '}
-              <Button endIcon={<Pencil />}>Sửa khóa học</Button>
+              <Button className={classes.buttonTextColor} endIcon={<Pencil />}>
+                Sửa khóa học
+              </Button>
             </Link>
           }
         >
@@ -253,7 +265,11 @@ const DetailCourse: FC<DetailCourseProps> = () => {
           title="Thông tin giảng viên"
           action={
             <>
-              <Button endIcon={<UserPlus />} onClick={handleOpenCreateLecturer}>
+              <Button
+                endIcon={<UserPlus />}
+                className={classes.buttonTextColor}
+                onClick={handleOpenCreateLecturer}
+              >
                 Thêm giảng viên
               </Button>
               <Popover
@@ -323,8 +339,12 @@ const DetailCourse: FC<DetailCourseProps> = () => {
           title="Thông tin học viên"
           action={
             <>
-              <Button endIcon={<UserPlus />} onClick={handleOpenCreateStudent}>
-                Thêm học sinh
+              <Button
+                endIcon={<UserPlus />}
+                className={classes.buttonTextColor}
+                onClick={handleOpenCreateStudent}
+              >
+                Thêm học viên
               </Button>
               <Popover
                 style={{ width: '89%' }}
@@ -392,14 +412,25 @@ const DetailCourse: FC<DetailCourseProps> = () => {
     </PageContainer>
   )
 }
-const useStyles = makeStyles({
+const useStyles = makeStyles(({ palette }) => ({
   displayName: {
     alignItems: 'center !important',
   },
   pointer: {
     cursor: 'pointer',
   },
-})
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  linkButtonHover: {
+    '&:hover': {
+      textDecoration: 'none',
+    },
+  },
+}))
 
 const WithPermissionDetailCourse = () => (
   <WithAuth permission={Permission.Academic_Course_Access}>
