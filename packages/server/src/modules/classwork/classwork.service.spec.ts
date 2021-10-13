@@ -23,7 +23,6 @@ import {
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
   ClassworkAssignmentByStudentIdInCourseResponse,
 } from './classwork.type'
-import { IframeVideo } from './models/Classwork'
 import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
 describe('classwork.service', () => {
