@@ -457,6 +457,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FileText />}
                             onClick={handleOpenAddClassworkMaterialListInClass}
                           >
@@ -513,6 +514,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FilePlus />}
                             onClick={
                               handleOpenAddClassworkAssignmentListInClass
@@ -580,6 +582,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FileText />}
                             onClick={
                               handleOpenAddClassworkMaterialListAfterClass
@@ -638,6 +641,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FilePlus />}
                             onClick={
                               handleOpenAddClassworkAssignmentListAfterClass
@@ -718,10 +722,10 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles(() => ({
   root: {},
   buttonTextColor: {
-    color: palette.semantic.purple,
+    color: '#992154',
     '&:hover': {
       backgroundColor: 'transparent',
     },
