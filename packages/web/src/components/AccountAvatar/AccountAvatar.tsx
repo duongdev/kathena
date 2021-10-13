@@ -116,7 +116,7 @@ const useStyles = makeStyles(({ palette }) => ({
     backgroundColor: palette.semantic.green,
     color: palette.semantic.green,
     boxShadow: `0 0 0 2px ${palette.background.paper}`,
-    left: '2.5em',
+    left: '80%',
     '&::after': {
       position: 'absolute',
       top: 0,
