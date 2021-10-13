@@ -14,6 +14,21 @@ registerEnumType(ClassworkType, {
   description: 'Type of a classwork',
 })
 
+@ObjectType()
+export class IframeVideo {
+  @Field()
+  @prop({ required: true })
+  title: string
+
+  @Field()
+  @prop({ type: Types.ObjectId })
+  thumbnail: string
+
+  @Field()
+  @prop({ required: true })
+  iframe: string
+}
+
 @ObjectType({ implements: [BaseModel] })
 export class Classwork extends BaseModel {
   @Field((_type) => ID)
@@ -40,9 +55,9 @@ export class Classwork extends BaseModel {
   @prop({ type: [Types.ObjectId] })
   attachments?: string[]
 
-  @Field((_type) => [String])
-  @prop({ type: [String] })
-  iframeVideos?: string[]
+  @Field((_type) => [IframeVideo])
+  @prop({ type: [IframeVideo] })
+  iframeVideos?: IframeVideo[]
 
   @Field((_type) => Publication)
   @prop({ required: true, index: true, default: Publication.Draft })

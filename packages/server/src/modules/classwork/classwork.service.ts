@@ -34,7 +34,7 @@ import {
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
   UpdateClassworkAssignmentInput,
 } from './classwork.type'
-import { Classwork, ClassworkType } from './models/Classwork'
+import { Classwork, ClassworkType, IframeVideo } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 import {
@@ -198,6 +198,28 @@ export class ClassworkService {
     return listFileId
   }
 
+  async uploadThumbnail(
+    orgId: string,
+    uploadedByAccountId: string,
+    thumbnail: Promise<FileUpload>,
+  ): Promise<string> {
+    const image = await thumbnail
+
+    const { createReadStream, filename, encoding } = image
+
+    // eslint-disable-next-line no-console
+    console.log('encoding', encoding)
+
+    const imageFile = await this.fileStorageService.uploadFromReadStream({
+      orgId,
+      originalFileName: filename,
+      readStream: createReadStream(),
+      uploadedByAccountId,
+    })
+
+    return imageFile.id
+  }
+
   /**
    * END GENERAL FUNCTION
    */
@@ -232,6 +254,28 @@ export class ClassworkService {
     if (!(await this.authService.canAccountManageCourse(creatorId, courseId)))
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
+    const listIframeVideos: IframeVideo[] = []
+
+    if (iframeVideos) {
+      const map = iframeVideos.map(async (iframeObject) => {
+        const imageId = await this.uploadThumbnail(
+          orgId,
+          creatorId,
+          iframeObject.thumbnail,
+        )
+
+        const iframeVideo: IframeVideo = {
+          title: iframeObject.title,
+          thumbnail: imageId,
+          iframe: iframeObject.iframe,
+        }
+
+        listIframeVideos.push(iframeVideo)
+      })
+
+      await Promise.all(map)
+    }
+
     const classworkMaterial = await this.classworkMaterialModel.create({
       description: removeExtraSpaces(description),
       title: removeExtraSpaces(title),
@@ -239,7 +283,7 @@ export class ClassworkService {
       createdByAccountId: creatorId,
       orgId,
       courseId,
-      iframeVideos,
+      iframeVideos: listIframeVideos,
     })
 
     let classworkMaterialWithFile: ANY = null
@@ -322,9 +366,29 @@ export class ClassworkService {
       }
     }
     if (iframeVideos) {
+      const listIframeVideos: IframeVideo[] = []
+
+      const map = iframeVideos.map(async (iframeObject) => {
+        const imageId = await this.uploadThumbnail(
+          orgId,
+          accountId,
+          iframeObject.thumbnail,
+        )
+
+        const iframeVideo: IframeVideo = {
+          title: iframeObject.title,
+          thumbnail: imageId,
+          iframe: iframeObject.iframe,
+        }
+
+        listIframeVideos.push(iframeVideo)
+      })
+
+      await Promise.all(map)
+
       updateInput = {
         ...updateInput,
-        iframeVideos,
+        iframeVideos: listIframeVideos,
       }
     }
 
@@ -745,6 +809,28 @@ export class ClassworkService {
       }
     }
 
+    const listIframeVideos: IframeVideo[] = []
+
+    if (iframeVideos) {
+      const map = iframeVideos.map(async (iframeObject) => {
+        const imageId = await this.uploadThumbnail(
+          orgId,
+          createdByAccountId,
+          iframeObject.thumbnail,
+        )
+
+        const iframeVideo: IframeVideo = {
+          title: iframeObject.title,
+          thumbnail: imageId,
+          iframe: iframeObject.iframe,
+        }
+
+        listIframeVideos.push(iframeVideo)
+      })
+
+      await Promise.all(map)
+    }
+
     let classworkAssignment = await this.classworkAssignmentsModel.create({
       createdByAccountId,
       courseId,
@@ -753,7 +839,7 @@ export class ClassworkService {
       description: removeExtraSpaces(description),
       publicationState,
       dueDate: dueDateInput,
-      iframeVideos,
+      iframeVideos: listIframeVideos,
     })
 
     if (attachments?.length) {
@@ -861,7 +947,28 @@ export class ClassworkService {
       }
     }
 
-    if (iframeVideos) classworkAssignmentUpdate.iframeVideos = iframeVideos
+    if (iframeVideos) {
+      const listIframeVideos: IframeVideo[] = []
+      const map = iframeVideos.map(async (iframeObject) => {
+        const imageId = await this.uploadThumbnail(
+          orgId,
+          accountId,
+          iframeObject.thumbnail,
+        )
+
+        const iframeVideo: IframeVideo = {
+          title: iframeObject.title,
+          thumbnail: imageId,
+          iframe: iframeObject.iframe,
+        }
+
+        listIframeVideos.push(iframeVideo)
+      })
+
+      await Promise.all(map)
+
+      classworkAssignmentUpdate.iframeVideos = listIframeVideos
+    }
 
     const updated = await classworkAssignmentUpdate.save()
     return updated
