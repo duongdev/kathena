@@ -23,6 +23,7 @@ import {
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
   ClassworkAssignmentByStudentIdInCourseResponse,
 } from './classwork.type'
+import { IframeVideo } from './models/Classwork'
 import { ClassworkSubmissionStatus } from './models/ClassworkSubmission'
 
 describe('classwork.service', () => {
@@ -142,7 +143,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the created classworkMaterial`, async () => {
-        expect.assertions(3)
+        expect.assertions(2)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -179,24 +180,6 @@ describe('classwork.service', () => {
           title: 'test 123',
           publicationState: Publication.Published,
         })
-
-        const classworkMaterialIframeVideos =
-          await classworkService.createClassworkMaterial(
-            objectId(),
-            objectId(),
-            objectId(),
-            {
-              title: 'Bai Tap Nay Moi Nhat 1',
-              description: '',
-              iframeVideos: ['iframe1', 'iframe2'],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkMaterialIframeVideos.iframeVideos?.length
-          })(),
-        ).resolves.toBe(2)
       })
     })
 
@@ -245,7 +228,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns an updated classworkMaterial`, async () => {
-        expect.assertions(3)
+        expect.assertions(2)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -294,23 +277,6 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Đặng Hiếu Liêm',
         })
-
-        const classworkMaterialWithIframeVideos =
-          await classworkService.updateClassworkMaterial(
-            classworkMaterial.orgId,
-            objectId(),
-            classworkMaterial.id,
-            {
-              description: 'Đặng Hiếu Liêm',
-              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkMaterialWithIframeVideos.iframeVideos?.length
-          })(),
-        ).resolves.toBe(3)
       })
     })
 
@@ -1048,7 +1014,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the Classwork Assignment`, async () => {
-        expect.assertions(2)
+        expect.assertions(1)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1124,25 +1090,6 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Bai Tap Nay Moi Nhat',
         })
-
-        const classworkAssignmentWithIframeVideos =
-          await classworkService.createClassworkAssignment(
-            accountLecturer.id,
-            courseTest.id,
-            org.id,
-            {
-              title: 'Bai Tap Nay Moi Nhat 1',
-              description: '',
-              dueDate: date,
-              iframeVideos: ['iframe1', 'iframe2'],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkAssignmentWithIframeVideos.iframeVideos?.length
-          })(),
-        ).resolves.toBe(2)
       })
     })
 
@@ -1283,7 +1230,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(2)
+        expect.assertions(1)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1360,24 +1307,6 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
-
-        const classworkAssignmentWithIframeVideos =
-          await classworkService.updateClassworkAssignment(
-            {
-              id: classworkAssignmentUpdate.id,
-              accountId: accountLecturer.id,
-              orgId: org.id,
-            },
-            {
-              iframeVideos: ['iframeVideo1', 'iframeVideo2', 'iframeVideo3'],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkAssignmentWithIframeVideos.iframeVideos?.length
-          })(),
-        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {

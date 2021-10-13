@@ -169,8 +169,7 @@ export class ClassworkService {
       const arrFileId = promiseFileUpload.map(async (document) => {
         const { createReadStream, filename, encoding } = await document
 
-        // eslint-disable-next-line no-console
-        console.log('encoding', encoding)
+        this.logger.log('encoding', encoding)
 
         const documentFile = await this.fileStorageService.uploadFromReadStream(
           {
@@ -207,8 +206,7 @@ export class ClassworkService {
 
     const { createReadStream, filename, encoding } = image
 
-    // eslint-disable-next-line no-console
-    console.log('encoding', encoding)
+    this.logger.log('encoding', encoding)
 
     const imageFile = await this.fileStorageService.uploadFromReadStream({
       orgId,
