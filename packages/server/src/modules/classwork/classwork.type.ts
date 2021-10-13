@@ -15,7 +15,7 @@ import { ClassworkAssignment } from './models/ClassworkAssignment'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 import { ClassworkSubmission } from './models/ClassworkSubmission'
 
-@ObjectType()
+@InputType()
 class IframeVideoType {
   @Field()
   title: string

@@ -149,6 +149,12 @@ enum FileLocation {
   LocalStorage
 }
 
+type IframeVideo {
+  title: String!
+  thumbnail: String!
+  iframe: String!
+}
+
 type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -160,7 +166,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [String!]!
+  iframeVideos: [IframeVideo!]!
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
@@ -177,7 +183,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [String!]!
+  iframeVideos: [IframeVideo!]!
   publicationState: Publication!
 }
 
@@ -575,7 +581,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
-  addLessonToCourse(createLessonInput: CreateLessonInput!): Lesson!
+  createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
@@ -672,13 +678,19 @@ input CreateClassworkMaterialInput {
   description: String
   publicationState: Publication
   attachments: [Upload!]
-  iframeVideos: [String!]
+  iframeVideos: [IframeVideoType!]
+}
+
+input IframeVideoType {
+  title: String!
+  thumbnail: Upload!
+  iframe: String!
 }
 
 input UpdateClassworkMaterialInput {
   title: String
   description: String
-  iframeVideos: [String!]
+  iframeVideos: [IframeVideoType!]
 }
 
 input AddAttachmentsToClassworkInput {
@@ -691,14 +703,14 @@ input CreateClassworkAssignmentInput {
   attachments: [Upload!] = []
   dueDate: DateTime
   publicationState: Publication
-  iframeVideos: [String!]
+  iframeVideos: [IframeVideoType!]
 }
 
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
-  iframeVideos: [String!]
+  iframeVideos: [IframeVideoType!]
 }
 
 input CreateClassworkSubmissionInput {
