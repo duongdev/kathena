@@ -2177,6 +2177,7 @@ export type DetailClassworkMaterialQuery = {
     attachments: Array<string>
     publicationState: Publication
     courseId: string
+    iframeVideos: Array<string>
   }
 }
 
@@ -12328,6 +12329,10 @@ export const DetailClassworkMaterialDocument = {
                   name: { kind: 'Name', value: 'publicationState' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'iframeVideos' },
+                },
               ],
             },
           },
