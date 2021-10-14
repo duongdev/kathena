@@ -15,7 +15,7 @@ const OrgLogo: FC<OrgLogoProps> = (props) => {
   return (
     <Box
       component="img"
-      src="/images/kmin-logo.png"
+      src="/images/kmin-dark-logo.png"
       alt="logo"
       className={clsx(className, classes.root)}
     />

@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   root: {},
   logo: {
     display: 'block',
-    height: `calc(${APP_BAR_HEIGHT}px - ${spacing(3)})`,
+    height: `calc(${APP_BAR_HEIGHT}px - ${spacing(2)})`,
     '& > img': {
       height: '100%',
     },

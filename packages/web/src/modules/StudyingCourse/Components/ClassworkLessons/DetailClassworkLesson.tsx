@@ -59,6 +59,11 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
       withBackButton
       maxWidth="lg"
       title={classworkLesson.description as ANY}
+      actions={[
+        <Button onClick={handleOpenRating} variant="contained">
+          Đánh giá buổi học
+        </Button>,
+      ]}
     >
       <RatingLesson
         lesson={classworkLesson}
@@ -72,11 +77,6 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
             maxContentHeight={false}
             gridItem={{ xs: 12, md: 12 }}
             title="Thông tin buổi học"
-            action={[
-              <Button onClick={handleOpenRating} variant="contained">
-                Đánh giá buổi học
-              </Button>,
-            ]}
           >
             <CardContent>
               <Grid container spacing={2}>

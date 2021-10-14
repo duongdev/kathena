@@ -59,8 +59,8 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
   useEffect(() => {
     const newConversation = dataConversationCreated?.conversationCreated
     if (newConversation) {
-      const listConversaion = [newConversation, ...conversations]
-      setConversations(listConversaion as ANY)
+      const listConversation = [newConversation, ...conversations]
+      setConversations(listConversation as ANY)
       setTotalConversation(totalConversation + 1)
     }
     // eslint-disable-next-line
@@ -135,10 +135,14 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
           </div>
         </div>
         <div className={classes.actions}>
-          <Minus onClick={closePopup} style={{ cursor: 'pointer' }} size={26} />
+          <Minus
+            onClick={closePopup}
+            style={{ cursor: 'pointer', color: '#0065FF' }}
+            size={26}
+          />
           <X
             onClick={closeRoomChat}
-            style={{ marginLeft: '8px', cursor: 'pointer' }}
+            style={{ marginLeft: '8px', cursor: 'pointer', color: '#0065FF' }}
             size={26}
           />
         </div>
@@ -176,8 +180,14 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
       <div className={classes.bottom}>
         <InputField
           value={input}
+          placeholder="Bình luận..."
           onChange={(e) => setInput(e.target.value)}
-          style={{ height: '30px', marginLeft: '7px', width: '300px' }}
+          style={{
+            height: '35px',
+            marginLeft: '7px',
+            width: '300px',
+            borderRadius: '15px',
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleSend()
@@ -194,11 +204,12 @@ const ConversationPopup: FC<ConversationPopupProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {
     width: '350px',
     height: '450px',
-    background: '#f3f3f3',
+    // background: palette.background.dark,
+    background: '#fff',
     position: 'absolute',
     left: -360,
     bottom: -40,
@@ -206,17 +217,19 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     borderTopLeftRadius: '15px',
     borderTopRightRadius: '15px',
+    boxShadow: '0px 0px 20px rgb(0 0 0 / 10%)',
     zIndex: 1000,
   },
   top: {
-    height: '40px',
-    background: '#c9c9c9',
+    height: '50px',
+    background: '#fff',
     borderTopLeftRadius: '15px',
     borderTopRightRadius: '15px',
     display: 'flex',
+    boxShadow: `0px 5px 5px ${palette.divider}`,
   },
   middle: {
-    border: '2px solid #c9c9c9',
+    border: '2px solid #fff',
     flex: 1,
     display: 'flex',
     flexWrap: 'nowrap',
@@ -225,8 +238,8 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column-reverse',
   },
   bottom: {
-    height: '40px',
-    background: '#c9c9c9',
+    height: '45px',
+    background: '#fff',
     display: 'flex',
     alignItems: 'center',
   },

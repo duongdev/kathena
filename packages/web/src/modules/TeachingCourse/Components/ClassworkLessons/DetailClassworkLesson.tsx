@@ -135,7 +135,14 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
       },
     })
     if (updated) {
-      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+      enqueueSnackbar(
+        `Cập nhật thành ${
+          classworkLesson.publicationState === Publication.Draft
+            ? 'bản công khai'
+            : 'bản nháp'
+        }`,
+        { variant: 'success' },
+      )
     } else {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
@@ -159,8 +166,8 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             variant="contained"
           >
             {classworkLesson.publicationState === Publication.Draft
-              ? 'Public'
-              : 'Draft'}
+              ? 'Bản nháp'
+              : 'Công khai'}
           </Button>,
           <Button onClick={handleOpenAttendance} variant="contained">
             Điểm danh
@@ -321,6 +328,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FileText />}
                             onClick={
                               handleOpenAddClassworkMaterialListBeforeClass
@@ -379,6 +387,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FilePlus />}
                             onClick={
                               handleOpenAddClassworkAssignmentListBeforeClass
@@ -448,6 +457,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FileText />}
                             onClick={handleOpenAddClassworkMaterialListInClass}
                           >
@@ -504,6 +514,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FilePlus />}
                             onClick={
                               handleOpenAddClassworkAssignmentListInClass
@@ -571,6 +582,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FileText />}
                             onClick={
                               handleOpenAddClassworkMaterialListAfterClass
@@ -629,6 +641,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       >
                         <Grid item xs={1}>
                           <Button
+                            className={classes.buttonTextColor}
                             endIcon={<FilePlus />}
                             onClick={
                               handleOpenAddClassworkAssignmentListAfterClass
@@ -676,7 +689,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
             <SectionCard
               fullHeight={false}
               gridItem={{ xs: 12, md: 12 }}
-              title={`SV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
+              title={`HV vắng mặt: ${classworkLesson.absentStudentIds.length} sv`}
             >
               <CardContent>
                 {classworkLesson.absentStudentIds.length ? (
@@ -711,6 +724,12 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   root: {},
+  buttonTextColor: {
+    color: '#992154',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }))
 const WithPermissionDetailClassworkLesson = () => (
   <WithAuth permission={Permission.Teaching_Course_Access}>

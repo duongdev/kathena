@@ -33,7 +33,11 @@ const Conversation: FC<ConversationProps> = (props) => {
         <AccountAvatar size={25} accountId={conversation.createdByAccountId} />
       )}
       <div className={`${classes.root} ${owner && classes.owner}`}>
-        <div className={`${classes.commentContent}`}>
+        <div
+          className={`${classes.commentContent} ${
+            owner && classes.commentContentOwner
+          }`}
+        >
           {conversation.content}
         </div>
       </div>
@@ -50,18 +54,25 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'flex-start',
     padding: '10px',
-    borderRadius: '20px',
+    borderRadius: '17px',
   },
   commentContent: {
     display: 'flex',
     flexDirection: 'column',
     maxWidth: '200px',
   },
+  commentContentOwner: {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: '200px',
+    color: '#ffff',
+  },
+
   reverse: {
     flexDirection: 'row-reverse',
   },
   owner: {
-    background: '#c9c9c9',
+    background: '#1877F2',
   },
 })
 

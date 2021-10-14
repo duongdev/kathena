@@ -45,6 +45,7 @@ const RatingLesson: FC<RatingLessonProps> = (props) => {
       })
       if (lessonUpdate) {
         enqueueSnackbar(`Đánh giá thành công`, { variant: 'success' })
+        onClose()
       } else {
         enqueueSnackbar(`Đánh giá thất bại`, { variant: 'error' })
       }
