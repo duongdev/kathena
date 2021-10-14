@@ -76,7 +76,10 @@ export class AccountService {
     const account = await this.accountModel.create({
       username: accountInput.username,
       email: accountInput.email,
-      password: bcrypt.hashSync(accountInput.password || '', 10),
+      password: bcrypt.hashSync(
+        accountInput.password || accountInput.email,
+        10,
+      ),
       otp,
       otpExpired,
       orgId: accountInput.orgId,
