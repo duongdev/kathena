@@ -22,16 +22,10 @@ export type OrgOfficeListCardProps = {}
 const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
-  const [
-    createDialogOpen,
-    handleOpenCreateDialog,
-    handleCloseCreateDialog,
-  ] = useDialogState()
-  const [
-    updateDialogOpen,
-    handleOpenUpdateDialog,
-    handleCloseUpdateDialog,
-  ] = useDialogState()
+  const [createDialogOpen, handleOpenCreateDialog, handleCloseCreateDialog] =
+    useDialogState()
+  const [updateDialogOpen, handleOpenUpdateDialog, handleCloseUpdateDialog] =
+    useDialogState()
   const [valueUpdate, setValueUpdate] = useState({ id: '' })
 
   const receiveValueUpdate = useCallback(
@@ -51,6 +45,7 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
             startIcon={<Plus />}
             size="small"
             onClick={handleOpenCreateDialog}
+            className={classes.buttonTextColor}
           >
             Thêm văn phòng
           </Button>
@@ -77,8 +72,14 @@ const OrgOfficeListCard: FC<OrgOfficeListCardProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {},
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }))
 
 export default withComponentHocs(OrgOfficeListCard)

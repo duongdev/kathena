@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { CardContent, Grid, Skeleton } from '@material-ui/core'
+import { CardContent, Grid, Skeleton, makeStyles } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { FilePlus } from 'phosphor-react'
@@ -33,6 +33,7 @@ import {
 export type ClassworkLessonProps = {}
 
 const ClassworkLesson: FC<ClassworkLessonProps> = () => {
+  const classes = useStyles()
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
   const { data: dataCourse, loading: loadingCourse } = useCourseDetailQuery({
@@ -96,6 +97,7 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
         gridItem={{ xs: 12 }}
         action={
           <Button
+            className={classes.buttonTextColor}
             startIcon={<FilePlus size={24} />}
             link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_LESSON, {
               id: courseId,
@@ -185,6 +187,14 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
     </Grid>
   )
 }
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+}))
 const WithPermissionClassworkLesson = () => (
   <WithAuth permission={Permission.Teaching_Course_Access}>
     <ClassworkLesson />

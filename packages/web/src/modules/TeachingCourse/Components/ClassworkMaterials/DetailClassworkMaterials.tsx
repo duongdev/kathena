@@ -191,7 +191,14 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       },
     })
     if (updated) {
-      enqueueSnackbar(`Cập nhật thành công`, { variant: 'success' })
+      enqueueSnackbar(
+        `Cập nhật thành ${
+          classworkMaterial?.publicationState === Publication.Draft
+            ? 'bản công khai'
+            : 'bản nháp'
+        }`,
+        { variant: 'success' },
+      )
     } else {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
@@ -216,8 +223,8 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           variant="contained"
         >
           {classworkMaterial?.publicationState === Publication.Draft
-            ? 'Public'
-            : 'Draft'}
+            ? 'Bản nháp'
+            : 'Công khai'}
         </Button>,
         <Button onClick={handleOpenUpdateDialog} variant="contained">
           Sửa tài liệu
@@ -328,11 +335,13 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title={
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className={classes.headerComment}>
               <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                 Bình luận
               </Typography>
-              <Button onClick={pinRoomChat}>Ghim</Button>
+              <Button className={classes.buttonTextColor} onClick={pinRoomChat}>
+                Ghim
+              </Button>
             </div>
           }
         >
@@ -366,7 +375,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                   padding: '10px',
                 }}
               >
-                <Typography>Không có comment</Typography>
+                <Typography>Không có bình luận</Typography>
               </div>
             )}
             <CreateComment roomId={id} />
@@ -383,8 +392,20 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {},
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  headerComment: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
+  },
 }))
 const WithPermissionDetailContentClassworkMaterial = () => (
   <WithAuth permission={Permission.Teaching_Course_Access}>

@@ -209,7 +209,7 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
                   padding: '10px',
                 }}
               >
-                <Typography>Không có comment</Typography>
+                <Typography>Không có bình luận</Typography>
               </div>
             )}
             <CreateComment roomId={classworkSubmission.id} />

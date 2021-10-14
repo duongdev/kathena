@@ -92,7 +92,7 @@ const AddStudent: FC<AddStudentProps> = (props) => {
             <Button
               variant="text"
               size="medium"
-              color="primary"
+              className={classes.buttonTextColor}
               onClick={formik.submitForm}
               loading={formik.isSubmitting}
             >
@@ -117,8 +117,14 @@ const AddStudent: FC<AddStudentProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {},
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }))
 
 export default AddStudent
