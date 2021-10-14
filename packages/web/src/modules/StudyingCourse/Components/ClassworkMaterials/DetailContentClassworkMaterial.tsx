@@ -158,11 +158,16 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
             title={
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={classes.headerComment}>
                 <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                   Bình luận
                 </Typography>
-                <Button onClick={pinRoomChat}>Ghim</Button>
+                <Button
+                  className={classes.buttonTextColor}
+                  onClick={pinRoomChat}
+                >
+                  Ghim
+                </Button>
               </div>
             }
           >
@@ -198,7 +203,7 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
                     padding: '10px',
                   }}
                 >
-                  <Typography>Không có comment</Typography>
+                  <Typography>Không có bình luận</Typography>
                 </div>
               )}
               <CreateComment roomId={id} />
@@ -209,8 +214,20 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
     )
   }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {},
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  headerComment: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
+  },
 }))
 
 const WithPermissionDetailContentClassworkMaterial = () => (

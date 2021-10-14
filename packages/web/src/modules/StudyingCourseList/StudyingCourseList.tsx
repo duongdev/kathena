@@ -116,7 +116,7 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
               skeleton: <Skeleton />,
               align: 'center',
               render: ({ studentIds }) => (
-                <Typography>{studentIds.length} hv</Typography>
+                <Typography>{studentIds.length} học viên</Typography>
               ),
             },
           ]}

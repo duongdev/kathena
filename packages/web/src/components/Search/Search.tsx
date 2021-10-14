@@ -20,7 +20,7 @@ const Search: FC<SearchProps> = () => {
       variant="text"
       style={{ background: 'white', borderColor: '#C9C9C9' }}
       startAdornment={<MagnifyingGlass />}
-      placeholder="Search....."
+      placeholder="Tìm kiếm....."
       onBlur={(e) => handleSubmitSearch(e.currentTarget.value)}
       onKeyDown={(e) =>
         e.key === 'Enter' && handleSubmitSearch(e.currentTarget.value)

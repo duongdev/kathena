@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react'
 
-import { CardContent, Grid, Skeleton } from '@material-ui/core'
+import { CardContent, Grid, Skeleton, makeStyles } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
@@ -26,8 +26,8 @@ import {
 export type ClassworkAssignmentsProps = {}
 
 const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
+  const classes = useStyles()
   const params: { id: string } = useParams()
-
   const courseId = useMemo(() => params.id, [params])
   const { data: dataCourse, loading: loadingCourse } = useCourseDetailQuery({
     variables: { id: courseId },
@@ -83,6 +83,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
         gridItem={{ xs: 12 }}
         action={
           <Button
+            className={classes.buttonTextColor}
             link={buildPath(TEACHING_COURSE_CREATE_QUIZ, {
               id: courseId,
             })}
@@ -167,5 +168,12 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
     </Grid>
   )
 }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+}))
 export default ClassworkAssignments

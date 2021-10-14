@@ -40,11 +40,14 @@ const DashboardContainer: FC<DashboardContainerProps> = (props) => {
 }
 
 const useStyles = makeStyles(({ palette, zIndex }) => ({
-  root: { display: 'flex' },
+  root: {
+    display: 'flex',
+  },
   appBar: {
     borderBottom: `solid 1px ${palette.divider}`,
     height: APP_BAR_HEIGHT,
     zIndex: `${zIndex.drawer + 1} !important` as TODO,
+    backgroundColor: '#103955',
   },
   toolbar: {
     height: APP_BAR_HEIGHT,

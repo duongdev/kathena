@@ -53,7 +53,11 @@ const AccountAvatarMenu: FC<AccountAvatarMenuProps> = (props) => {
 }
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: {
+    zIndex: 50,
+    border: '2px solid #ffff',
+    borderRadius: '50%',
+  },
 }))
 
 export default withComponentHocs(AccountAvatarMenu)
