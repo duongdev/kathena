@@ -98,6 +98,7 @@ const Attendance: FC<AttendanceProps> = (props) => {
       })
       if (lessonUpdate) {
         enqueueSnackbar(`Lưu thành công`, { variant: 'success' })
+        onClose()
       } else {
         enqueueSnackbar(`Lưu thất bại`, { variant: 'error' })
       }

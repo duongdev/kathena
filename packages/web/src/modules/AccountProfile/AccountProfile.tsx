@@ -1,9 +1,10 @@
 import { FC, useCallback, useMemo } from 'react'
 
-import { CardContent, Grid } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import AccountAvatar from 'components/AccountAvatar/AccountAvatar'
 import AccountStatusChip from 'components/AccountStatusChip'
 import { useSnackbar } from 'notistack'
+import { UserGear } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -31,6 +32,7 @@ import { UpdateAccountDialog } from './UpdateAccountDialog'
 export type AccountProfileProps = {}
 
 const AccountProfile: FC<AccountProfileProps> = () => {
+  const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const params: { username: string } = useParams()
   const username = useMemo(() => params.username, [params])
@@ -135,7 +137,13 @@ const AccountProfile: FC<AccountProfileProps> = () => {
                   ? 'Hủy kích hoạt'
                   : 'Kích hoạt'}
               </Button>
-              <Button onClick={openUpdateAccountDialog}>Sửa người dùng</Button>
+              <Button
+                onClick={openUpdateAccountDialog}
+                className={classes.buttonTextColor}
+                endIcon={<UserGear />}
+              >
+                Sửa người dùng
+              </Button>
             </RequiredManageRoles>
           }
         >
@@ -169,5 +177,12 @@ const AccountProfile: FC<AccountProfileProps> = () => {
     </PageContainer>
   )
 }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+}))
 export default AccountProfile

@@ -92,7 +92,7 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
             <Button
               variant="text"
               size="medium"
-              color="primary"
+              className={classes.buttonTextColor}
               onClick={formik.submitForm}
               loading={formik.isSubmitting}
             >
@@ -116,8 +116,14 @@ const CurrentMenu: FC<CurrentMenuProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ palette }) => ({
   root: {},
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }))
 
 export default CurrentMenu

@@ -43,15 +43,15 @@ const AccountAvatar: FC<AccountAvatarProps> = (props) => {
     skip: !!accountProp,
   })
 
-  const account = useMemo(() => accountProp || data?.account, [
-    data?.account,
-    accountProp,
-  ])
+  const account = useMemo(
+    () => accountProp || data?.account,
+    [data?.account, accountProp],
+  )
 
-  const displayName = useMemo(() => (account ? getDisplayName(account) : ''), [
-    account,
-    getDisplayName,
-  ])
+  const displayName = useMemo(
+    () => (account ? getDisplayName(account) : ''),
+    [account, getDisplayName],
+  )
 
   const avatarUrl = useMemo(() => {
     if (!account?.email) return ''
@@ -116,6 +116,7 @@ const useStyles = makeStyles(({ palette }) => ({
     backgroundColor: palette.semantic.green,
     color: palette.semantic.green,
     boxShadow: `0 0 0 2px ${palette.background.paper}`,
+    left: '80%',
     '&::after': {
       position: 'absolute',
       top: 0,

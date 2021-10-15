@@ -30,6 +30,7 @@ const CreateCommentForm: FC<CreateCommentFormProps> = () => {
             }
           }}
           name="content"
+          placeholder="Bình luận..."
         />
       </Grid>
       <Grid item xs={1} style={{ paddingLeft: 0 }}>

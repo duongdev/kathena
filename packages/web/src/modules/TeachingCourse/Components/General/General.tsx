@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, useEffect } from 'react'
 
-import { CardContent, Grid } from '@material-ui/core'
+import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import format from 'date-fns/format'
 import { Bar } from 'react-chartjs-2'
@@ -31,6 +31,7 @@ import AccountInfoRow from '../AccountInfoRow'
 export type GeneralProps = {}
 
 const General: FC<GeneralProps> = () => {
+  const classes = useStyles()
   const params: { id: string } = useParams()
   const courseId = useMemo(() => params.id, [params])
   const [lastId, setLastId] = useState<string | null>(null)
@@ -216,11 +217,13 @@ const General: FC<GeneralProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title={
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className={classes.headerComment}>
               <Typography style={{ fontWeight: 600, fontSize: '1.3rem' }}>
                 Bình luận
               </Typography>
-              <Button onClick={pinRoomChat}>Ghim</Button>
+              <Button className={classes.buttonTextColor} onClick={pinRoomChat}>
+                Ghim
+              </Button>
             </div>
           }
         >
@@ -255,7 +258,7 @@ const General: FC<GeneralProps> = () => {
                   padding: '10px',
                 }}
               >
-                <Typography>Không có comment</Typography>
+                <Typography>Không có bình luận</Typography>
               </div>
             )}
             <CreateComment roomId={courseId} />
@@ -280,5 +283,18 @@ const General: FC<GeneralProps> = () => {
     </Grid>
   )
 }
-
+const useStyles = makeStyles(({ palette }) => ({
+  buttonTextColor: {
+    color: palette.semantic.yellow,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  headerComment: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '-0.25em 0em',
+    alignItems: 'center',
+  },
+}))
 export default General
