@@ -65,6 +65,20 @@ describe('classwork.service', () => {
     expect(classworkService).toBeDefined()
   })
 
+  const videos: ANY = [
+    {
+      title: 'video 1',
+      iframe: 'iframe 1',
+    },
+    {
+      title: 'video 2',
+      iframe: 'iframe 2',
+    },
+    {
+      title: 'video 3',
+      iframe: 'iframe 3',
+    },
+  ]
   /**
    * START CLASSWORK MATERIAL
    */
@@ -227,10 +241,11 @@ describe('classwork.service', () => {
       })
 
       it(`returns an updated classworkMaterial`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as ANY)
           .mockResolvedValueOnce(true as ANY)
 
         jest
@@ -276,6 +291,24 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Đặng Hiếu Liêm',
         })
+
+        const classworkMaterialvideos =
+          await classworkService.createClassworkMaterial(
+            objectId(),
+            objectId(),
+            objectId(),
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              videos: [videos[0], videos[1]],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialvideos.videos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 
@@ -353,7 +386,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns an updated classworkMaterial`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -377,6 +410,7 @@ describe('classwork.service', () => {
 
         jest
           .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
           .mockResolvedValueOnce(true as never)
 
@@ -405,6 +439,23 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           publicationState: Publication.Published,
         })
+
+        const classworkMaterialWithvideos =
+          await classworkService.updateClassworkMaterial(
+            classworkMaterial.orgId,
+            objectId(),
+            classworkMaterial.id,
+            {
+              description: 'Đặng Hiếu Liêm',
+              videos: [videos[0], videos[1], videos[2]],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkMaterialWithvideos.videos?.length
+          })(),
+        ).resolves.toBe(3)
       })
     })
 
@@ -1013,7 +1064,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the Classwork Assignment`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1089,6 +1140,25 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Bai Tap Nay Moi Nhat',
         })
+
+        const classworkAssignmentWithvideos =
+          await classworkService.createClassworkAssignment(
+            accountLecturer.id,
+            courseTest.id,
+            org.id,
+            {
+              title: 'Bai Tap Nay Moi Nhat 1',
+              description: '',
+              dueDate: date,
+              videos: [videos[0], videos[1]],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithvideos.videos?.length
+          })(),
+        ).resolves.toBe(2)
       })
     })
 
@@ -1229,7 +1299,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(1)
+        expect.assertions(2)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1306,6 +1376,24 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
+
+        const classworkAssignmentWithvideos =
+          await classworkService.updateClassworkAssignment(
+            {
+              id: classworkAssignmentUpdate.id,
+              accountId: accountLecturer.id,
+              orgId: org.id,
+            },
+            {
+              videos: [videos[0], videos[1], videos[2]],
+            },
+          )
+
+        await expect(
+          (async (): Promise<ANY> => {
+            return classworkAssignmentWithvideos.videos?.length
+          })(),
+        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {

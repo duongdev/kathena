@@ -149,9 +149,9 @@ enum FileLocation {
   LocalStorage
 }
 
-type IframeVideo {
+type Video {
   title: String!
-  thumbnail: String!
+  thumbnail: ID
   iframe: String!
 }
 
@@ -166,7 +166,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [IframeVideo!]!
+  videos: [Video!]!
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
@@ -183,7 +183,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [IframeVideo!]!
+  videos: [Video!]!
   publicationState: Publication!
 }
 
@@ -678,19 +678,19 @@ input CreateClassworkMaterialInput {
   description: String
   publicationState: Publication
   attachments: [Upload!]
-  iframeVideos: [IframeVideoType!]
+  videos: [VideoInput!]
 }
 
-input IframeVideoType {
+input VideoInput {
   title: String!
-  thumbnail: Upload!
+  thumbnail: Upload
   iframe: String!
 }
 
 input UpdateClassworkMaterialInput {
   title: String
   description: String
-  iframeVideos: [IframeVideoType!]
+  videos: [VideoInput!]
 }
 
 input AddAttachmentsToClassworkInput {
@@ -703,14 +703,14 @@ input CreateClassworkAssignmentInput {
   attachments: [Upload!] = []
   dueDate: DateTime
   publicationState: Publication
-  iframeVideos: [IframeVideoType!]
+  videos: [VideoInput!]
 }
 
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
-  iframeVideos: [IframeVideoType!]
+  videos: [VideoInput!]
 }
 
 input CreateClassworkSubmissionInput {

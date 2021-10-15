@@ -16,12 +16,12 @@ import { ClassworkMaterial } from './models/ClassworkMaterial'
 import { ClassworkSubmission } from './models/ClassworkSubmission'
 
 @InputType()
-class IframeVideoType {
+class VideoInput {
   @Field()
   title: string
 
-  @Field((_type) => GraphQLUpload)
-  thumbnail: Promise<FileUpload>
+  @Field((_type) => GraphQLUpload, { nullable: true })
+  thumbnail?: Promise<FileUpload>
 
   @Field()
   iframe: string
@@ -34,8 +34,8 @@ export class UpdateClassworkMaterialInput {
   @Field({ nullable: true })
   description?: string
 
-  @Field((_type) => [IframeVideoType], { nullable: true })
-  iframeVideos?: IframeVideoType[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @InputType()
@@ -52,8 +52,8 @@ export class CreateClassworkMaterialInput {
   @Field((_type) => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[]
 
-  @Field((_type) => [IframeVideoType], { nullable: true })
-  iframeVideos?: IframeVideoType[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @ObjectType()
@@ -109,8 +109,8 @@ export class CreateClassworkAssignmentInput {
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
 
-  @Field((_type) => [IframeVideoType], { nullable: true })
-  iframeVideos?: IframeVideoType[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @InputType()
@@ -127,8 +127,8 @@ export class UpdateClassworkAssignmentInput {
   @IsOptional()
   dueDate?: Date
 
-  @Field((_type) => [IframeVideoType], { nullable: true })
-  iframeVideos?: IframeVideoType[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @InputType()
