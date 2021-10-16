@@ -258,7 +258,7 @@ describe('course.service', () => {
             name: 'Test',
           },
         ),
-      ).rejects.toThrowError(`COURSE_NOT_POUND`)
+      ).rejects.toThrowError(`COURSE_NOT_FOUND`)
     })
 
     it(`throws error if tuition fee is a negative number`, async () => {
