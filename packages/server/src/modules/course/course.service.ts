@@ -214,7 +214,7 @@ export class CourseService {
     })
 
     if (!course) {
-      throw new Error(`COURSE_NOT_POUND`)
+      throw new Error(`COURSE_NOT_FOUND`)
     }
 
     let updateInput = {}
