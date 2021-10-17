@@ -54,11 +54,15 @@ export class UpdateCourseInput {
 
   @Field({ nullable: true })
   @IsOptional()
-  startDate?: string
+  startDate?: Date
 
   @Field((_type) => [ID], { nullable: true })
   @IsOptional()
   lecturerIds?: string[]
+
+  @Field((_type) => [DayOfTheWeekInput], { nullable: true })
+  @IsOptional()
+  daysOfTheWeek?: DayOfTheWeekInput[]
 }
 
 @ObjectType()

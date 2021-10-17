@@ -255,10 +255,118 @@ describe('course.service', () => {
             orgId: objectId(),
           },
           {
-            name: 'Con meo ngu ngoc ne anh',
+            name: 'Test',
           },
         ),
-      ).rejects.toThrowError(`Couldn't find course to update`)
+      ).rejects.toThrowError(`COURSE_NOT_FOUND`)
+    })
+
+    it(`throws error if tuition fee is a negative number`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+      await expect(
+        courseService.updateCourse(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            tuitionFee: -8888,
+          },
+        ),
+      ).rejects.toThrowError(`TUITION_FEE_MUST_BE_POSITIVE`)
+    })
+
+    it(`throws error if account is not lecturer`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce({ id: objectId() } as ANY)
+
+      jest
+        .spyOn(authService, 'getAccountRoles')
+        .mockResolvedValueOnce([{ name: 'admin' }] as ANY)
+
+      await expect(
+        courseService.updateCourse(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            lecturerIds: [objectId()],
+          },
+        ),
+      ).rejects.toThrowError(`ACCOUNT_IS_NOT_LECTURER`)
+    })
+
+    it(`throws error if start date invalid`, async () => {
+      expect.assertions(1)
+
+      const org = await orgService.createOrg({
+        namespace: 'kmin-edu',
+        name: 'Kmin Academy',
+      })
+
+      const accountLecturer = await accountService.createAccount({
+        orgId: org.id,
+        email: 'vanhai0911@gmail.com',
+        password: '123456',
+        username: 'haidev',
+        roles: ['lecturer'],
+        displayName: 'Nguyen Van Hai',
+      })
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const courseTest = await courseService.createCourse(
+        objectId(),
+        accountLecturer.orgId,
+        {
+          ...createCourseInput,
+          startDate: new Date(),
+        },
+      )
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(courseTest)
+
+      const today = new Date()
+      const yesterday = new Date(today)
+      yesterday.setDate(yesterday.getDate() - 1)
+
+      await expect(
+        courseService.updateCourse(
+          {
+            id: courseTest.id,
+            orgId: courseTest.orgId,
+          },
+          {
+            startDate: yesterday,
+          },
+        ),
+      ).rejects.toThrowError('START_DATE_INVALID')
     })
 
     it(`returns a course with a new name`, async () => {
@@ -410,7 +518,7 @@ describe('course.service', () => {
         },
       )
 
-      await expect(lecturerArray.lecturerIds.toString()).toBe(
+      await expect(lecturerArray?.lecturerIds.toString()).toBe(
         expectLecturerIds.toString(),
       )
     })
@@ -462,20 +570,20 @@ describe('course.service', () => {
         .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(courseTest)
 
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
       const updated = await courseService.updateCourse(
         {
           id: courseTest.id,
           orgId: courseTest.orgId,
         },
         {
-          startDate: '2018-3-3',
+          startDate: tomorrow,
         },
       )
-      const dateUpdated = new Date(updated.startDate).toString()
-      const expectDate = new Date(
-        new Date('2018-3-3').setHours(7, 0, 0, 0),
-      ).toString()
-      expect(dateUpdated).toBe(expectDate)
+      expect(updated?.startDate.toDateString()).toBe(tomorrow.toDateString())
     })
   })
 
