@@ -100,7 +100,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                           },
                         )}
                       >
-                        <Typography variant="body1">
+                        <Typography variant="body1" fontWeight="bold">
                           {classworkAssignment.title}
                         </Typography>
                       </Link>
