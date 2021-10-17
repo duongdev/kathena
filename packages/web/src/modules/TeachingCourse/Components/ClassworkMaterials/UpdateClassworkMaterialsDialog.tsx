@@ -1,13 +1,13 @@
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 
 import { useSnackbar } from 'notistack'
 
 import { ANY } from '@kathena/types'
 import { FormDialog } from '@kathena/ui'
 import {
-  useUpdateClassworkMaterialMutation,
-  useDetailClassworkMaterialQuery,
   ClassworkMaterial,
+  useDetailClassworkMaterialQuery,
+  useUpdateClassworkMaterialMutation,
 } from 'graphql/generated'
 
 import {
@@ -34,6 +34,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
 ) => {
   const { open, onClose } = props
   const { classworkMaterialId } = props as ClassworkMaterialWithId
+
   const { classworkMaterial: classworkMaterialProp } =
     props as ClassworkMaterialWithClassworkMaterial
 
@@ -55,7 +56,18 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
     () => classworkMaterial,
     [classworkMaterial],
   )
+  // Video
+  const { data: dataIframeVideo } = useDetailClassworkMaterialQuery({
+    variables: { Id: classworkMaterial.id },
+  })
+  const classworkMaterialVideo = useMemo(
+    () => dataIframeVideo?.classworkMaterial,
+    [dataIframeVideo],
+  )
 
+  const [iframeVideos, setVideos] = useState<string[]>(
+    classworkMaterialVideo?.iframeVideos ?? [],
+  )
   const handleUpdateClassworkMaterial = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
       try {
@@ -65,6 +77,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
             updateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
+              iframeVideos,
             },
           },
         })
@@ -83,8 +96,32 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
         console.error(err)
       }
     },
-    [updateClassworkMaterial, enqueueSnackbar, onClose, classworkMaterial.id],
+    [
+      updateClassworkMaterial,
+      enqueueSnackbar,
+      onClose,
+      classworkMaterial.id,
+      iframeVideos,
+    ],
   )
+  // Thêm/Xóa iframVideo
+  const addIframe = (iframe: string) => {
+    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
+      const arr = [...iframeVideos]
+      arr.push(iframe)
+      setVideos(arr)
+    } else {
+      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
+        variant: 'error',
+      })
+    }
+  }
+  const removeIframe = (index: number) => {
+    const arr = [...iframeVideos]
+    arr.splice(index, 1)
+    setVideos(arr)
+  }
+  //----------------
 
   return (
     <FormDialog
@@ -96,8 +133,11 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       dialogTitle="Sửa tài liệu"
       submitButtonLabel="Sửa"
     >
-      <FormContent classworkMaterialId={classworkMaterial.id} />
-      {/* <FormContent classworkMaterialId={classworkMaterialId} error={error} /> */}
+      <FormContent
+        iframeVideos={iframeVideos}
+        addIframe={addIframe}
+        removeIframe={removeIframe}
+      />
     </FormDialog>
   )
 }

@@ -2,7 +2,6 @@
 import { FC, useMemo, useState } from 'react'
 
 import { IconButton, makeStyles, Stack } from '@material-ui/core'
-import { useSnackbar } from 'notistack'
 import { Plus, X } from 'phosphor-react'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
@@ -14,12 +13,13 @@ import {
   useDialogState,
 } from '@kathena/ui'
 import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
-import { useDetailClassworkMaterialQuery } from 'graphql/generated'
 
 import kminLogo from './kmin-logo.png'
 
 export type ClassworkMaterialWithId = {
-  classworkMaterialId: string
+  iframeVideos: string[]
+  addIframe: (iframe: string) => void
+  removeIframe: (index: number) => void
 }
 export type UpdateClassworkMaterialsFormInput = {
   title: string
@@ -41,37 +41,12 @@ export const validationSchema: SchemaOf<UpdateClassworkMaterialsFormInput> =
   })
 
 export const FormContent: FC<ClassworkMaterialWithId> = (props) => {
-  const { classworkMaterialId } = props as ClassworkMaterialWithId
+  const { iframeVideos, addIframe, removeIframe } =
+    props as ClassworkMaterialWithId
   const classes = useStyles()
-  const { enqueueSnackbar } = useSnackbar()
   const [inputValue, setInputValue] = useState<string>('')
-  const { data } = useDetailClassworkMaterialQuery({
-    variables: { Id: classworkMaterialId },
-  })
-  const classworkMaterial = useMemo(() => data?.classworkMaterial, [data])
-  const [videos, setVideos] = useState<string[]>(
-    classworkMaterial?.iframeVideos ?? [],
-  )
   const [open, handleOpenDialog, handleCloseDialog] = useDialogState()
   const [currentIndex, setCurrentIndex] = useState(0)
-  // Video
-  const addIframe = (iframe: string) => {
-    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
-      const arr = [...videos]
-      arr.push(iframe)
-      setVideos(arr)
-    } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
-        variant: 'error',
-      })
-    }
-  }
-  const removeIframe = (index: number) => {
-    const arr = [...videos]
-    arr.splice(index, 1)
-    setVideos(arr)
-  }
-  //----------------
   return (
     <Stack spacing={2} className={classes.root}>
       <TextFormField required autoFocus label={labels.title} name="title" />
@@ -81,7 +56,7 @@ export const FormContent: FC<ClassworkMaterialWithId> = (props) => {
         {/* Start Video */}
         <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
         <div className={classes.iframeContainer}>
-          {videos.map((item, index) => (
+          {iframeVideos.map((item, index) => (
             <>
               <div
                 onClick={() => {
@@ -121,7 +96,7 @@ export const FormContent: FC<ClassworkMaterialWithId> = (props) => {
           <IconButton
             onClick={() => {
               // console.log(inputValue);
-              if (inputValue.length < 1) {
+              if (inputValue !== '' || inputValue.length < 1) {
                 addIframe(inputValue)
                 setInputValue('')
               }
