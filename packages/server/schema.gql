@@ -652,8 +652,9 @@ input DayOfTheWeekInput {
 input UpdateCourseInput {
   name: String
   tuitionFee: Float
-  startDate: String
+  startDate: DateTime
   lecturerIds: [ID!]
+  daysOfTheWeek: [DayOfTheWeekInput!]
 }
 
 input CloneCourseInput {

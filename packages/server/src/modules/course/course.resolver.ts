@@ -11,7 +11,7 @@ import {
   AvgGradeOfClassworkByCourseOptionInput,
 } from 'modules/classwork/classwork.type'
 import { Org } from 'modules/org/models/Org'
-import { PageOptionsInput } from 'types'
+import { Nullable, PageOptionsInput } from 'types'
 
 import { CourseService } from './course.service'
 import {
@@ -54,7 +54,7 @@ export class CourseResolver {
     @Args('id', { type: () => ID }) courseId: string,
     @Args('updateInput') updateInput: UpdateCourseInput,
     @CurrentOrg() currentOrg: Org,
-  ): Promise<Course> {
+  ): Promise<Nullable<Course>> {
     return this.courseService.updateCourse(
       {
         id: courseId,
