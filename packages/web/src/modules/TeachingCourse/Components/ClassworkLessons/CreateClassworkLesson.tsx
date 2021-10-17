@@ -166,7 +166,7 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
         <PageContainer
           maxWidth="sm"
           title="Thêm buổi học "
-          backButtonLabel="Danh sách bài tập"
+          backButtonLabel="Danh sách buổi học"
           withBackButton={buildPath(TEACHING_COURSE_CLASSWORK_LESSONS, {
             id: idCourse,
           })}
@@ -174,7 +174,7 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
             <SplitButton
               items={[
                 {
-                  children: 'Đăng bài tập',
+                  children: 'Đăng buổi học',
                   onClick: () => {
                     setPublication(Publication.Published)
                     formik.submitForm()
@@ -182,7 +182,7 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
                   loading: formik.isSubmitting,
                 },
                 {
-                  children: 'Lưu nháp bài tập',
+                  children: 'Lưu nháp buổi học',
                   onClick: () => {
                     setPublication(Publication.Draft)
                     formik.submitForm()

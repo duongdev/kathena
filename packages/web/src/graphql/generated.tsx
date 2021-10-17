@@ -2194,6 +2194,7 @@ export type UpdateClassworkMaterialMutation = {
     title: string
     description?: string | null | undefined
     attachments: Array<string>
+    iframeVideos: Array<string>
   }
 }
 
@@ -12490,6 +12491,10 @@ export const UpdateClassworkMaterialDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'iframeVideos' },
+                },
               ],
             },
           },
