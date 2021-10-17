@@ -37,6 +37,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const { classworkMaterial: classworkMaterialProp } =
     props as ClassworkMaterialWithClassworkMaterial
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updateClassworkMaterial, { error }] =
     useUpdateClassworkMaterialMutation()
   const { data } = useDetailClassworkMaterialQuery({
@@ -95,7 +96,8 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       dialogTitle="Sửa tài liệu"
       submitButtonLabel="Sửa"
     >
-      <FormContent error={error} />
+      <FormContent classworkMaterialId={classworkMaterial.id} />
+      {/* <FormContent classworkMaterialId={classworkMaterialId} error={error} /> */}
     </FormDialog>
   )
 }
