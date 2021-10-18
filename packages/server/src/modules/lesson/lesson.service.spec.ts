@@ -66,7 +66,7 @@ describe('lesson.service', () => {
     orgId: objectId(),
     name: 'NodeJs',
     code: 'NODEJS',
-    startDate: new Date('2021-09-16'),
+    startDate: new Date('2021-08-15'),
   }
 
   const createLessonInput: ANY = {
@@ -114,7 +114,7 @@ describe('lesson.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
-    it('throws error if startDate and endDate invalid', async () => {
+    it('throws error if startTime is smaller than startDate of the course', async () => {
       expect.assertions(1)
 
       jest
@@ -128,15 +128,45 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      createLessonInput.startTime = new Date('2021-08-15 14:00')
-      createLessonInput.endTime = new Date('2021-08-15 13:00')
+      const createLesson: ANY = {
+        ...createLessonInput,
+        startTime: new Date('2021-08-14 14:00'),
+        endTime: new Date('2021-08-14 13:00'),
+      }
 
       await expect(
-        lessonService.createLesson(objectId(), objectId(), createLessonInput),
+        lessonService.createLesson(objectId(), objectId(), createLesson),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
+      )
+    })
+
+    it('throws error if startTime and endDate invalid', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      const createLesson: ANY = {
+        ...createLessonInput,
+        startTime: new Date('2021-09-17 14:00'),
+        endTime: new Date('2021-09-17 13:00'),
+      }
+
+      await expect(
+        lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('START_TIME_OR_END_TIME_INVALID')
     })
 
-    it('throws error if startDate and endDate coincide with other lessons', async () => {
+    it('throws error if startTime and endTime coincide with other lessons', async () => {
       expect.assertions(4)
 
       jest
@@ -160,12 +190,15 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
         .mockResolvedValueOnce(course)
 
-      createLessonInput.startTime = new Date('2021-08-15 14:00')
-      createLessonInput.endTime = new Date('2021-08-15 16:30')
+      const createLesson: ANY = {
+        ...createLessonInput,
+        startTime: new Date('2021-08-15 14:00'),
+        endTime: new Date('2021-08-15 16:30'),
+      }
 
       const lessons: ANY = [
         {
-          ...createLessonInput,
+          ...createLesson,
         },
       ]
 
@@ -176,32 +209,32 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(lessons)
         .mockResolvedValueOnce(lessons)
 
-      createLessonInput.startTime = new Date('2021-08-15 12:00')
-      createLessonInput.endTime = new Date('2021-08-15 16:30')
+      createLesson.startTime = new Date('2021-08-15 12:00')
+      createLesson.endTime = new Date('2021-08-15 16:30')
 
       await expect(
-        lessonService.createLesson(objectId(), objectId(), createLessonInput),
+        lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLessonInput.startTime = new Date('2021-08-15 15:00')
-      createLessonInput.endTime = new Date('2021-08-15 16:00')
+      createLesson.startTime = new Date('2021-08-15 15:00')
+      createLesson.endTime = new Date('2021-08-15 16:00')
 
       await expect(
-        lessonService.createLesson(objectId(), objectId(), createLessonInput),
+        lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLessonInput.startTime = new Date('2021-08-15 15:00')
-      createLessonInput.endTime = new Date('2021-08-15 17:00')
+      createLesson.startTime = new Date('2021-08-15 15:00')
+      createLesson.endTime = new Date('2021-08-15 17:00')
 
       await expect(
-        lessonService.createLesson(objectId(), objectId(), createLessonInput),
+        lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLessonInput.startTime = new Date('2021-08-15 12:00')
-      createLessonInput.endTime = new Date('2021-08-15 17:30')
+      createLesson.startTime = new Date('2021-08-15 12:00')
+      createLesson.endTime = new Date('2021-08-15 17:30')
 
       await expect(
-        lessonService.createLesson(objectId(), objectId(), createLessonInput),
+        lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
     })
 
@@ -220,9 +253,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
+      const createLesson: ANY = {
+        ...createLessonInput,
+      }
+
       const lessons: ANY = [
         {
-          ...createLessonInput,
+          ...createLesson,
         },
       ]
 
@@ -230,13 +267,13 @@ describe('lesson.service', () => {
         .spyOn(lessonService['lessonModel'], 'find')
         .mockResolvedValueOnce(lessons)
 
-      createLessonInput.startTime = new Date('2021-08-16 12:00')
-      createLessonInput.endTime = new Date('2021-08-16 16:30')
+      createLesson.startTime = new Date('2021-08-16 12:00')
+      createLesson.endTime = new Date('2021-08-16 16:30')
 
       const expectLesson = await lessonService.createLesson(
         objectId(),
         objectId(),
-        createLessonInput,
+        createLesson,
       )
 
       const resultForExpectLesson = {
@@ -250,8 +287,8 @@ describe('lesson.service', () => {
       const data = {
         courseId: course.id,
         description: 'Day la buoi 1',
-        startTime: createLessonInput.startTime,
-        endTime: createLessonInput.endTime,
+        startTime: createLesson.startTime,
+        endTime: createLesson.endTime,
         publicationState: 'Published',
       }
 
@@ -728,8 +765,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       await expect(
@@ -767,8 +804,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkMaterialListBeforeClass = [
@@ -816,8 +853,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkMaterialListAfterClass = [
@@ -865,8 +902,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkMaterialListInClass = [objectId(), objectId(), objectId()]
@@ -910,8 +947,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkAssignmentListAfterClass = [
@@ -959,8 +996,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkAssignmentListInClass = [
@@ -1008,8 +1045,8 @@ describe('lesson.service', () => {
 
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-01 12:00'),
-        endTime: new Date('2021-08-01 14:00'),
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
       })
 
       const classworkAssignmentListBeforeClass = [
@@ -1656,18 +1693,18 @@ describe('lesson.service', () => {
       ).resolves.toMatchObject({
         lessons: [
           {
-            startTime: new Date('2021-09-17 17:30'),
-            endTime: new Date('2021-09-17 19:00'),
+            startTime: new Date('2021-08-16 12:30'),
+            endTime: new Date('2021-08-16 14:00'),
             description: 'Tiêu đề',
           },
           {
-            startTime: new Date('2021-09-20 12:30'),
-            endTime: new Date('2021-09-20 14:00'),
+            startTime: new Date('2021-08-18 14:30'),
+            endTime: new Date('2021-08-18 16:00'),
             description: 'Tiêu đề',
           },
           {
-            startTime: new Date('2021-09-22 14:30'),
-            endTime: new Date('2021-09-22 16:00'),
+            startTime: new Date('2021-08-20 17:30'),
+            endTime: new Date('2021-08-20 19:00'),
             description: 'Tiêu đề',
           },
         ],
@@ -1739,16 +1776,16 @@ describe('lesson.service', () => {
         lessonService.generateArrayDateTimeOfTheLessons(generateLessonsInput),
       ).resolves.toMatchObject([
         {
-          startTime: new Date('2021-09-17 17:30'),
-          endTime: new Date('2021-09-17 19:00'),
+          startTime: new Date('2021-08-16 12:30'),
+          endTime: new Date('2021-08-16 14:00'),
         },
         {
-          startTime: new Date('2021-09-20 12:30'),
-          endTime: new Date('2021-09-20 14:00'),
+          startTime: new Date('2021-08-18 14:30'),
+          endTime: new Date('2021-08-18 16:00'),
         },
         {
-          startTime: new Date('2021-09-22 14:30'),
-          endTime: new Date('2021-09-22 16:00'),
+          startTime: new Date('2021-08-20 17:30'),
+          endTime: new Date('2021-08-20 19:00'),
         },
       ])
     })

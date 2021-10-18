@@ -80,6 +80,12 @@ export class LessonService {
     const startTimeInput = new Date(startTime)
     const endTimeInput = new Date(endTime)
 
+    if (startTimeInput < course.startDate) {
+      throw new Error(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
+      )
+    }
+
     if (startTimeInput > endTimeInput) {
       throw new Error('START_TIME_OR_END_TIME_INVALID')
     }
