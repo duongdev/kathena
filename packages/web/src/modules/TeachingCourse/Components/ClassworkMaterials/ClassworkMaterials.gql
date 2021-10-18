@@ -66,6 +66,7 @@ mutation UpdateClassworkMaterial(
     title
     description
     attachments
+    iframeVideos
   }
 }
 

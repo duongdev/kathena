@@ -101,7 +101,7 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                           },
                         )}
                       >
-                        <Typography variant="body1">
+                        <Typography variant="body1" fontWeight="bold">
                           {classworkMaterial.title}
                         </Typography>
                       </Link>

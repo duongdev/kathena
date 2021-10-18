@@ -71,7 +71,7 @@ const StudyingCourse: FC<StudyingCourseProps> = () => {
             exact: true,
           },
           {
-            title: 'Danh sách Bài tập',
+            title: 'Bài tập',
             to: buildPath(STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS, {
               id: params.id,
             }),
