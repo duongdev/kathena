@@ -347,6 +347,12 @@ export class LessonService {
       throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     }
 
+    const course = await courseModel.findOne({ _id: courseId, orgId })
+
+    if (!course) {
+      throw new Error(`Course not found`)
+    }
+
     const lesson = await lessonModel.findOne({
       _id: lessonId,
       orgId,
@@ -374,6 +380,12 @@ export class LessonService {
 
       if (endTime) {
         lesson.endTime = endTime
+      }
+
+      if (lesson.startTime < course.startDate) {
+        throw new Error(
+          `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
+        )
       }
 
       if (lesson.endTime < lesson.startTime) {
@@ -416,12 +428,6 @@ export class LessonService {
           },
         ],
       })
-
-      const course = await courseModel.findOne({ _id: courseId, orgId })
-
-      if (!course) {
-        throw new Error(`Course not found`)
-      }
 
       const updateTime = lessonsData.map(async (lessonData) => {
         const lessonStartTime = new Date(lessonData.startTime)

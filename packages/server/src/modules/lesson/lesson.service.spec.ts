@@ -720,7 +720,7 @@ describe('lesson.service', () => {
   })
 
   describe('updateLessonById', () => {
-    it('throws error if lesson not found', async () => {
+    it('throws error if course not found', async () => {
       expect.assertions(1)
 
       const updateLessonInput: ANY = {
@@ -744,6 +744,37 @@ describe('lesson.service', () => {
           updateLessonInput,
           objectId(),
         ),
+      ).rejects.toThrowError('Course not found')
+    })
+
+    it('throws error if lesson not found', async () => {
+      expect.assertions(1)
+
+      const updateLessonInput: ANY = {
+        startTime: new Date(),
+        endTime: new Date(),
+        description: 'day la buoi 1',
+        publicationState: Publication.Published,
+      }
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: objectId(),
+            orgId: objectId(),
+            courseId: objectId(),
+          },
+          updateLessonInput,
+          objectId(),
+        ),
       ).rejects.toThrowError('Lesson not found')
     })
 
@@ -756,6 +787,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
@@ -795,6 +830,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
@@ -847,6 +886,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -896,6 +939,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -938,6 +985,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
@@ -990,6 +1041,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -1036,6 +1091,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
