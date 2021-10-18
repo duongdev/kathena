@@ -133,7 +133,7 @@ const useStyles = makeStyles(
       marginBottom: spacing(1),
     },
     menuTitleIcon: {
-      color: palette.text.secondary,
+      color: '#fcbf16',
       marginRight: spacing(2),
     },
     menuTitleText: { fontSize: typography.body2.fontSize },
@@ -154,8 +154,12 @@ const useStyles = makeStyles(
       },
       '&:hover': { opacity: 0.875 },
       '&.active': {
+        width: '85%',
+        padding: ' 0.3em 0.3em 0.4em 1.5em',
+        borderRadius: '5px',
+        backgroundColor: '#fcbf16',
         opacity: 1,
-        color: `${palette.primary.main} !important`,
+        color: `${palette.background.paper} !important`,
       },
     },
   }),

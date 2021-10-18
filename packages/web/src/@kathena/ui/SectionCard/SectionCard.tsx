@@ -94,10 +94,12 @@ const useStyles = makeStyles<
     height: ({ fullHeight }) => (fullHeight ? '100%' : undefined),
     display: 'flex',
     flexDirection: 'column',
+    borderRadius: '70px 10px 10px 10px',
   },
   titleCss: {
     backgroundColor: '#103955',
     color: '#fff',
+    paddingLeft: '2.5em',
   },
   content: ({ maxContentHeight }) =>
     maxContentHeight
