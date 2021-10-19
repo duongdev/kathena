@@ -243,7 +243,7 @@ export class ClassworkService {
       createClassworkMaterialInput,
     })
 
-    const { title, description, publicationState, attachments, videos } =
+    const { title, description, publicationState, attachments } =
       createClassworkMaterialInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
@@ -254,34 +254,34 @@ export class ClassworkService {
 
     const listVideos: Video[] = []
 
-    if (videos) {
-      const map = videos.map(async (iframeObject) => {
-        let imageId = ''
-        if (iframeObject.thumbnail) {
-          imageId = await this.uploadThumbnail(
-            orgId,
-            creatorId,
-            iframeObject.thumbnail,
-          )
-        }
+    // if (videos) {
+    //   const map = videos.map(async (iframeObject) => {
+    //     let imageId = ''
+    //     if (iframeObject.thumbnail) {
+    //       imageId = await this.uploadThumbnail(
+    //         orgId,
+    //         creatorId,
+    //         iframeObject.thumbnail,
+    //       )
+    //     }
 
-        let video: Video = {
-          title: iframeObject.title,
-          iframe: iframeObject.iframe,
-        }
+    //     let video: Video = {
+    //       title: iframeObject.title,
+    //       iframe: iframeObject.iframe,
+    //     }
 
-        if (imageId) {
-          video = {
-            ...video,
-            thumbnail: imageId,
-          }
-        }
+    //     if (imageId) {
+    //       video = {
+    //         ...video,
+    //         thumbnail: imageId,
+    //       }
+    //     }
 
-        listVideos.push(video)
-      })
+    //     listVideos.push(video)
+    //   })
 
-      await Promise.all(map)
-    }
+    //   await Promise.all(map)
+    // }
 
     const classworkMaterial = await this.classworkMaterialModel.create({
       description: removeExtraSpaces(description),
@@ -335,7 +335,7 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
-    const { description, videos, title } = updateClassworkMaterialInput
+    const { description, title } = updateClassworkMaterialInput
 
     const classworkMaterial = await this.classworkMaterialModel.findOne({
       _id: classworkMaterialId,
@@ -372,41 +372,41 @@ export class ClassworkService {
         description: removeExtraSpaces(description),
       }
     }
-    if (videos) {
-      const listVideos: Video[] = []
+    // if (videos) {
+    //   const listVideos: Video[] = []
 
-      const map = videos.map(async (iframeObject) => {
-        let imageId = ''
-        if (iframeObject.thumbnail) {
-          imageId = await this.uploadThumbnail(
-            orgId,
-            accountId,
-            iframeObject.thumbnail,
-          )
-        }
+    //   const map = videos.map(async (iframeObject) => {
+    //     let imageId = ''
+    //     if (iframeObject.thumbnail) {
+    //       imageId = await this.uploadThumbnail(
+    //         orgId,
+    //         accountId,
+    //         iframeObject.thumbnail,
+    //       )
+    //     }
 
-        let video: Video = {
-          title: iframeObject.title,
-          iframe: iframeObject.iframe,
-        }
+    //     let video: Video = {
+    //       title: iframeObject.title,
+    //       iframe: iframeObject.iframe,
+    //     }
 
-        if (imageId) {
-          video = {
-            ...video,
-            thumbnail: imageId,
-          }
-        }
+    //     if (imageId) {
+    //       video = {
+    //         ...video,
+    //         thumbnail: imageId,
+    //       }
+    //     }
 
-        listVideos.push(video)
-      })
+    //     listVideos.push(video)
+    //   })
 
-      await Promise.all(map)
+    //   await Promise.all(map)
 
-      updateInput = {
-        ...updateInput,
-        videos: listVideos,
-      }
-    }
+    //   updateInput = {
+    //     ...updateInput,
+    //     videos: listVideos,
+    //   }
+    // }
 
     const classworkMaterialUpdated =
       await this.classworkMaterialModel.findOneAndUpdate(
@@ -920,7 +920,7 @@ export class ClassworkService {
     update: UpdateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { id, orgId, accountId } = query
-    const { description, dueDate, videos, title } = update
+    const { description, dueDate, title } = update
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
@@ -972,37 +972,37 @@ export class ClassworkService {
       }
     }
 
-    if (videos) {
-      const listVideos: Video[] = []
-      const map = videos.map(async (iframeObject) => {
-        let imageId = ''
-        if (iframeObject.thumbnail) {
-          imageId = await this.uploadThumbnail(
-            orgId,
-            accountId,
-            iframeObject.thumbnail,
-          )
-        }
+    // if (videos) {
+    //   const listVideos: Video[] = []
+    //   const map = videos.map(async (iframeObject) => {
+    //     let imageId = ''
+    //     if (iframeObject.thumbnail) {
+    //       imageId = await this.uploadThumbnail(
+    //         orgId,
+    //         accountId,
+    //         iframeObject.thumbnail,
+    //       )
+    //     }
 
-        let video: Video = {
-          title: iframeObject.title,
-          iframe: iframeObject.iframe,
-        }
+    //     let video: Video = {
+    //       title: iframeObject.title,
+    //       iframe: iframeObject.iframe,
+    //     }
 
-        if (imageId) {
-          video = {
-            ...video,
-            thumbnail: imageId,
-          }
-        }
+    //     if (imageId) {
+    //       video = {
+    //         ...video,
+    //         thumbnail: imageId,
+    //       }
+    //     }
 
-        listVideos.push(video)
-      })
+    //     listVideos.push(video)
+    //   })
 
-      await Promise.all(map)
+    //   await Promise.all(map)
 
-      classworkAssignmentUpdate.videos = listVideos
-    }
+    //   classworkAssignmentUpdate.videos = listVideos
+    // }
 
     const updated = await classworkAssignmentUpdate.save()
     return updated

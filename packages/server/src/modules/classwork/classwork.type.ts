@@ -34,8 +34,8 @@ export class UpdateClassworkMaterialInput {
   @Field({ nullable: true })
   description?: string
 
-  @Field((_type) => [VideoInput], { nullable: true })
-  videos?: VideoInput[]
+  // @Field((_type) => [VideoInput], { nullable: true })
+  // videos?: VideoInput[]
 }
 
 @InputType()
@@ -52,8 +52,8 @@ export class CreateClassworkMaterialInput {
   @Field((_type) => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[]
 
-  @Field((_type) => [VideoInput], { nullable: true })
-  videos?: VideoInput[]
+  // @Field((_type) => [VideoInput], { nullable: true })
+  // videos?: VideoInput[]
 }
 
 @ObjectType()
@@ -127,8 +127,8 @@ export class UpdateClassworkAssignmentInput {
   @IsOptional()
   dueDate?: Date
 
-  @Field((_type) => [VideoInput], { nullable: true })
-  videos?: VideoInput[]
+  // @Field((_type) => [VideoInput], { nullable: true })
+  // videos?: VideoInput[]
 }
 
 @InputType()
