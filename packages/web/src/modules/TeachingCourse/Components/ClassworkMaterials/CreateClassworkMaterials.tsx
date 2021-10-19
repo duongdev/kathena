@@ -56,9 +56,6 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const { $org: org } = useAuth()
-  // Video
-  const [iframeVideos, setIframeVideos] = useState<string[]>([])
-  //----------------
   const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
     refetchQueries: [
       {
@@ -79,8 +76,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
               title: input.title,
               description: input.description,
               publicationState: publication,
-              attachments: input.attachments as ANY,
-              iframeVideos,
+              attachments: input.attachments as ANY
             },
           },
         })
@@ -105,28 +101,9 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
       enqueueSnackbar,
       idCourse,
       history,
-      publication,
-      iframeVideos,
+      publication
     ],
   )
-  // Video -----
-  const addIframe = (iframe: string) => {
-    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
-      const arr = [...iframeVideos]
-      arr.push(iframe)
-      setIframeVideos(arr)
-    } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
-        variant: 'error',
-      })
-    }
-  }
-  const removeIframe = (index: number) => {
-    const arr = [...iframeVideos]
-    arr.splice(index, 1)
-    setIframeVideos(arr)
-  }
-  // -------------------------------
   return (
     <Formik
       validationSchema={validationSchema}
@@ -164,11 +141,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
           ]}
           className={classes.root}
         >
-          <CreateClassworkMaterialForm
-            iframeVideos={iframeVideos}
-            addIframe={addIframe}
-            removeIframe={removeIframe}
-          />
+          <CreateClassworkMaterialForm />
         </PageContainer>
       )}
     </Formik>

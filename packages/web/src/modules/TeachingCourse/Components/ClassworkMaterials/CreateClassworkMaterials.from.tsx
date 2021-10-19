@@ -33,9 +33,6 @@ import {
 import kminLogo from './kmin-logo.png'
 
 export type CreateClassworkMaterialFormProps = {
-  iframeVideos: string[]
-  addIframe: (iframe: string) => void
-  removeIframe: (index: number) => void
 }
 
 const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
@@ -45,13 +42,7 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
-  // video
-  const [input, setInput] = useState<string>('')
-  const { iframeVideos, addIframe, removeIframe } = props
-  const [open, handleOpenDialog, handleCloseDialog] = useDialogState()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  //--------
-  const handleMaterialSelect = useCallback(
+    const handleMaterialSelect = useCallback(
     (files: File[]) => {
       formik.setFieldValue('attachments', files ?? null)
     },
@@ -81,57 +72,6 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               name="description"
               label={labels.description}
             />
-          </Stack>
-          <Stack mt={3}>
-            {/* Start Video */}
-            <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
-            <div className={classes.iframeContainer}>
-              {iframeVideos.map((item, index) => (
-                <div
-                  onClick={() => {
-                    handleOpenDialog()
-                    setCurrentIndex(index)
-                  }}
-                  className={classes.iframeWrapper}
-                >
-                  <img
-                    style={{ borderRadius: '5px' }}
-                    src={kminLogo}
-                    title={item}
-                    alt="Video"
-                    width={50}
-                    height={50}
-                  />
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      removeIframe(index)
-                    }}
-                    className={classes.removeWrapper}
-                  >
-                    <X width={14} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{ display: 'flex' }}>
-              <InputField
-                fullWidth
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
-              <IconButton
-                onClick={() => {
-                  if (input !== '') {
-                    addIframe(input)
-                    setInput('')
-                  }
-                }}
-              >
-                <Plus />
-              </IconButton>
-            </div>
-            {/* End Video---------------- */}
           </Stack>
         </CardContent>
       </SectionCard>
