@@ -470,42 +470,49 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           gridItem={{ xs: 3 }}
           title="Học viên đã nộp"
           fullHeight={false}
-          action={[
-            <div className={classes.textSoLuong}>
-              <Typography>Số lượng: {classworkSubmissions?.length}</Typography>
-            </div>,
-          ]}
+          // action={[
+          //   <div className={classes.textSoLuong}>
+          //     <Typography>Số lượng: {classworkSubmissions?.length}</Typography>
+          //   </div>,
+          // ]}
         >
           <CardContent>
-            {classworkSubmissions?.length ? (
-              classworkSubmissions.map((classworkSubmission) => (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '5px',
-                  }}
-                >
-                  <AccountAvatar
-                    accountId={classworkSubmission.createdByAccountId}
-                  />
-                  <Link
-                    style={{ marginLeft: '10px' }}
-                    to={buildPath(
-                      TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
-                      { id: classworkSubmission.id },
-                    )}
+            <>
+              <div className={classes.textSoLuong}>
+                <Typography>
+                  Số lượng: {classworkSubmissions?.length}
+                </Typography>
+              </div>
+              {classworkSubmissions?.length ? (
+                classworkSubmissions.map((classworkSubmission) => (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '5px',
+                    }}
                   >
-                    <AccountDisplayName
-                      style={{ cursor: 'pointer' }}
+                    <AccountAvatar
                       accountId={classworkSubmission.createdByAccountId}
                     />
-                  </Link>
-                </div>
-              ))
-            ) : (
-              <Typography>Chưa có học viên nộp bài</Typography>
-            )}
+                    <Link
+                      style={{ marginLeft: '10px' }}
+                      to={buildPath(
+                        TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
+                        { id: classworkSubmission.id },
+                      )}
+                    >
+                      <AccountDisplayName
+                        style={{ cursor: 'pointer' }}
+                        accountId={classworkSubmission.createdByAccountId}
+                      />
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <Typography>Chưa có học viên nộp bài</Typography>
+              )}
+            </>
           </CardContent>
         </SectionCard>
       </Grid>
@@ -526,7 +533,7 @@ const useStyles = makeStyles(({ palette }) => ({
     },
   },
   textSoLuong: {
-    padding: '0.25em 0em',
+    textAlign: 'right',
   },
   headerComment: {
     display: 'flex',
