@@ -52,8 +52,8 @@ export class CreateClassworkMaterialInput {
   @Field((_type) => [GraphQLUpload], { nullable: true })
   attachments?: Promise<FileUpload>[]
 
-  // @Field((_type) => [VideoInput], { nullable: true })
-  // videos?: VideoInput[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @ObjectType()
