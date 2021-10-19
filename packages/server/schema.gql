@@ -575,7 +575,7 @@ type Mutation {
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
-  addLessonToCourse(createLessonInput: CreateLessonInput!): Lesson!
+  createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
