@@ -148,9 +148,11 @@ describe('rating.service', () => {
     it('returns the average number of stars by targetId', async () => {
       expect.assertions(1)
 
+      const date = new Date()
+
       const createLessonInput: ANY = {
-        startTime: new Date('2021-08-15 14:00'),
-        endTime: new Date('2021-08-15 16:30'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
         description: 'Day la buoi 1',
         courseId: course.id,
         publicationState: Publication.Published,
