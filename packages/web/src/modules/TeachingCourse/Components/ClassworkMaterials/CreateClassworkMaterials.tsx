@@ -142,6 +142,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
           })}
           actions={[
             <SplitButton
+              backgroundButton="primary"
               items={[
                 {
                   children: 'Đăng tài liệu',

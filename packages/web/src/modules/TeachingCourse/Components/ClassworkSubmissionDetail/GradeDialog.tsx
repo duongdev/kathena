@@ -72,6 +72,7 @@ const GradeDialog: FC<GradeDialogProps> = (props) => {
       onSubmit={handleGrade}
       submitButtonLabel="Chấm điểm"
       width={400}
+      backgroundButton="primary"
     >
       <FormContent error={error} />
     </FormDialog>
