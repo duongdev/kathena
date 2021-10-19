@@ -114,6 +114,38 @@ describe('lesson.service', () => {
       ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
     })
 
+    it('throws error if startTime is smaller than currentDate', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+
+      const date = new Date()
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+
+      const createLesson: ANY = {
+        ...createLessonInput,
+        startTime: new Date('2021-09-10 10:30'),
+        endTime: new Date('2021-09-10 12:30'),
+      }
+
+      await expect(
+        lessonService.createLesson(objectId(), objectId(), createLesson),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_CURRENT_TIME`,
+      )
+    })
+
     it('throws error if startTime is smaller than startDate of the course', async () => {
       expect.assertions(1)
 
@@ -124,14 +156,19 @@ describe('lesson.service', () => {
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       jest
         .spyOn(courseService['courseModel'], 'findById')
-        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
 
       const createLesson: ANY = {
         ...createLessonInput,
-        startTime: new Date('2021-08-14 14:00'),
-        endTime: new Date('2021-08-14 13:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       }
 
       await expect(
@@ -155,10 +192,12 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
+      const date = new Date()
+
       const createLesson: ANY = {
         ...createLessonInput,
-        startTime: new Date('2021-09-17 14:00'),
-        endTime: new Date('2021-09-17 13:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() - 4),
       }
 
       await expect(
@@ -190,10 +229,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
         .mockResolvedValueOnce(course)
 
+      const date = new Date()
+
       const createLesson: ANY = {
         ...createLessonInput,
-        startTime: new Date('2021-08-15 14:00'),
-        endTime: new Date('2021-08-15 16:30'),
+        startTime: new Date().setHours(date.getHours() + 2),
+        endTime: new Date().setHours(date.getHours() + 4),
       }
 
       const lessons: ANY = [
@@ -209,29 +250,29 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(lessons)
         .mockResolvedValueOnce(lessons)
 
-      createLesson.startTime = new Date('2021-08-15 12:00')
-      createLesson.endTime = new Date('2021-08-15 16:30')
+      createLesson.startTime = new Date().setHours(date.getHours() + 1)
+      createLesson.endTime = new Date().setHours(date.getHours() + 2)
 
       await expect(
         lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLesson.startTime = new Date('2021-08-15 15:00')
-      createLesson.endTime = new Date('2021-08-15 16:00')
+      createLesson.startTime = new Date().setHours(date.getHours() + 1)
+      createLesson.endTime = new Date().setHours(date.getHours() + 5)
 
       await expect(
         lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLesson.startTime = new Date('2021-08-15 15:00')
-      createLesson.endTime = new Date('2021-08-15 17:00')
+      createLesson.startTime = new Date().setHours(date.getHours() + 2)
+      createLesson.endTime = new Date().setHours(date.getHours() + 6)
 
       await expect(
         lessonService.createLesson(objectId(), objectId(), createLesson),
       ).rejects.toThrowError('THERE_WAS_A_REHEARSAL_CLASS_DURING_THIS_TIME')
 
-      createLesson.startTime = new Date('2021-08-15 12:00')
-      createLesson.endTime = new Date('2021-08-15 17:30')
+      createLesson.startTime = new Date().setHours(date.getHours() + 1)
+      createLesson.endTime = new Date().setHours(date.getHours() + 4)
 
       await expect(
         lessonService.createLesson(objectId(), objectId(), createLesson),
@@ -259,7 +300,7 @@ describe('lesson.service', () => {
 
       const lessons: ANY = [
         {
-          ...createLesson,
+          ...createLessonInput,
         },
       ]
 
@@ -267,8 +308,10 @@ describe('lesson.service', () => {
         .spyOn(lessonService['lessonModel'], 'find')
         .mockResolvedValueOnce(lessons)
 
-      createLesson.startTime = new Date('2021-08-16 12:00')
-      createLesson.endTime = new Date('2021-08-16 16:30')
+      const date = new Date()
+
+      createLesson.startTime = date.setDate(date.getDate() + 1)
+      createLesson.endTime = date.setDate(date.getDate() + 1)
 
       const expectLesson = await lessonService.createLesson(
         objectId(),
@@ -287,8 +330,8 @@ describe('lesson.service', () => {
       const data = {
         courseId: course.id,
         description: 'Day la buoi 1',
-        startTime: createLesson.startTime,
-        endTime: createLesson.endTime,
+        startTime: new Date(createLesson.startTime),
+        endTime: new Date(createLesson.endTime),
         publicationState: 'Published',
       }
 
@@ -763,10 +806,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       await expect(
@@ -802,10 +847,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkMaterialListBeforeClass = [
@@ -851,10 +898,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkMaterialListAfterClass = [
@@ -900,10 +949,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkMaterialListInClass = [objectId(), objectId(), objectId()]
@@ -945,10 +996,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkAssignmentListAfterClass = [
@@ -994,10 +1047,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkAssignmentListInClass = [
@@ -1043,10 +1098,12 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
+      const date = new Date()
+
       const lesson = await lessonService.createLesson(objectId(), objectId(), {
         ...createLessonInput,
-        startTime: new Date('2021-08-16 12:00'),
-        endTime: new Date('2021-08-16 14:00'),
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
       })
 
       const classworkAssignmentListBeforeClass = [
@@ -1143,11 +1200,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      const lesson = await lessonService.createLesson(
-        orgId,
-        objectId(),
-        createLessonInput,
-      )
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(orgId, objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
 
       const id = objectId()
 
@@ -1204,11 +1263,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      const lesson = await lessonService.createLesson(
-        orgId,
-        objectId(),
-        createLessonInput,
-      )
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(orgId, objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
 
       const addAbsentStudentIds = await lessonService.addAbsentStudentsToLesson(
         {
@@ -1293,11 +1354,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      const lesson = await lessonService.createLesson(
-        orgId,
-        objectId(),
-        createLessonInput,
-      )
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(orgId, objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
 
       const id = objectId()
 
@@ -1354,11 +1417,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      const lesson = await lessonService.createLesson(
-        orgId,
-        objectId(),
-        createLessonInput,
-      )
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(orgId, objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
 
       lesson.absentStudentIds.push(accountStudent.id)
       await lesson.save()
@@ -1547,11 +1612,13 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce(course)
 
-      const lesson = await lessonService.createLesson(
-        orgId,
-        objectId(),
-        createLessonInput,
-      )
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(orgId, objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
 
       await expect(
         lessonService.commentsForTheLessonByLecturer(
@@ -1570,8 +1637,9 @@ describe('lesson.service', () => {
   })
 
   describe('generateLessons', () => {
+    const date = new Date()
     const generateLessonsInput: GenerateLessonsInput = {
-      courseStartDate: course.startDate,
+      courseStartDate: new Date(new Date().setDate(date.getDate() + 5)),
       totalNumberOfLessons: 3,
       daysOfTheWeek: [
         {
@@ -1678,10 +1746,27 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
-        .mockResolvedValueOnce(course)
-        .mockResolvedValueOnce(course)
-        .mockResolvedValueOnce(course)
-        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+
+      const arrayDateTimeOfTheLessons =
+        await lessonService.generateArrayDateTimeOfTheLessons(
+          generateLessonsInput,
+        )
 
       await expect(
         lessonService.generateLessons(
@@ -1693,18 +1778,18 @@ describe('lesson.service', () => {
       ).resolves.toMatchObject({
         lessons: [
           {
-            startTime: new Date('2021-08-16 12:30'),
-            endTime: new Date('2021-08-16 14:00'),
+            startTime: arrayDateTimeOfTheLessons[0].startTime,
+            endTime: arrayDateTimeOfTheLessons[0].endTime,
             description: 'Tiêu đề',
           },
           {
-            startTime: new Date('2021-08-18 14:30'),
-            endTime: new Date('2021-08-18 16:00'),
+            startTime: arrayDateTimeOfTheLessons[1].startTime,
+            endTime: arrayDateTimeOfTheLessons[1].endTime,
             description: 'Tiêu đề',
           },
           {
-            startTime: new Date('2021-08-20 17:30'),
-            endTime: new Date('2021-08-20 19:00'),
+            startTime: arrayDateTimeOfTheLessons[2].startTime,
+            endTime: arrayDateTimeOfTheLessons[2].endTime,
             description: 'Tiêu đề',
           },
         ],
