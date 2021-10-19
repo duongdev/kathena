@@ -32,10 +32,13 @@ export type FormDialogProps<Values extends {}> = {
   onSubmit: (values: Values) => Promise<ANY>
   onClose: () => ANY
   width?: number | string
-  classes?: Partial<Record<'dialogPaper' | 'form', string>>
+  classes?: Partial<
+    Record<'dialogPaper' | 'form' | 'root' | 'backgroundColorButton', string>
+  >
   children?:
     | React.ReactNode
     | ((formik: FormikContextType<Values>) => React.ReactNode)
+  backgroundButton?: 'default' | 'primary'
 }
 
 const FormDialog = <Values extends {}>(
@@ -80,6 +83,7 @@ const FormDialogContent = <Values extends {}>(
     submitButtonLabel,
     children,
     onClose,
+    backgroundButton,
   } = props
   const classes = useStyles(props)
   const formik = useFormikContext<Values>()
@@ -138,6 +142,11 @@ const FormDialogContent = <Values extends {}>(
               variant="contained"
               color="primary"
               loading={formik.isSubmitting}
+              className={
+                backgroundButton === 'primary'
+                  ? classes.backgroundColorButton
+                  : classes.root
+              }
             >
               {submitButtonLabel ?? 'Submit'}
             </Button>
@@ -151,7 +160,7 @@ const FormDialogContent = <Values extends {}>(
 const useStyles = makeStyles<
   Theme,
   FormDialogProps<ANY>,
-  'dialogPaper' | 'form'
+  'dialogPaper' | 'form' | 'root' | 'backgroundColorButton'
 >(() => ({
   dialogPaper: {
     maxWidth: '95vw',
@@ -161,6 +170,10 @@ const useStyles = makeStyles<
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+  },
+  root: {},
+  backgroundColorButton: {
+    backgroundColor: '#fcbf16',
   },
 }))
 

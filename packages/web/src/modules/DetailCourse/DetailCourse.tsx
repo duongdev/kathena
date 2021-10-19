@@ -229,7 +229,11 @@ const DetailCourse: FC<DetailCourseProps> = () => {
               className={classes.linkButtonHover}
             >
               {' '}
-              <Button className={classes.buttonTextColor} endIcon={<Pencil />}>
+              <Button
+                backgroundColorButton="primary"
+                className={classes.buttonTextColor}
+                endIcon={<Pencil />}
+              >
                 Sửa khóa học
               </Button>
             </Link>
