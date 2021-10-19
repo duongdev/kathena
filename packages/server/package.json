@@ -60,7 +60,7 @@
     "type-graphql": "1.1.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "8.1.2",
+    "@nestjs/cli": "8.1.4",
     "@nestjs/schematics": "8.0.3",
     "@types/bcrypt": "5.0.0",
     "@types/date-fns": "2.6.0",
