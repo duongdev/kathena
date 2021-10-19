@@ -679,19 +679,11 @@ input CreateClassworkMaterialInput {
   description: String
   publicationState: Publication
   attachments: [Upload!]
-  videos: [VideoInput!]
-}
-
-input VideoInput {
-  title: String!
-  thumbnail: Upload
-  iframe: String!
 }
 
 input UpdateClassworkMaterialInput {
   title: String
   description: String
-  videos: [VideoInput!]
 }
 
 input AddAttachmentsToClassworkInput {
@@ -707,11 +699,16 @@ input CreateClassworkAssignmentInput {
   videos: [VideoInput!]
 }
 
+input VideoInput {
+  title: String!
+  thumbnail: Upload
+  iframe: String!
+}
+
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
-  videos: [VideoInput!]
 }
 
 input CreateClassworkSubmissionInput {
