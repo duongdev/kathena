@@ -382,6 +382,14 @@ export class LessonService {
         lesson.endTime = endTime
       }
 
+      const currentTime = new Date()
+
+      if (lesson.startTime < currentTime) {
+        throw new Error(
+          `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_CURRENT_TIME`,
+        )
+      }
+
       if (lesson.startTime < course.startDate) {
         throw new Error(
           `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,

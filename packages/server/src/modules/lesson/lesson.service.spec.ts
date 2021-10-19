@@ -18,6 +18,7 @@ import {
   GenerateLessonsInput,
   LessonsFilterInputStatus,
   UpdateLessonInput,
+  UpdateLessonTimeOptions,
 } from './lesson.type'
 import { Lesson } from './models/Lesson'
 
@@ -778,7 +779,7 @@ describe('lesson.service', () => {
       ).rejects.toThrowError('Lesson not found')
     })
 
-    it('returns lessons with new data', async () => {
+    it('throws error if startTime is smaller than currentTime', async () => {
       expect.assertions(1)
 
       jest
@@ -813,11 +814,132 @@ describe('lesson.service', () => {
           },
           {
             description: 'day la buoi 2',
+            startTime: new Date('2021-08-16 12:00'),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_CURRENT_TIME`,
+      )
+    })
+
+    it('throws error if startTime is smaller than startDate of the course', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      const date = new Date()
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+
+      const lesson = await lessonService.createLesson(objectId(), objectId(), {
+        ...createLessonInput,
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
+      })
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
+            startTime: new Date(new Date().setDate(date.getDate() + 3)),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
+      )
+    })
+
+    it('returns lessons with new data', async () => {
+      expect.assertions(2)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+
+      const lesson = await lessonService.createLesson(objectId(), objectId(), {
+        ...createLessonInput,
+        startTime: new Date('2021-08-16 12:00'),
+        endTime: new Date('2021-08-16 14:00'),
+      })
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
           } as UpdateLessonInput,
           objectId(),
         ),
       ).resolves.toMatchObject({
         description: 'day la buoi 2',
+      })
+
+      const date = new Date()
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
+            startTime: new Date(date.setDate(date.getDate() + 1)),
+            endTime: new Date(new Date().setDate(date.getDate() + 2)),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).resolves.toMatchObject({
+        description: 'day la buoi 2',
+        startTime: date,
       })
     })
 
