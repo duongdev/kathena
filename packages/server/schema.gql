@@ -691,6 +691,7 @@ input VideoInput {
 input UpdateClassworkMaterialInput {
   title: String
   description: String
+  videos: [VideoInput!]
 }
 
 input AddAttachmentsToClassworkInput {

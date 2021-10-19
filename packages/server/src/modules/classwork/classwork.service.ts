@@ -335,7 +335,7 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
-    const { description, title } = updateClassworkMaterialInput
+    const { description, title, videos } = updateClassworkMaterialInput
 
     const classworkMaterial = await this.classworkMaterialModel.findOne({
       _id: classworkMaterialId,
@@ -372,41 +372,41 @@ export class ClassworkService {
         description: removeExtraSpaces(description),
       }
     }
-    // if (videos) {
-    //   const listVideos: Video[] = []
+    if (videos) {
+      const listVideos: Video[] = []
 
-    //   const map = videos.map(async (iframeObject) => {
-    //     let imageId = ''
-    //     if (iframeObject.thumbnail) {
-    //       imageId = await this.uploadThumbnail(
-    //         orgId,
-    //         accountId,
-    //         iframeObject.thumbnail,
-    //       )
-    //     }
+      const map = videos.map(async (iframeObject) => {
+        let imageId = ''
+        if (iframeObject.thumbnail) {
+          imageId = await this.uploadThumbnail(
+            orgId,
+            accountId,
+            iframeObject.thumbnail,
+          )
+        }
 
-    //     let video: Video = {
-    //       title: iframeObject.title,
-    //       iframe: iframeObject.iframe,
-    //     }
+        let video: Video = {
+          title: iframeObject.title,
+          iframe: iframeObject.iframe,
+        }
 
-    //     if (imageId) {
-    //       video = {
-    //         ...video,
-    //         thumbnail: imageId,
-    //       }
-    //     }
+        if (imageId) {
+          video = {
+            ...video,
+            thumbnail: imageId,
+          }
+        }
 
-    //     listVideos.push(video)
-    //   })
+        listVideos.push(video)
+      })
 
-    //   await Promise.all(map)
+      await Promise.all(map)
 
-    //   updateInput = {
-    //     ...updateInput,
-    //     videos: listVideos,
-    //   }
-    // }
+      updateInput = {
+        ...updateInput,
+        videos: listVideos,
+      }
+    }
 
     const classworkMaterialUpdated =
       await this.classworkMaterialModel.findOneAndUpdate(
