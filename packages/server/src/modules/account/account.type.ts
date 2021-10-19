@@ -1,5 +1,6 @@
 import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql'
 import { ArrayNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 
 import { OrgRoleName } from 'modules/auth/models'
 
@@ -46,6 +47,10 @@ export class UpdateAccountInput {
   @MinLength(6)
   @IsOptional()
   password?: string
+
+  @Field((_type) => GraphQLUpload, { nullable: true })
+  @IsOptional()
+  avatar?: Promise<FileUpload>
 }
 
 export class CreateAccountServiceInput extends CreateAccountInput {
