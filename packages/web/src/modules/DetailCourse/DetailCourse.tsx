@@ -201,6 +201,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
       title={course.name}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               course.publicationState === Publication.Draft
@@ -229,11 +230,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
               className={classes.linkButtonHover}
             >
               {' '}
-              <Button
-                backgroundColorButton="primary"
-                className={classes.buttonTextColor}
-                endIcon={<Pencil />}
-              >
+              <Button className={classes.buttonTextColor} endIcon={<Pencil />}>
                 Sửa khóa học
               </Button>
             </Link>

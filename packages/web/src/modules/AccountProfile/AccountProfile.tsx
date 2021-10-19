@@ -138,7 +138,6 @@ const AccountProfile: FC<AccountProfileProps> = () => {
                   : 'Kích hoạt'}
               </Button>
               <Button
-                backgroundColorButton="primary"
                 onClick={openUpdateAccountDialog}
                 className={classes.buttonTextColor}
                 endIcon={<UserGear />}

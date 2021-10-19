@@ -79,6 +79,7 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
             <Grid item>
               <Button
                 variant="contained"
+                backgroundColorButton="primary"
                 link={buildPath(CREATE_ACADEMIC_COURSE, {
                   idSubject: subject.id,
                 })}
@@ -112,10 +113,7 @@ const AcademicSubjectDetail: FC<AcademicSubjectDetailProps> = (props) => {
                     <RequiredPermission
                       permission={Permission.Academic_AcademicSubject_Access}
                     >
-                      <Button
-                        backgroundColorButton="primary"
-                        onClick={handleOpenUpdateImageDialog}
-                      >
+                      <Button onClick={handleOpenUpdateImageDialog}>
                         Sửa hình ảnh
                       </Button>
                     </RequiredPermission>,

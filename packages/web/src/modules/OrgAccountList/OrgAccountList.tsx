@@ -66,6 +66,7 @@ const OrgAccountList: FC<OrgAccountListProps> = (props) => {
           color="primary"
           startIcon={<UserPlus />}
           onClick={openCreateAccountDialog}
+          backgroundColorButton="primary"
         >
           Thêm người dùng
         </Button>,

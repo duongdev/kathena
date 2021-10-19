@@ -276,6 +276,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
             createMode
               ? [
                   <Button
+                    backgroundColorButton="primary"
                     variant="contained"
                     color="primary"
                     startIcon={<Check />}
@@ -293,15 +294,15 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     startIcon={
                       data?.academicSubject.publication ===
                       Publication.Draft ? (
-                        <LockOpen />
-                      ) : (
                         <Lock />
+                      ) : (
+                        <LockOpen />
                       )
                     }
                   >
                     {data?.academicSubject.publication === Publication.Draft
-                      ? 'Publish'
-                      : 'Unpublish'}
+                      ? 'Bản nháp'
+                      : 'Công khai'}
                   </Button>,
                   <Button
                     variant="contained"
@@ -310,6 +311,7 @@ const CreateUpdateAcademicSubject: FC<CreateUpdateAcademicSubjectProps> = (
                     startIcon={<Check />}
                     onClick={formik.submitForm}
                     loading={formik.isSubmitting}
+                    backgroundColorButton="primary"
                   >
                     Lưu thay đổi
                   </Button>,
