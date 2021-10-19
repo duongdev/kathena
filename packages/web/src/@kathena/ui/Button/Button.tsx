@@ -37,6 +37,7 @@ export type ButtonProps = MuiButtonProps & {
   loading?: boolean
   labelColor?: 'default' | 'primary' | 'secondary'
   tooltip?: string | TooltipProps
+  backgroundColorButton?: 'default' | 'primary'
 }
 
 const Button: FC<ButtonProps> = (props) => {
@@ -51,6 +52,8 @@ const Button: FC<ButtonProps> = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     labelColor,
     tooltip,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    backgroundColorButton,
     size = 'medium',
     ...restMuiButtonProps
   } = props
@@ -102,7 +105,6 @@ const Button: FC<ButtonProps> = (props) => {
     link,
     size,
   ])
-
   return (
     <Container>
       <MuiButton size={size} {...restMuiButtonProps} {...btnProps} />
@@ -112,7 +114,7 @@ const Button: FC<ButtonProps> = (props) => {
 
 const useStyles = makeStyles<Theme, ButtonProps>(
   ({ palette, spacing, components, transitions }) => ({
-    root: ({ rounded, iconOnly }) => {
+    root: ({ rounded, iconOnly, backgroundColorButton }) => {
       const css: ANY = {
         transition: transitions.create(
           [
@@ -127,11 +129,12 @@ const useStyles = makeStyles<Theme, ButtonProps>(
           },
         ),
       }
-
+      if (backgroundColorButton === 'primary') {
+        css.backgroundColor = '#fcbf16'
+      }
       if (rounded) {
         css.borderRadius = '1000px !important'
       }
-
       if (iconOnly) {
         css.minWidth = 'unset'
         css.padding = 0
@@ -141,11 +144,20 @@ const useStyles = makeStyles<Theme, ButtonProps>(
 
       return css
     },
+    backgroundPrimaryButton: {
+      '&:hover': {
+        backgroundColor: '#fcbf16',
+      },
+    },
     containedPrimary: {
       '&:active': {
         backgroundColor: darken(palette.primary.main, ACTIVE_DARKEN),
       },
+      '&:hover': {
+        backgroundColor: '#fcbf16',
+      },
     },
+
     containedSecondary: {
       '&:active': {
         backgroundColor: darken(palette.secondary.main, ACTIVE_DARKEN),

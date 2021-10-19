@@ -278,6 +278,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       title={classworkAssignment.title}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               classworkAssignment.publicationState === Publication.Draft
@@ -291,7 +292,11 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             ? 'Bản nháp'
             : 'Công khai'}
         </Button>,
-        <Button onClick={handleOpenUpdateDialog} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenUpdateDialog}
+          variant="contained"
+        >
           Sửa bài tập
         </Button>,
       ]}
