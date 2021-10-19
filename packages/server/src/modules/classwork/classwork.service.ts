@@ -920,7 +920,7 @@ export class ClassworkService {
     update: UpdateClassworkAssignmentInput,
   ): Promise<DocumentType<ClassworkAssignment>> {
     const { id, orgId, accountId } = query
-    const { description, dueDate, title } = update
+    const { description, dueDate, title, videos } = update
 
     const classworkAssignmentUpdate =
       await this.classworkAssignmentsModel.findOne({
@@ -972,37 +972,37 @@ export class ClassworkService {
       }
     }
 
-    // if (videos) {
-    //   const listVideos: Video[] = []
-    //   const map = videos.map(async (iframeObject) => {
-    //     let imageId = ''
-    //     if (iframeObject.thumbnail) {
-    //       imageId = await this.uploadThumbnail(
-    //         orgId,
-    //         accountId,
-    //         iframeObject.thumbnail,
-    //       )
-    //     }
+    if (videos) {
+      const listVideos: Video[] = []
+      const map = videos.map(async (iframeObject) => {
+        let imageId = ''
+        if (iframeObject.thumbnail) {
+          imageId = await this.uploadThumbnail(
+            orgId,
+            accountId,
+            iframeObject.thumbnail,
+          )
+        }
 
-    //     let video: Video = {
-    //       title: iframeObject.title,
-    //       iframe: iframeObject.iframe,
-    //     }
+        let video: Video = {
+          title: iframeObject.title,
+          iframe: iframeObject.iframe,
+        }
 
-    //     if (imageId) {
-    //       video = {
-    //         ...video,
-    //         thumbnail: imageId,
-    //       }
-    //     }
+        if (imageId) {
+          video = {
+            ...video,
+            thumbnail: imageId,
+          }
+        }
 
-    //     listVideos.push(video)
-    //   })
+        listVideos.push(video)
+      })
 
-    //   await Promise.all(map)
+      await Promise.all(map)
 
-    //   classworkAssignmentUpdate.videos = listVideos
-    // }
+      classworkAssignmentUpdate.videos = listVideos
+    }
 
     const updated = await classworkAssignmentUpdate.save()
     return updated

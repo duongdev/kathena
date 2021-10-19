@@ -127,8 +127,8 @@ export class UpdateClassworkAssignmentInput {
   @IsOptional()
   dueDate?: Date
 
-  // @Field((_type) => [VideoInput], { nullable: true })
-  // videos?: VideoInput[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @InputType()
