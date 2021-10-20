@@ -207,6 +207,40 @@ describe('course.service', () => {
       ).rejects.toThrowError(`Thanh Canh Admin isn't a lecturer`)
     })
 
+    it(`throws error if total number of the lesson greater than 200 lessons`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      const date = new Date()
+
+      // Start date less than the current date
+      await expect(
+        courseService.createCourse(objectId(), objectId(), {
+          ...createCourseInput,
+          totalNumberOfLessons: 201,
+          startDate: date,
+        }),
+      ).rejects.toThrowError(
+        'TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS',
+      )
+    })
+
     it(`returns a course`, async () => {
       expect.assertions(1)
 
