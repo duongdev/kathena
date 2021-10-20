@@ -107,6 +107,9 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
   const handleSubmitForm = useCallback(
     async (input: CourseFormInput) => {
       try {
+        if (input.totalNumberOfLessons < 201) {
+          return
+        }
         if (!academicSubject) return
         const lecturerIds: string[] = []
         if (input.lecturerIds.length)
