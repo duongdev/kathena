@@ -6,6 +6,8 @@ import AccountDisplayName from 'components/AccountDisplayName'
 import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
+import Image from 'components/Image'
+import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { Pie } from 'react-chartjs-2'
@@ -100,6 +102,10 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     () => dataSubmissions?.classworkSubmissions,
     [dataSubmissions],
   )
+
+  const [index, setIndex] = useState(0)
+    const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
 
   const classworkSubmissionChart = useMemo(() => {
     const arr = dataSubmissionStatus?.submissionStatusStatistics ?? []
@@ -242,7 +248,6 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       </PageContainer>
     )
   }
-
   const updatePublication = async (publicationState: Publication) => {
     const updated = await updateAssignmentPublication({
       variables: {
@@ -377,6 +382,23 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
               </Grid>
             </CardContent>
           </SectionCard>
+          {classworkAssignment.videos.length > 0 && <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Danh sách video"
+          >
+            <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {
+                classworkAssignment.videos.map((item, i) => (
+                  <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
+                    <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+                    <p style={{ margin: 0 }}>{item.title}</p>
+                  </div>
+                ))
+              }
+            </CardContent>
+            <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
+          </SectionCard>}
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}

@@ -1527,6 +1527,11 @@ export type ClassworkAssignmentDetailQuery = {
     publicationState: Publication
     attachments: Array<string>
     dueDate?: any | null | undefined
+    videos: Array<{
+      title: string
+      thumbnail?: string | null | undefined
+      iframe: string
+    }>
   }
 }
 
@@ -5634,6 +5639,24 @@ export const ClassworkAssignmentDetailDocument = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'videos' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'thumbnail' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'iframe' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
