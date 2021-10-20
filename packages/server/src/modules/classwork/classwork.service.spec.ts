@@ -577,6 +577,8 @@ describe('classwork.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lưu',
@@ -716,6 +718,8 @@ describe('classwork.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lưu',
@@ -1685,6 +1689,8 @@ describe('classwork.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lưu',
@@ -1858,6 +1864,8 @@ describe('classwork.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lưu',
@@ -2240,6 +2248,8 @@ describe('classwork.service', () => {
           createdByAccountId: accountAdmin.id,
           imageFileId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           name: 'Kmin Quận 1',
@@ -2376,6 +2386,8 @@ describe('classwork.service', () => {
           createdByAccountId: accAdmin.id,
           imageFileId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           name: 'Kmin Quận 1',
@@ -3592,6 +3604,8 @@ describe('classwork.service', () => {
           createdByAccountId: accAdmin.id,
           imageFileId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           name: 'Kmin Quận 1',
@@ -3767,6 +3781,8 @@ describe('classwork.service', () => {
           createdByAccountId: accAdmin.id,
           imageFileId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           name: 'Kmin Quận 1',

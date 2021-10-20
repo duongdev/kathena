@@ -70,8 +70,18 @@ describe('course.service', () => {
     expect(courseService).toBeDefined()
   })
 
+  const academicSubjectTemplate = {
+    id: objectId(),
+    publication: 'Published',
+    orgId: objectId(),
+    name: 'Test Subject',
+    description: '123',
+    createdByAccountId: objectId(),
+    code: 'TEST',
+  }
+
   const createCourseInput: CreateCourseInput = {
-    academicSubjectId: objectId(),
+    academicSubjectId: academicSubjectTemplate.id,
     orgOfficeId: objectId(),
     code: 'NodeJS-12',
     name: 'Node Js Thang 12',
@@ -81,6 +91,7 @@ describe('course.service', () => {
     daysOfTheWeek: [],
     totalNumberOfLessons: 0,
   }
+
   describe('createCourse', () => {
     it(`throws error "Org ID is invalid" if org id is invalid`, async () => {
       expect.assertions(1)
@@ -238,6 +249,41 @@ describe('course.service', () => {
         }),
       ).rejects.toThrowError(
         'TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS',
+      )
+    })
+
+    it(`throws error if the academic subject is a draft`, async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(authService, 'accountHasPermission')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(orgOfficeService, 'findOrgOfficeById')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+      jest
+        .spyOn(academicService, 'findAcademicSubjectById')
+        .mockResolvedValueOnce({
+          ...academicSubjectTemplate,
+          publication: Publication.Draft,
+        } as ANY)
+
+      const date = new Date()
+
+      // Start date less than the current date
+      await expect(
+        courseService.createCourse(objectId(), objectId(), {
+          ...createCourseInput,
+          startDate: date,
+        }),
+      ).rejects.toThrowError(
+        'CAN_NOT_CREATE_COURSE_WHEN_ACADEMIC_SUBJECT_IS_A_DRAFT',
       )
     })
 
@@ -714,6 +760,8 @@ describe('course.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lựu',
@@ -833,6 +881,8 @@ describe('course.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25A Mai Thị Lựu',
@@ -1157,6 +1207,8 @@ describe('course.service', () => {
           imageFileId: objectId(),
           createdByAccountId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25 A Mai Thi Lựu',
@@ -1353,6 +1405,8 @@ describe('course.service', () => {
           imageFileId: objectId(),
           createdByAccountId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25 A Mai Thi Lựu',
@@ -1755,6 +1809,8 @@ describe('course.service', () => {
           name: 'HTMl',
           orgId: org.id,
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           address: '25 A Mai Thi Lựu',
@@ -1900,6 +1956,8 @@ describe('course.service', () => {
           createdByAccountId: accAdmin.id,
           imageFileId: objectId(),
         })
+        academicSubject.publication = Publication.Published
+        await academicSubject.save()
 
         const orgOffice = await orgOfficeService.createOrgOffice({
           name: 'Kmin Quận 1',
@@ -2310,6 +2368,8 @@ describe('course.service', () => {
         description: 'nodejs căn bản cho người mới bắt đầu',
         imageFileId: objectId(),
       })
+      academicSubject.publication = Publication.Published
+      await academicSubject.save()
 
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
@@ -2400,6 +2460,8 @@ describe('course.service', () => {
         description: 'nodejs căn bản cho người mới bắt đầu',
         imageFileId: objectId(),
       })
+      academicSubject.publication = Publication.Published
+      await academicSubject.save()
 
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
