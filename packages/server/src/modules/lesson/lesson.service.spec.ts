@@ -18,6 +18,7 @@ import {
   GenerateLessonsInput,
   LessonsFilterInputStatus,
   UpdateLessonInput,
+  UpdateLessonTimeOptions,
 } from './lesson.type'
 import { Lesson } from './models/Lesson'
 
@@ -300,7 +301,7 @@ describe('lesson.service', () => {
 
       const lessons: ANY = [
         {
-          ...createLessonInput,
+          ...createLesson,
         },
       ]
 
@@ -763,7 +764,7 @@ describe('lesson.service', () => {
   })
 
   describe('updateLessonById', () => {
-    it('throws error if lesson not found', async () => {
+    it('throws error if course not found', async () => {
       expect.assertions(1)
 
       const updateLessonInput: ANY = {
@@ -787,10 +788,41 @@ describe('lesson.service', () => {
           updateLessonInput,
           objectId(),
         ),
+      ).rejects.toThrowError('Course not found')
+    })
+
+    it('throws error if lesson not found', async () => {
+      expect.assertions(1)
+
+      const updateLessonInput: ANY = {
+        startTime: new Date(),
+        endTime: new Date(),
+        description: 'day la buoi 1',
+        publicationState: Publication.Published,
+      }
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: objectId(),
+            orgId: objectId(),
+            courseId: objectId(),
+          },
+          updateLessonInput,
+          objectId(),
+        ),
       ).rejects.toThrowError('Lesson not found')
     })
 
-    it('returns lessons with new data', async () => {
+    it('throws error if startTime is smaller than currentTime', async () => {
       expect.assertions(1)
 
       jest
@@ -802,7 +834,113 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+
+      const date = new Date()
+
+      const lesson = await lessonService.createLesson(objectId(), objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
+            startTime: new Date('2021-08-16 12:00'),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_CURRENT_TIME`,
+      )
+    })
+
+    it('throws error if startTime is smaller than startDate of the course', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      const date = new Date()
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce({
+          ...course,
+          startDate: new Date().setDate(date.getDate() + 5),
+        })
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+
+      const lesson = await lessonService.createLesson(objectId(), objectId(), {
+        ...createLessonInput,
+        startTime: date.setDate(date.getDate() + 1),
+        endTime: date.setDate(date.getDate() + 1),
+      })
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
+            startTime: new Date(new Date().setDate(date.getDate() + 1)),
+            endTime: new Date(new Date().setDate(date.getDate() + 2)),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).rejects.toThrowError(
+        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
+      )
+    })
+
+    it('returns lessons with new data', async () => {
+      expect.assertions(2)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
 
@@ -829,6 +967,26 @@ describe('lesson.service', () => {
       ).resolves.toMatchObject({
         description: 'day la buoi 2',
       })
+
+      await expect(
+        lessonService.updateLessonById(
+          {
+            lessonId: lesson.id,
+            orgId: lesson.orgId,
+            courseId: lesson.courseId,
+          },
+          {
+            description: 'day la buoi 2',
+            startTime: new Date(date.setDate(date.getDate() + 1)),
+            endTime: new Date(new Date().setDate(date.getDate() + 2)),
+            options: UpdateLessonTimeOptions.ArbitraryChange,
+          } as UpdateLessonInput,
+          objectId(),
+        ),
+      ).resolves.toMatchObject({
+        description: 'day la buoi 2',
+        startTime: date,
+      })
     })
 
     it('returns lessons with new data classworkMaterialListBeforeClass', async () => {
@@ -840,6 +998,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
@@ -894,6 +1056,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -945,6 +1111,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -989,6 +1159,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
@@ -1043,6 +1217,10 @@ describe('lesson.service', () => {
         .mockResolvedValueOnce(course)
 
       jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce(course)
+
+      jest
         .spyOn(authService, 'canAccountManageCourse')
         .mockResolvedValueOnce(true)
         .mockResolvedValueOnce(true)
@@ -1091,6 +1269,10 @@ describe('lesson.service', () => {
 
       jest
         .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(course)
 
       jest
