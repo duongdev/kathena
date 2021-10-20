@@ -110,17 +110,16 @@ export class CourseService {
     }
 
     // Check the existence of academic subject
-    const academicSubjectIsExist =
-      (await this.academicService.findAcademicSubjectById(
-        createCourseInput.academicSubjectId,
-      )) !== null
+    const academicSubject = await this.academicService.findAcademicSubjectById(
+      createCourseInput.academicSubjectId,
+    )
 
     const orgOfficeIsExist =
       (await this.orgOfficeService.findOrgOfficeById(
         createCourseInput.orgOfficeId,
       )) !== null
 
-    if (!academicSubjectIsExist) {
+    if (!academicSubject) {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
     }
 
@@ -166,6 +165,10 @@ export class CourseService {
       throw new Error(
         `TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS`,
       )
+    }
+
+    if (academicSubject.publication === Publication.Draft) {
+      throw new Error(`CAN_NOT_CREATE_COURSE_WHEN_ACADEMIC_SUBJECT_IS_A_DRAFT`)
     }
 
     const course = await this.courseModel.create({
