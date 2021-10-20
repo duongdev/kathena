@@ -162,6 +162,12 @@ export class CourseService {
       throw new Error('START_DATE_INVALID')
     }
 
+    if (totalNumberOfLessons > 200) {
+      throw new Error(
+        `TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS`,
+      )
+    }
+
     const course = await this.courseModel.create({
       createdByAccountId: creatorId,
       orgId,
