@@ -85,7 +85,7 @@ export class Course extends BaseModel {
   studentIds: string[]
 
   @Field((_type) => Number)
-  @prop({ require: true, min: 0 })
+  @prop({ require: true, min: 0, max: 200 })
   totalNumberOfLessons: number
 
   @Field((_type) => [DayOfTheWeek])
