@@ -48,6 +48,8 @@ export enum Permission {
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
+  Classwork_AddVideoToClassworkAssignment = 'Classwork_AddVideoToClassworkAssignment',
+  Classwork_RemoveVideoToClassworkAssignment = 'Classwork_RemoveVideoToClassworkAssignment',
 
   Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
@@ -56,6 +58,8 @@ export enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
+  Classwork_AddVideoToClassworkMaterial = 'Classwork_AddVideoToClassworkMaterial',
+  Classwork_RemoveVideoToClassworkMaterial = 'Classwork_RemoveVideoToClassworkMaterial',
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
