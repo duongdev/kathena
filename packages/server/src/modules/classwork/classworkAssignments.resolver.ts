@@ -224,6 +224,21 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_AddVideoToClassworkAssignment)
+  async removeVideoFromClassworkAssignment(
+    @CurrentOrg() org: Org,
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('videoId', { type: () => ID }) videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkService.removeVideoFromClassworkAssignment(
+      org.id,
+      classworkAssignmentId,
+      videoId,
+    )
+  }
+
   /**
    * END ASSIGNMENTS RESOLVER
    */

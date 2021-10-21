@@ -221,7 +221,6 @@ export class ClassworkService {
 
   async addVideoToClasswork(
     orgId: string,
-    accountId: string,
     classworkId: string,
     classworkType: ClassworkType,
     videoInput: {
@@ -248,6 +247,43 @@ export class ClassworkService {
 
     if (classwork) {
       classwork.videos.push(videoInput)
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  async removeVideoFromClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork) {
+      const currentVideos = classwork.videos
+
+      const videosFilter = currentVideos.filter((video) => {
+        return video.id !== videoId
+      })
+
+      classwork.videos = videosFilter
     }
 
     await classwork.save()
@@ -738,10 +774,22 @@ export class ClassworkService {
     }
     return this.addVideoToClasswork(
       orgId,
-      uploadedByAccountId,
       classworkMaterialId,
       ClassworkType.Material,
       videoObject,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
+
+  async removeVideoFromClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.removeVideoFromClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      videoId,
     ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
   }
   /**
@@ -912,7 +960,7 @@ export class ClassworkService {
           )
         }
 
-        let video: Video = {
+        let video: ANY = {
           title: iframeObject.title,
           iframe: iframeObject.iframe,
         }
@@ -1382,10 +1430,22 @@ export class ClassworkService {
     }
     return this.addVideoToClasswork(
       orgId,
-      uploadedByAccountId,
       classworkAssignmentId,
       ClassworkType.Assignment,
       videoObject,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async removeVideoFromClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.removeVideoFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      videoId,
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
   /**
