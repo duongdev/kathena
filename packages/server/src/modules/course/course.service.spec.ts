@@ -247,9 +247,7 @@ describe('course.service', () => {
           totalNumberOfLessons: 201,
           startDate: date,
         }),
-      ).rejects.toThrowError(
-        'TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS',
-      )
+      ).rejects.toThrowError('Tổng số buổi học không được lớn hơn 200 buổi!')
     })
 
     it(`throws error if the academic subject is a draft`, async () => {
