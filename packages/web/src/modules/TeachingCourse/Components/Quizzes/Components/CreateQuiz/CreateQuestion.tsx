@@ -105,6 +105,7 @@ const CreateQuestion: FC<CreateQuestionProps> = (props) => {
           variant="contained"
           disabled={questionChoices.length === 0 || title === ''}
           onClick={onCreateQuestion}
+          backgroundColorButton="primary"
         >
           Thêm câu hỏi
         </Button>

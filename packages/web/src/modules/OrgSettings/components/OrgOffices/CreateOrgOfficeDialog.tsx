@@ -64,6 +64,7 @@ const CreateOrgOfficeDialog: FC<CreateOrgOfficeDialogProps> = (props) => {
       onSubmit={handleCreateOrgOffice}
       submitButtonLabel="Tạo văn phòng"
       width={400}
+      backgroundButton="primary"
     >
       <FormContent error={error} />
     </FormDialog>

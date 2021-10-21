@@ -110,17 +110,16 @@ export class CourseService {
     }
 
     // Check the existence of academic subject
-    const academicSubjectIsExist =
-      (await this.academicService.findAcademicSubjectById(
-        createCourseInput.academicSubjectId,
-      )) !== null
+    const academicSubject = await this.academicService.findAcademicSubjectById(
+      createCourseInput.academicSubjectId,
+    )
 
     const orgOfficeIsExist =
       (await this.orgOfficeService.findOrgOfficeById(
         createCourseInput.orgOfficeId,
       )) !== null
 
-    if (!academicSubjectIsExist) {
+    if (!academicSubject) {
       throw new Error('ACADEMIC_SUBJECT_NOT_FOUND')
     }
 
@@ -160,6 +159,14 @@ export class CourseService {
       startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
     ) {
       throw new Error('START_DATE_INVALID')
+    }
+
+    if (totalNumberOfLessons > 200) {
+      throw new Error(`Tổng số buổi học không được lớn hơn 200 buổi!`)
+    }
+
+    if (academicSubject.publication === Publication.Draft) {
+      throw new Error(`CAN_NOT_CREATE_COURSE_WHEN_ACADEMIC_SUBJECT_IS_A_DRAFT`)
     }
 
     const course = await this.courseModel.create({

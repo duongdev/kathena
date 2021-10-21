@@ -184,6 +184,7 @@ const CreateQuiz: FC<CreateQuizProps> = (props) => {
       })}
       actions={[
         <SplitButton
+          backgroundButton="primary"
           disable={
             !!errorMessageTitle ||
             !!errorMessageDescription ||
@@ -286,6 +287,7 @@ const CreateQuiz: FC<CreateQuizProps> = (props) => {
               </div>
             ))}
             <Button
+              backgroundColorButton="primary"
               variant="contained"
               fullWidth
               loading={loadingCreateQuestions}

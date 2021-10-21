@@ -118,7 +118,11 @@ const ClassworkSubmissionDetail: FC<ClassworkSubmissionDetailProps> = (
       maxWidth="md"
       title={`${classworkTitle}`}
       actions={[
-        <Button onClick={handleOpenGradeDialog} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenGradeDialog}
+          variant="contained"
+        >
           {classworkSubmission.grade !== null ? 'Chấm lại' : 'Chấm điểm'}
         </Button>,
       ]}
