@@ -74,6 +74,8 @@ export const lecturer: Role = {
     P.Classwork_RemoveAttachmentsFromClassworkMaterial,
     P.Classwork_SetGradeForClassworkSubmission,
     P.Classwork_ShowSubmissionStatusList,
+    P.Classwork_AddVideoToClassworkAssignment,
+    P.Classwork_AddVideoToClassworkMaterial,
     P.Academic_CreateLesson,
     P.Academic_ListLesson,
     P.Academic_UpdateLesson,

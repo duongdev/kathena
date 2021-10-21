@@ -24,6 +24,7 @@ import {
   AddAttachmentsToClassworkInput,
   ClassworkAssignmentByStudentIdInCourseInput,
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
+  AddVideoToClassworkInput,
 } from './classwork.type'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
 
@@ -202,6 +203,23 @@ export class ClassworkAssignmentsResolver {
     return this.classworkService.listClassworkAssignmentsByStudentIdInCourse(
       input,
       org.id,
+      account.id,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkAssignment)
+  @UseAuthGuard(P.Classwork_AddVideoToClassworkAssignment)
+  async addVideoToClassworkAssignment(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('videoInput') videoInput: AddVideoToClassworkInput,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.classworkService.addVideoToClassworkAssignment(
+      org.id,
+      classworkAssignmentId,
+      videoInput,
       account.id,
     )
   }
