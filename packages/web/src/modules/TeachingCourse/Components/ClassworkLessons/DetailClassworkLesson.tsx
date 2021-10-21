@@ -26,6 +26,7 @@ import {
   FindLessonByIdDocument,
   Permission,
   Publication,
+  UpdateLessonTimeOptions,
   useFindLessonByIdQuery,
   useUpdateLessonMutation,
 } from 'graphql/generated'
@@ -131,6 +132,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
         lessonId: classworkLesson.id,
         updateInput: {
           publicationState,
+          options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
         },
       },
     })
@@ -224,18 +226,21 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           open={addClassworkAssignmentListAfterClass}
           onClose={handleCloseAddClassworkAssignmentListAfterClass}
         />
+        {/* Modal Thêm tài liệu trước buổi học */}
         <AddClassworkMaterialListBeforeClass
           lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
           open={addClassworkMaterialListBeforeClass}
           onClose={handleCloseAddClassworkMaterialListBeforeClass}
         />
+        {/* Modal Thêm tài liệu trong buổi học */}
         <AddClassworkMaterialListInClass
           lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
           open={addClassworkMaterialListInClass}
           onClose={handleCloseAddClassworkMaterialListInClass}
         />
+        {/* Modal Thêm tài liệu sau buổi học */}
         <AddClassworkMaterialListAfterClass
           lesson={classworkLesson}
           idCourse={classworkLesson.courseId}
@@ -272,7 +277,9 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                     <Grid item xs={4}>
                       <Stack spacing={2}>
                         <InfoBlock label="Trạng thái">
-                          {classworkLesson.publicationState}
+                          {classworkLesson.publicationState === 'Draft'
+                            ? 'Bản nháp'
+                            : 'Công khai'}
                         </InfoBlock>
                         <InfoBlock label="Thời gian bắt đầu">
                           <Typography>

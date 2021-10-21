@@ -10,6 +10,7 @@ import {
   Lesson,
   useUpdateLessonMutation,
   useClassworkAssignmentListQuery,
+  UpdateLessonTimeOptions,
 } from 'graphql/generated'
 
 import AssignmentDisplayName from '../LessonDisplayName/AssignmentDisplayName'
@@ -121,11 +122,13 @@ const AddClassworkAssignmentListAfterClass: FC<AddClassworkAssignmentListAfterCl
             lessonId: lesson.id,
             updateInput: {
               classworkAssignmentListAfterClass,
+              options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
             },
           },
         })
         if (lessonUpdate) {
           enqueueSnackbar(`Thêm thành công`, { variant: 'success' })
+          onClose()
         } else {
           enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
         }

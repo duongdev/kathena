@@ -10,6 +10,7 @@ import {
   Lesson,
   useUpdateLessonMutation,
   useClassworkMaterialsListQuery,
+  UpdateLessonTimeOptions,
 } from 'graphql/generated'
 
 import MaterialDisplayName from '../LessonDisplayName/MaterialDisplayName'
@@ -116,11 +117,13 @@ const AddClassworkMaterialListBeforeClass: FC<AddClassworkMaterialListBeforeClas
             lessonId: lesson.id,
             updateInput: {
               classworkMaterialListBeforeClass,
+              options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
             },
           },
         })
         if (lessonUpdate) {
           enqueueSnackbar(`Thêm thành công`, { variant: 'success' })
+          onClose()
         } else {
           enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
         }
