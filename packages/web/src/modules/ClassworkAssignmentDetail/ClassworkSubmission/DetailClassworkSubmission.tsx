@@ -55,7 +55,11 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
       withBackButton
       maxWidth="md"
       title="Thông tin bài tập"
-      actions={[<Button variant="contained">Chấm điểm</Button>]}
+      actions={[
+        <Button backgroundColorButton="primary" variant="contained">
+          Chấm điểm
+        </Button>,
+      ]}
     >
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard

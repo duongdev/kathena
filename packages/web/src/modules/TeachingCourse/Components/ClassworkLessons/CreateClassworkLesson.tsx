@@ -172,6 +172,7 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
           })}
           actions={[
             <SplitButton
+              backgroundButton="primary"
               items={[
                 {
                   children: 'Đăng buổi học',

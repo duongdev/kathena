@@ -107,6 +107,7 @@ const Quiz: FC<QuizProps> = () => {
       title={quiz.title}
       actions={[
         <Button
+          backgroundColorButton="primary"
           variant="contained"
           onClick={() =>
             handleChangePublication(
@@ -116,7 +117,9 @@ const Quiz: FC<QuizProps> = () => {
             )
           }
         >
-          {quiz?.publicationState === Publication.Draft ? 'Public' : 'Draft'}
+          {quiz?.publicationState === Publication.Draft
+            ? 'Bản nháp'
+            : 'Công khai'}
         </Button>,
       ]}
     >

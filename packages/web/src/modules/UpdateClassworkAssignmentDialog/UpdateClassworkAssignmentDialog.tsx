@@ -105,6 +105,7 @@ const UpdateClassworkAssignmentDialog: FC<UpdateClassworkAssignmentDialogProps> 
         onSubmit={handleUpdateClassworkAssignment}
         dialogTitle="Sửa bài tập"
         submitButtonLabel="Sửa bài tập"
+        backgroundButton="primary"
       >
         <FormContent error={error} />
       </FormDialog>

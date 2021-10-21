@@ -8,6 +8,7 @@ import {
   MenuItem,
   MenuList,
   Paper,
+  makeStyles,
   Popper,
 } from '@material-ui/core'
 import { CaretDown } from 'phosphor-react'
@@ -19,10 +20,13 @@ export type SplitButtonProps = {
   items: ButtonProps[]
   variant?: 'contained' | 'outlined' | 'text'
   disable?: boolean
+  backgroundButton?: 'default' | 'primary'
 }
 
 const SplitButton: FC<SplitButtonProps> = (props) => {
-  const { variant, items, disable } = props
+  const classes = useStyles(props)
+
+  const { variant, items, disable, backgroundButton } = props
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -58,8 +62,20 @@ const SplitButton: FC<SplitButtonProps> = (props) => {
         aria-label="split button"
         disabled={disable}
       >
-        <Button {...items[selectedIndex]} />
         <Button
+          {...items[selectedIndex]}
+          className={
+            backgroundButton === 'primary'
+              ? classes.backgroundColorSplitButton
+              : classes.root
+          }
+        />
+        <Button
+          className={
+            backgroundButton === 'primary'
+              ? classes.backgroundColorSplitButton
+              : classes.root
+          }
           aria-controls={open ? 'split-button-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup="menu"
@@ -107,5 +123,11 @@ const SplitButton: FC<SplitButtonProps> = (props) => {
     </>
   )
 }
-
+const useStyles = makeStyles(() => ({
+  root: {},
+  backgroundColorSplitButton: {
+    backgroundColor: '#fcbf16',
+    borderColor: '#fff !important',
+  },
+}))
 export default withComponentHocs(SplitButton)

@@ -146,6 +146,7 @@ const ProfileSettingsForm: FC<ProfileSettingsFormProps> = (props) => {
                 loading={formik.isSubmitting}
                 type="submit"
                 sx={{ mt: 2 }}
+                backgroundColorButton="primary"
               >
                 Cập nhật
               </Button>

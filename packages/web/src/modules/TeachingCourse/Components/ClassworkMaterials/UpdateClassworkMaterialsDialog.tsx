@@ -132,6 +132,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       onSubmit={handleUpdateClassworkMaterial}
       dialogTitle="Sửa tài liệu"
       submitButtonLabel="Sửa"
+      backgroundButton="primary"
     >
       <FormContent
         iframeVideos={iframeVideos}
