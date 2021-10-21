@@ -16,6 +16,9 @@ registerEnumType(ClassworkType, {
 
 @ObjectType()
 export class Video {
+  @Field((_type) => ID)
+  id: string
+
   @Field()
   @prop({ required: true })
   title: string

@@ -16,6 +16,7 @@ import {
   CreateClassworkMaterialInput,
   ClassworkMaterialPayload,
   AddAttachmentsToClassworkInput,
+  AddVideoToClassworkInput,
 } from './classwork.type'
 import { ClassworkMaterial } from './models/ClassworkMaterial'
 
@@ -184,6 +185,38 @@ export class ClassworkMaterialResolver {
       org.id,
       classworkAssignmentId,
       attachments,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_AddVideoToClassworkAssignment)
+  async addVideoToClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkMaterialId: string,
+    @Args('videoInput') videoInput: AddVideoToClassworkInput,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkService.addVideoToClassworkMaterial(
+      org.id,
+      classworkMaterialId,
+      videoInput,
+      account.id,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkMaterial)
+  @UseAuthGuard(P.Classwork_RemoveVideoToClassworkMaterial)
+  async removeVideoFromClassworkMaterial(
+    @CurrentOrg() org: Org,
+    @Args('classworkMaterialId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('videoId', { type: () => String }) videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.classworkService.removeVideoFromClassworkMaterial(
+      org.id,
+      classworkAssignmentId,
+      videoId,
     )
   }
 
