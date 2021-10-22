@@ -6,6 +6,7 @@ import { ANY } from '@kathena/types'
 import { FormDialog } from '@kathena/ui'
 import {
   Lesson,
+  UpdateLessonTimeOptions,
   useFindLessonByIdQuery,
   useUpdateLessonMutation,
 } from 'graphql/generated'
@@ -66,47 +67,87 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
       startTime: '',
       endDay: '',
       endTime: '',
+      numberOfLessonsPostponed: '0',
+      options:
+        UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons as string,
     }),
     [classworkLesson.description],
   )
 
   const handleUpdateClassworkLesson = useCallback(
     async (input: UpdateClassworkLessonFormInput) => {
-      const TimeStart = `${input.startDay} ${input.startTime}`
-      const TimeEnd = `${input.endDay} ${input.endTime}`
-      try {
-        const { data: dataUpdated } = await updateClassworkLesson({
-          variables: {
-            courseId: classworkLesson.courseId,
-            lessonId: classworkLesson.id,
-            updateInput: {
-              description: input.description,
-              publicationState: classworkLesson.publicationState,
+      if (
+        input.options ===
+        UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons
+      ) {
+        try {
+          // console.log(input)
+          const { data: dataUpdated } = await updateClassworkLesson({
+            variables: {
+              courseId: classworkLesson.courseId,
+              lessonId: classworkLesson.id,
+              updateInput: {
+                description: input.description,
+                options:
+                  UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
+                numberOfLessonsPostponed: input.numberOfLessonsPostponed,
+              },
             },
-          },
-        })
-        const classworkLessonUpdated = dataUpdated?.updateLesson
-        if (!classworkLessonUpdated) {
-          return
-        }
-
-        enqueueSnackbar(`Sửa buổi học thành công`, {
-          variant: 'success',
-        })
-        onClose()
-      } catch (err) {
-        if (TimeStart > TimeEnd) {
-          enqueueSnackbar(`Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc`, {
-            variant: 'warning',
           })
-        } else {
+          const classworkLessonUpdated = dataUpdated?.updateLesson
+          if (!classworkLessonUpdated) {
+            return
+          }
+
+          enqueueSnackbar(`Sửa buổi học thành công`, {
+            variant: 'success',
+          })
+          // onClose()
+        } catch (err) {
           enqueueSnackbar(`Sửa buổi học thất bại`, {
             variant: 'error',
           })
         }
+      } else {
+        const TimeStart = `${input.startDay} ${input.startTime}`
+        const TimeEnd = `${input.endDay} ${input.endTime}`
+        try {
+          const { data: dataUpdated } = await updateClassworkLesson({
+            variables: {
+              courseId: classworkLesson.courseId,
+              lessonId: classworkLesson.id,
+              updateInput: {
+                description: input.description,
+                publicationState: classworkLesson.publicationState,
+              },
+            },
+          })
+          const classworkLessonUpdated = dataUpdated?.updateLesson
+          if (!classworkLessonUpdated) {
+            return
+          }
+
+          enqueueSnackbar(`Sửa buổi học thành công`, {
+            variant: 'success',
+          })
+          // onClose()
+        } catch (err) {
+          if (TimeStart > TimeEnd) {
+            enqueueSnackbar(
+              `Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc`,
+              {
+                variant: 'warning',
+              },
+            )
+          } else {
+            enqueueSnackbar(`Sửa buổi học thất bại`, {
+              variant: 'error',
+            })
+          }
+        }
       }
     },
-    [updateClassworkLesson, enqueueSnackbar, onClose, classworkLesson],
+    [updateClassworkLesson, enqueueSnackbar, classworkLesson],
   )
 
   return (

@@ -1,27 +1,22 @@
 import { FC, useState } from 'react'
 
 import { ApolloError } from '@apollo/client'
-import {
-  Grid,
-  InputLabel,
-  makeStyles,
-  MenuItem,
-  Select,
-  Stack,
-} from '@material-ui/core'
+import { Grid, makeStyles, Stack } from '@material-ui/core'
+import { useFormikContext } from 'formik'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
 import { ANY } from '@kathena/types'
-import { ApolloErrorList, TextFormField } from '@kathena/ui'
+import { ApolloErrorList, SelectFormField, TextFormField } from '@kathena/ui'
 import { UpdateLessonTimeOptions } from 'graphql/generated'
 
 export type UpdateClassworkLessonFormInput = {
   description: string
-  startTime: string
-  endTime: string
-  startDay: string
-  endDay: string
-  numberOfLessonsPostponed: string
+  startTime: string | ANY
+  endTime: string | ANY
+  startDay: string | ANY
+  endDay: string | ANY
+  numberOfLessonsPostponed: number
+  options: string
 }
 
 export const labels: Record<keyof UpdateClassworkLessonFormInput, string> = {
@@ -31,19 +26,41 @@ export const labels: Record<keyof UpdateClassworkLessonFormInput, string> = {
   startDay: 'Ngày bắt đầu',
   endDay: 'Ngày kết thúc',
   numberOfLessonsPostponed: 'Số buổi muốn dời',
+  options: 'Lựa chọn',
 }
 
 export const validationSchema: SchemaOf<UpdateClassworkLessonFormInput> =
   yup.object({
     description: yup.string().label(labels.description).required(),
+    options: yup.string().label(labels.options).required(),
     numberOfLessonsPostponed: yup
-      .string()
+      .number()
       .label(labels.numberOfLessonsPostponed)
       .required(),
-    startTime: yup.string().label(labels.startTime).trim().required(),
-    endTime: yup.string().label(labels.endTime).trim().required(),
-    startDay: yup.string().label(labels.startDay).trim().required(),
-    endDay: yup.string().label(labels.endDay).trim().required(),
+    // startTime: yup.string().label(labels.startTime).trim().notRequired(),
+    // endTime: yup.string().label(labels.endTime).trim().notRequired(),
+    // startDay: yup.string().label(labels.startDay).trim().notRequired(),
+    // endDay: yup.string().label(labels.endDay).trim().notRequired(),
+    startTime: yup.string().when('options', {
+      is: true,
+      then: yup.string().label(labels.startTime).trim().required(),
+      otherwise: yup.string().label(labels.startTime).trim().notRequired(),
+    }),
+    endTime: yup.string().when('options', {
+      is: true,
+      then: yup.string().label(labels.endTime).trim().required(),
+      otherwise: yup.string().label(labels.endTime).trim().notRequired(),
+    }),
+    startDay: yup.string().when('options', {
+      is: true,
+      then: yup.string().label(labels.startDay).trim().required(),
+      otherwise: yup.string().label(labels.startDay).trim().notRequired(),
+    }),
+    endDay: yup.string().when('options', {
+      is: true,
+      then: yup.string().label(labels.endDay).trim().required(),
+      otherwise: yup.string().label(labels.endDay).trim().notRequired(),
+    }),
   })
 
 export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
@@ -51,33 +68,36 @@ export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
   const [numberOfLessonsPostponed] = useState({
     numberValue: 0,
   })
+
+  const formik = useFormikContext<UpdateClassworkLessonFormInput>()
   const [statusSubmit, setStatusSubmit] = useState({
-    label: 'Thay đổi thời gian buổi học',
-    value: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
+    value: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons as ANY,
   })
+
   const handleSelectTimeOption = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     // Cập nhật lại state hiển thị
+    formik.setFieldValue('options', event.target.value)
     setStatusSubmit({
       ...statusSubmit,
-      value: event.target.value as ANY,
+      value: event.target.value,
     })
   }
   const arrayOptionStatus = [
     {
       id: 1,
-      label: 'Thay đổi thời gian buổi học',
-      value: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
+      label: 'Dời buổi học',
+      value: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons as string,
     },
     {
       id: 2,
-      label: 'Dời buổi học',
-      value: UpdateLessonTimeOptions.ArbitraryChange,
+      label: 'Thay đổi thời gian buổi học',
+      value: UpdateLessonTimeOptions.ArbitraryChange as string,
     },
   ]
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} className={classes.root}>
       <Grid container>
         <Grid item container xs={12}>
           <TextFormField
@@ -89,20 +109,20 @@ export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
         </Grid>
       </Grid>
       <Grid container>
-        <InputLabel>Lựa chọn:</InputLabel>
-        <Select
-          className={classes.selectStatus}
-          value={statusSubmit.value}
+        <SelectFormField
+          gridItem={{ xs: 12 }}
+          fullWidth
+          required
+          name="options"
+          label={labels.options}
+          defaultValue={UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons}
+          placeholder="Lựa chọn"
+          options={arrayOptionStatus}
           onChange={handleSelectTimeOption}
-        >
-          {arrayOptionStatus?.map((OptionStatus) => (
-            <MenuItem key={OptionStatus.id} value={OptionStatus.value}>
-              {OptionStatus.label ?? OptionStatus.value}
-            </MenuItem>
-          ))}
-        </Select>
+        />
       </Grid>
-      {statusSubmit.value === UpdateLessonTimeOptions.ArbitraryChange ? (
+      {statusSubmit.value ===
+      UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons ? (
         <>
           {/* Số buổi muốn dời */}
           <Grid container>
@@ -169,24 +189,6 @@ export const FormContent: FC<{ error?: ApolloError }> = ({ error }) => {
     </Stack>
   )
 }
-const useStyles = makeStyles(({ palette }) => ({
-  root: {
-    width: '8em',
-  },
-  selectStatus: {
-    color: 'black',
-    width: '100%',
-    height: '2.75em',
-    backgroundColor: '#f4f4f4',
-  },
-  labelSearch: {
-    color: palette.background.paper,
-    marginRight: '1em',
-  },
-  headerSearch: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '-0.25em 0em',
-    alignItems: 'center',
-  },
+const useStyles = makeStyles(() => ({
+  root: {},
 }))
