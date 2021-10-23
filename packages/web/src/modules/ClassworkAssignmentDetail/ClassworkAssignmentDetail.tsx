@@ -9,7 +9,7 @@ import FileComponent from 'components/FileComponent'
 import Image from 'components/Image'
 import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
-import { FilePlus, Trash } from 'phosphor-react'
+import { FilePlus, Trash, PlusCircle } from 'phosphor-react'
 import { Pie } from 'react-chartjs-2'
 import { useParams } from 'react-router-dom'
 
@@ -50,6 +50,7 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
+import AddVideoToClassworkAssignment from './AddVideoToClassworkAssignment'
 
 export type ClassworkAssignmentDetailProps = {}
 
@@ -58,6 +59,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const params: { id: string } = useParams()
   const id = useMemo(() => params.id, [params])
   const [openAddFile, setOpenAddFile] = useState(false)
+  const [openAddVideo, setOpenAddVideo] = useState(false)
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<CommentModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
@@ -392,15 +394,32 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             gridItem={{ xs: 12 }}
             title="Danh sách video"
           >
-            <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {
-                classworkAssignment.videos.map((item, i) => (
-                  <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
-                    <Image width={150} height={150} fileId={item.thumbnail as ANY} />
-                    <p style={{ margin: 0 }}>{item.title}</p>
-                  </div>
-                ))
-              }
+            <CardContent >
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {
+                  classworkAssignment.videos.map((item, i) => (
+                    <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
+                      <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+                      <p style={{ margin: 0 }}>{item.title}</p>
+                    </div>
+                  ))
+                }
+              </div>
+              {!openAddVideo && (
+                <Button
+                  fullWidth
+                  onClick={() => setOpenAddVideo(true)}
+                  startIcon={<PlusCircle />}
+                >
+                  Thêm video
+                </Button>
+              )}
+              {openAddVideo && (
+                <AddVideoToClassworkAssignment
+                  idClassworkAssignment={classworkAssignment.id}
+                  setOpen={setOpenAddVideo}
+                />
+              )}
             </CardContent>
             <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
           </SectionCard>}

@@ -33,6 +33,7 @@ import {
   ClassworkAssignmentByStudentIdInCourseInputStatus,
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
   UpdateClassworkAssignmentInput,
+  AddVideoToClassworkInput,
 } from './classwork.type'
 import { Classwork, ClassworkType, Video } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -216,6 +217,78 @@ export class ClassworkService {
     })
 
     return imageFile.id
+  }
+
+  async addVideoToClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    videoInput: {
+      title: string
+      thumbnail: string
+      iframe: string
+    },
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork) {
+      classwork.videos.push(videoInput)
+    }
+
+    await classwork.save()
+
+    return classwork
+  }
+
+  async removeVideoFromClasswork(
+    orgId: string,
+    classworkId: string,
+    classworkType: ClassworkType,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<Classwork>>> {
+    const { classworkMaterialModel, classworkAssignmentsModel } = this
+
+    let classwork: ANY
+
+    if (classworkType === ClassworkType.Material) {
+      classwork = await classworkMaterialModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    } else if (classworkType === ClassworkType.Assignment) {
+      classwork = await classworkAssignmentsModel.findOne({
+        _id: classworkId,
+        orgId,
+      })
+    }
+
+    if (classwork) {
+      const currentVideos = classwork.videos
+
+      const videosFilter = currentVideos.filter((video) => {
+        return video.id !== videoId
+      })
+
+      classwork.videos = videosFilter
+    }
+
+    await classwork.save()
+
+    return classwork
   }
 
   /**
@@ -670,6 +743,55 @@ export class ClassworkService {
     this.logger.verbose(newCloneClassworkMaterial)
     return newCloneClassworkMaterial
   }
+
+  async addVideoToClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    videoInput: AddVideoToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    const { video } = videoInput
+
+    let imageId = ''
+    if (video.thumbnail) {
+      imageId = await this.uploadThumbnail(
+        orgId,
+        uploadedByAccountId,
+        video.thumbnail,
+      )
+    }
+
+    let videoObject: ANY = {
+      title: video.title,
+      iframe: video.iframe,
+    }
+
+    if (imageId) {
+      videoObject = {
+        ...video,
+        thumbnail: imageId,
+      }
+    }
+    return this.addVideoToClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      videoObject,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
+
+  async removeVideoFromClassworkMaterial(
+    orgId: string,
+    classworkMaterialId: string,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkMaterial>>> {
+    return this.removeVideoFromClasswork(
+      orgId,
+      classworkMaterialId,
+      ClassworkType.Material,
+      videoId,
+    ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
+  }
   /**
    * END CLASSWORK MATERIAL
    */
@@ -838,7 +960,7 @@ export class ClassworkService {
           )
         }
 
-        let video: Video = {
+        let video: ANY = {
           title: iframeObject.title,
           iframe: iframeObject.iframe,
         }
@@ -971,38 +1093,6 @@ export class ClassworkService {
         classworkAssignmentUpdate.dueDate = dueDateInput
       }
     }
-
-    // if (videos) {
-    //   const listVideos: Video[] = []
-    //   const map = videos.map(async (iframeObject) => {
-    //     let imageId = ''
-    //     if (iframeObject.thumbnail) {
-    //       imageId = await this.uploadThumbnail(
-    //         orgId,
-    //         accountId,
-    //         iframeObject.thumbnail,
-    //       )
-    //     }
-
-    //     let video: Video = {
-    //       title: iframeObject.title,
-    //       iframe: iframeObject.iframe,
-    //     }
-
-    //     if (imageId) {
-    //       video = {
-    //         ...video,
-    //         thumbnail: imageId,
-    //       }
-    //     }
-
-    //     listVideos.push(video)
-    //   })
-
-    //   await Promise.all(map)
-
-    //   classworkAssignmentUpdate.videos = listVideos
-    // }
 
     const updated = await classworkAssignmentUpdate.save()
     return updated
@@ -1308,6 +1398,55 @@ export class ClassworkService {
     )
     this.logger.verbose(newCloneClassworkAssignment)
     return newCloneClassworkAssignment
+  }
+
+  async addVideoToClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    videoInput: AddVideoToClassworkInput,
+    uploadedByAccountId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    const { video } = videoInput
+
+    let imageId = ''
+    if (video.thumbnail) {
+      imageId = await this.uploadThumbnail(
+        orgId,
+        uploadedByAccountId,
+        video.thumbnail,
+      )
+    }
+
+    let videoObject: ANY = {
+      title: video.title,
+      iframe: video.iframe,
+    }
+
+    if (imageId) {
+      videoObject = {
+        ...video,
+        thumbnail: imageId,
+      }
+    }
+    return this.addVideoToClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      videoObject,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
+  }
+
+  async removeVideoFromClassworkAssignment(
+    orgId: string,
+    classworkAssignmentId: string,
+    videoId: string,
+  ): Promise<Nullable<DocumentType<ClassworkAssignment>>> {
+    return this.removeVideoFromClasswork(
+      orgId,
+      classworkAssignmentId,
+      ClassworkType.Assignment,
+      videoId,
+    ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
   /**
    * END CLASSWORK ASSIGNMENT

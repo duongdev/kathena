@@ -126,15 +126,18 @@ export class UpdateClassworkAssignmentInput {
   @Field({ nullable: true })
   @IsOptional()
   dueDate?: Date
-
-  // @Field((_type) => [VideoInput], { nullable: true })
-  // videos?: VideoInput[]
 }
 
 @InputType()
 export class AddAttachmentsToClassworkInput {
   @Field((_type) => [GraphQLUpload])
   attachments?: Promise<FileUpload>[]
+}
+
+@InputType()
+export class AddVideoToClassworkInput {
+  @Field((_type) => VideoInput, { nullable: true })
+  video: VideoInput
 }
 
 @InputType()

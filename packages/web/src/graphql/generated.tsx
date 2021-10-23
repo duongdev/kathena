@@ -87,6 +87,10 @@ export type AddAttachmentsToClassworkInput = {
   attachments: Array<Scalars['Upload']>
 }
 
+export type AddVideoToClassworkInput = {
+  video?: Maybe<VideoInput>
+}
+
 export type AuthenticatePayload = {
   account: Account
   org: Org
@@ -452,6 +456,8 @@ export type Mutation = {
   addAttachmentsToClassworkMaterial: ClassworkMaterial
   addLecturesToCourse: Course
   addStudentsToCourse: Course
+  addVideoToClassworkAssignment: ClassworkAssignment
+  addVideoToClassworkMaterial: ClassworkMaterial
   callOTP: Account
   cloneTheCourse: Course
   commentsByLecturer: Lesson
@@ -474,6 +480,8 @@ export type Mutation = {
   removeAttachmentsFromClassworkMaterial: ClassworkMaterial
   removeLecturersFromCourse: Course
   removeStudentsFromCourse: Course
+  removeVideoFromClassworkAssignment: ClassworkAssignment
+  removeVideoFromClassworkMaterial: ClassworkMaterial
   setGradeForClassworkSubmission: ClassworkSubmission
   setPassword: Account
   signIn: SignInPayload
@@ -518,6 +526,16 @@ export type MutationAddLecturesToCourseArgs = {
 export type MutationAddStudentsToCourseArgs = {
   courseId: Scalars['ID']
   studentIds: Array<Scalars['ID']>
+}
+
+export type MutationAddVideoToClassworkAssignmentArgs = {
+  classworkAssignmentId: Scalars['ID']
+  videoInput: AddVideoToClassworkInput
+}
+
+export type MutationAddVideoToClassworkMaterialArgs = {
+  classworkMaterialId: Scalars['ID']
+  videoInput: AddVideoToClassworkInput
 }
 
 export type MutationCallOtpArgs = {
@@ -618,6 +636,16 @@ export type MutationRemoveLecturersFromCourseArgs = {
 export type MutationRemoveStudentsFromCourseArgs = {
   id: Scalars['ID']
   studentIds: Array<Scalars['ID']>
+}
+
+export type MutationRemoveVideoFromClassworkAssignmentArgs = {
+  classworkAssignmentId: Scalars['ID']
+  videoId: Scalars['ID']
+}
+
+export type MutationRemoveVideoFromClassworkMaterialArgs = {
+  classworkMaterialId: Scalars['ID']
+  videoId: Scalars['String']
 }
 
 export type MutationSetGradeForClassworkSubmissionArgs = {
@@ -767,6 +795,8 @@ export enum Permission {
   AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
   Classwork_AddAttachmentsToClassworkAssignment = 'Classwork_AddAttachmentsToClassworkAssignment',
   Classwork_AddAttachmentsToClassworkMaterial = 'Classwork_AddAttachmentsToClassworkMaterial',
+  Classwork_AddVideoToClassworkAssignment = 'Classwork_AddVideoToClassworkAssignment',
+  Classwork_AddVideoToClassworkMaterial = 'Classwork_AddVideoToClassworkMaterial',
   Classwork_CreateClassworkAssignment = 'Classwork_CreateClassworkAssignment',
   Classwork_CreateClassworkMaterial = 'Classwork_CreateClassworkMaterial',
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
@@ -775,6 +805,8 @@ export enum Permission {
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
+  Classwork_RemoveVideoToClassworkAssignment = 'Classwork_RemoveVideoToClassworkAssignment',
+  Classwork_RemoveVideoToClassworkMaterial = 'Classwork_RemoveVideoToClassworkMaterial',
   Classwork_SetClassworkAssignmentPublication = 'Classwork_SetClassworkAssignmentPublication',
   Classwork_SetClassworkMaterialPublication = 'Classwork_SetClassworkMaterialPublication',
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
@@ -1176,6 +1208,7 @@ export type UpdateOrgOfficeInput = {
 }
 
 export type Video = {
+  id: Scalars['ID']
   iframe: Scalars['String']
   thumbnail?: Maybe<Scalars['ID']>
   title: Scalars['String']
@@ -1610,6 +1643,15 @@ export type UpdateClassworkAssignmentPublicationMutation = {
     publicationState: Publication
     dueDate?: any | null | undefined
   }
+}
+
+export type AddVideoToClassworkAssignmentMutationVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+  videoInput: AddVideoToClassworkInput
+}>
+
+export type AddVideoToClassworkAssignmentMutation = {
+  addVideoToClassworkAssignment: { id: string }
 }
 
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
@@ -6497,6 +6539,152 @@ export type UpdateClassworkAssignmentPublicationMutationOptions =
   Apollo.BaseMutationOptions<
     UpdateClassworkAssignmentPublicationMutation,
     UpdateClassworkAssignmentPublicationMutationVariables
+  >
+export const AddVideoToClassworkAssignmentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddVideoToClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'videoInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddVideoToClassworkInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addVideoToClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'videoInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'videoInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddVideoToClassworkAssignmentMutationFn = Apollo.MutationFunction<
+  AddVideoToClassworkAssignmentMutation,
+  AddVideoToClassworkAssignmentMutationVariables
+>
+export type AddVideoToClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables
+  >
+} & TChildProps
+export function withAddVideoToClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables,
+    AddVideoToClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables,
+    AddVideoToClassworkAssignmentProps<TChildProps, TDataName>
+  >(AddVideoToClassworkAssignmentDocument, {
+    alias: 'addVideoToClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddVideoToClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useAddVideoToClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddVideoToClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addVideoToClassworkAssignmentMutation, { data, loading, error }] = useAddVideoToClassworkAssignmentMutation({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *      videoInput: // value for 'videoInput'
+ *   },
+ * });
+ */
+export function useAddVideoToClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables
+  >(AddVideoToClassworkAssignmentDocument, options)
+}
+export type AddVideoToClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useAddVideoToClassworkAssignmentMutation
+>
+export type AddVideoToClassworkAssignmentMutationResult =
+  Apollo.MutationResult<AddVideoToClassworkAssignmentMutation>
+export type AddVideoToClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddVideoToClassworkAssignmentMutation,
+    AddVideoToClassworkAssignmentMutationVariables
   >
 export const FindClassworkSubmissionByIdDocument = {
   kind: 'Document',

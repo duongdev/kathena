@@ -150,6 +150,7 @@ enum FileLocation {
 }
 
 type Video {
+  id: ID!
   title: String!
   thumbnail: ID
   iframe: String!
@@ -292,6 +293,8 @@ enum Permission {
   Classwork_SetClassworkAssignmentPublication
   Classwork_AddAttachmentsToClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkAssignment
+  Classwork_AddVideoToClassworkAssignment
+  Classwork_RemoveVideoToClassworkAssignment
   Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
@@ -299,6 +302,8 @@ enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
   Classwork_SetGradeForClassworkSubmission
+  Classwork_AddVideoToClassworkMaterial
+  Classwork_RemoveVideoToClassworkMaterial
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
@@ -573,11 +578,15 @@ type Mutation {
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
   addAttachmentsToClassworkMaterial(attachmentsInput: AddAttachmentsToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
+  addVideoToClassworkMaterial(videoInput: AddVideoToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
+  removeVideoFromClassworkMaterial(videoId: String!, classworkMaterialId: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  addVideoToClassworkAssignment(videoInput: AddVideoToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
+  removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateFile(newFile: Upload!, id: ID!): File!
@@ -690,6 +699,16 @@ input AddAttachmentsToClassworkInput {
   attachments: [Upload!]!
 }
 
+input AddVideoToClassworkInput {
+  video: VideoInput
+}
+
+input VideoInput {
+  title: String!
+  thumbnail: Upload
+  iframe: String!
+}
+
 input CreateClassworkAssignmentInput {
   title: String!
   description: String!
@@ -697,12 +716,6 @@ input CreateClassworkAssignmentInput {
   dueDate: DateTime
   publicationState: Publication
   videos: [VideoInput!]
-}
-
-input VideoInput {
-  title: String!
-  thumbnail: Upload
-  iframe: String!
 }
 
 input UpdateClassworkAssignmentInput {
