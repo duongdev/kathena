@@ -84,3 +84,9 @@ mutation UpdateClassworkAssignmentPublication($publication: String!, $id: ID!) {
     dueDate
   }
 }
+
+mutation AddVideoToClassworkAssignment ($classworkAssignmentId: ID!, $videoInput: AddVideoToClassworkInput!){
+  addVideoToClassworkAssignment(classworkAssignmentId: $classworkAssignmentId,videoInput:$videoInput){
+    id
+  }
+}
