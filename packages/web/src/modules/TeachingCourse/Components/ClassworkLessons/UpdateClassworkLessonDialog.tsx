@@ -46,7 +46,7 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
   const { classworkLesson: classworkLessonProp } =
     props as ClassworkLessonWithClassworkLesson
 
-  const [updateClassworkLesson, { error }] = useUpdateLessonMutation()
+  const [updateClassworkLesson] = useUpdateLessonMutation()
   const { data } = useFindLessonByIdQuery({
     variables: {
       lessonId: classworkLessonId,
@@ -102,7 +102,7 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
           enqueueSnackbar(`Sửa buổi học thành công`, {
             variant: 'success',
           })
-          // onClose()
+          onClose()
         } catch (err) {
           enqueueSnackbar(`Sửa buổi học thất bại`, {
             variant: 'error',
@@ -118,7 +118,9 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
               lessonId: classworkLesson.id,
               updateInput: {
                 description: input.description,
-                publicationState: classworkLesson.publicationState,
+                options: UpdateLessonTimeOptions.ArbitraryChange,
+                startTime: TimeStart,
+                endTime: TimeEnd,
               },
             },
           })
@@ -126,13 +128,12 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
           if (!classworkLessonUpdated) {
             return
           }
-
           enqueueSnackbar(`Sửa buổi học thành công`, {
             variant: 'success',
           })
-          // onClose()
+          onClose()
         } catch (err) {
-          if (TimeStart > TimeEnd) {
+          if (TimeStart >= TimeEnd) {
             enqueueSnackbar(
               `Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc`,
               {
@@ -140,14 +141,14 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
               },
             )
           } else {
-            enqueueSnackbar(`Sửa buổi học thất bại`, {
+            enqueueSnackbar(`Đã có một buổi học trong thời gian này!`, {
               variant: 'error',
             })
           }
         }
       }
     },
-    [updateClassworkLesson, enqueueSnackbar, classworkLesson],
+    [updateClassworkLesson, enqueueSnackbar, classworkLesson, onClose],
   )
 
   return (
@@ -162,7 +163,7 @@ const UpdateClassworkLessonDialog: FC<UpdateClassworkLessonDialogProps> = (
       submitButtonLabel="Sửa"
       backgroundButton="primary"
     >
-      <FormContent error={error} />
+      <FormContent />
     </FormDialog>
   )
 }

@@ -15,7 +15,7 @@ export type UpdateClassworkLessonFormInput = {
   endTime: string | ANY
   startDay: string | ANY
   endDay: string | ANY
-  numberOfLessonsPostponed: number
+  numberOfLessonsPostponed: number | ANY
   options: string
 }
 
@@ -33,31 +33,35 @@ export const validationSchema: SchemaOf<UpdateClassworkLessonFormInput> =
   yup.object({
     description: yup.string().label(labels.description).required(),
     options: yup.string().label(labels.options).required(),
-    numberOfLessonsPostponed: yup
-      .number()
-      .label(labels.numberOfLessonsPostponed)
-      .required(),
-    // startTime: yup.string().label(labels.startTime).trim().notRequired(),
-    // endTime: yup.string().label(labels.endTime).trim().notRequired(),
-    // startDay: yup.string().label(labels.startDay).trim().notRequired(),
-    // endDay: yup.string().label(labels.endDay).trim().notRequired(),
+    numberOfLessonsPostponed: yup.number().when('options', {
+      is: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
+      then: yup
+        .number()
+        .label(labels.numberOfLessonsPostponed)
+        .max(50)
+        .required(),
+      otherwise: yup
+        .number()
+        .label(labels.numberOfLessonsPostponed)
+        .notRequired(),
+    }),
     startTime: yup.string().when('options', {
-      is: true,
+      is: UpdateLessonTimeOptions.ArbitraryChange,
       then: yup.string().label(labels.startTime).trim().required(),
       otherwise: yup.string().label(labels.startTime).trim().notRequired(),
     }),
     endTime: yup.string().when('options', {
-      is: true,
+      is: UpdateLessonTimeOptions.ArbitraryChange,
       then: yup.string().label(labels.endTime).trim().required(),
       otherwise: yup.string().label(labels.endTime).trim().notRequired(),
     }),
     startDay: yup.string().when('options', {
-      is: true,
+      is: UpdateLessonTimeOptions.ArbitraryChange,
       then: yup.string().label(labels.startDay).trim().required(),
       otherwise: yup.string().label(labels.startDay).trim().notRequired(),
     }),
     endDay: yup.string().when('options', {
-      is: true,
+      is: UpdateLessonTimeOptions.ArbitraryChange,
       then: yup.string().label(labels.endDay).trim().required(),
       otherwise: yup.string().label(labels.endDay).trim().notRequired(),
     }),
