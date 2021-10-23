@@ -10,6 +10,7 @@ import {
   Lesson,
   useUpdateLessonMutation,
   useClassworkMaterialsListQuery,
+  UpdateLessonTimeOptions,
 } from 'graphql/generated'
 
 import MaterialDisplayName from '../LessonDisplayName/MaterialDisplayName'
@@ -116,11 +117,13 @@ const AddClassworkMaterialListAfterClass: FC<AddClassworkMaterialListAfterClassP
             lessonId: lesson.id,
             updateInput: {
               classworkMaterialListAfterClass,
+              options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
             },
           },
         })
         if (lessonUpdate) {
           enqueueSnackbar(`Thêm thành công`, { variant: 'success' })
+          onClose()
         } else {
           enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
         }
@@ -137,28 +140,36 @@ const AddClassworkMaterialListAfterClass: FC<AddClassworkMaterialListAfterClassP
         width={770}
         dialogTitle="Danh sách tài liệu"
         extraDialogActions={
-          <Button onClick={handleUpdate} loading={loading}>
+          <Button
+            variant="contained"
+            backgroundColorButton="primary"
+            onClick={handleUpdate}
+            loading={loading}
+          >
             Lưu
           </Button>
         }
       >
         <>
           <div className={classes.root}>
-            {materials.map((item) => {
-              const inTheListMaterial =
-                classworkMaterialListAfterClass.findIndex((i) => i === item) >
-                -1
-              return (
-                <div
-                  onClick={() => toggleClick(item)}
-                  className={`${classes.item} ${
-                    inTheListMaterial ? classes.active : ''
-                  }`}
-                >
-                  <MaterialDisplayName materialId={item} />
-                </div>
-              )
-            })}
+            {materials.length
+              ? materials.map((item) => {
+                  const inTheListMaterial =
+                    classworkMaterialListAfterClass.findIndex(
+                      (i) => i === item,
+                    ) > -1
+                  return (
+                    <div
+                      onClick={() => toggleClick(item)}
+                      className={`${classes.item} ${
+                        inTheListMaterial ? classes.active : ''
+                      }`}
+                    >
+                      <MaterialDisplayName materialId={item} />
+                    </div>
+                  )
+                })
+              : 'Không có tài liệu trong danh sách'}
           </div>
         </>
       </Dialog>

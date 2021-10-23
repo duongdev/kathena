@@ -10,6 +10,7 @@ import {
   Lesson,
   useUpdateLessonMutation,
   useClassworkAssignmentListQuery,
+  UpdateLessonTimeOptions,
 } from 'graphql/generated'
 
 import AssignmentDisplayName from '../LessonDisplayName/AssignmentDisplayName'
@@ -121,11 +122,13 @@ const AddClassworkAssignmentListBeforeClass: FC<AddClassworkAssignmentListBefore
             lessonId: lesson.id,
             updateInput: {
               classworkAssignmentListBeforeClass,
+              options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
             },
           },
         })
         if (lessonUpdate) {
           enqueueSnackbar(`Thêm thành công`, { variant: 'success' })
+          onClose()
         } else {
           enqueueSnackbar(`Thêm thất bại`, { variant: 'error' })
         }
@@ -142,29 +145,36 @@ const AddClassworkAssignmentListBeforeClass: FC<AddClassworkAssignmentListBefore
         width={770}
         dialogTitle="Danh sách bài tập"
         extraDialogActions={
-          <Button onClick={handleUpdate} loading={loading}>
+          <Button
+            variant="contained"
+            backgroundColorButton="primary"
+            onClick={handleUpdate}
+            loading={loading}
+          >
             Lưu
           </Button>
         }
       >
         <>
           <div className={classes.root}>
-            {attachments.map((item) => {
-              const inTheListAssignment =
-                classworkAssignmentListBeforeClass.findIndex(
-                  (i) => i === item,
-                ) > -1
-              return (
-                <div
-                  onClick={() => toggleClick(item)}
-                  className={`${classes.item} ${
-                    inTheListAssignment ? classes.active : ''
-                  }`}
-                >
-                  <AssignmentDisplayName assignmentId={item} />
-                </div>
-              )
-            })}
+            {attachments.length
+              ? attachments.map((item) => {
+                  const inTheListAssignment =
+                    classworkAssignmentListBeforeClass.findIndex(
+                      (i) => i === item,
+                    ) > -1
+                  return (
+                    <div
+                      onClick={() => toggleClick(item)}
+                      className={`${classes.item} ${
+                        inTheListAssignment ? classes.active : ''
+                      }`}
+                    >
+                      <AssignmentDisplayName assignmentId={item} />
+                    </div>
+                  )
+                })
+              : 'Không có bài tập trong danh sách'}
           </div>
         </>
       </Dialog>
