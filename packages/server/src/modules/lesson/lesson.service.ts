@@ -440,21 +440,24 @@ export class LessonService {
     } else if (
       options === UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons
     ) {
-      const lessonsData = await lessons.find({
-        $and: [
-          {
-            startTime: {
-              $gte: lesson.startTime,
+      const lessonsData = await lessons
+        .find({
+          $and: [
+            {
+              startTime: {
+                $gte: lesson.startTime,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+        .sort({ startTime: 1 })
 
       const updateTime = lessonsData.map(async (lessonData) => {
         const lessonStartTime = new Date(lessonData.startTime)
         const lessonEndTime = new Date(lessonData.endTime)
 
         let count = 0
+        this.logger.log(numberOfLessonsPostponed)
         if (numberOfLessonsPostponed) {
           while (count < numberOfLessonsPostponed) {
             if (!course.listOfLessonsForAWeek.length) break
@@ -482,6 +485,8 @@ export class LessonService {
       await Promise.all(updateTime).catch((err) => {
         throw new Error(err)
       })
+
+      this.logger.log(lessonsData)
 
       lesson.startTime = lessonsData[0].startTime
       lesson.endTime = lessonsData[0].endTime
