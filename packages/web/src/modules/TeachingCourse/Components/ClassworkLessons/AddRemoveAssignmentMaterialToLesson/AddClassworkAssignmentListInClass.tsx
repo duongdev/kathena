@@ -143,27 +143,36 @@ const AddClassworkAssignmentListInClass: FC<AddClassworkAssignmentListInClassPro
         width={770}
         dialogTitle="Danh sách bài tập"
         extraDialogActions={
-          <Button onClick={handleUpdate} loading={loading}>
+          <Button
+            variant="contained"
+            backgroundColorButton="primary"
+            onClick={handleUpdate}
+            loading={loading}
+          >
             Lưu
           </Button>
         }
       >
         <>
           <div className={classes.root}>
-            {attachments.map((item) => {
-              const inTheListAssignment =
-                classworkAssignmentListInClass.findIndex((i) => i === item) > -1
-              return (
-                <div
-                  onClick={() => toggleClick(item)}
-                  className={`${classes.item} ${
-                    inTheListAssignment ? classes.active : ''
-                  }`}
-                >
-                  <AssignmentDisplayName assignmentId={item} />
-                </div>
-              )
-            })}
+            {attachments.length
+              ? attachments.map((item) => {
+                  const inTheListAssignment =
+                    classworkAssignmentListInClass.findIndex(
+                      (i) => i === item,
+                    ) > -1
+                  return (
+                    <div
+                      onClick={() => toggleClick(item)}
+                      className={`${classes.item} ${
+                        inTheListAssignment ? classes.active : ''
+                      }`}
+                    >
+                      <AssignmentDisplayName assignmentId={item} />
+                    </div>
+                  )
+                })
+              : 'Không có bài tập trong danh sách'}
           </div>
         </>
       </Dialog>
