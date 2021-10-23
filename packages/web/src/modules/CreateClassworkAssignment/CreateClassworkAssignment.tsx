@@ -84,7 +84,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
               input: {
                 ...input,
                 publicationState: publication,
-                iframeVideos
+                iframeVideos,
               },
             },
           })
@@ -126,13 +126,14 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
   )
 
   const addIframe = (iframe: string) => {
-    if(iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`))
-    {
+    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
       const arr = [...iframeVideos]
       arr.push(iframe)
       setIframeVideos(arr)
     } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, { variant: 'error' })
+      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
+        variant: 'error',
+      })
     }
   }
 
@@ -157,6 +158,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           })}
           actions={[
             <SplitButton
+              backgroundButton="primary"
               items={[
                 {
                   children: 'Đăng bài tập',
@@ -179,7 +181,11 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           ]}
           className={classes.root}
         >
-          <CreateClassworkAssignmentForm iframeVideos={iframeVideos} addIframe={addIframe} removeIframe={removeIframe} />
+          <CreateClassworkAssignmentForm
+            iframeVideos={iframeVideos}
+            addIframe={addIframe}
+            removeIframe={removeIframe}
+          />
         </PageContainer>
       )}
     </Formik>
