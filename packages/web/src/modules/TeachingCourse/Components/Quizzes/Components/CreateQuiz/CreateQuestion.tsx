@@ -130,6 +130,7 @@ const CreateQuestion: FC<CreateQuestionProps> = (props) => {
           name="score"
           variant="quantity"
           label="Điểm"
+          max={100}
           min={1}
         />
       </Stack>

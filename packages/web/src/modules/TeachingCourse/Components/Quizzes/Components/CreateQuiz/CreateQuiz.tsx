@@ -251,6 +251,7 @@ const CreateQuiz: FC<CreateQuizProps> = (props) => {
             <Stack mt={3}>
               <InputField
                 required
+                max={720}
                 quantity={duration}
                 onQuantityChange={(value) => setDuration(value)}
                 name="duration"
