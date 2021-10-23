@@ -102,6 +102,7 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
             className={classes.root}
             actions={[
               <Button
+                backgroundColorButton="primary"
                 variant="contained"
                 color="primary"
                 size="large"

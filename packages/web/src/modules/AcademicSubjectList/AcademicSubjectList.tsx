@@ -58,6 +58,7 @@ const AcademicSubjectList: FC<AcademicSubjectListProps> = (props) => {
           permission={Permission.Academic_AcademicSubject_Access}
         >
           <Button
+            backgroundColorButton="primary"
             variant="contained"
             color="primary"
             link={CREATE_ACADEMIC_SUBJECT}

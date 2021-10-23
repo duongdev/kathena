@@ -69,7 +69,7 @@
     "@types/file-type": "10.9.1",
     "@types/jest": "27.0.2",
     "@types/jsonwebtoken": "8.5.5",
-    "@types/lodash": "4.14.175",
+    "@types/lodash": "4.14.176",
     "@types/mongodb-memory-server": "2.3.0",
     "@types/node": "14.14.37",
     "@types/shortid": "0.0.29",
@@ -88,7 +88,7 @@
     "supertest": "6.1.6",
     "ts-jest": "27.0.7",
     "ts-loader": "9.2.6",
-    "ts-node": "10.3.0",
+    "ts-node": "10.4.0",
     "tsconfig-paths": "3.11.0",
     "typescript": "4.1.2",
     "webpack-node-externals": "3.0.0"

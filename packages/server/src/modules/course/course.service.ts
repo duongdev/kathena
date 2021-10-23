@@ -162,9 +162,7 @@ export class CourseService {
     }
 
     if (totalNumberOfLessons > 200) {
-      throw new Error(
-        `TOTAL_NUMBER_OF_THE_LESSON_SHOULD_NOT_EXCEED_200_LESSONS`,
-      )
+      throw new Error(`Tổng số buổi học không được lớn hơn 200 buổi!`)
     }
 
     if (academicSubject.publication === Publication.Draft) {

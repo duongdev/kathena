@@ -101,6 +101,7 @@ const SignInForm: FC<SignInFormProps> = (props) => {
               size="large"
               loading={formik.isSubmitting}
               type="submit"
+              backgroundColorButton="primary"
             >
               Đăng nhập
             </Button>

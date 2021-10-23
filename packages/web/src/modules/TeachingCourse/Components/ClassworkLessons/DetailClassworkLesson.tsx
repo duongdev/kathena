@@ -156,6 +156,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
         title={classworkLesson.description as ANY}
         actions={[
           <Button
+            backgroundColorButton="primary"
             onClick={() =>
               updatePublication(
                 classworkLesson.publicationState === Publication.Draft
@@ -169,10 +170,18 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
               ? 'Bản nháp'
               : 'Công khai'}
           </Button>,
-          <Button onClick={handleOpenAttendance} variant="contained">
+          <Button
+            backgroundColorButton="primary"
+            onClick={handleOpenAttendance}
+            variant="contained"
+          >
             Điểm danh
           </Button>,
-          <Button onClick={handleOpenUpdateDialog} variant="contained">
+          <Button
+            backgroundColorButton="primary"
+            onClick={handleOpenUpdateDialog}
+            variant="contained"
+          >
             Sửa buổi học
           </Button>,
         ]}

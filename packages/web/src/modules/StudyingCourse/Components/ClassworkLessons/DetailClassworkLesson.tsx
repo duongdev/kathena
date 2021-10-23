@@ -60,7 +60,11 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
       maxWidth="lg"
       title={classworkLesson.description as ANY}
       actions={[
-        <Button onClick={handleOpenRating} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenRating}
+          variant="contained"
+        >
           Đánh giá buổi học
         </Button>,
       ]}

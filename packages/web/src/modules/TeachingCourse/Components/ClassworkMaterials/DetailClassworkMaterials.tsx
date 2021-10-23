@@ -207,6 +207,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       title={`${classworkMaterial?.title}`}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               classworkMaterial?.publicationState === Publication.Draft
@@ -220,7 +221,11 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
             ? 'Bản nháp'
             : 'Công khai'}
         </Button>,
-        <Button onClick={handleOpenUpdateDialog} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenUpdateDialog}
+          variant="contained"
+        >
           Sửa tài liệu
         </Button>,
       ]}

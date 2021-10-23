@@ -106,6 +106,7 @@ export const CreateAccountDialog: FC<CreateAccountDialogProps> = (props) => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
       submitButtonLabel="Tạo tài khoản"
+      backgroundButton="primary"
     >
       <Grid container spacing={2}>
         <TextFormField

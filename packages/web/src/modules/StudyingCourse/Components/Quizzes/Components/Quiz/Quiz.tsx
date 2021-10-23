@@ -1,9 +1,8 @@
-import { FC, useMemo, useState, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CardContent, Chip, Grid, Stack } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import { useSnackbar } from 'notistack'
-import { useParams, Prompt } from 'react-router-dom'
+import { Prompt, useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
@@ -223,11 +222,30 @@ const Quiz: FC<QuizProps> = () => {
       maxWidth="md"
       title={quiz.title}
       actions={[
-        <PublicationChip
-          publication={quiz?.publicationState as ANY}
-          variant="outlined"
-          size="medium"
-        />,
+        !startTime ? (
+          <>
+            {!isSubmited ? (
+              <Button
+                variant="contained"
+                backgroundColorButton="primary"
+                onClick={handleStart}
+              >
+                Bắt đầu làm bài
+              </Button>
+            ) : (
+              <Chip color="primary" label={`${quizSubmit?.scores ?? 0} điểm`} />
+            )}
+          </>
+        ) : (
+          <Button
+            backgroundColorButton="primary"
+            variant="contained"
+            loading={loadingSubmit}
+            onClick={() => handleSubmit()}
+          >
+            Nộp bài: {endTime}
+          </Button>
+        ),
       ]}
     >
       <Prompt
@@ -239,28 +257,6 @@ const Quiz: FC<QuizProps> = () => {
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
           title="Thông tin trắc nghiệm"
-          action={
-            !startTime ? (
-              <>
-                {!isSubmited ? (
-                  <Button onClick={handleStart}>Bắt đầu làm bài</Button>
-                ) : (
-                  <Chip
-                    color="primary"
-                    label={`${quizSubmit?.scores ?? 0} điểm`}
-                  />
-                )}
-              </>
-            ) : (
-              <Button
-                variant="contained"
-                loading={loadingSubmit}
-                onClick={() => handleSubmit()}
-              >
-                Nộp bài: {endTime}
-              </Button>
-            )
-          }
         >
           <CardContent>
             <Grid container spacing={2}>
