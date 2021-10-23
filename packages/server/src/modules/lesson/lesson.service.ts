@@ -440,15 +440,17 @@ export class LessonService {
     } else if (
       options === UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons
     ) {
-      const lessonsData = await lessons.find({
-        $and: [
-          {
-            startTime: {
-              $gte: lesson.startTime,
+      const lessonsData = await lessons
+        .find({
+          $and: [
+            {
+              startTime: {
+                $gte: lesson.startTime,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+        .sort({ startTime: 1 })
 
       const updateTime = lessonsData.map(async (lessonData) => {
         const lessonStartTime = new Date(lessonData.startTime)
