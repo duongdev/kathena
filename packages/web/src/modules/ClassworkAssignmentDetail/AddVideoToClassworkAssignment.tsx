@@ -19,6 +19,7 @@ const AddVideoToClassworkAssignment: FC<AddVideoToClassworkAssignmentProps> =
     const { idClassworkAssignment } = props
     const { enqueueSnackbar } = useSnackbar()
     const [addVideoToClassworkAssignment] = useAddVideoToClassworkAssignmentMutation({
+      context: { hasFileUpload: true },
       refetchQueries: [{
         query: ClassworkAssignmentDetailDocument,
         variables: { id: idClassworkAssignment }
