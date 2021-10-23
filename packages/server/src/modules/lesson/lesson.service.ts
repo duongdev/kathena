@@ -457,7 +457,6 @@ export class LessonService {
         const lessonEndTime = new Date(lessonData.endTime)
 
         let count = 0
-        this.logger.log(numberOfLessonsPostponed)
         if (numberOfLessonsPostponed) {
           while (count < numberOfLessonsPostponed) {
             if (!course.listOfLessonsForAWeek.length) break
@@ -485,8 +484,6 @@ export class LessonService {
       await Promise.all(updateTime).catch((err) => {
         throw new Error(err)
       })
-
-      this.logger.log(lessonsData)
 
       lesson.startTime = lessonsData[0].startTime
       lesson.endTime = lessonsData[0].endTime
