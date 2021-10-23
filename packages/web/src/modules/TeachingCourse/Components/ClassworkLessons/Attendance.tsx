@@ -13,6 +13,7 @@ import {
   useFindCourseByIdQuery,
   useUpdateLessonMutation,
   FindLessonByIdDocument,
+  UpdateLessonTimeOptions,
 } from 'graphql/generated'
 
 export type AttendanceProps = {
@@ -93,6 +94,7 @@ const Attendance: FC<AttendanceProps> = (props) => {
           lessonId: lesson.id,
           updateInput: {
             absentStudentIds,
+            options: UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons,
           },
         },
       })
