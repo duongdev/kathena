@@ -47,7 +47,6 @@ query DetailClassworkMaterial($Id: ID!) {
     attachments
     publicationState
     courseId
-    iframeVideos
   }
 }
 
@@ -66,7 +65,6 @@ mutation UpdateClassworkMaterial(
     title
     description
     attachments
-    iframeVideos
   }
 }
 

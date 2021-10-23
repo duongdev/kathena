@@ -1,18 +1,22 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { ANY } from '@kathena/types'
-import { Dialog, Button } from '@kathena/ui'
+import { Dialog, Button, Typography } from '@kathena/ui'
 
 export type VideoPopupProps = {
   open: boolean
   onClose: () => void
-  iframeVideos: string[]
+  videos: ANY[]
   index: number
 }
 
 const VideoPopup: FC<VideoPopupProps> = (props) => {
-  const { open, onClose, iframeVideos, index: indexProps } = props
+  const { open, onClose, videos, index: indexProps } = props
   const [index, setIndex] = useState(indexProps)
+
+  useEffect(() => {
+    setIndex(indexProps)
+  }, [indexProps])
 
   return (
     <Dialog
@@ -27,7 +31,7 @@ const VideoPopup: FC<VideoPopupProps> = (props) => {
             Previous
           </Button>
           <Button
-            disabled={iframeVideos.length === index + 1}
+            disabled={videos.length === index + 1}
             onClick={() => setIndex((state) => state + 1)}
           >
             Next
@@ -35,10 +39,11 @@ const VideoPopup: FC<VideoPopupProps> = (props) => {
         </>
       }
     >
+      <Typography variant='h3' style={{ marginBottom: 10 }} >{videos[index].title}</Typography>
       <div style={{ position: 'relative' }}>
         <div
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: iframeVideos[index] as ANY }}
+          dangerouslySetInnerHTML={{ __html: videos[index].iframe as ANY }}
         />
       </div>
     </Dialog>

@@ -56,17 +56,9 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
     () => classworkMaterial,
     [classworkMaterial],
   )
-  // Video
-  const { data: dataIframeVideo } = useDetailClassworkMaterialQuery({
-    variables: { Id: classworkMaterial.id },
-  })
-  const classworkMaterialVideo = useMemo(
-    () => dataIframeVideo?.classworkMaterial,
-    [dataIframeVideo],
-  )
 
   const [iframeVideos, setVideos] = useState<string[]>(
-    classworkMaterialVideo?.iframeVideos ?? [],
+    [],
   )
   const handleUpdateClassworkMaterial = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
@@ -77,7 +69,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
             updateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
-              iframeVideos,
+              // iframeVideos,
             },
           },
         })
@@ -101,7 +93,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       enqueueSnackbar,
       onClose,
       classworkMaterial.id,
-      iframeVideos,
+      // iframeVideos,
     ],
   )
   // Thêm/Xóa iframVideo
@@ -132,6 +124,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       onSubmit={handleUpdateClassworkMaterial}
       dialogTitle="Sửa tài liệu"
       submitButtonLabel="Sửa"
+      backgroundButton="primary"
     >
       <FormContent
         iframeVideos={iframeVideos}

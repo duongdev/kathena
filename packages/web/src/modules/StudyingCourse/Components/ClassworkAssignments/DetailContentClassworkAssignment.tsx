@@ -1,8 +1,10 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 
-import { CardContent, Chip, Grid, Stack, makeStyles } from '@material-ui/core'
+import { CardContent, Chip, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
+import Image from 'components/Image'
+import VideoPopup from 'components/VideoPopup'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -10,29 +12,29 @@ import { ANY } from '@kathena/types'
 import {
   Button,
   InfoBlock,
-  Link,
   PageContainer,
   PageContainerSkeleton,
   SectionCard,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import { listRoomChatVar } from 'common/cache'
 import {
+  Conversation as ConversationModel,
+  ConversationType,
   Permission,
   useClassworkAssignmentDetailQuery,
-  useFindOneClassworkSubmissionQuery,
-  useConversationsQuery,
-  Conversation as ConversationModel,
   useConversationCreatedSubscription,
-  ConversationType,
+  useConversationsQuery,
+  useFindOneClassworkSubmissionQuery,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import {
   buildPath,
-  STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS,
   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_LIST_OF_SUBMITTED_ASSIGNMENTS,
 } from 'utils/path-builder'
 
 export type DetailContentClassworkAssignmentProps = {}
@@ -50,6 +52,10 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
     const { data, loading } = useClassworkAssignmentDetailQuery({
       variables: { id },
     })
+
+    const [index, setIndex] = useState(0)
+    const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
 
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
 
@@ -154,29 +160,32 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
         actions={[
           <>
             {!classworkAssignmentSubmit?.id ? (
-              <Link
-                to={buildPath(
+              <Button
+                link={buildPath(
                   STUDYING_COURSE_CREATE_SUBMISSION_CLASSWORK_ASSIGNMENTS,
                   {
                     id: classworkAssignment.id,
                   },
                 )}
+                style={{ textDecoration: 'none' }}
+                backgroundColorButton="primary"
+                variant="contained"
               >
-                <Button variant="contained">Nộp bài</Button>
-              </Link>
+                Nộp bài
+              </Button>
             ) : (
-              <Link
-                to={buildPath(
+              <Button
+                link={buildPath(
                   STUDYING_COURSE_DETAIL_SUBMISSION_CLASSWORK_ASSIGNMENTS,
                   {
                     id: classworkAssignmentSubmit.id,
                   },
                 )}
+                backgroundColorButton="primary"
+                variant="contained"
               >
-                <Button variant="outlined" color="primary">
-                  Xem chi tiết bài tập
-                </Button>
-              </Link>
+                Xem chi tiết bài tập
+              </Button>
             )}
           </>,
         ]}
@@ -213,6 +222,23 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
               </Grid>
             </CardContent>
           </SectionCard>
+          {classworkAssignment.videos.length > 0 && <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Danh sách video"
+          >
+            <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {
+                classworkAssignment.videos.map((item, i) => (
+                  <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
+                    <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+                    <p style={{ margin: 0 }}>{item.title}</p>
+                  </div>
+                ))
+              }
+            </CardContent>
+            <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
+          </SectionCard>}
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}

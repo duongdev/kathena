@@ -6,6 +6,7 @@ import AccountDisplayName from 'components/AccountDisplayName'
 import Comment from 'components/Comment/Comment'
 import CourseName from 'components/CourseName'
 import FileComponent from 'components/FileComponent'
+import Image from 'components/Image'
 import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
@@ -49,7 +50,6 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkAssignment from './AddAttachmentsToClassworkAssignment'
-import kminLogo from './kmin-logo.png'
 
 export type ClassworkAssignmentDetailProps = {}
 
@@ -61,9 +61,6 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<CommentModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
-  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
-    useDialogState()
-  const [indexVideo, setIndexVideo] = useState(0)
   const { data, loading } = useClassworkAssignmentDetailQuery({
     variables: { id },
   })
@@ -105,6 +102,10 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     () => dataSubmissions?.classworkSubmissions,
     [dataSubmissions],
   )
+
+  const [index, setIndex] = useState(0)
+    const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
 
   const classworkSubmissionChart = useMemo(() => {
     const arr = dataSubmissionStatus?.submissionStatusStatistics ?? []
@@ -247,7 +248,6 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       </PageContainer>
     )
   }
-
   const updatePublication = async (publicationState: Publication) => {
     const updated = await updateAssignmentPublication({
       variables: {
@@ -278,6 +278,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
       title={classworkAssignment.title}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               classworkAssignment.publicationState === Publication.Draft
@@ -291,7 +292,11 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             ? 'Bản nháp'
             : 'Công khai'}
         </Button>,
-        <Button onClick={handleOpenUpdateDialog} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenUpdateDialog}
+          variant="contained"
+        >
           Sửa bài tập
         </Button>,
       ]}
@@ -330,34 +335,6 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                         }}
                       />
                     </InfoBlock>
-                    {classworkAssignment.iframeVideos.length > 0 && (
-                      <InfoBlock label="Danh sách video">
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                          {classworkAssignment.iframeVideos.map(
-                            (_item, index) => (
-                              <div
-                                onClick={() => {
-                                  setIndexVideo(index)
-                                  handleOpenVideoDialog()
-                                }}
-                                style={{
-                                  margin: '10px 10px 0px 0px',
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                <img
-                                  style={{ borderRadius: '10px' }}
-                                  src={kminLogo}
-                                  width={60}
-                                  height={60}
-                                  alt="video"
-                                />
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      </InfoBlock>
-                    )}
                     <InfoBlock label="Tập tin đính kèm">
                       {classworkAssignment.attachments.length ? (
                         classworkAssignment.attachments.map((attachment) => (
@@ -410,6 +387,23 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
               </Grid>
             </CardContent>
           </SectionCard>
+          {classworkAssignment.videos.length > 0 && <SectionCard
+            maxContentHeight={false}
+            gridItem={{ xs: 12 }}
+            title="Danh sách video"
+          >
+            <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {
+                classworkAssignment.videos.map((item, i) => (
+                  <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
+                    <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+                    <p style={{ margin: 0 }}>{item.title}</p>
+                  </div>
+                ))
+              }
+            </CardContent>
+            <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
+          </SectionCard>}
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
@@ -470,51 +464,52 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
           gridItem={{ xs: 3 }}
           title="Học viên đã nộp"
           fullHeight={false}
-          action={[
-            <div className={classes.textSoLuong}>
-              <Typography>Số lượng: {classworkSubmissions?.length}</Typography>
-            </div>,
-          ]}
+          // action={[
+          //   <div className={classes.textSoLuong}>
+          //     <Typography>Số lượng: {classworkSubmissions?.length}</Typography>
+          //   </div>,
+          // ]}
         >
           <CardContent>
-            {classworkSubmissions?.length ? (
-              classworkSubmissions.map((classworkSubmission) => (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '5px',
-                  }}
-                >
-                  <AccountAvatar
-                    accountId={classworkSubmission.createdByAccountId}
-                  />
-                  <Link
-                    style={{ marginLeft: '10px' }}
-                    to={buildPath(
-                      TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
-                      { id: classworkSubmission.id },
-                    )}
+            <>
+              <div className={classes.textSoLuong}>
+                <Typography>
+                  Số lượng: {classworkSubmissions?.length}
+                </Typography>
+              </div>
+              {classworkSubmissions?.length ? (
+                classworkSubmissions.map((classworkSubmission) => (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '5px',
+                    }}
                   >
-                    <AccountDisplayName
-                      style={{ cursor: 'pointer' }}
+                    <AccountAvatar
                       accountId={classworkSubmission.createdByAccountId}
                     />
-                  </Link>
-                </div>
-              ))
-            ) : (
-              <Typography>Chưa có học viên nộp bài</Typography>
-            )}
+                    <Link
+                      style={{ marginLeft: '10px' }}
+                      to={buildPath(
+                        TEACHING_COURSE_DETAIL_CLASSWORK_SUBMISSIONS,
+                        { id: classworkSubmission.id },
+                      )}
+                    >
+                      <AccountDisplayName
+                        style={{ cursor: 'pointer' }}
+                        accountId={classworkSubmission.createdByAccountId}
+                      />
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <Typography>Chưa có học viên nộp bài</Typography>
+              )}
+            </>
           </CardContent>
         </SectionCard>
       </Grid>
-      <VideoPopup
-        iframeVideos={classworkAssignment.iframeVideos}
-        index={indexVideo}
-        open={openVideo}
-        onClose={handleCloseVideoDialog}
-      />
     </PageContainer>
   )
 }
@@ -526,7 +521,7 @@ const useStyles = makeStyles(({ palette }) => ({
     },
   },
   textSoLuong: {
-    padding: '0.25em 0em',
+    textAlign: 'right',
   },
   headerComment: {
     display: 'flex',

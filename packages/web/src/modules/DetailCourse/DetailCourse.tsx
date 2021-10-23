@@ -201,6 +201,7 @@ const DetailCourse: FC<DetailCourseProps> = () => {
       title={course.name}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               course.publicationState === Publication.Draft

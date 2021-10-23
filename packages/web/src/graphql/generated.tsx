@@ -117,13 +117,13 @@ export type ClassworkAssignment = BaseModel & {
   description?: Maybe<Scalars['String']>
   dueDate?: Maybe<Scalars['DateTime']>
   id: Scalars['ID']
-  iframeVideos: Array<Scalars['String']>
   maxScores: Scalars['Float']
   orgId: Scalars['ID']
   publicationState: Publication
   title: Scalars['String']
   type: Scalars['String']
   updatedAt: Scalars['DateTime']
+  videos: Array<Video>
 }
 
 export type ClassworkAssignmentByStudentIdInCourseInput = {
@@ -165,12 +165,12 @@ export type ClassworkMaterial = BaseModel & {
   createdByAccountId: Scalars['ID']
   description?: Maybe<Scalars['String']>
   id: Scalars['ID']
-  iframeVideos: Array<Scalars['String']>
   orgId: Scalars['ID']
   publicationState: Publication
   title: Scalars['String']
   type: Scalars['String']
   updatedAt: Scalars['DateTime']
+  videos: Array<Video>
 }
 
 export type ClassworkMaterialPayload = {
@@ -292,15 +292,14 @@ export type CreateClassworkAssignmentInput = {
   attachments?: Maybe<Array<Scalars['Upload']>>
   description: Scalars['String']
   dueDate?: Maybe<Scalars['DateTime']>
-  iframeVideos?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
   title: Scalars['String']
+  videos?: Maybe<Array<VideoInput>>
 }
 
 export type CreateClassworkMaterialInput = {
   attachments?: Maybe<Array<Scalars['Upload']>>
   description?: Maybe<Scalars['String']>
-  iframeVideos?: Maybe<Array<Scalars['String']>>
   publicationState?: Maybe<Publication>
   title: Scalars['String']
 }
@@ -1127,20 +1126,19 @@ export type UpdateAccountInput = {
 export type UpdateClassworkAssignmentInput = {
   description?: Maybe<Scalars['String']>
   dueDate?: Maybe<Scalars['DateTime']>
-  iframeVideos?: Maybe<Array<Scalars['String']>>
   title?: Maybe<Scalars['String']>
 }
 
 export type UpdateClassworkMaterialInput = {
   description?: Maybe<Scalars['String']>
-  iframeVideos?: Maybe<Array<Scalars['String']>>
   title?: Maybe<Scalars['String']>
 }
 
 export type UpdateCourseInput = {
+  daysOfTheWeek?: Maybe<Array<DayOfTheWeekInput>>
   lecturerIds?: Maybe<Array<Scalars['ID']>>
   name?: Maybe<Scalars['String']>
-  startDate?: Maybe<Scalars['String']>
+  startDate?: Maybe<Scalars['DateTime']>
   tuitionFee?: Maybe<Scalars['Float']>
 }
 
@@ -1175,6 +1173,18 @@ export type UpdateOrgOfficeInput = {
   address?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   phone?: Maybe<Scalars['String']>
+}
+
+export type Video = {
+  iframe: Scalars['String']
+  thumbnail?: Maybe<Scalars['ID']>
+  title: Scalars['String']
+}
+
+export type VideoInput = {
+  iframe: Scalars['String']
+  thumbnail?: Maybe<Scalars['Upload']>
+  title: Scalars['String']
 }
 
 export type AuthAccountFragment = {
@@ -1517,7 +1527,11 @@ export type ClassworkAssignmentDetailQuery = {
     publicationState: Publication
     attachments: Array<string>
     dueDate?: any | null | undefined
-    iframeVideos: Array<string>
+    videos: Array<{
+      title: string
+      thumbnail?: string | null | undefined
+      iframe: string
+    }>
   }
 }
 
@@ -2177,7 +2191,6 @@ export type DetailClassworkMaterialQuery = {
     attachments: Array<string>
     publicationState: Publication
     courseId: string
-    iframeVideos: Array<string>
   }
 }
 
@@ -2194,7 +2207,6 @@ export type UpdateClassworkMaterialMutation = {
     title: string
     description?: string | null | undefined
     attachments: Array<string>
-    iframeVideos: Array<string>
   }
 }
 
@@ -5629,7 +5641,21 @@ export const ClassworkAssignmentDetailDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'dueDate' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'iframeVideos' },
+                  name: { kind: 'Name', value: 'videos' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'thumbnail' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'iframe' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -12330,10 +12356,6 @@ export const DetailClassworkMaterialDocument = {
                   name: { kind: 'Name', value: 'publicationState' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'iframeVideos' },
-                },
               ],
             },
           },
@@ -12491,10 +12513,6 @@ export const UpdateClassworkMaterialDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'attachments' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'iframeVideos' },
-                },
               ],
             },
           },

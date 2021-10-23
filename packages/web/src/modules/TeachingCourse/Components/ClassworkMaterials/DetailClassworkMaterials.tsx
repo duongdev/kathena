@@ -3,7 +3,6 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
-import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
 import { FilePlus, Trash } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
@@ -40,7 +39,6 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
-import kminLogo from './kmin-logo.png'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
@@ -57,11 +55,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<ConversationModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
-  // Xem Popup video
-  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
-    useDialogState()
-  const [indexVideo, setIndexVideo] = useState(0)
-  // -----------------
+
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
@@ -213,6 +207,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       title={`${classworkMaterial?.title}`}
       actions={[
         <Button
+          backgroundColorButton="primary"
           onClick={() =>
             updatePublication(
               classworkMaterial?.publicationState === Publication.Draft
@@ -226,7 +221,11 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
             ? 'Bản nháp'
             : 'Công khai'}
         </Button>,
-        <Button onClick={handleOpenUpdateDialog} variant="contained">
+        <Button
+          backgroundColorButton="primary"
+          onClick={handleOpenUpdateDialog}
+          variant="contained"
+        >
           Sửa tài liệu
         </Button>,
       ]}
@@ -261,7 +260,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                       }}
                     />
                   </InfoBlock>
-                  {(classworkMaterial?.iframeVideos.length as ANY) > 0 && (
+                  {/* {(classworkMaterial?.iframeVideos.length as ANY) > 0 && (
                     <InfoBlock label="Danh sách video">
                       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                         {classworkMaterial?.iframeVideos.map((_item, index) => (
@@ -286,7 +285,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                         ))}
                       </div>
                     </InfoBlock>
-                  )}
+                  )} */}
                   <InfoBlock label="Tập tin đính kèm: ">
                     {classworkMaterial?.attachments.length ? (
                       classworkMaterial?.attachments.map((attachment) => (
@@ -382,12 +381,12 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           </CardContent>
         </SectionCard>
       </Grid>
-      <VideoPopup
+      {/* <VideoPopup
         iframeVideos={classworkMaterial?.iframeVideos as ANY}
         index={indexVideo}
         open={openVideo}
         onClose={handleCloseVideoDialog}
-      />
+      /> */}
     </PageContainer>
   )
 }
