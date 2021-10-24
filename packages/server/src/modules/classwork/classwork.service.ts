@@ -338,7 +338,7 @@ export class ClassworkService {
           )
         }
 
-        let video: Video = {
+        let video: ANY = {
           title: iframeObject.title,
           iframe: iframeObject.iframe,
         }
@@ -408,7 +408,7 @@ export class ClassworkService {
       updateClassworkMaterialInput,
     })
 
-    const { description, title, videos } = updateClassworkMaterialInput
+    const { description, title } = updateClassworkMaterialInput
 
     const classworkMaterial = await this.classworkMaterialModel.findOne({
       _id: classworkMaterialId,
@@ -443,41 +443,6 @@ export class ClassworkService {
       updateInput = {
         ...updateInput,
         description: removeExtraSpaces(description),
-      }
-    }
-    if (videos) {
-      const listVideos: Video[] = []
-
-      const map = videos.map(async (iframeObject) => {
-        let imageId = ''
-        if (iframeObject.thumbnail) {
-          imageId = await this.uploadThumbnail(
-            orgId,
-            accountId,
-            iframeObject.thumbnail,
-          )
-        }
-
-        let video: Video = {
-          title: iframeObject.title,
-          iframe: iframeObject.iframe,
-        }
-
-        if (imageId) {
-          video = {
-            ...video,
-            thumbnail: imageId,
-          }
-        }
-
-        listVideos.push(video)
-      })
-
-      await Promise.all(map)
-
-      updateInput = {
-        ...updateInput,
-        videos: listVideos,
       }
     }
 

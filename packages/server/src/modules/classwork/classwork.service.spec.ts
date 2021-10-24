@@ -386,7 +386,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns an updated classworkMaterial`, async () => {
-        expect.assertions(3)
+        expect.assertions(2)
 
         jest
           .spyOn(classworkService['orgService'], 'validateOrgId')
@@ -439,23 +439,6 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           publicationState: Publication.Published,
         })
-
-        const classworkMaterialWithvideos =
-          await classworkService.updateClassworkMaterial(
-            classworkMaterial.orgId,
-            objectId(),
-            classworkMaterial.id,
-            {
-              description: 'Đặng Hiếu Liêm',
-              videos: [videos[0], videos[1], videos[2]],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkMaterialWithvideos.videos?.length
-          })(),
-        ).resolves.toBe(3)
       })
     })
 
@@ -1303,7 +1286,7 @@ describe('classwork.service', () => {
       })
 
       it(`returns the classworkAssignment with a new title`, async () => {
-        expect.assertions(2)
+        expect.assertions(1)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
@@ -1380,24 +1363,6 @@ describe('classwork.service', () => {
         ).resolves.toMatchObject({
           title: 'Day La Bai Tap Moi',
         })
-
-        const classworkAssignmentWithvideos =
-          await classworkService.updateClassworkAssignment(
-            {
-              id: classworkAssignmentUpdate.id,
-              accountId: accountLecturer.id,
-              orgId: org.id,
-            },
-            {
-              videos: [videos[0], videos[1], videos[2]],
-            },
-          )
-
-        await expect(
-          (async (): Promise<ANY> => {
-            return classworkAssignmentWithvideos.videos?.length
-          })(),
-        ).resolves.toBe(3)
       })
 
       it(`returns the classworkAssignment with a new description`, async () => {
