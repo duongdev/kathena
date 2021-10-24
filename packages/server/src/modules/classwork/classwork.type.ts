@@ -34,8 +34,8 @@ export class UpdateClassworkMaterialInput {
   @Field({ nullable: true })
   description?: string
 
-  // @Field((_type) => [VideoInput], { nullable: true })
-  // videos?: VideoInput[]
+  @Field((_type) => [VideoInput], { nullable: true })
+  videos?: VideoInput[]
 }
 
 @InputType()
