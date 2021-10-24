@@ -9,7 +9,7 @@ import FileComponent from 'components/FileComponent'
 import Image from 'components/Image'
 import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
-import { FilePlus, Trash, PlusCircle } from 'phosphor-react'
+import { FilePlus, Trash, PlusCircle, X } from 'phosphor-react'
 import { Pie } from 'react-chartjs-2'
 import { useParams } from 'react-router-dom'
 
@@ -32,6 +32,7 @@ import {
   Permission,
   useClassworkAssignmentDetailQuery,
   useRemoveAttachmentsFromClassworkAssignmentMutation,
+  useRemoveVideoFromClassworkAssignmentMutation,
   useListClassworkSubmissionQuery,
   useConversationsQuery,
   useConversationCreatedSubscription,
@@ -87,6 +88,17 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
   })
   const [removeAttachmentsFromClassworkAssignment] =
     useRemoveAttachmentsFromClassworkAssignmentMutation({
+      refetchQueries: [
+        {
+          query: ClassworkAssignmentDetailDocument,
+          variables: {
+            id,
+          },
+        },
+      ],
+    })
+  const [removeVideoFromClassworkAssignment] =
+    useRemoveVideoFromClassworkAssignmentMutation({
       refetchQueries: [
         {
           query: ClassworkAssignmentDetailDocument,
@@ -212,6 +224,43 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
     },
     [
       removeAttachmentsFromClassworkAssignment,
+      enqueueSnackbar,
+      classworkAssignment,
+    ],
+  )
+
+  const removeVideo = useCallback(
+    async (videoId: string) => {
+      if (!classworkAssignment) return
+      try {
+        const dataCreated = (
+          await removeVideoFromClassworkAssignment({
+            variables: {
+              classworkAssignmentId: classworkAssignment.id,
+              videoId
+            },
+          })
+        ).data
+
+        const classworkAssignmentUpdated =
+          dataCreated?.removeVideoFromClassworkAssignment
+
+        if (!classworkAssignmentUpdated) {
+          return
+        }
+        enqueueSnackbar(`Xóa video thành công`, {
+          variant: 'success',
+        })
+        // eslint-disable-next-line no-console
+        console.log(classworkAssignment)
+      } catch (error) {
+        enqueueSnackbar(error, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [
+      removeVideoFromClassworkAssignment,
       enqueueSnackbar,
       classworkAssignment,
     ],
@@ -389,7 +438,7 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
               </Grid>
             </CardContent>
           </SectionCard>
-          {classworkAssignment.videos.length > 0 && <SectionCard
+          <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
             title="Danh sách video"
@@ -397,12 +446,22 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
             <CardContent >
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {
-                  classworkAssignment.videos.map((item, i) => (
-                    <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
-                      <Image width={150} height={150} fileId={item.thumbnail as ANY} />
-                      <p style={{ margin: 0 }}>{item.title}</p>
-                    </div>
-                  ))
+                  classworkAssignment.videos.length > 0 ?
+                    <>
+                    {
+                      classworkAssignment.videos.map((item, i) => (
+                        <div className={classes.videoWrapper} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
+                          <div onClick={(e) => {
+                            e.stopPropagation()
+                            removeVideo(item.id)
+                          }} className={classes.removeBtn} ><X /></div>
+                          <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+                          <p style={{ margin: 0 }}>{item.title}</p>
+                        </div>
+                      ))
+                    }
+                    </>
+                  : <Typography>Không có video đính kèm</Typography>
                 }
               </div>
               {!openAddVideo && (
@@ -421,8 +480,8 @@ const ClassworkAssignmentDetail: FC<ClassworkAssignmentDetailProps> = () => {
                 />
               )}
             </CardContent>
-            <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
-          </SectionCard>}
+            {classworkAssignment.videos.length > 0 && <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />}
+          </SectionCard>
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
@@ -548,6 +607,25 @@ const useStyles = makeStyles(({ palette }) => ({
     margin: '-0.25em 0em',
     alignItems: 'center',
   },
+  videoWrapper:{
+    cursor: 'pointer',
+    marginRight: 30,
+    marginTop: 20,
+    position: 'relative'
+  },
+  removeBtn: {
+    position: 'absolute',
+    top: -15,
+    right: -15,
+    width: 30,
+    height: 30,
+    background: '#f2f2f2',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer'
+  }
 }))
 const WithPermissionClassworkAssignmentDetail = () => (
   <WithAuth permission={Permission.Teaching_Course_Access}>

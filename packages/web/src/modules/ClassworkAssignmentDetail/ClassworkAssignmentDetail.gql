@@ -10,6 +10,7 @@ query ClassworkAssignmentDetail($id: ID!) {
     attachments
     dueDate
     videos{
+      id
       title
       thumbnail
       iframe
@@ -87,6 +88,12 @@ mutation UpdateClassworkAssignmentPublication($publication: String!, $id: ID!) {
 
 mutation AddVideoToClassworkAssignment ($classworkAssignmentId: ID!, $videoInput: AddVideoToClassworkInput!){
   addVideoToClassworkAssignment(classworkAssignmentId: $classworkAssignmentId,videoInput:$videoInput){
+    id
+  }
+}
+
+mutation RemoveVideoFromClassworkAssignment ($classworkAssignmentId: ID!, $videoId: ID!){
+  removeVideoFromClassworkAssignment(videoId: $videoId, classworkAssignmentId: $classworkAssignmentId){
     id
   }
 }

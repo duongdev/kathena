@@ -1561,6 +1561,7 @@ export type ClassworkAssignmentDetailQuery = {
     attachments: Array<string>
     dueDate?: any | null | undefined
     videos: Array<{
+      id: string
       title: string
       thumbnail?: string | null | undefined
       iframe: string
@@ -1652,6 +1653,15 @@ export type AddVideoToClassworkAssignmentMutationVariables = Exact<{
 
 export type AddVideoToClassworkAssignmentMutation = {
   addVideoToClassworkAssignment: { id: string }
+}
+
+export type RemoveVideoFromClassworkAssignmentMutationVariables = Exact<{
+  classworkAssignmentId: Scalars['ID']
+  videoId: Scalars['ID']
+}>
+
+export type RemoveVideoFromClassworkAssignmentMutation = {
+  removeVideoFromClassworkAssignment: { id: string }
 }
 
 export type FindClassworkSubmissionByIdQueryVariables = Exact<{
@@ -5687,6 +5697,7 @@ export const ClassworkAssignmentDetailDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
@@ -6685,6 +6696,150 @@ export type AddVideoToClassworkAssignmentMutationOptions =
   Apollo.BaseMutationOptions<
     AddVideoToClassworkAssignmentMutation,
     AddVideoToClassworkAssignmentMutationVariables
+  >
+export const RemoveVideoFromClassworkAssignmentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveVideoFromClassworkAssignment' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkAssignmentId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'videoId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'removeVideoFromClassworkAssignment' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'videoId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'videoId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkAssignmentId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkAssignmentId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveVideoFromClassworkAssignmentMutationFn =
+  Apollo.MutationFunction<
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables
+  >
+export type RemoveVideoFromClassworkAssignmentProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables
+  >
+} & TChildProps
+export function withRemoveVideoFromClassworkAssignment<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables,
+    RemoveVideoFromClassworkAssignmentProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables,
+    RemoveVideoFromClassworkAssignmentProps<TChildProps, TDataName>
+  >(RemoveVideoFromClassworkAssignmentDocument, {
+    alias: 'removeVideoFromClassworkAssignment',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveVideoFromClassworkAssignmentMutation__
+ *
+ * To run a mutation, you first call `useRemoveVideoFromClassworkAssignmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveVideoFromClassworkAssignmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeVideoFromClassworkAssignmentMutation, { data, loading, error }] = useRemoveVideoFromClassworkAssignmentMutation({
+ *   variables: {
+ *      classworkAssignmentId: // value for 'classworkAssignmentId'
+ *      videoId: // value for 'videoId'
+ *   },
+ * });
+ */
+export function useRemoveVideoFromClassworkAssignmentMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables
+  >(RemoveVideoFromClassworkAssignmentDocument, options)
+}
+export type RemoveVideoFromClassworkAssignmentMutationHookResult = ReturnType<
+  typeof useRemoveVideoFromClassworkAssignmentMutation
+>
+export type RemoveVideoFromClassworkAssignmentMutationResult =
+  Apollo.MutationResult<RemoveVideoFromClassworkAssignmentMutation>
+export type RemoveVideoFromClassworkAssignmentMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveVideoFromClassworkAssignmentMutation,
+    RemoveVideoFromClassworkAssignmentMutationVariables
   >
 export const FindClassworkSubmissionByIdDocument = {
   kind: 'Document',
