@@ -316,7 +316,7 @@ export class ClassworkService {
       createClassworkMaterialInput,
     })
 
-    const { title, description, publicationState, attachments } =
+    const { title, description, publicationState, attachments, videos } =
       createClassworkMaterialInput
 
     if (!(await this.orgService.validateOrgId(orgId)))
@@ -327,34 +327,34 @@ export class ClassworkService {
 
     const listVideos: Video[] = []
 
-    // if (videos) {
-    //   const map = videos.map(async (iframeObject) => {
-    //     let imageId = ''
-    //     if (iframeObject.thumbnail) {
-    //       imageId = await this.uploadThumbnail(
-    //         orgId,
-    //         creatorId,
-    //         iframeObject.thumbnail,
-    //       )
-    //     }
+    if (videos) {
+      const map = videos.map(async (iframeObject) => {
+        let imageId = ''
+        if (iframeObject.thumbnail) {
+          imageId = await this.uploadThumbnail(
+            orgId,
+            creatorId,
+            iframeObject.thumbnail,
+          )
+        }
 
-    //     let video: Video = {
-    //       title: iframeObject.title,
-    //       iframe: iframeObject.iframe,
-    //     }
+        let video: Video = {
+          title: iframeObject.title,
+          iframe: iframeObject.iframe,
+        }
 
-    //     if (imageId) {
-    //       video = {
-    //         ...video,
-    //         thumbnail: imageId,
-    //       }
-    //     }
+        if (imageId) {
+          video = {
+            ...video,
+            thumbnail: imageId,
+          }
+        }
 
-    //     listVideos.push(video)
-    //   })
+        listVideos.push(video)
+      })
 
-    //   await Promise.all(map)
-    // }
+      await Promise.all(map)
+    }
 
     const classworkMaterial = await this.classworkMaterialModel.create({
       description: removeExtraSpaces(description),
