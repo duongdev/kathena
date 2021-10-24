@@ -93,12 +93,6 @@ export class LessonService {
       )
     }
 
-    if (startTimeInput < course.startDate) {
-      throw new Error(
-        `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
-      )
-    }
-
     if (startTimeInput > endTimeInput) {
       throw new Error('START_TIME_OR_END_TIME_INVALID')
     }
@@ -440,15 +434,17 @@ export class LessonService {
     } else if (
       options === UpdateLessonTimeOptions.DoNotChangeTheOrderOfTheLessons
     ) {
-      const lessonsData = await lessons.find({
-        $and: [
-          {
-            startTime: {
-              $gte: lesson.startTime,
+      const lessonsData = await lessons
+        .find({
+          $and: [
+            {
+              startTime: {
+                $gte: lesson.startTime,
+              },
             },
-          },
-        ],
-      })
+          ],
+        })
+        .sort({ startTime: 1 })
 
       const updateTime = lessonsData.map(async (lessonData) => {
         const lessonStartTime = new Date(lessonData.startTime)
