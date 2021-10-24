@@ -2246,6 +2246,12 @@ export type DetailClassworkMaterialQuery = {
     attachments: Array<string>
     publicationState: Publication
     courseId: string
+    videos: Array<{
+      id: string
+      title: string
+      thumbnail?: string | null | undefined
+      iframe: string
+    }>
   }
 }
 
@@ -12720,6 +12726,25 @@ export const DetailClassworkMaterialDocument = {
                   name: { kind: 'Name', value: 'publicationState' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'videos' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'thumbnail' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'iframe' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
