@@ -15,6 +15,7 @@ import * as path from 'path'
 
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 import * as fileType from 'file-type'
+import { FileUpload } from 'graphql-upload'
 import * as shortid from 'shortid'
 
 import { config, InjectModel, Logger, Service } from 'core'
@@ -207,5 +208,26 @@ export class FileStorageService {
 
     const updatedFile = file.save()
     return updatedFile
+  }
+
+  async uploadFile(
+    orgId: string,
+    uploadedByAccountId: string,
+    file: Promise<FileUpload>,
+  ): Promise<DocumentType<File>> {
+    const image = await file
+
+    const { createReadStream, filename, encoding } = image
+
+    this.logger.log('encoding', encoding)
+
+    const imageFile = await this.uploadFromReadStream({
+      orgId,
+      originalFileName: filename,
+      readStream: createReadStream(),
+      uploadedByAccountId,
+    })
+
+    return imageFile
   }
 }
