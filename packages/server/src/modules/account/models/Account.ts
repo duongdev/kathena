@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { index, prop } from '@typegoose/typegoose'
 import { isEmail } from 'class-validator'
 import { Types } from 'mongoose'
@@ -49,6 +49,10 @@ export class Account extends BaseModel {
 
   @prop({ required: true })
   password: string
+
+  @Field((_type) => ID, { defaultValue: null, nullable: true })
+  @prop({ type: Types.ObjectId, default: null })
+  avatar: string
 
   @Field({ nullable: true })
   @prop({ nullable: true })
