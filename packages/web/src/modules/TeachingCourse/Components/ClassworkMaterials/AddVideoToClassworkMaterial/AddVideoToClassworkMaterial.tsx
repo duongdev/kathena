@@ -63,7 +63,7 @@ const AddVideoToClassworkMaterial: FC<AddVideoToClassworkMaterialProps> = (
         if (!classworkAssignment) {
           return
         }
-        enqueueSnackbar(`Thêm video vào bài tập thành công`, {
+        enqueueSnackbar(`Thêm video vào tài liệu thành công`, {
           variant: 'success',
         })
         props.setOpen(false)
