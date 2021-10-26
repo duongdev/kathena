@@ -52,7 +52,10 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const { enqueueSnackbar } = useSnackbar()
 
   const initialValues: ANY = useMemo(
-    () => classworkMaterial,
+    () => ({
+      title: classworkMaterial.title,
+      description: classworkMaterial.description,
+    }),
     [classworkMaterial],
   )
 
