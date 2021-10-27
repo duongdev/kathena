@@ -250,7 +250,7 @@ const Quiz: FC<QuizProps> = () => {
     >
       <Prompt
         when={!!startTime}
-        message="Bạn chưa nộp bài !! Bạn có thể nộp trước khi rời khỏi đây, bạn có thể nộp lại nếu vẫn còn thời gian nộp bài, bạn có chắc muốn rời khỏi mà không nộp bài ??"
+        message="Bạn chưa hết thời gian làm !! Bạn nên nộp bài ít nhất 1 lần trước khi rời khỏi đây, bạn có thể nộp lại nếu vẫn còn thời gian nộp bài."
       />
       <Grid container spacing={DASHBOARD_SPACING}>
         <SectionCard

@@ -47,7 +47,12 @@ query DetailClassworkMaterial($Id: ID!) {
     attachments
     publicationState
     courseId
-    iframeVideos
+    videos {
+      id
+      title
+      thumbnail
+      iframe
+    }
   }
 }
 
@@ -66,7 +71,6 @@ mutation UpdateClassworkMaterial(
     title
     description
     attachments
-    iframeVideos
   }
 }
 
@@ -116,5 +120,31 @@ mutation UpdateClassworkMaterialPublication(
     courseId
     publicationState
     type
+  }
+}
+
+#Thêm video vào tài liệu
+mutation AddVideoToClassworkMaterial(
+  $classworkMaterialId: ID!
+  $videoInput: AddVideoToClassworkInput!
+) {
+  addVideoToClassworkMaterial(
+    classworkMaterialId: $classworkMaterialId
+    videoInput: $videoInput
+  ) {
+    id
+  }
+}
+
+#Xóa video từ tài liệu
+mutation RemoveVideoFromClassworkMaterial(
+  $classworkMaterialId: ID!
+  $videoId: String!
+) {
+  removeVideoFromClassworkMaterial(
+    videoId: $videoId
+    classworkMaterialId: $classworkMaterialId
+  ) {
+    id
   }
 }

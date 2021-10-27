@@ -57,8 +57,9 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const history = useHistory()
   const { $org: org } = useAuth()
   // Video
-  const [iframeVideos, setIframeVideos] = useState<string[]>([])
-  //----------------
+  const [videos, setVideos] = useState<ANY>([])
+
+  // --
   const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
     refetchQueries: [
       {
@@ -80,7 +81,7 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
               description: input.description,
               publicationState: publication,
               attachments: input.attachments as ANY,
-              iframeVideos,
+              videos,
             },
           },
         })
@@ -101,32 +102,14 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
       }
     },
     [
+      videos,
       createClassworkMaterial,
       enqueueSnackbar,
       idCourse,
       history,
       publication,
-      iframeVideos,
     ],
   )
-  // Video -----
-  const addIframe = (iframe: string) => {
-    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
-      const arr = [...iframeVideos]
-      arr.push(iframe)
-      setIframeVideos(arr)
-    } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
-        variant: 'error',
-      })
-    }
-  }
-  const removeIframe = (index: number) => {
-    const arr = [...iframeVideos]
-    arr.splice(index, 1)
-    setIframeVideos(arr)
-  }
-  // -------------------------------
   return (
     <Formik
       validationSchema={validationSchema}
@@ -166,9 +149,8 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
           className={classes.root}
         >
           <CreateClassworkMaterialForm
-            iframeVideos={iframeVideos}
-            addIframe={addIframe}
-            removeIframe={removeIframe}
+            videos={videos}
+            onChangeVideos={(v) => setVideos(v)}
           />
         </PageContainer>
       )}
