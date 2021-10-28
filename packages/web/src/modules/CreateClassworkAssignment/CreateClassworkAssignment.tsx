@@ -62,7 +62,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const { $org: org } = useAuth()
-  const [iframeVideos, setIframeVideos] = useState<string[]>([])
+  const [videos, setVideos] = useState<ANY>([])
   const [createClassworkAssignment] = useCreateClassworkAssignmentMutation({
     refetchQueries: [
       {
@@ -84,7 +84,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
               input: {
                 ...input,
                 publicationState: publication,
-                iframeVideos
+                videos,
               },
             },
           })
@@ -116,32 +116,14 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
       }
     },
     [
+      videos,
       createClassworkAssignment,
       enqueueSnackbar,
       idCourse,
       history,
       publication,
-      iframeVideos,
     ],
   )
-
-  const addIframe = (iframe: string) => {
-    if(iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`))
-    {
-      const arr = [...iframeVideos]
-      arr.push(iframe)
-      setIframeVideos(arr)
-    } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, { variant: 'error' })
-    }
-  }
-
-  const removeIframe = (index: number) => {
-    const arr = [...iframeVideos]
-    arr.splice(index, 1)
-    setIframeVideos(arr)
-  }
-
   return (
     <Formik
       validationSchema={validationSchema}
@@ -157,6 +139,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           })}
           actions={[
             <SplitButton
+              backgroundButton="primary"
               items={[
                 {
                   children: 'Đăng bài tập',
@@ -179,7 +162,10 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           ]}
           className={classes.root}
         >
-          <CreateClassworkAssignmentForm iframeVideos={iframeVideos} addIframe={addIframe} removeIframe={removeIframe} />
+          <CreateClassworkAssignmentForm
+            videos={videos}
+            onChangeVideos={(v) => setVideos(v)}
+          />
         </PageContainer>
       )}
     </Formik>

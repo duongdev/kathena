@@ -3,9 +3,10 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
+import Image from 'components/Image'
 import VideoPopup from 'components/VideoPopup'
 import { useSnackbar } from 'notistack'
-import { FilePlus, Trash } from 'phosphor-react'
+import { FilePlus, Trash, PlusCircle, X } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -32,6 +33,7 @@ import {
   useDetailClassworkMaterialQuery,
   useRemoveAttachmentsFromClassworkMaterialMutation,
   useUpdateClassworkMaterialPublicationMutation,
+  useRemoveVideoFromClassworkMaterialMutation,
 } from 'graphql/generated'
 import CreateComment from 'modules/CreateComment'
 import {
@@ -40,7 +42,7 @@ import {
 } from 'utils/path-builder'
 
 import AddAttachmentsToClassworkMaterial from './AddDeleteAttachmentClassworkMaterial/AddAttachmentClassworkMaterial'
-import kminLogo from './kmin-logo.png'
+import AddVideoToClassworkMaterial from './AddVideoToClassworkMaterial/AddVideoToClassworkMaterial'
 import UpdateClassworkMaterialDialog from './UpdateClassworkMaterialsDialog'
 
 export type DetailClassworkMaterialsProps = {}
@@ -57,11 +59,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const [lastId, setLastId] = useState<string | null>(null)
   const [comments, setComments] = useState<ConversationModel[]>([])
   const [totalComment, setTotalComment] = useState(0)
-  // Xem Popup video
-  const [openVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
-    useDialogState()
-  const [indexVideo, setIndexVideo] = useState(0)
-  // -----------------
+
   const { data, loading } = useDetailClassworkMaterialQuery({
     variables: { Id: id },
   })
@@ -82,7 +80,56 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
   const [removeAttachmentsFromClassworkMaterial] =
     useRemoveAttachmentsFromClassworkMaterialMutation()
   const { enqueueSnackbar } = useSnackbar()
+  // video
+  const [openAddVideo, setOpenAddVideo] = useState(false)
 
+  const [index, setIndex] = useState(0)
+  const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+    useDialogState()
+  const [removeVideoFromClassworkMaterial] =
+    useRemoveVideoFromClassworkMaterialMutation({
+      refetchQueries: [
+        {
+          query: ClassworkMaterialsListDocument,
+          variables: {
+            id,
+          },
+        },
+      ],
+    })
+  const removeVideo = useCallback(
+    async (videoId: string) => {
+      if (!classworkMaterial) return
+      try {
+        const dataCreated = (
+          await removeVideoFromClassworkMaterial({
+            variables: {
+              classworkMaterialId: classworkMaterial.id,
+              videoId,
+            },
+          })
+        ).data
+
+        const classworkMaterialUpdated =
+          dataCreated?.removeVideoFromClassworkMaterial
+
+        if (!classworkMaterialUpdated) {
+          return
+        }
+        enqueueSnackbar(`Xóa video thành công`, {
+          variant: 'success',
+        })
+        // eslint-disable-next-line no-console
+        console.log(classworkMaterial)
+      } catch (error) {
+        enqueueSnackbar(error, { variant: 'error' })
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    },
+    [removeVideoFromClassworkMaterial, enqueueSnackbar, classworkMaterial],
+  )
+  // --
   const removeAttachment = useCallback(
     async (attachmentId: string) => {
       if (!classworkMaterial) return
@@ -203,6 +250,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
       enqueueSnackbar(`Cập nhật thất bại`, { variant: 'error' })
     }
   }
+
   return (
     <PageContainer
       backButtonLabel="Danh sách tài liệu"
@@ -266,7 +314,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                       }}
                     />
                   </InfoBlock>
-                  {(classworkMaterial?.iframeVideos.length as ANY) > 0 && (
+                  {/* {(classworkMaterial?.iframeVideos.length as ANY) > 0 && (
                     <InfoBlock label="Danh sách video">
                       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                         {classworkMaterial?.iframeVideos.map((_item, index) => (
@@ -291,7 +339,7 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
                         ))}
                       </div>
                     </InfoBlock>
-                  )}
+                  )} */}
                   <InfoBlock label="Tập tin đính kèm: ">
                     {classworkMaterial?.attachments.length ? (
                       classworkMaterial?.attachments.map((attachment) => (
@@ -336,6 +384,72 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
             </Grid>
           </CardContent>
         </SectionCard>
+        {/* Video */}
+        <SectionCard
+          maxContentHeight={false}
+          gridItem={{ xs: 12 }}
+          title="Danh sách video"
+        >
+          <CardContent>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {(classworkMaterial?.videos.length as ANY) > 0 ? (
+                <>
+                  {classworkMaterial?.videos.map((item, i) => (
+                    <div
+                      className={classes.videoWrapper}
+                      onClick={() => {
+                        setIndex(i)
+                        handleOpenVideoDialog()
+                      }}
+                    >
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          removeVideo(item.id)
+                        }}
+                        className={classes.removeBtn}
+                      >
+                        <X />
+                      </div>
+                      <Image
+                        width={150}
+                        height={150}
+                        fileId={item.thumbnail as ANY}
+                      />
+                      <p style={{ margin: 0 }}>{item.title}</p>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <Typography>Không có video đính kèm</Typography>
+              )}
+            </div>
+            {!openAddVideo && (
+              <Button
+                fullWidth
+                onClick={() => setOpenAddVideo(true)}
+                startIcon={<PlusCircle />}
+              >
+                Thêm video
+              </Button>
+            )}
+            {openAddVideo && (
+              <AddVideoToClassworkMaterial
+                idClassworkMaterial={classworkMaterial?.id as ANY}
+                setOpen={setOpenAddVideo}
+              />
+            )}
+          </CardContent>
+          {(classworkMaterial?.videos.length as ANY) > 0 && (
+            <VideoPopup
+              index={index}
+              onClose={handleCloseVideoDialog}
+              open={dialogOpenVideo}
+              videos={classworkMaterial?.videos as ANY}
+            />
+          )}
+        </SectionCard>
+        {/* --- */}
         <SectionCard
           maxContentHeight={false}
           gridItem={{ xs: 12 }}
@@ -387,12 +501,12 @@ const DetailClassworkMaterials: FC<DetailClassworkMaterialsProps> = (props) => {
           </CardContent>
         </SectionCard>
       </Grid>
-      <VideoPopup
+      {/* <VideoPopup
         iframeVideos={classworkMaterial?.iframeVideos as ANY}
         index={indexVideo}
         open={openVideo}
         onClose={handleCloseVideoDialog}
-      />
+      /> */}
     </PageContainer>
   )
 }
@@ -405,11 +519,30 @@ const useStyles = makeStyles(({ palette }) => ({
       backgroundColor: 'transparent',
     },
   },
+  videoWrapper: {
+    cursor: 'pointer',
+    marginRight: 30,
+    marginTop: 20,
+    position: 'relative',
+  },
   headerComment: {
     display: 'flex',
     justifyContent: 'space-between',
     margin: '-0.25em 0em',
     alignItems: 'center',
+  },
+  removeBtn: {
+    position: 'absolute',
+    top: -15,
+    right: -15,
+    width: 30,
+    height: 30,
+    background: '#f2f2f2',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
   },
 }))
 const WithPermissionDetailContentClassworkMaterial = () => (

@@ -2,7 +2,8 @@ import { FC, useCallback, useState } from 'react'
 
 import { CardContent, Grid, IconButton, makeStyles, Stack } from '@material-ui/core'
 import { useFormikContext } from 'formik'
-import { Plus, X } from 'phosphor-react'
+import { useSnackbar } from 'notistack'
+import { Trash } from 'phosphor-react'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
@@ -13,10 +14,9 @@ import {
   TextFormField,
   Typography,
   EditorFormField,
-  InputField,
-  Dialog,
-  useDialogState,
   Button,
+  ImagesUploadInput,
+  InputField,
 } from '@kathena/ui'
 import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
 
@@ -24,28 +24,20 @@ import {
   ClassworkAssignmentFormInput,
   classworkAssignmentLabels as labels,
 } from './CreateClassworkAssignment'
-import kminLogo from './kmin-logo.png'
 
 export type CreateClassworkAssignmentFormProps = {
-  iframeVideos: string[]
-  addIframe: (iframe: string) => void
-  removeIframe: (index: number) => void
+  videos: ANY[],
+  onChangeVideos: (value: ANY) => void
 }
 
 const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
   props,
 ) => {
-  const { iframeVideos, addIframe, removeIframe } = props
+  const { videos, onChangeVideos } = props
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const classes = useStyles(props)
+  const { enqueueSnackbar } = useSnackbar()
   const formik = useFormikContext<ClassworkAssignmentFormInput>()
-  const [input, setInput] = useState<string>('')
-  const [
-    open,
-    handleOpenDialog,
-    handleCloseDialog,
-  ] = useDialogState()
-  const [currentIndex, setCurrentIndex] = useState(0)
   const handleAttachmentsSelect = useCallback(
     (files: File[]) => {
       formik.setFieldValue('attachments', files ?? null)
@@ -53,6 +45,37 @@ const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
+
+  const [title, setTitle] = useState<string>('')
+  const [iframe, setIframe] = useState<string>('')
+  const [thumbnail, setThumbnail] = useState<File | null>(null)
+  const [imageInput, setImageInput] = useState(true)
+
+  const addVideo = () => {
+    if (iframe.startsWith('<iframe') && iframe.endsWith('></iframe>')) {
+      const arr = [...videos]
+      const video = {
+        title,
+        iframe,
+        thumbnail
+      }
+      arr.push(video)
+      onChangeVideos(arr)
+      setTitle('')
+      setIframe('')
+      setThumbnail(null)
+      setImageInput(false)
+      setTimeout(() => setImageInput(true), 300)
+    } else {
+      enqueueSnackbar('Vui lòng nhập đúng định dạng iframe', { variant: 'error' })
+    }
+  }
+
+  const removeVideo = (index: number) => {
+    const arr = [...videos]
+    arr.splice(index, 1)
+    onChangeVideos(arr)
+  }
 
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
@@ -76,40 +99,6 @@ const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
               name="dueDate"
               label={labels.dueDate}
             />
-            <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
-            <div className={classes.iframeContainer}>
-              {
-                iframeVideos.map((item, index) => (
-                  <div onClick={() => {
-                    handleOpenDialog()
-                    setCurrentIndex(index)
-                  }} className={classes.iframeWrapper}>
-                    <img style={{ borderRadius: '5px' }} src={kminLogo} title={item} alt="Video" width={50} height={50} />
-                    <div onClick={(e) => {
-                      e.stopPropagation()
-                      removeIframe(index)
-                    }} className={classes.removeWrapper} >
-                      <X width={14} />
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
-            <div style={{ display: 'flex' }}>
-              <InputField
-                fullWidth
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
-              <IconButton onClick={() => {
-                if (input !== '') {
-                  addIframe(input)
-                  setInput('')
-                }
-              }}>
-                <Plus />
-              </IconButton>
-            </div>
           </Stack>
         </CardContent>
       </SectionCard>
@@ -133,16 +122,40 @@ const CreateClassworkAssignmentForm: FC<CreateClassworkAssignmentFormProps> = (
           )}
         </CardContent>
       </SectionCard>
-      <Dialog open={open} onClose={handleCloseDialog} extraDialogActions={<Button variant='contained' onClick={() => {
-        handleCloseDialog()
-        removeIframe(currentIndex)
-        setCurrentIndex(0)
-      }}>Xóa</Button>} >
-        <div
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: iframeVideos[currentIndex] as ANY }}
-        />
-      </Dialog>
+      <SectionCard
+        maxContentHeight={false}
+        gridItem={{ xs: 12, sm: 6 }}
+        title='Danh sách video'
+        fullHeight={false}
+      >
+        <CardContent className={classes.attachmentsCardContent}>
+            {
+              videos.map((item, index) => (
+                <div style={{ display: 'flex', alignItems: 'center' }} key={item.title}>
+                  <p>- Video {index + 1}: {item.title}</p>
+                  <IconButton onClick={() => removeVideo(index)}>
+                    <Trash/>
+                  </IconButton>
+                </div>
+              ))
+            }
+            <Stack spacing={2} className={classes.inputWrapper}>
+              <Stack>
+                <InputFieldLabel>Tiêu đề:</InputFieldLabel>
+                <InputField value={title} onChange={(e) => setTitle(e.target.value)} fullWidth />
+              </Stack>
+              <Stack>
+                <InputFieldLabel>Iframe:</InputFieldLabel>
+                <InputField value={iframe} onChange={(e) => setIframe(e.target.value)} fullWidth />
+              </Stack>
+              <Stack>
+                <InputFieldLabel>Thumbnail:</InputFieldLabel>
+                {imageInput && <ImagesUploadInput accept={['image/png', 'image/jpeg']} maxFiles={1} onChange={(files) => setThumbnail(files[0] ?? null)} />}
+              </Stack>
+              <Button onClick={addVideo} disabled={title === '' || iframe === '' || !thumbnail} style={{ marginTop: 20 }} variant='contained'>Thêm video</Button>
+            </Stack>
+        </CardContent>
+      </SectionCard>
     </Grid>
   )
 }
@@ -163,27 +176,13 @@ const useStyles = makeStyles(({ spacing }) => ({
     flexShrink: 0,
     display: 'block',
   },
-  iframeContainer: {
+  inputWrapper:{
+    width: '100%',
     display: 'flex',
-    flexWrap: 'wrap'
-  },
-  iframeWrapper: {
-    margin: '10px 10px 0px 0px',
-    position: 'relative',
-    cursor: 'pointer'
-  },
-  removeWrapper: {
-    position: 'absolute',
-    right: '-6px',
-    top: '-6px',
-    cursor: 'pointer',
-    width: 18,
-    height: 18,
-    background: '#f2f2f2',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '50%'
+    flexDirection: 'column',
+    borderRadius: '10px',
+    border: '1px dashed #828282',
+    padding: '20px'
   }
 }))
 

@@ -43,6 +43,10 @@ const AddAttachmentsToClassworkAssignment: FC<AddAttachmentsToClassworkAssignmen
     const handleSubmitForm = useCallback(
       async (input: AddAttachmentsFormInput) => {
         try {
+          if (input.attachments?.length === 0) {
+            enqueueSnackbar(`Vui lòng chọn file cần thêm`, { variant: 'error' })
+            return
+          }
           const dataCreated = (
             await addAttachmentsToClassworkAssignment({
               variables: {

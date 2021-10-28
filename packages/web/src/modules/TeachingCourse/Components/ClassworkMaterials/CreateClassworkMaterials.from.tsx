@@ -10,9 +10,11 @@ import {
   Stack,
 } from '@material-ui/core'
 import { useFormikContext } from 'formik'
-import { Plus, X } from 'phosphor-react'
+import { useSnackbar } from 'notistack'
+import { Trash, Plus, X } from 'phosphor-react'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
+import { ANY } from '@kathena/types'
 import {
   EditorFormField,
   SectionCard,
@@ -20,8 +22,10 @@ import {
   TextFormField,
   Typography,
   SelectFormField,
+  ImagesUploadInput,
   InputField,
   useDialogState,
+  Button,
   UploadInput,
 } from '@kathena/ui'
 import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
@@ -33,9 +37,8 @@ import {
 import kminLogo from './kmin-logo.png'
 
 export type CreateClassworkMaterialFormProps = {
-  iframeVideos: string[]
-  addIframe: (iframe: string) => void
-  removeIframe: (index: number) => void
+  videos: ANY[]
+  onChangeVideos: (value: ANY) => void
 }
 
 const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
@@ -45,12 +48,6 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
   const classes = useStyles(props)
   const formik = useFormikContext<ClassworkMaterialFormInput>()
 
-  // video
-  const [input, setInput] = useState<string>('')
-  const { iframeVideos, addIframe, removeIframe } = props
-  const [open, handleOpenDialog, handleCloseDialog] = useDialogState()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  //--------
   const handleMaterialSelect = useCallback(
     (files: File[]) => {
       formik.setFieldValue('attachments', files ?? null)
@@ -58,7 +55,44 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
+  // Video
+  const { videos, onChangeVideos } = props
+  const { enqueueSnackbar } = useSnackbar()
 
+  const [title, setTitle] = useState<string>('')
+  const [iframe, setIframe] = useState<string>('')
+  const [thumbnail, setThumbnail] = useState<File | null>(null)
+  const [imageInput, setImageInput] = useState(true)
+
+  const addVideo = () => {
+    if (iframe.startsWith('<iframe') && iframe.endsWith('></iframe>')) {
+      const arr = [...videos]
+      const video = {
+        title,
+        iframe,
+        thumbnail,
+      }
+      arr.push(video)
+      onChangeVideos(arr)
+      setTitle('')
+      setIframe('')
+      setThumbnail(null)
+      setImageInput(false)
+      setTimeout(() => setImageInput(true), 300)
+    } else {
+      enqueueSnackbar('Vui lòng nhập đúng định dạng iframe', {
+        variant: 'error',
+      })
+    }
+  }
+
+  const removeVideo = (index: number) => {
+    const arr = [...videos]
+    arr.splice(index, 1)
+    onChangeVideos(arr)
+  }
+
+  // --
   return (
     <Grid container spacing={DASHBOARD_SPACING}>
       <SectionCard
@@ -82,57 +116,6 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               label={labels.description}
             />
           </Stack>
-          <Stack mt={3}>
-            {/* Start Video */}
-            <InputFieldLabel>Danh sách iframe video: </InputFieldLabel>
-            <div className={classes.iframeContainer}>
-              {iframeVideos.map((item, index) => (
-                <div
-                  onClick={() => {
-                    handleOpenDialog()
-                    setCurrentIndex(index)
-                  }}
-                  className={classes.iframeWrapper}
-                >
-                  <img
-                    style={{ borderRadius: '5px' }}
-                    src={kminLogo}
-                    title={item}
-                    alt="Video"
-                    width={50}
-                    height={50}
-                  />
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      removeIframe(index)
-                    }}
-                    className={classes.removeWrapper}
-                  >
-                    <X width={14} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{ display: 'flex' }}>
-              <InputField
-                fullWidth
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
-              <IconButton
-                onClick={() => {
-                  if (input !== '') {
-                    addIframe(input)
-                    setInput('')
-                  }
-                }}
-              >
-                <Plus />
-              </IconButton>
-            </div>
-            {/* End Video---------------- */}
-          </Stack>
         </CardContent>
       </SectionCard>
       <SectionCard
@@ -153,6 +136,65 @@ const CreateClassworkMaterialForm: FC<CreateClassworkMaterialFormProps> = (
               {formik.errors.attachments}
             </Typography>
           )}
+        </CardContent>
+      </SectionCard>
+      <SectionCard
+        maxContentHeight={false}
+        gridItem={{ xs: 12, sm: 6 }}
+        title="Danh sách video"
+        fullHeight={false}
+      >
+        <CardContent className={classes.attachmentsCardContent}>
+          {videos.map((item, index) => (
+            <div
+              style={{ display: 'flex', alignItems: 'center' }}
+              key={item.title}
+            >
+              <p>
+                - Video {index + 1}: {item.title}
+              </p>
+              <IconButton onClick={() => removeVideo(index)}>
+                <Trash />
+              </IconButton>
+            </div>
+          ))}
+          <Stack spacing={2} className={classes.inputWrapper}>
+            <Stack>
+              <InputFieldLabel>Tiêu đề:</InputFieldLabel>
+              <InputField
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                fullWidth
+              />
+            </Stack>
+            <Stack>
+              <InputFieldLabel>Iframe:</InputFieldLabel>
+              <InputField
+                value={iframe}
+                onChange={(e) => setIframe(e.target.value)}
+                fullWidth
+              />
+            </Stack>
+            <Stack>
+              <InputFieldLabel>Thumbnail:</InputFieldLabel>
+              {imageInput && (
+                <ImagesUploadInput
+                  accept={['image/png', 'image/jpeg']}
+                  maxFiles={1}
+                  onChange={(files) => setThumbnail(files[0] ?? null)}
+                />
+              )}
+            </Stack>
+            <Button
+              backgroundColorButton="primary"
+              onClick={addVideo}
+              disabled={title === '' || iframe === '' || !thumbnail}
+              style={{ marginTop: 20 }}
+              variant="contained"
+            >
+              Thêm video
+            </Button>
+          </Stack>
         </CardContent>
       </SectionCard>
     </Grid>
@@ -196,6 +238,14 @@ const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
+  },
+  inputWrapper: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '10px',
+    border: '1px dashed #828282',
+    padding: '20px',
   },
 }))
 

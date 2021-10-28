@@ -150,6 +150,13 @@ enum FileLocation {
   LocalStorage
 }
 
+type Video {
+  id: ID!
+  title: String!
+  thumbnail: ID
+  iframe: String!
+}
+
 type ClassworkAssignment implements BaseModel {
   id: ID!
   orgId: ID!
@@ -161,7 +168,7 @@ type ClassworkAssignment implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [String!]!
+  videos: [Video!]!
   publicationState: Publication!
   dueDate: DateTime
   maxScores: Float!
@@ -178,7 +185,7 @@ type ClassworkMaterial implements BaseModel {
   type: String!
   description: String
   attachments: [String!]!
-  iframeVideos: [String!]!
+  videos: [Video!]!
   publicationState: Publication!
 }
 
@@ -287,6 +294,8 @@ enum Permission {
   Classwork_SetClassworkAssignmentPublication
   Classwork_AddAttachmentsToClassworkAssignment
   Classwork_RemoveAttachmentsFromClassworkAssignment
+  Classwork_AddVideoToClassworkAssignment
+  Classwork_RemoveVideoToClassworkAssignment
   Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
@@ -294,6 +303,8 @@ enum Permission {
   Classwork_AddAttachmentsToClassworkMaterial
   Classwork_RemoveAttachmentsFromClassworkMaterial
   Classwork_SetGradeForClassworkSubmission
+  Classwork_AddVideoToClassworkMaterial
+  Classwork_RemoveVideoToClassworkMaterial
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
@@ -569,11 +580,15 @@ type Mutation {
   updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
   addAttachmentsToClassworkMaterial(attachmentsInput: AddAttachmentsToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
+  addVideoToClassworkMaterial(videoInput: AddVideoToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
+  removeVideoFromClassworkMaterial(videoId: String!, classworkMaterialId: ID!): ClassworkMaterial!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
   addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
+  addVideoToClassworkAssignment(videoInput: AddVideoToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
+  removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
@@ -675,17 +690,33 @@ input CreateClassworkMaterialInput {
   description: String
   publicationState: Publication
   attachments: [Upload!]
-  iframeVideos: [String!]
+  videos: [VideoInput!]
+}
+
+input VideoInput {
+  title: String!
+  thumbnail: Upload
+  iframe: String!
 }
 
 input UpdateClassworkMaterialInput {
   title: String
   description: String
-  iframeVideos: [String!]
+  videos: [VideoInput!]
 }
 
 input AddAttachmentsToClassworkInput {
   attachments: [Upload!]!
+}
+
+input AddVideoToClassworkInput {
+  video: VideoInput
+}
+
+input VideoInput {
+  title: String!
+  thumbnail: Upload
+  iframe: String!
 }
 
 input CreateClassworkAssignmentInput {
@@ -694,14 +725,13 @@ input CreateClassworkAssignmentInput {
   attachments: [Upload!] = []
   dueDate: DateTime
   publicationState: Publication
-  iframeVideos: [String!]
+  videos: [VideoInput!]
 }
 
 input UpdateClassworkAssignmentInput {
   title: String
   description: String
   dueDate: DateTime
-  iframeVideos: [String!]
 }
 
 input CreateClassworkSubmissionInput {

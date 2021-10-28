@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from 'react'
+import { FC, useCallback, useMemo } from 'react'
 
 import { useSnackbar } from 'notistack'
 
@@ -38,7 +38,6 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const { classworkMaterial: classworkMaterialProp } =
     props as ClassworkMaterialWithClassworkMaterial
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updateClassworkMaterial, { error }] =
     useUpdateClassworkMaterialMutation()
   const { data } = useDetailClassworkMaterialQuery({
@@ -53,75 +52,45 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
   const { enqueueSnackbar } = useSnackbar()
 
   const initialValues: ANY = useMemo(
-    () => classworkMaterial,
+    () => ({
+      title: classworkMaterial.title,
+      description: classworkMaterial.description,
+    }),
     [classworkMaterial],
   )
-  // Video
-  const { data: dataIframeVideo } = useDetailClassworkMaterialQuery({
-    variables: { Id: classworkMaterial.id },
-  })
-  const classworkMaterialVideo = useMemo(
-    () => dataIframeVideo?.classworkMaterial,
-    [dataIframeVideo],
-  )
 
-  const [iframeVideos, setVideos] = useState<string[]>(
-    classworkMaterialVideo?.iframeVideos ?? [],
-  )
   const handleUpdateClassworkMaterial = useCallback(
     async (input: UpdateClassworkMaterialsFormInput) => {
       try {
+        if (input.description.length < 0) {
+          return
+        }
         const { data: dataUpdated } = await updateClassworkMaterial({
           variables: {
             classworkMaterialId: classworkMaterial.id,
             updateClassworkMaterialInput: {
               title: input.title,
               description: input.description,
-              iframeVideos,
             },
           },
         })
         const classworkMaterialUpdated = dataUpdated?.updateClassworkMaterial
-        // console.log(classworkMaterialProp.id)
         if (!classworkMaterialUpdated) {
           return
         }
-
         enqueueSnackbar(`Sửa tài liệu thành công`, {
           variant: 'success',
         })
         onClose()
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
+        enqueueSnackbar(`Sửa tài liệu thất bại`, {
+          variant: 'error',
+        })
+        // console.error(err)
       }
     },
-    [
-      updateClassworkMaterial,
-      enqueueSnackbar,
-      onClose,
-      classworkMaterial.id,
-      iframeVideos,
-    ],
+    [updateClassworkMaterial, enqueueSnackbar, onClose, classworkMaterial.id],
   )
-  // Thêm/Xóa iframVideo
-  const addIframe = (iframe: string) => {
-    if (iframe.startsWith(`<iframe`) && iframe.endsWith(`></iframe>`)) {
-      const arr = [...iframeVideos]
-      arr.push(iframe)
-      setVideos(arr)
-    } else {
-      enqueueSnackbar(`Vui lòng nhập đúng định dạng iframe video`, {
-        variant: 'error',
-      })
-    }
-  }
-  const removeIframe = (index: number) => {
-    const arr = [...iframeVideos]
-    arr.splice(index, 1)
-    setVideos(arr)
-  }
-  //----------------
 
   return (
     <FormDialog
@@ -134,11 +103,7 @@ const UpdateClassworkMaterialDialog: FC<UpdateClassworkMaterialDialogProps> = (
       submitButtonLabel="Sửa"
       backgroundButton="primary"
     >
-      <FormContent
-        iframeVideos={iframeVideos}
-        addIframe={addIframe}
-        removeIframe={removeIframe}
-      />
+      <FormContent error={error} />
     </FormDialog>
   )
 }
