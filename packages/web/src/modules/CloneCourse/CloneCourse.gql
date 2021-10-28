@@ -1,0 +1,7 @@
+mutation CloneCourse($cloneCourseInput: CloneCourseInput!) {
+  cloneTheCourse(cloneCourseInput: $cloneCourseInput) {
+    id
+    code
+    name
+  }
+}

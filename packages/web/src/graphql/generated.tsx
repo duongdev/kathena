@@ -51,6 +51,7 @@ export type AcademicSubjectsPayload = {
 
 export type Account = BaseModel & {
   availability: AccountAvailability
+  avatar?: Maybe<Scalars['ID']>
   createdAt: Scalars['DateTime']
   displayName?: Maybe<Scalars['String']>
   email: Scalars['String']
@@ -1117,6 +1118,7 @@ export type UpdateAcademicSubjectInput = {
 }
 
 export type UpdateAccountInput = {
+  avatar?: Maybe<Scalars['Upload']>
   displayName?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
@@ -1138,9 +1140,10 @@ export type UpdateClassworkMaterialInput = {
 }
 
 export type UpdateCourseInput = {
+  daysOfTheWeek?: Maybe<Array<DayOfTheWeekInput>>
   lecturerIds?: Maybe<Array<Scalars['ID']>>
   name?: Maybe<Scalars['String']>
-  startDate?: Maybe<Scalars['String']>
+  startDate?: Maybe<Scalars['DateTime']>
   tuitionFee?: Maybe<Scalars['Float']>
 }
 
@@ -1612,6 +1615,14 @@ export type FindClassworkSubmissionByIdQuery = {
     classworkId: string
     grade?: number | null | undefined
   }
+}
+
+export type CloneCourseMutationVariables = Exact<{
+  cloneCourseInput: CloneCourseInput
+}>
+
+export type CloneCourseMutation = {
+  cloneTheCourse: { id: string; code: string; name: string }
 }
 
 export type CoursesQueryVariables = Exact<{
@@ -2268,6 +2279,13 @@ export type CourseDetailQuery = {
     lecturerIds: Array<string>
     studentIds: Array<string>
     publicationState: Publication
+    orgOfficeId: string
+    totalNumberOfLessons: number
+    listOfLessonsForAWeek: Array<{
+      dayOfWeek: DayOfWeek
+      startTime: string
+      endTime: string
+    }>
   }
 }
 
@@ -6613,6 +6631,133 @@ export type FindClassworkSubmissionByIdLazyQueryHookResult = ReturnType<
 export type FindClassworkSubmissionByIdQueryResult = Apollo.QueryResult<
   FindClassworkSubmissionByIdQuery,
   FindClassworkSubmissionByIdQueryVariables
+>
+export const CloneCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CloneCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'cloneCourseInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CloneCourseInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'cloneTheCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'cloneCourseInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'cloneCourseInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CloneCourseMutationFn = Apollo.MutationFunction<
+  CloneCourseMutation,
+  CloneCourseMutationVariables
+>
+export type CloneCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CloneCourseMutation,
+    CloneCourseMutationVariables
+  >
+} & TChildProps
+export function withCloneCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CloneCourseMutation,
+    CloneCourseMutationVariables,
+    CloneCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CloneCourseMutation,
+    CloneCourseMutationVariables,
+    CloneCourseProps<TChildProps, TDataName>
+  >(CloneCourseDocument, {
+    alias: 'cloneCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCloneCourseMutation__
+ *
+ * To run a mutation, you first call `useCloneCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCloneCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cloneCourseMutation, { data, loading, error }] = useCloneCourseMutation({
+ *   variables: {
+ *      cloneCourseInput: // value for 'cloneCourseInput'
+ *   },
+ * });
+ */
+export function useCloneCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CloneCourseMutation,
+    CloneCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CloneCourseMutation, CloneCourseMutationVariables>(
+    CloneCourseDocument,
+    options,
+  )
+}
+export type CloneCourseMutationHookResult = ReturnType<
+  typeof useCloneCourseMutation
+>
+export type CloneCourseMutationResult =
+  Apollo.MutationResult<CloneCourseMutation>
+export type CloneCourseMutationOptions = Apollo.BaseMutationOptions<
+  CloneCourseMutation,
+  CloneCourseMutationVariables
 >
 export const CoursesDocument = {
   kind: 'Document',
@@ -13227,6 +13372,32 @@ export const CourseDetailDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgOfficeId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'totalNumberOfLessons' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'listOfLessonsForAWeek' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dayOfWeek' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endTime' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
