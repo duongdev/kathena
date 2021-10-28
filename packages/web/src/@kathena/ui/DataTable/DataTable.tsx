@@ -30,7 +30,7 @@ import Spinner from '../Spinner'
 type Column<RowData> = {
   label?: string
   field?: keyof RowData
-  render?: (row: RowData) => ReactNode
+  render?: (row: RowData, index: number) => ReactNode
   align?: TableCellProps['align']
   padding?: TableCellProps['padding']
   width?: number | string
@@ -60,9 +60,10 @@ export type DataTableProps<RowData extends object> = {
 const getCellValue = <RowData extends object>(
   row: RowData,
   column: Column<RowData>,
+  index: number,
 ) => {
   if (typeof column.render === 'function') {
-    return column.render(row)
+    return column.render(row, index)
   }
 
   if (column.field) {
@@ -176,14 +177,14 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
                       key={getRowKey(row, props.rowKey) || idx}
                       className={classes.rowItem}
                     >
-                      {props.columns.map((column, idx) => (
+                      {props.columns.map((column, idc) => (
                         <TableCell
                           align={column.align}
                           padding={column.padding}
-                          key={`${column.label}-${column.field || idx}`}
+                          key={`${column.label}-${column.field || idc}`}
                           style={{ width: column.width }}
                         >
-                          {getCellValue(row, column)}
+                          {getCellValue(row, column, idx)}
                         </TableCell>
                       ))}
                     </TableRow>

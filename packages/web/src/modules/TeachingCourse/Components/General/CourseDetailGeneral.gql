@@ -9,6 +9,13 @@ query CourseDetail($id: ID!) {
     lecturerIds
     studentIds
     publicationState
+    orgOfficeId
+    totalNumberOfLessons
+    listOfLessonsForAWeek{
+      dayOfWeek
+      startTime
+      endTime
+    }
   }
 }
 
