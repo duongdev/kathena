@@ -6,6 +6,7 @@ import { useFormikContext } from 'formik'
 
 import { ANY } from '@kathena/types'
 import { CurrencyFormField, SelectFormField, TextFormField } from '@kathena/ui'
+import InputFieldHelperText from '@kathena/ui/InputField/InputFieldHelperText'
 import InputFieldLabel from '@kathena/ui/InputField/InputFieldLabel'
 import { DayOfWeek, useListOrgOfficesQuery } from 'graphql/generated'
 
@@ -139,6 +140,7 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
         />
         <div className={classes.inputDayofWeekContainer}>
           <InputFieldLabel required>{labels.daysOfTheWeek}</InputFieldLabel>
+          <InputFieldHelperText color='error'>{formik.errors.daysOfTheWeek}</InputFieldHelperText>
           <div className={classes.inputDayofWeekWrapper}>
             {dayOfTheWeekData.map((item) => {
               const arr = [...daysOfTheWeek]

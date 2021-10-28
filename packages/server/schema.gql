@@ -702,7 +702,6 @@ input VideoInput {
 input UpdateClassworkMaterialInput {
   title: String
   description: String
-  videos: [VideoInput!]
 }
 
 input AddAttachmentsToClassworkInput {
@@ -711,12 +710,6 @@ input AddAttachmentsToClassworkInput {
 
 input AddVideoToClassworkInput {
   video: VideoInput
-}
-
-input VideoInput {
-  title: String!
-  thumbnail: Upload
-  iframe: String!
 }
 
 input CreateClassworkAssignmentInput {

@@ -1,10 +1,10 @@
-import { FC, useCallback, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
 import { Formik } from 'formik'
 import { useSnackbar } from 'notistack'
-import { Check, CopySimple } from 'phosphor-react'
-import { useHistory, useParams } from 'react-router-dom'
+import { CopySimple } from 'phosphor-react'
+import { useParams, useHistory } from 'react-router-dom'
 
 import yup from '@kathena/libs/yup'
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -18,11 +18,9 @@ import {
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import {
-  useFindAcademicSubjectByIdQuery,
-  useCreateCourseMutation,
   CoursesDocument,
-  Permission,
   DayOfWeek,
+  useCloneCourseMutation,
   useCourseDetailQuery,
 } from 'graphql/generated'
 import { ACADEMIC_COURSE_LIST } from 'utils/path-builder'
@@ -62,6 +60,7 @@ const validationSchema = yup.object({
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
   orgOfficeId: yup.string().label(labels.orgOfficeId).trim().required(),
+  daysOfTheWeek: yup.array().min(1, 'Phải chọn ít nhất 1 buổi học trong tuần').label(labels.daysOfTheWeek).required()
 })
 
 const CloneCourse: FC<CloneCourseProps> = (props) => {
@@ -74,13 +73,11 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
   const { data } = useCourseDetailQuery({
     variables: { id: idCourse }
   })
-  const [createCourse] = useCreateCourseMutation({
-    refetchQueries: [
-      {
-        query: CoursesDocument,
-        variables: { orgId: org.id, skip: 0, limit: 10 },
-      },
-    ],
+  const [cloneCourse] = useCloneCourseMutation({
+    refetchQueries: [{
+      query: CoursesDocument,
+      variables: { orgId: org.id, skip: 0, limit: 10 },
+    }]
   })
   const courseRoot = useMemo(() => data?.findCourseById, [data?.findCourseById])
   const initialValues: CourseFormInput = {
@@ -103,53 +100,48 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
     )
   }
 
-  // const handleSubmitForm = useCallback(
-  //   async (input: CourseFormInput) => {
-  //     try {
-  //       if (!academicSubject) return
-  //       const lecturerIds: string[] = []
-  //       if (input.lecturerIds.length)
-  //         input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
-  //       const { data: dataCreated } = await createCourse({
-  //         variables: {
-  //           input: {
-  //             academicSubjectId: academicSubject.id,
-  //             code: input.code,
-  //             name: input.name,
-  //             startDate: input.startDate,
-  //             tuitionFee: input.tuitionFee,
-  //             orgOfficeId: input.orgOfficeId,
-  //             lecturerIds,
-  //             totalNumberOfLessons: input.totalNumberOfLessons,
-  //             daysOfTheWeek: input.daysOfTheWeek,
-  //           },
-  //         },
-  //       })
+  const handleClone = async (input: CourseFormInput) => {
+    try {
+      if (!courseRoot) return
+      const lecturerIds: string[] = []
+      if (input.lecturerIds.length)
+        input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
+      const { data: dataCreated } = await cloneCourse({
+        variables: {
+          cloneCourseInput:{
+            code: input.code,
+            courseIdMustCopy: courseRoot.id,
+            name: input.name,
+            orgOfficeId: input.orgOfficeId,
+            startDate: input.startDate,
+            lecturerIds,
+            tuitionFee: input.tuitionFee,
+            daysOfTheWeek: input.daysOfTheWeek,
+          }
+        },
+      })
 
-  //       const course = dataCreated?.createCourse
+      const course = dataCreated?.cloneTheCourse
 
-  //       if (!course) {
-  //         return
-  //       }
-  //       enqueueSnackbar('Thêm khóa học thành công', { variant: 'success' })
-  //       history.push(ACADEMIC_COURSE_LIST)
-  //       // eslint-disable-next-line no-console
-  //       console.log(academicSubject)
-  //     } catch (error) {
-  //       const errorMessage = renderApolloError(error)()
-  //       enqueueSnackbar(errorMessage, { variant: 'error' })
-  //       // eslint-disable-next-line no-console
-  //       console.error(error)
-  //     }
-  //   },
-  //   [createCourse, academicSubject, enqueueSnackbar, history],
-  // )
+      if (!course) {
+        return
+      }
+      enqueueSnackbar('Sao chép khóa học thành công', { variant: 'success' })
+      history.push(ACADEMIC_COURSE_LIST)
+    } catch (error) {
+      const errorMessage = renderApolloError(error)()
+      enqueueSnackbar(errorMessage, { variant: 'error' })
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+  }
 
   return (
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={(e) => console.log(e)}
+      // eslint-disable-next-line
+      onSubmit={handleClone}
     >
       {(formik) => (
         <PageContainer
