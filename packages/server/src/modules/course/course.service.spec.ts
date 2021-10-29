@@ -323,6 +323,34 @@ describe('course.service', () => {
   })
 
   describe('updateCourse', () => {
+    it(`throws error if course is teaching`, async () => {
+      expect.assertions(1)
+      const today = new Date()
+      const yesterday = new Date(today)
+      yesterday.setDate(yesterday.getDate() - 1)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findOne')
+        .mockResolvedValueOnce({
+          startDate: yesterday,
+          publicationState: Publication.Published,
+        } as ANY)
+
+      await expect(
+        courseService.updateCourse(
+          {
+            id: objectId(),
+            orgId: objectId(),
+          },
+          {
+            name: 'Test',
+          },
+        ),
+      ).rejects.toThrowError(
+        'Khóa học đang được dạy và học không thể chỉnh sửa !',
+      )
+    })
+
     it(`throws error if couldn't find course to update`, async () => {
       expect.assertions(1)
 
