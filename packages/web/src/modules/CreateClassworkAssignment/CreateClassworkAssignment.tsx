@@ -84,7 +84,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
               input: {
                 ...input,
                 publicationState: publication,
-                videos
+                videos,
               },
             },
           })
@@ -139,6 +139,7 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           })}
           actions={[
             <SplitButton
+              backgroundButton="primary"
               items={[
                 {
                   children: 'Đăng bài tập',
@@ -161,7 +162,10 @@ const CreateClassworkAssignment: FC<CreateClassworkAssignmentProps> = (
           ]}
           className={classes.root}
         >
-          <CreateClassworkAssignmentForm videos={videos} onChangeVideos={(v) => setVideos(v)} />
+          <CreateClassworkAssignmentForm
+            videos={videos}
+            onChangeVideos={(v) => setVideos(v)}
+          />
         </PageContainer>
       )}
     </Formik>

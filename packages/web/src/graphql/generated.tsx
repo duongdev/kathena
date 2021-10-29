@@ -51,6 +51,7 @@ export type AcademicSubjectsPayload = {
 
 export type Account = BaseModel & {
   availability: AccountAvailability
+  avatar?: Maybe<Scalars['ID']>
   createdAt: Scalars['DateTime']
   displayName?: Maybe<Scalars['String']>
   email: Scalars['String']
@@ -306,6 +307,7 @@ export type CreateClassworkMaterialInput = {
   description?: Maybe<Scalars['String']>
   publicationState?: Maybe<Publication>
   title: Scalars['String']
+  videos?: Maybe<Array<VideoInput>>
 }
 
 export type CreateClassworkSubmissionInput = {
@@ -1148,6 +1150,7 @@ export type UpdateAcademicSubjectInput = {
 }
 
 export type UpdateAccountInput = {
+  avatar?: Maybe<Scalars['Upload']>
   displayName?: Maybe<Scalars['String']>
   email?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
@@ -1678,6 +1681,14 @@ export type FindClassworkSubmissionByIdQuery = {
     classworkId: string
     grade?: number | null | undefined
   }
+}
+
+export type CloneCourseMutationVariables = Exact<{
+  cloneCourseInput: CloneCourseInput
+}>
+
+export type CloneCourseMutation = {
+  cloneTheCourse: { id: string; code: string; name: string }
 }
 
 export type CoursesQueryVariables = Exact<{
@@ -2243,6 +2254,12 @@ export type DetailClassworkMaterialQuery = {
     attachments: Array<string>
     publicationState: Publication
     courseId: string
+    videos: Array<{
+      id: string
+      title: string
+      thumbnail?: string | null | undefined
+      iframe: string
+    }>
   }
 }
 
@@ -2306,6 +2323,24 @@ export type UpdateClassworkMaterialPublicationMutation = {
   }
 }
 
+export type AddVideoToClassworkMaterialMutationVariables = Exact<{
+  classworkMaterialId: Scalars['ID']
+  videoInput: AddVideoToClassworkInput
+}>
+
+export type AddVideoToClassworkMaterialMutation = {
+  addVideoToClassworkMaterial: { id: string }
+}
+
+export type RemoveVideoFromClassworkMaterialMutationVariables = Exact<{
+  classworkMaterialId: Scalars['ID']
+  videoId: Scalars['String']
+}>
+
+export type RemoveVideoFromClassworkMaterialMutation = {
+  removeVideoFromClassworkMaterial: { id: string }
+}
+
 export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
 }>
@@ -2332,6 +2367,13 @@ export type CourseDetailQuery = {
     lecturerIds: Array<string>
     studentIds: Array<string>
     publicationState: Publication
+    orgOfficeId: string
+    totalNumberOfLessons: number
+    listOfLessonsForAWeek: Array<{
+      dayOfWeek: DayOfWeek
+      startTime: string
+      endTime: string
+    }>
   }
 }
 
@@ -6982,6 +7024,133 @@ export type FindClassworkSubmissionByIdLazyQueryHookResult = ReturnType<
 export type FindClassworkSubmissionByIdQueryResult = Apollo.QueryResult<
   FindClassworkSubmissionByIdQuery,
   FindClassworkSubmissionByIdQueryVariables
+>
+export const CloneCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CloneCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'cloneCourseInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CloneCourseInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'cloneTheCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'cloneCourseInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'cloneCourseInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type CloneCourseMutationFn = Apollo.MutationFunction<
+  CloneCourseMutation,
+  CloneCourseMutationVariables
+>
+export type CloneCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CloneCourseMutation,
+    CloneCourseMutationVariables
+  >
+} & TChildProps
+export function withCloneCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CloneCourseMutation,
+    CloneCourseMutationVariables,
+    CloneCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CloneCourseMutation,
+    CloneCourseMutationVariables,
+    CloneCourseProps<TChildProps, TDataName>
+  >(CloneCourseDocument, {
+    alias: 'cloneCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useCloneCourseMutation__
+ *
+ * To run a mutation, you first call `useCloneCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCloneCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cloneCourseMutation, { data, loading, error }] = useCloneCourseMutation({
+ *   variables: {
+ *      cloneCourseInput: // value for 'cloneCourseInput'
+ *   },
+ * });
+ */
+export function useCloneCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CloneCourseMutation,
+    CloneCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CloneCourseMutation, CloneCourseMutationVariables>(
+    CloneCourseDocument,
+    options,
+  )
+}
+export type CloneCourseMutationHookResult = ReturnType<
+  typeof useCloneCourseMutation
+>
+export type CloneCourseMutationResult =
+  Apollo.MutationResult<CloneCourseMutation>
+export type CloneCourseMutationOptions = Apollo.BaseMutationOptions<
+  CloneCourseMutation,
+  CloneCourseMutationVariables
 >
 export const CoursesDocument = {
   kind: 'Document',
@@ -12699,6 +12868,25 @@ export const DetailClassworkMaterialDocument = {
                   name: { kind: 'Name', value: 'publicationState' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'videos' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'thumbnail' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'iframe' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -13402,6 +13590,299 @@ export type UpdateClassworkMaterialPublicationMutationOptions =
     UpdateClassworkMaterialPublicationMutation,
     UpdateClassworkMaterialPublicationMutationVariables
   >
+export const AddVideoToClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'AddVideoToClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'videoInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'AddVideoToClassworkInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addVideoToClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'videoInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'videoInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type AddVideoToClassworkMaterialMutationFn = Apollo.MutationFunction<
+  AddVideoToClassworkMaterialMutation,
+  AddVideoToClassworkMaterialMutationVariables
+>
+export type AddVideoToClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables
+  >
+} & TChildProps
+export function withAddVideoToClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables,
+    AddVideoToClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables,
+    AddVideoToClassworkMaterialProps<TChildProps, TDataName>
+  >(AddVideoToClassworkMaterialDocument, {
+    alias: 'addVideoToClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useAddVideoToClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useAddVideoToClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddVideoToClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addVideoToClassworkMaterialMutation, { data, loading, error }] = useAddVideoToClassworkMaterialMutation({
+ *   variables: {
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *      videoInput: // value for 'videoInput'
+ *   },
+ * });
+ */
+export function useAddVideoToClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables
+  >(AddVideoToClassworkMaterialDocument, options)
+}
+export type AddVideoToClassworkMaterialMutationHookResult = ReturnType<
+  typeof useAddVideoToClassworkMaterialMutation
+>
+export type AddVideoToClassworkMaterialMutationResult =
+  Apollo.MutationResult<AddVideoToClassworkMaterialMutation>
+export type AddVideoToClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    AddVideoToClassworkMaterialMutation,
+    AddVideoToClassworkMaterialMutationVariables
+  >
+export const RemoveVideoFromClassworkMaterialDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RemoveVideoFromClassworkMaterial' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'classworkMaterialId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'videoId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'removeVideoFromClassworkMaterial' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'videoId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'videoId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'classworkMaterialId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'classworkMaterialId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type RemoveVideoFromClassworkMaterialMutationFn =
+  Apollo.MutationFunction<
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables
+  >
+export type RemoveVideoFromClassworkMaterialProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables
+  >
+} & TChildProps
+export function withRemoveVideoFromClassworkMaterial<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables,
+    RemoveVideoFromClassworkMaterialProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables,
+    RemoveVideoFromClassworkMaterialProps<TChildProps, TDataName>
+  >(RemoveVideoFromClassworkMaterialDocument, {
+    alias: 'removeVideoFromClassworkMaterial',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useRemoveVideoFromClassworkMaterialMutation__
+ *
+ * To run a mutation, you first call `useRemoveVideoFromClassworkMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveVideoFromClassworkMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeVideoFromClassworkMaterialMutation, { data, loading, error }] = useRemoveVideoFromClassworkMaterialMutation({
+ *   variables: {
+ *      classworkMaterialId: // value for 'classworkMaterialId'
+ *      videoId: // value for 'videoId'
+ *   },
+ * });
+ */
+export function useRemoveVideoFromClassworkMaterialMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables
+  >(RemoveVideoFromClassworkMaterialDocument, options)
+}
+export type RemoveVideoFromClassworkMaterialMutationHookResult = ReturnType<
+  typeof useRemoveVideoFromClassworkMaterialMutation
+>
+export type RemoveVideoFromClassworkMaterialMutationResult =
+  Apollo.MutationResult<RemoveVideoFromClassworkMaterialMutation>
+export type RemoveVideoFromClassworkMaterialMutationOptions =
+  Apollo.BaseMutationOptions<
+    RemoveVideoFromClassworkMaterialMutation,
+    RemoveVideoFromClassworkMaterialMutationVariables
+  >
 export const SetGradeForClassworkSubmissionDocument = {
   kind: 'Document',
   definitions: [
@@ -13588,6 +14069,32 @@ export const CourseDetailDocument = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'publicationState' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'orgOfficeId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'totalNumberOfLessons' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'listOfLessonsForAWeek' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dayOfWeek' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endTime' },
+                      },
+                    ],
+                  },
                 },
               ],
             },

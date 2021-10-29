@@ -55,7 +55,7 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
 
     const [index, setIndex] = useState(0)
     const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
-    useDialogState()
+      useDialogState()
 
     const classworkAssignment = useMemo(() => data?.classworkAssignment, [data])
 
@@ -222,23 +222,38 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
               </Grid>
             </CardContent>
           </SectionCard>
-          {classworkAssignment.videos.length > 0 && <SectionCard
-            maxContentHeight={false}
-            gridItem={{ xs: 12 }}
-            title="Danh sách video"
-          >
-            <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {
-                classworkAssignment.videos.map((item, i) => (
-                  <div style={{ cursor: 'pointer', marginRight: 30 }} onClick={() => { setIndex(i); handleOpenVideoDialog() }}>
-                    <Image width={150} height={150} fileId={item.thumbnail as ANY} />
+          {classworkAssignment.videos.length > 0 && (
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12 }}
+              title="Danh sách video"
+            >
+              <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {classworkAssignment.videos.map((item, i) => (
+                  <div
+                    style={{ cursor: 'pointer', marginRight: 30 }}
+                    onClick={() => {
+                      setIndex(i)
+                      handleOpenVideoDialog()
+                    }}
+                  >
+                    <Image
+                      width={150}
+                      height={150}
+                      fileId={item.thumbnail as ANY}
+                    />
                     <p style={{ margin: 0 }}>{item.title}</p>
                   </div>
-                ))
-              }
-            </CardContent>
-            <VideoPopup index={index} onClose={handleCloseVideoDialog} open={dialogOpenVideo} videos={classworkAssignment.videos} />
-          </SectionCard>}
+                ))}
+              </CardContent>
+              <VideoPopup
+                index={index}
+                onClose={handleCloseVideoDialog}
+                open={dialogOpenVideo}
+                videos={classworkAssignment.videos}
+              />
+            </SectionCard>
+          )}
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
@@ -281,7 +296,15 @@ const DetailContentClassworkAssignment: FC<DetailContentClassworkAssignmentProps
                   </Button>
                 </div>
               ) : (
-                'Không có bình luận'
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '10px',
+                  }}
+                >
+                  <Typography>Không có bình luận</Typography>
+                </div>
               )}
               <CreateComment roomId={id} />
             </CardContent>

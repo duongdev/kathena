@@ -3,6 +3,8 @@ import { FC, useMemo, useEffect, useState } from 'react'
 import { CardContent, Grid, makeStyles, Stack } from '@material-ui/core'
 import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
+import Image from 'components/Image'
+import VideoPopup from 'components/VideoPopup'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
@@ -14,6 +16,7 @@ import {
   SectionCard,
   SectionCardSkeleton,
   Typography,
+  useDialogState,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import { listRoomChatVar } from 'common/cache'
@@ -44,6 +47,12 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
     const { data, loading } = useDetailClassworkMaterialQuery({
       variables: { Id: id },
     })
+    // Video
+    const [index, setIndex] = useState(0)
+    const [dialogOpenVideo, handleOpenVideoDialog, handleCloseVideoDialog] =
+      useDialogState()
+
+    // --
     const { data: dataComments, refetch } = useConversationsQuery({
       variables: {
         roomId: id,
@@ -154,6 +163,40 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
               </Grid>
             </CardContent>
           </SectionCard>
+          {/* video */}
+          {(classworkMaterial?.videos.length as ANY) > 0 && (
+            <SectionCard
+              maxContentHeight={false}
+              gridItem={{ xs: 12 }}
+              title="Danh sách video"
+            >
+              <CardContent style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {classworkMaterial?.videos.map((item, i) => (
+                  <div
+                    style={{ cursor: 'pointer', marginRight: 30 }}
+                    onClick={() => {
+                      setIndex(i)
+                      handleOpenVideoDialog()
+                    }}
+                  >
+                    <Image
+                      width={150}
+                      height={150}
+                      fileId={item.thumbnail as ANY}
+                    />
+                    <p style={{ margin: 0 }}>{item.title}</p>
+                  </div>
+                ))}
+              </CardContent>
+              <VideoPopup
+                index={index}
+                onClose={handleCloseVideoDialog}
+                open={dialogOpenVideo}
+                videos={classworkMaterial?.videos as ANY}
+              />
+            </SectionCard>
+          )}
+          {/* --- */}
           <SectionCard
             maxContentHeight={false}
             gridItem={{ xs: 12 }}
@@ -210,12 +253,6 @@ const DetailContentClassworkMaterial: FC<DetailContentClassworkMaterialProps> =
             </CardContent>
           </SectionCard>
         </Grid>
-        {/* <VideoPopup
-          iframeVideos={classworkMaterial?.iframeVideos as ANY}
-          index={indexVideo}
-          open={openVideo}
-          onClose={handleCloseVideoDialog}
-        /> */}
       </PageContainer>
     )
   }

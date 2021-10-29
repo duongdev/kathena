@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "husky": "7.0.4",
-    "lint-staged": "11.2.4",
+    "lint-staged": "11.2.6",
     "prettier": "2.4.1"
   },
   "resolutions": {
@@ -37,6 +37,6 @@
     "*.{js,jsx,ts,tsx}": "yarn lint --fix"
   },
   "dependencies": {
-    "@nestjs/common": "8.1.1"
+    "@nestjs/common": "8.1.2"
   }
 }

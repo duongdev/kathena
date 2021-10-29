@@ -66,6 +66,7 @@ const validationSchema = yup.object({
     .number()
     .label(labels.totalNumberOfLessons)
     .min(1)
+    .max(200)
     .required(),
 })
 
