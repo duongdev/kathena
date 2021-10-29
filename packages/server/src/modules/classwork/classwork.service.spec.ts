@@ -861,7 +861,7 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
           ),
-        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGECOURSE`)
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
       })
 
       it(`returns new clone ClassworkMaterial`, async () => {
@@ -2820,7 +2820,7 @@ describe('classwork.service', () => {
             objectId(),
             objectId(),
           ),
-        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGECOURSE`)
+        ).rejects.toThrowError(`ACCOUNT_CAN'T_MANAGE_COURSE`)
       })
 
       it(`returns new clone ClassworkAssignment`, async () => {
