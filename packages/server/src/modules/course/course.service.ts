@@ -227,6 +227,13 @@ export class CourseService {
       throw new Error(`COURSE_NOT_FOUND`)
     }
 
+    if (
+      course.startDate < new Date() &&
+      course.publicationState === Publication.Published
+    ) {
+      throw new Error('Khóa học đang được dạy và học không thể chỉnh sửa !')
+    }
+
     let updateInput = {}
 
     if (name) {
