@@ -60,7 +60,11 @@ const validationSchema = yup.object({
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
   startDate: yup.string().label(labels.startDate).default(''),
   orgOfficeId: yup.string().label(labels.orgOfficeId).trim().required(),
-  daysOfTheWeek: yup.array().min(1, 'Phải chọn ít nhất 1 buổi học trong tuần').label(labels.daysOfTheWeek).required()
+  daysOfTheWeek: yup
+    .array()
+    .min(1, 'Phải chọn ít nhất 1 buổi học trong tuần')
+    .label(labels.daysOfTheWeek)
+    .required(),
 })
 
 const CloneCourse: FC<CloneCourseProps> = (props) => {
@@ -71,13 +75,15 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
   const idCourse = useMemo(() => params.idCourse, [params.idCourse])
   const { $org: org } = useAuth()
   const { data } = useCourseDetailQuery({
-    variables: { id: idCourse }
+    variables: { id: idCourse },
   })
   const [cloneCourse] = useCloneCourseMutation({
-    refetchQueries: [{
-      query: CoursesDocument,
-      variables: { orgId: org.id, skip: 0, limit: 10 },
-    }]
+    refetchQueries: [
+      {
+        query: CoursesDocument,
+        variables: { orgId: org.id, skip: 0, limit: 10 },
+      },
+    ],
   })
   const courseRoot = useMemo(() => data?.findCourseById, [data?.findCourseById])
   const initialValues: CourseFormInput = {
@@ -108,7 +114,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
         input.lecturerIds.map((lecturer) => lecturerIds.push(lecturer.id))
       const { data: dataCreated } = await cloneCourse({
         variables: {
-          cloneCourseInput:{
+          cloneCourseInput: {
             code: input.code,
             courseIdMustCopy: courseRoot.id,
             name: input.name,
@@ -117,7 +123,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
             lecturerIds,
             tuitionFee: input.tuitionFee,
             daysOfTheWeek: input.daysOfTheWeek,
-          }
+          },
         },
       })
 
@@ -172,9 +178,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
               <CardContent>
                 <InfoBlock label="Code">{courseRoot.code}</InfoBlock>
                 <InfoBlock label="Tên khoá học">{courseRoot.name}</InfoBlock>
-                <InfoBlock label="Học phí">
-                  {courseRoot.tuitionFee}
-                </InfoBlock>
+                <InfoBlock label="Học phí">{courseRoot.tuitionFee}</InfoBlock>
               </CardContent>
             </SectionCard>
             <SectionCard

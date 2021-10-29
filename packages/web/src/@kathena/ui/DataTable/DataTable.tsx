@@ -87,13 +87,12 @@ const DataTable = <RowData extends object>(props: DataTableProps<RowData>) => {
   const classes = useStyles(props)
 
   const handleSort = useCallback(
-    (property?: keyof RowData) => (
-      event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    ) => {
-      if (typeof props.onRequestSort === 'function') {
-        props.onRequestSort(event, property)
-      }
-    },
+    (property?: keyof RowData) =>
+      (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        if (typeof props.onRequestSort === 'function') {
+          props.onRequestSort(event, property)
+        }
+      },
     [props],
   )
 

@@ -140,7 +140,9 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
         />
         <div className={classes.inputDayofWeekContainer}>
           <InputFieldLabel required>{labels.daysOfTheWeek}</InputFieldLabel>
-          <InputFieldHelperText color='error'>{formik.errors.daysOfTheWeek}</InputFieldHelperText>
+          <InputFieldHelperText color="error">
+            {formik.errors.daysOfTheWeek}
+          </InputFieldHelperText>
           <div className={classes.inputDayofWeekWrapper}>
             {dayOfTheWeekData.map((item) => {
               const arr = [...daysOfTheWeek]

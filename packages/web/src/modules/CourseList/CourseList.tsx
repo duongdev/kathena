@@ -16,11 +16,15 @@ import {
   useLocationQuery,
   Typography,
   usePagination,
-  Button
+  Button,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useCoursesQuery } from 'graphql/generated'
-import { buildPath, ACADEMIC_COURSE, CLONE_ACADEMIC_COURSE } from 'utils/path-builder'
+import {
+  buildPath,
+  ACADEMIC_COURSE,
+  CLONE_ACADEMIC_COURSE,
+} from 'utils/path-builder'
 
 export type CourseListProps = {}
 
@@ -127,7 +131,14 @@ const CourseList: FC<CourseListProps> = (props) => {
               },
               {
                 render: (course) => (
-                  <Button startIcon={<CopySimple />} link={buildPath(CLONE_ACADEMIC_COURSE, { idCourse: course.id })} >Clone</Button>
+                  <Button
+                    startIcon={<CopySimple />}
+                    link={buildPath(CLONE_ACADEMIC_COURSE, {
+                      idCourse: course.id,
+                    })}
+                  >
+                    Clone
+                  </Button>
                 ),
               },
             ]}

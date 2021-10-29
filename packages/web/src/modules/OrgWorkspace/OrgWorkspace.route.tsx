@@ -77,9 +77,7 @@ const CreateCourse = lazy(
 )
 const CloneCourse = lazy(
   () =>
-    import(
-      'modules/CloneCourse' /* webpackChunkName: "modules/CloneCourse" */
-    ),
+    import('modules/CloneCourse' /* webpackChunkName: "modules/CloneCourse" */),
 )
 const CourseList = lazy(
   () =>
