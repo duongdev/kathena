@@ -6,6 +6,7 @@ import OrgOfficeName from 'components/OrgOfficeName'
 import PublicationChip from 'components/PublicationChip'
 import Search from 'components/Search'
 import { format } from 'date-fns'
+import { CopySimple } from 'phosphor-react'
 
 import { ANY } from '@kathena/types'
 import {
@@ -15,10 +16,15 @@ import {
   useLocationQuery,
   Typography,
   usePagination,
+  Button,
 } from '@kathena/ui'
 import { useAuth, WithAuth } from 'common/auth'
 import { Permission, useCoursesQuery } from 'graphql/generated'
-import { buildPath, ACADEMIC_COURSE } from 'utils/path-builder'
+import {
+  buildPath,
+  ACADEMIC_COURSE,
+  CLONE_ACADEMIC_COURSE,
+} from 'utils/path-builder'
 
 export type CourseListProps = {}
 
@@ -121,6 +127,18 @@ const CourseList: FC<CourseListProps> = (props) => {
                 label: 'Trạng thái',
                 render: ({ publicationState }) => (
                   <PublicationChip publication={publicationState} />
+                ),
+              },
+              {
+                render: (course) => (
+                  <Button
+                    startIcon={<CopySimple />}
+                    link={buildPath(CLONE_ACADEMIC_COURSE, {
+                      idCourse: course.id,
+                    })}
+                  >
+                    Clone
+                  </Button>
                 ),
               },
             ]}

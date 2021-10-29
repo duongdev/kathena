@@ -36,6 +36,7 @@ import {
   STUDYING_COURSE_DETAIL_CLASSWORK_LESSON,
   TEACHING_COURSE_CREATE_CLASSWORK_LESSON,
   TEACHING_COURSE_QUIZSUBMIT,
+  CLONE_ACADEMIC_COURSE,
 } from 'utils/path-builder'
 
 import ConversationPopupContainer from '../ConversationsPopupContainer/ConversationPopupContainer'
@@ -73,6 +74,10 @@ const CreateCourse = lazy(
     import(
       'modules/CreateCourse' /* webpackChunkName: "modules/CreateCourse" */
     ),
+)
+const CloneCourse = lazy(
+  () =>
+    import('modules/CloneCourse' /* webpackChunkName: "modules/CloneCourse" */),
 )
 const CourseList = lazy(
   () =>
@@ -242,6 +247,7 @@ const OrgWorkspaceRoute: FC<OrgWorkspaceRouteProps> = () => (
       />
       <Route path={ACADEMIC_COURSE_LIST} exact component={CourseList} />
       <Route path={CREATE_ACADEMIC_COURSE} exact component={CreateCourse} />
+      <Route path={CLONE_ACADEMIC_COURSE} exact component={CloneCourse} />
       <Route path={ORG_SETTINGS} exact component={OrgSettings} />
       <Route path={TEACHING_COURSE_LIST} exact component={TeachingCourseList} />
       <Route path={STUDYING_COURSE_LIST} exact component={StudyingCourseList} />

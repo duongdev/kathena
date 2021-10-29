@@ -56,6 +56,10 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar()
   const history = useHistory()
   const { $org: org } = useAuth()
+  // Video
+  const [videos, setVideos] = useState<ANY>([])
+
+  // --
   const [createClassworkMaterial] = useCreateClassworkMaterialMutation({
     refetchQueries: [
       {
@@ -76,7 +80,8 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
               title: input.title,
               description: input.description,
               publicationState: publication,
-              attachments: input.attachments as ANY
+              attachments: input.attachments as ANY,
+              videos,
             },
           },
         })
@@ -97,11 +102,12 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
       }
     },
     [
+      videos,
       createClassworkMaterial,
       enqueueSnackbar,
       idCourse,
       history,
-      publication
+      publication,
     ],
   )
   return (
@@ -142,7 +148,10 @@ const CreateClassworkMaterial: FC<CreateClassworkMaterialProps> = (props) => {
           ]}
           className={classes.root}
         >
-          <CreateClassworkMaterialForm />
+          <CreateClassworkMaterialForm
+            videos={videos}
+            onChangeVideos={(v) => setVideos(v)}
+          />
         </PageContainer>
       )}
     </Formik>

@@ -14,12 +14,13 @@ import {
 } from 'core/utils/string'
 import { AuthService } from 'modules/auth/auth.service'
 import { OrgRoleName, Permission } from 'modules/auth/models'
+import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
 import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY, Nullable } from 'types'
 
 import { OTP_TIME } from './account.const'
-import { CreateAccountServiceInput } from './account.type'
+import { CreateAccountServiceInput, UpdateAccountInput } from './account.type'
 import { Account, AccountStatus } from './models/Account'
 
 @Service()
@@ -35,6 +36,8 @@ export class AccountService {
     private readonly orgService: OrgService,
     @Inject(forwardRef(() => MailService))
     private readonly mailService: MailService,
+    @Inject(forwardRef(() => FileStorageService))
+    private readonly fileStorageService: FileStorageService,
   ) {}
 
   async createAccount(
@@ -223,13 +226,7 @@ export class AccountService {
 
   async updateAccount(
     query: { id: string; orgId: string },
-    update: {
-      displayName?: string
-      email?: string
-      username?: string
-      password?: string
-      roles?: OrgRoleName[]
-    },
+    update: UpdateAccountInput,
   ): Promise<DocumentType<Account>> {
     const account = await this.accountModel.findOne({
       _id: query.id,
@@ -255,6 +252,17 @@ export class AccountService {
     if (update.roles) {
       account.roles = update.roles
     }
+
+    if (update.avatar) {
+      const image = await this.fileStorageService.uploadFile(
+        query.orgId,
+        account.id,
+        update.avatar,
+      )
+
+      account.avatar = image.id
+    }
+
     const updatedAccount = await account.save()
 
     return updatedAccount
@@ -263,13 +271,7 @@ export class AccountService {
   async updateOrgMemberAccount(
     updaterId: string,
     query: { id: string; orgId: string },
-    update: {
-      displayName?: string
-      email?: string
-      username?: string
-      password?: string
-      roles?: OrgRoleName[]
-    },
+    update: UpdateAccountInput,
   ): Promise<DocumentType<Account>> {
     this.logger.log(`[updateOrgMemberAccount] start updating`)
     this.logger.verbose({ updaterId, query, update })
@@ -281,6 +283,7 @@ export class AccountService {
       return this.updateAccount(query, {
         displayName: update.displayName,
         password: update.password,
+        avatar: update.avatar,
       })
     }
 
@@ -333,7 +336,13 @@ export class AccountService {
       throw new ForbiddenError()
     }
 
-    return this.updateAccount(query, update)
+    return this.updateAccount(query, {
+      displayName: update.displayName,
+      password: update.password,
+      email: update.email,
+      username: update.username,
+      roles: update.roles,
+    })
   }
 
   async updateOrgMemberAccountStatus(
