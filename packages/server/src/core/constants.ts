@@ -30,3 +30,5 @@ export const DAY_OF_THE_WEEK = [
     en: 'Saturday',
   },
 ]
+
+export const MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE = 200
