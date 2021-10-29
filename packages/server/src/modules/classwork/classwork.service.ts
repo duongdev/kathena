@@ -678,7 +678,7 @@ export class ClassworkService {
     const canAccountManageCourse =
       await this.authService.canAccountManageCourse(accountId, toCourseId)
 
-    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGECOURSE`)
+    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
     const toClassworkMaterial = await this.createClassworkMaterial(
       accountId,
@@ -696,6 +696,7 @@ export class ClassworkService {
         toClassworkMaterial.id,
         {
           attachments: formClassworkMaterial.attachments,
+          videos: formClassworkMaterial.videos,
         },
         {
           new: true,
@@ -1334,7 +1335,7 @@ export class ClassworkService {
     const canAccountManageCourse =
       await this.authService.canAccountManageCourse(accountId, toCourseId)
 
-    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGECOURSE`)
+    if (!canAccountManageCourse) throw new Error(`ACCOUNT_CAN'T_MANAGE_COURSE`)
 
     const toClassworkAssignment = await this.createClassworkAssignment(
       accountId,
@@ -1352,6 +1353,7 @@ export class ClassworkService {
         toClassworkAssignment.id,
         {
           attachments: formClassworkAssignment.attachments,
+          videos: formClassworkAssignment.videos,
         },
         {
           new: true,
