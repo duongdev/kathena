@@ -2,6 +2,7 @@ import { TestingModule } from '@nestjs/testing'
 import { Connection } from 'mongoose'
 
 import { Publication } from 'core'
+import { MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE } from 'core/constants'
 import { objectId } from 'core/utils/db'
 import { createTestingModule, initTestDb } from 'core/utils/testing'
 import { AcademicService } from 'modules/academic/academic.service'
@@ -218,7 +219,7 @@ describe('course.service', () => {
       ).rejects.toThrowError(`Thanh Canh Admin isn't a lecturer`)
     })
 
-    it(`throws error if total number of the lesson greater than 200 lessons`, async () => {
+    it(`throws error if total number of the lesson greater than ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} lessons`, async () => {
       expect.assertions(1)
 
       jest
@@ -244,10 +245,13 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          totalNumberOfLessons: 201,
+          totalNumberOfLessons:
+            MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE + 1,
           startDate: date,
         }),
-      ).rejects.toThrowError('Tổng số buổi học không được lớn hơn 200 buổi!')
+      ).rejects.toThrowError(
+        `Tổng số buổi học không được lớn hơn ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} buổi!`,
+      )
     })
 
     it(`throws error if the academic subject is a draft`, async () => {
