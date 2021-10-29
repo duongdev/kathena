@@ -30,7 +30,9 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""Status of an account."""
+"""
+Status of an account.
+"""
 enum AccountStatus {
   Pending
   Active
@@ -347,7 +349,9 @@ type Conversation implements BaseModel {
   type: ConversationType!
 }
 
-"""Type of an conversation."""
+"""
+Type of an conversation.
+"""
 enum ConversationType {
   Group
   Single
@@ -438,39 +442,82 @@ type Rating implements BaseModel {
 type Query {
   account(id: ID!): Account
   accountByUserName(username: String!): Account
-  orgAccounts(filter: AccountsFilterInput!, pageOptions: PageOptionsInput!): OrgAccountsPayload!
+  orgAccounts(
+    filter: AccountsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): OrgAccountsPayload!
   authenticate: AuthenticatePayload!
   canAccountManageRoles(roles: [String!]!): Boolean!
   file(id: ID!): File
-  academicSubjects(filter: AcademicSubjectsFilterInput!, pageOptions: PageOptionsInput!): AcademicSubjectsPayload!
+  academicSubjects(
+    filter: AcademicSubjectsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): AcademicSubjectsPayload!
   academicSubject(id: ID!): AcademicSubject!
   orgOffices: [OrgOffice!]!
   orgOffice(id: ID!): OrgOffice!
   findCourseById(id: ID!): Course!
-  courses(filter: CoursesFilterInput!, pageOptions: PageOptionsInput!): CoursesPayload!
-  calculateAvgGradeOfClassworkAssignmentInCourse(optionInput: AvgGradeOfClassworkByCourseOptionInput!, courseId: ID!): [AvgGradeOfClassworkByCourse!]!
-  classworkMaterials(searchText: String, courseId: String!, pageOptions: PageOptionsInput!): ClassworkMaterialPayload!
+  courses(
+    filter: CoursesFilterInput!
+    pageOptions: PageOptionsInput!
+  ): CoursesPayload!
+  calculateAvgGradeOfClassworkAssignmentInCourse(
+    optionInput: AvgGradeOfClassworkByCourseOptionInput!
+    courseId: ID!
+  ): [AvgGradeOfClassworkByCourse!]!
+  classworkMaterials(
+    searchText: String
+    courseId: String!
+    pageOptions: PageOptionsInput!
+  ): ClassworkMaterialPayload!
   classworkMaterial(Id: ID!): ClassworkMaterial!
   classworkAssignment(id: ID!): ClassworkAssignment!
-  classworkAssignments(searchText: String, courseId: ID!, pageOptions: PageOptionsInput!): ClassworkAssignmentPayload!
-  listClassworkAssignmentsByStudentIdInCourse(Input: ClassworkAssignmentByStudentIdInCourseInput!): ClassworkAssignmentByStudentIdInCourseResponsePayload!
+  classworkAssignments(
+    searchText: String
+    courseId: ID!
+    pageOptions: PageOptionsInput!
+  ): ClassworkAssignmentPayload!
+  listClassworkAssignmentsByStudentIdInCourse(
+    Input: ClassworkAssignmentByStudentIdInCourseInput!
+  ): ClassworkAssignmentByStudentIdInCourseResponsePayload!
   classworkSubmissions(classworkAssignmentId: ID!): [ClassworkSubmission!]!
   findClassworkSubmissionById(classworkSubmissionId: ID!): ClassworkSubmission!
   findOneClassworkSubmission(ClassworkAssignment: ID!): ClassworkSubmission!
-  getListOfStudentsSubmitAssignmentsByStatus(classworkSubmissionStatus: String!, classworkAssignmentId: ID!): ClassworkSubmissionStatusPayload!
-  submissionStatusStatistics(classworkAssignmentId: ID!): [SubmissionStatusStatistics!]!
-  lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
+  getListOfStudentsSubmitAssignmentsByStatus(
+    classworkSubmissionStatus: String!
+    classworkAssignmentId: ID!
+  ): ClassworkSubmissionStatusPayload!
+  submissionStatusStatistics(
+    classworkAssignmentId: ID!
+  ): [SubmissionStatusStatistics!]!
+  lessons(
+    filter: LessonsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
-  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
-  quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
-  quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
+  conversations(
+    conversationPageOptionInput: ConversationPageOptionInput!
+    lastId: ID
+    roomId: String!
+  ): ConversationsPayload!
+  quizzes(
+    filter: QuizzesFilterInput!
+    pageOptions: PageOptionsInput!
+  ): QuizzesPayload!
+  quizzesStudying(
+    filter: QuizzesFilterInput!
+    pageOptions: PageOptionsInput!
+  ): QuizzesPayload!
   quiz(id: ID!): Quiz!
   question(id: ID!): Question!
   questionChoices(questionId: ID!): QuestionChoicesPayload!
   quizSubmit(quizId: ID!): QuizSubmit!
   findQuizSubmitById(id: ID!): QuizSubmit!
-  quizSubmits(filter: QuizSubmitsFilterInput!, pageOptions: PageOptionsInput!): QuizSubmitsPayload!
+  quizSubmits(
+    filter: QuizSubmitsFilterInput!
+    pageOptions: PageOptionsInput!
+  ): QuizSubmitsPayload!
 }
 
 input AccountsFilterInput {
@@ -551,19 +598,31 @@ type Mutation {
   createOrgAccount(input: CreateAccountInput!): Account!
   updateAccount(updateInput: UpdateAccountInput!, id: ID!): Account!
   updateAccountStatus(status: String!, id: ID!): Account!
-  setPassword(otp: String!, password: String!, usernameOrEmail: String!): Account!
+  setPassword(
+    otp: String!
+    password: String!
+    usernameOrEmail: String!
+  ): Account!
   callOTP(type: String!, usernameOrEmail: String!): Account!
   signIn(
     password: String!
 
-    """Could be username or email"""
+    """
+    Could be username or email
+    """
     identity: String!
     orgNamespace: String!
   ): SignInPayload!
   updateFile(newFile: Upload!, id: ID!): File!
   createAcademicSubject(input: CreateAcademicSubjectInput!): AcademicSubject!
-  updateAcademicSubjectPublication(publication: String!, id: ID!): AcademicSubject!
-  updateAcademicSubject(updateInput: UpdateAcademicSubjectInput!, id: ID!): AcademicSubject!
+  updateAcademicSubjectPublication(
+    publication: String!
+    id: ID!
+  ): AcademicSubject!
+  updateAcademicSubject(
+    updateInput: UpdateAcademicSubjectInput!
+    id: ID!
+  ): AcademicSubject!
   createOrgOffice(input: CreateOrgOfficeInput!): OrgOffice!
   updateOrgOffice(input: UpdateOrgOfficeInput!, id: ID!): OrgOffice!
   findOrgOffices(searchText: String, orgId: ID): [OrgOffice!]!
@@ -575,27 +634,89 @@ type Mutation {
   removeStudentsFromCourse(studentIds: [ID!]!, id: ID!): Course!
   removeLecturersFromCourse(lecturerIds: [ID!]!, id: ID!): Course!
   cloneTheCourse(cloneCourseInput: CloneCourseInput!): Course!
-  createClassworkMaterial(CreateClassworkMaterialInput: CreateClassworkMaterialInput!, courseId: ID!): ClassworkMaterial!
-  updateClassworkMaterial(updateClassworkMaterialInput: UpdateClassworkMaterialInput!, classworkMaterialId: ID!): ClassworkMaterial!
-  updateClassworkMaterialPublication(publicationState: Publication!, classworkMaterialId: ID!): ClassworkMaterial!
-  addAttachmentsToClassworkMaterial(attachmentsInput: AddAttachmentsToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
-  removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
-  addVideoToClassworkMaterial(videoInput: AddVideoToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
-  removeVideoFromClassworkMaterial(videoId: String!, classworkMaterialId: ID!): ClassworkMaterial!
-  createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
-  updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
-  updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
-  addAttachmentsToClassworkAssignment(attachmentsInput: AddAttachmentsToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
-  removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
-  addVideoToClassworkAssignment(videoInput: AddVideoToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
-  removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
-  createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
-  setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
+  createClassworkMaterial(
+    CreateClassworkMaterialInput: CreateClassworkMaterialInput!
+    courseId: ID!
+  ): ClassworkMaterial!
+  updateClassworkMaterial(
+    updateClassworkMaterialInput: UpdateClassworkMaterialInput!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  updateClassworkMaterialPublication(
+    publicationState: Publication!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  addAttachmentsToClassworkMaterial(
+    attachmentsInput: AddAttachmentsToClassworkInput!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  removeAttachmentsFromClassworkMaterial(
+    attachments: [String!]!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  addVideoToClassworkMaterial(
+    videoInput: AddVideoToClassworkInput!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  removeVideoFromClassworkMaterial(
+    videoId: String!
+    classworkMaterialId: ID!
+  ): ClassworkMaterial!
+  createClassworkAssignment(
+    courseId: ID!
+    input: CreateClassworkAssignmentInput!
+  ): ClassworkAssignment!
+  updateClassworkAssignment(
+    updateInput: UpdateClassworkAssignmentInput!
+    id: ID!
+  ): ClassworkAssignment!
+  updateClassworkAssignmentPublication(
+    publication: String!
+    id: ID!
+  ): ClassworkAssignment!
+  addAttachmentsToClassworkAssignment(
+    attachmentsInput: AddAttachmentsToClassworkInput!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  removeAttachmentsFromClassworkAssignments(
+    attachments: [String!]!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  addVideoToClassworkAssignment(
+    videoInput: AddVideoToClassworkInput!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  removeVideoFromClassworkAssignment(
+    videoId: ID!
+    classworkAssignmentId: ID!
+  ): ClassworkAssignment!
+  createClassworkSubmission(
+    createClassworkSubmissionInput: CreateClassworkSubmissionInput!
+    courseId: ID!
+  ): ClassworkSubmission!
+  setGradeForClassworkSubmission(
+    setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!
+  ): ClassworkSubmission!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
-  updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
-  addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
-  removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
-  commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  updateLesson(
+    updateInput: UpdateLessonInput!
+    lessonId: ID!
+    courseId: ID!
+  ): Lesson!
+  addAbsentStudentsToLesson(
+    absentStudentIds: [String!]!
+    lessonId: ID!
+    courseId: ID!
+  ): Lesson!
+  removeAbsentStudentsFromLesson(
+    absentStudentIds: [String!]!
+    lessonId: ID!
+    courseId: ID!
+  ): Lesson!
+  commentsByLecturer(
+    commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!
+    commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!
+  ): Lesson!
   createConversation(conversationInput: CreateConversationInput!): Conversation!
   createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createQuiz(input: CreateQuizInput!): Quiz!
@@ -621,7 +742,9 @@ input UpdateAccountInput {
   avatar: Upload
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""
+The `Upload` scalar type represents a file upload.
+"""
 scalar Upload
 
 input CreateAcademicSubjectInput {
