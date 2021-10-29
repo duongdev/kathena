@@ -8,6 +8,7 @@ import {
   Publication,
   removeExtraSpaces,
 } from 'core'
+import { MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE } from 'core/constants'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
 import { AuthService } from 'modules/auth/auth.service'
@@ -161,8 +162,10 @@ export class CourseService {
       throw new Error('START_DATE_INVALID')
     }
 
-    if (totalNumberOfLessons > 200) {
-      throw new Error(`Tổng số buổi học không được lớn hơn 200 buổi!`)
+    if (totalNumberOfLessons > MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE) {
+      throw new Error(
+        `Tổng số buổi học không được lớn hơn ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} buổi!`,
+      )
     }
 
     if (academicSubject.publication === Publication.Draft) {
