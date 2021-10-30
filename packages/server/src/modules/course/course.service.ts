@@ -164,7 +164,7 @@ export class CourseService {
 
     if (totalNumberOfLessons > MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE) {
       throw new Error(
-        `Tổng số buổi học không được lớn hơn ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} buổi!`,
+        `Tổng số buổi học tạo tự động không được lớn hơn ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} buổi!`,
       )
     }
 
