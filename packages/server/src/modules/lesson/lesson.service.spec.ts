@@ -909,8 +909,8 @@ describe('lesson.service', () => {
           },
           {
             description: 'day la buoi 2',
-            startTime: new Date(new Date().setDate(date.getDate() + 1)),
-            endTime: new Date(new Date().setDate(date.getDate() + 2)),
+            startTime: new Date(date.setDate(date.getDate() - 1)),
+            endTime: new Date(date.setDate(date.getDate() + 1)),
             options: UpdateLessonTimeOptions.ArbitraryChange,
           } as UpdateLessonInput,
           objectId(),
@@ -968,8 +968,8 @@ describe('lesson.service', () => {
         description: 'day la buoi 2',
       })
 
-      const startTimeUpdate = new Date(new Date().setDate(date.getDate() + 1))
-      const endTimeUpdate = new Date(new Date().setDate(date.getDate() + 5))
+      const startTimeUpdate = new Date(date.setDate(date.getDate() + 1))
+      const endTimeUpdate = new Date(date.setDate(date.getDate() + 5))
 
       await expect(
         lessonService.updateLessonById(
