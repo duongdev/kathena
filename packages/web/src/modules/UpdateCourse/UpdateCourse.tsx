@@ -12,6 +12,7 @@ import {
   Button,
   CurrencyFormField,
   PageContainer,
+  renderApolloError,
   SectionCard,
   TextFormField,
 } from '@kathena/ui'
@@ -61,27 +62,35 @@ const UpdateCourse: FC<UpdateCourseProps> = (props) => {
   const handleSubmitForm = useCallback(
     async (input: CourseFormInput) => {
       try {
-        await updateCourse({
-          variables: {
-            id: idCourse,
-            updateInput: {
-              name: input.name,
-              tuitionFee: input.tuitionFee,
-              startDate: input.startDate,
+        const newLocal =
+          'Tất cả các buổi học sẽ được đưa vào lịch dạy. Bạn có muốn cập nhật không! '
+        // eslint-disable-next-line
+        const show = window.confirm(newLocal)
+        if (show === true) {
+          await updateCourse({
+            variables: {
+              id: idCourse,
+              updateInput: {
+                name: input.name,
+                tuitionFee: input.tuitionFee,
+                startDate: input.startDate,
+              },
             },
-          },
-        })
+          })
 
-        enqueueSnackbar('Sửa khóa học thành công', { variant: 'success' })
+          enqueueSnackbar('Sửa khóa học thành công', { variant: 'success' })
 
-        history.push(
-          buildPath(ACADEMIC_COURSE, {
-            id: idCourse,
-          }),
-        )
+          history.push(
+            buildPath(ACADEMIC_COURSE, {
+              id: idCourse,
+            }),
+          )
+        } else {
+          enqueueSnackbar('Sửa khóa học thất bại', { variant: 'error' })
+        }
       } catch (err) {
-        // console.log(err)
-        enqueueSnackbar('Sửa khóa học thất bại', { variant: 'error' })
+        const errorMessage = renderApolloError(err)()
+        enqueueSnackbar(errorMessage, { variant: 'error' })
       }
     },
     [enqueueSnackbar, updateCourse, idCourse, history],

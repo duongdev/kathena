@@ -15,7 +15,7 @@ const OrgLogo: FC<OrgLogoProps> = (props) => {
   return (
     <Box
       component="img"
-      src="/images/kmin-dark-logo.png"
+      src="/images/KATHENA-transparent.png"
       alt="logo"
       className={clsx(className, classes.root)}
     />
@@ -23,7 +23,9 @@ const OrgLogo: FC<OrgLogoProps> = (props) => {
 }
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: {
+    width: '100%',
+  },
 }))
 
 export default OrgLogo
