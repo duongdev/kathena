@@ -83,7 +83,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                 columns={[
                   {
                     label: 'Tiêu đề',
-                    render: (classworkLesson) => (
+                    render: (classworkLesson, index) => (
                       <Typography variant="body1" fontWeight="bold">
                         <Link
                           to={buildPath(
@@ -94,7 +94,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                             },
                           )}
                         >
-                          {classworkLesson.description}
+                          Buổi {page === 0 ? index + 1 : index + 1 + perPage}:{classworkLesson.description}
                         </Link>
                       </Typography>
                     ),
