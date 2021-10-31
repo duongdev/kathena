@@ -94,7 +94,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                             },
                           )}
                         >
-                          Buổi {page === 0 ? index + 1 : index + 1 + perPage}:{classworkLesson.description}
+                          Buổi {page === 0 ? index + 1 : index + 1 + (page * perPage)}: {classworkLesson.description}
                         </Link>
                       </Typography>
                     ),
