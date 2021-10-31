@@ -6,7 +6,7 @@
   "author": "Dustin Do <dustin.do95@gmail.com>",
   "private": true,
   "engines": {
-    "node": "12.x.x"
+    "node": "16.x"
   },
   "workspaces": [
     "packages/*"
