@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router-dom'
 
 import yup, { SchemaOf } from '@kathena/libs/yup'
-import { PageContainer, SplitButton, usePagination } from '@kathena/ui'
+import { PageContainer, SplitButton } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
 import {
   Permission,
@@ -14,7 +14,6 @@ import {
   useCreateLessonMutation,
   ListLessonsDocument,
   LessonsFilterInputStatus,
-  useListLessonsQuery,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -56,7 +55,6 @@ const initialValues = {
 const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
   const classes = useStyles(props)
   const [publication, setPublication] = useState(Publication.Published)
-  const { page, perPage } = usePagination()
   const params: { id: string } = useParams()
   const idCourse = useMemo(() => params.id, [params])
   const { enqueueSnackbar } = useSnackbar()
@@ -82,43 +80,19 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
       },
     ],
   })
-  // Thêm số buổi học
-  const { data: dataClasswork } = useListLessonsQuery({
-    variables: {
-      filter: {
-        courseId: idCourse,
-        absentStudentId: null,
-        endTime: null,
-        startTime: null,
-        status: LessonsFilterInputStatus.teaching,
-        ratingStar: null,
-      },
-      pageOptions: {
-        limit: perPage,
-        skip: page * perPage,
-      },
-    },
-  })
 
-  const classworkLessons = useMemo(
-    () => dataClasswork?.lessons.lessons ?? [],
-    [dataClasswork?.lessons.lessons],
-  )
   const handleSubmitForm = useCallback(
     async (input: CreateClassworkLessonInput) => {
       try {
         const TimeStart = `${input.startDay} ${input.startTime}`
         const TimeEnd = `${input.endDay} ${input.endTime}`
-        const nameLesson = `Buổi${` ${classworkLessons.length + 1}: `}${
-          input.description
-        }`
         if (!idCourse) return
         const dataCreated = (
           await createClassworkLesson({
             variables: {
               createLessonInput: {
                 courseId: idCourse,
-                description: nameLesson,
+                description: input.description,
                 endTime: TimeEnd,
                 startTime: TimeStart,
                 publicationState: publication,
@@ -146,14 +120,7 @@ const CreateClassworkLesson: FC<CreateClassworkLessonProps> = (props) => {
         enqueueSnackbar('Buổi học đã tồn tại', { variant: 'error' })
       }
     },
-    [
-      createClassworkLesson,
-      enqueueSnackbar,
-      idCourse,
-      history,
-      publication,
-      classworkLessons,
-    ],
+    [createClassworkLesson, enqueueSnackbar, idCourse, history, publication],
   )
 
   return (
