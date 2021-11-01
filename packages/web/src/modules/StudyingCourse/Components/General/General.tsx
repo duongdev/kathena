@@ -129,9 +129,6 @@ const General: FC<GeneralProps> = () => {
                 currency: 'VND',
               }).format(course.tuitionFee)}
             </InfoBlock>
-            <InfoBlock gridItem={{ xs: 6 }} label="Chi nhánh giảng dạy">
-              Sau khi merge sẽ render lại
-            </InfoBlock>
             <InfoBlock gridItem={{ xs: 6 }} label="Giảng viên đảm nhận">
               <Grid container>
                 {course.lecturerIds.map((lecturerId) => (

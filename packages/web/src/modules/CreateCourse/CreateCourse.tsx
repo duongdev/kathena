@@ -34,7 +34,7 @@ export type CourseFormInput = {
   name: string
   tuitionFee: number
   lecturerIds: Array<Account>
-  startDate: string
+  startDate: Date
   orgOfficeId: string
   totalNumberOfLessons: number
   daysOfTheWeek: {
@@ -60,7 +60,7 @@ const validationSchema = yup.object({
   code: yup.string().label(labels.code).trim().uppercase().required(),
   tuitionFee: yup.number().label(labels.tuitionFee).min(0).required(),
   lecturerIds: yup.array().label(labels.lecturerIds).notRequired(),
-  startDate: yup.string().label(labels.startDate).default(''),
+  startDate: yup.date().label(labels.startDate).required(),
   orgOfficeId: yup.string().label(labels.orgOfficeId).trim().required(),
   totalNumberOfLessons: yup
     .number()
