@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common'
 import { TypegooseModule } from 'nestjs-typegoose'
 
 import { AccountModule } from 'modules/account/account.module'
+import { AuthModule } from 'modules/auth/auth.module'
 import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
 import { OrgModule } from 'modules/org/org.module'
@@ -18,6 +19,7 @@ import { AcademicSubject } from './models/AcademicSubject'
     forwardRef(() => OrgOfficeModule),
     forwardRef(() => AccountModule),
     forwardRef(() => FileStorageModule),
+    forwardRef(() => AuthModule),
   ],
   providers: [AcademicSubjectResolver, AcademicService],
   exports: [AcademicService],
