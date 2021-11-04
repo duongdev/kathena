@@ -6,5 +6,6 @@ query File($id: ID!) {
     name
     size
     signedUrl
+    codeName
   }
 }

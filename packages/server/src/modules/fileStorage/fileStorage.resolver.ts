@@ -1,3 +1,6 @@
+import { url } from 'inspector'
+import { URL } from 'url'
+
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import {
   Args,
@@ -31,9 +34,9 @@ export class FileStorageResolver {
 
   @ResolveField((_returns) => String, { nullable: true })
   async signedUrl(@Parent() file: File): Promise<Nullable<string>> {
-    const { name } = file
+    const { codeName } = file
 
-    return `http://${config.APP_DOMAIN}/files/${name}`
+    return encodeURI(`http://${config.APP_DOMAIN}/files/${codeName}`)
   }
 
   @Mutation((_returns) => File)

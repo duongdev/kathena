@@ -139,6 +139,7 @@ type File implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  codeName: String!
   size: Int!
   mimeType: String!
   storageProvider: FileLocation!

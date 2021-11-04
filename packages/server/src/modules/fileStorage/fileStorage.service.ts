@@ -160,6 +160,7 @@ export class FileStorageService {
       orgId,
       size: stats.size,
       name: originalFileName,
+      codeName: fileName, // ShortId + originalFileName
       createdByAccountId: uploadedByAccountId,
       storageProvider: FileStorageProvider.LocalStorage,
       storageProviderIdentifier: filePath,
@@ -194,9 +195,11 @@ export class FileStorageService {
     const { stats, buffer, extension, mimeType } =
       await this.convertReadStreamToFileData(originalFileName, readStream)
 
-    const fileName = originalFileName.includes(extension)
+    const oldFileName = originalFileName.includes(extension)
       ? originalFileName
       : `${originalFileName}.${extension}`
+
+    const fileName = this.generateShortId() + oldFileName
 
     const { filePath } = await this.uploadToLocalStorage({
       buffer,
@@ -206,6 +209,7 @@ export class FileStorageService {
     file.mimeType = mimeType
     file.size = stats.size
     file.name = originalFileName
+    file.codeName = fileName // ShortId + originalFileName
     file.storageProviderIdentifier = filePath
 
     const updatedFile = file.save()
