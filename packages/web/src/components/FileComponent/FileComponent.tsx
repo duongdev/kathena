@@ -37,7 +37,6 @@ const FileComponent: FC<FileComponentProps> = (props) => {
   const handleDownloadFile = () => {
     const xhr = new XMLHttpRequest()
     xhr.responseType = 'blob'
-    console.log('111111111111111111111111111111')
     xhr.onload = function onLoad() {
       const a = document.createElement('a')
       a.href = window.URL.createObjectURL(xhr.response)
