@@ -361,6 +361,11 @@ describe('academic.service', () => {
         }),
       )
 
+      jest
+        .spyOn(academicService['authService'], 'getAccountRoles')
+        .mockResolvedValueOnce([{ priority: 3 }] as ANY)
+        .mockResolvedValueOnce([{ priority: 3 }] as ANY)
+
       await expect(
         academicService.findAndPaginateAcademicSubjects(
           {
@@ -370,6 +375,7 @@ describe('academic.service', () => {
           {
             orgId,
           },
+          objectId(),
         ),
       ).resolves.toMatchObject({
         academicSubjects: [
@@ -392,6 +398,7 @@ describe('academic.service', () => {
           {
             orgId,
           },
+          objectId(),
         ),
       ).resolves.toMatchObject({
         academicSubjects: [

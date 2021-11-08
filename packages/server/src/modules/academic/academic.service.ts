@@ -4,6 +4,7 @@ import { Error } from 'mongoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { normalizeCodeField, removeExtraSpaces } from 'core/utils/string'
+import { AuthService } from 'modules/auth/auth.service'
 import { OrgService } from 'modules/org/org.service'
 
 import { Nullable } from '../../types'
@@ -22,6 +23,9 @@ export class AcademicService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
   async findAcademicSubjectByCode(
@@ -107,16 +111,33 @@ export class AcademicService {
       orgId: string
       searchText?: string
     },
+    accountId: string,
   ): Promise<{
     academicSubjects: DocumentType<AcademicSubject>[]
     count: number
   }> {
+    this.logger.log(
+      `[${this.findAndPaginateAcademicSubjects.name}] finding ...`,
+    )
+    this.logger.verbose({ pageOptions, filter, accountId })
+
     const { limit, skip } = pageOptions
     const { orgId, searchText } = filter
 
     const academicSubjectModel = this.academicSubjectModel.find({
       orgId,
     })
+    const accountRoles = await this.authService.getAccountRoles(accountId)
+    if (
+      accountRoles.every((role) => {
+        return role.priority >= 4
+      })
+    ) {
+      academicSubjectModel.find({
+        publication: Publication.Published,
+      })
+    }
+
     if (searchText) {
       const search = removeExtraSpaces(searchText)
       if (search !== undefined && search !== '') {

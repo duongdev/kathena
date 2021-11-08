@@ -64,6 +64,7 @@ export class AcademicSubjectResolver {
     @Args('pageOptions') pageOptions: PageOptionsInput,
     @CurrentOrg() org: Org,
     @Args('filter') filter: AcademicSubjectsFilterInput,
+    @CurrentAccount() account: Account,
   ): Promise<AcademicSubjectsPayload> {
     if (org.id !== filter.orgId) {
       throw new ForbiddenError()
@@ -71,6 +72,7 @@ export class AcademicSubjectResolver {
     return this.academicService.findAndPaginateAcademicSubjects(
       pageOptions,
       filter,
+      account.id,
     )
   }
 

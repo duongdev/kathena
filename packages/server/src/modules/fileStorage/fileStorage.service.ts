@@ -144,9 +144,11 @@ export class FileStorageService {
     const { stats, buffer, extension, mimeType } =
       await this.convertReadStreamToFileData(originalFileName, readStream)
 
-    const fileName = originalFileName.includes(extension)
+    const oldFileName = originalFileName.includes(extension)
       ? originalFileName
       : `${originalFileName}.${extension}`
+
+    const fileName = this.generateShortId() + oldFileName
 
     const { filePath } = await this.uploadToLocalStorage({
       buffer,
