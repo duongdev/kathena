@@ -65,7 +65,7 @@ const useAuthHook = () => {
   const signOut = useCallback(async () => {
     removeJwt()
 
-    window.location.reload()
+    window.location.href = '/auth/sign-in'
   }, [removeJwt])
 
   const callOTP = useCallback(

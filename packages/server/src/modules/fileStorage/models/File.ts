@@ -17,6 +17,10 @@ export class File extends BaseModel {
   @prop({ required: true, index: true })
   name: string
 
+  @Field()
+  @prop()
+  codeName: string
+
   @Field((_type) => Int)
   @prop({ required: true })
   size: number

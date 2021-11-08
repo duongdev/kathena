@@ -393,6 +393,7 @@ export enum DayOfWeek {
 }
 
 export type File = BaseModel & {
+  codeName: Scalars['String']
   createdAt: Scalars['DateTime']
   id: Scalars['ID']
   mimeType: Scalars['String']
@@ -1412,6 +1413,7 @@ export type FileQuery = {
         name: string
         size: number
         signedUrl?: string | null | undefined
+        codeName: string
       }
     | null
     | undefined
@@ -4288,6 +4290,7 @@ export const FileDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'size' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'signedUrl' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'codeName' } },
               ],
             },
           },
