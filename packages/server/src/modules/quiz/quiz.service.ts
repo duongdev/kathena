@@ -279,4 +279,121 @@ export class QuizService {
     }
     return quizSubmits
   }
+
+  async cloneQuizzes(input: {
+    newCourseId: string
+    creatorId: string
+    oldCourseId: string
+    orgId: string
+  }): Promise<DocumentType<Quiz>[]> {
+    this.logger.log(`[${this.cloneQuizzes.name}] cloning ...`)
+    this.logger.log(input)
+
+    const { newCourseId, creatorId, oldCourseId, orgId } = input
+
+    const quizzesFormOldCourse = await this.quizModel.find({
+      courseId: oldCourseId,
+    })
+
+    const quizzes = await Promise.all(
+      quizzesFormOldCourse.map(
+        async (quiz: Quiz): Promise<DocumentType<Quiz>> => {
+          const questionIds: string[] = await Promise.all(
+            quiz.questionIds.map(
+              async (questionId: string): Promise<string> => {
+                const newQuestion = await this.cloneQuestion({
+                  creatorId,
+                  orgId,
+                  questionId,
+                })
+
+                return newQuestion.id
+              },
+            ),
+          )
+
+          const createInput = {
+            courseId: newCourseId,
+            createdByAccountId: creatorId,
+            description: quiz.description ? quiz.description : '',
+            title: quiz.title,
+            duration: quiz.duration,
+            publicationState: Publication.Draft,
+            questionIds,
+            orgId,
+          }
+          return this.quizModel.create(createInput)
+        },
+      ),
+    )
+
+    this.logger.log(`[${this.cloneQuizzes.name}] cloned !`)
+    this.logger.verbose(quizzes)
+    return quizzes
+  }
+
+  async cloneQuestion(input: {
+    questionId: string
+    orgId: string
+    creatorId: string
+  }): Promise<Question> {
+    this.logger.log(`[${this.cloneQuestion.name}] cloning ...`)
+    this.logger.log(input)
+    const { questionId, orgId, creatorId } = input
+    const question = await this.findQuestionById(questionId)
+
+    if (!question) {
+      throw new Error('Câu hỏi không tồn tạo')
+    }
+
+    const newQuestion = await this.questionModel.create({
+      title: question.title,
+      scores: question.scores,
+      createdByAccountId: creatorId,
+      orgId,
+    })
+
+    await this.cloneQuestionChoices({
+      creatorId,
+      newQuestionId: newQuestion.id,
+      oldQuestionId: questionId,
+      orgId,
+    })
+
+    this.logger.log(`[${this.cloneQuestion.name}] cloned !`)
+    this.logger.verbose(newQuestion)
+    return newQuestion
+  }
+
+  async cloneQuestionChoices(input: {
+    oldQuestionId: string
+    orgId: string
+    creatorId: string
+    newQuestionId: string
+  }): Promise<QuestionChoice[]> {
+    this.logger.log(`[${this.cloneQuestionChoices.name}] cloning ...`)
+    this.logger.log(input)
+
+    const { oldQuestionId, creatorId, newQuestionId } = input
+
+    const questionChoices: QuestionChoice[] =
+      await this.questionChoiceModel.find({
+        questionId: oldQuestionId,
+      })
+
+    const newQuestionChoices = await Promise.all(
+      questionChoices.map(async (questionChoice): Promise<QuestionChoice> => {
+        return this.createQuestionChoice({
+          createdByAccountId: creatorId,
+          isRight: questionChoice.isRight,
+          questionId: newQuestionId,
+          title: questionChoice.title,
+        })
+      }),
+    )
+
+    this.logger.log(`[${this.cloneQuestionChoices.name}] cloned !`)
+    this.logger.verbose(newQuestionChoices)
+    return newQuestionChoices
+  }
 }

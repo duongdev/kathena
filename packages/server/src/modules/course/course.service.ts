@@ -25,6 +25,7 @@ import { GenerateLessonsInput } from 'modules/lesson/lesson.type'
 import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgService } from 'modules/org/org.service'
 import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
+import { QuizService } from 'modules/quiz/quiz.service'
 import { ANY, Nullable } from 'types'
 
 import {
@@ -75,6 +76,9 @@ export class CourseService {
 
     @Inject(forwardRef(() => OrgService))
     private readonly orgService: OrgService,
+
+    @Inject(forwardRef(() => QuizService))
+    private readonly quizService: QuizService,
   ) {}
 
   async createCourse(
@@ -953,6 +957,13 @@ export class CourseService {
         )
       }),
     )
+
+    await this.quizService.cloneQuizzes({
+      creatorId,
+      newCourseId: cloneCourse.id,
+      oldCourseId: courseMustClone.id,
+      orgId,
+    })
 
     this.logger.log(`[${this.cloneTheCourse.name}] cloned ...`)
     this.logger.verbose(cloneCourse)
