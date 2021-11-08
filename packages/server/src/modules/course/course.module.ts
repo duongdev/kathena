@@ -10,6 +10,7 @@ import { ClassworkMaterial } from 'modules/classwork/models/ClassworkMaterial'
 import { LessonModule } from 'modules/lesson/lesson.module'
 import { Lesson } from 'modules/lesson/models/Lesson'
 import { OrgOfficeModule } from 'modules/orgOffice/orgOffice.module'
+import { QuizModule } from 'modules/quiz/quiz.module'
 
 import { CourseResolver } from './course.resolver'
 import { CourseService } from './course.service'
@@ -30,6 +31,7 @@ import { Course } from './models/Course'
     forwardRef(() => OrgOfficeModule),
     forwardRef(() => AcademicModule),
     forwardRef(() => LessonModule),
+    forwardRef(() => QuizModule),
   ],
   providers: [CourseService, CourseResolver],
   exports: [CourseService],
