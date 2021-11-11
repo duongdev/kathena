@@ -370,11 +370,6 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
-type CoursesPayload {
-  courses: [Course!]!
-  count: Int!
-}
-
 type QuizzesPayload {
   quizzes: [Quiz!]!
   count: Int!
@@ -388,6 +383,11 @@ type QuizSubmitsPayload {
 type QuestionChoicesPayload {
   questionChoices: [QuestionChoice!]!
   idRight: String!
+}
+
+type CoursesPayload {
+  courses: [Course!]!
+  count: Int!
 }
 
 type OrgAccountsPayload {
