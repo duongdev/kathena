@@ -63,7 +63,7 @@
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
     "@types/apollo-upload-client": "14.1.0",
-    "@types/autosuggest-highlight": "3.1.1",
+    "@types/autosuggest-highlight": "3.2.0",
     "@types/graphql": "14.5.0",
     "@types/gravatar": "1.8.3",
     "@types/jest": "27.0.2",
