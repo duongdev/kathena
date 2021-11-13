@@ -11,6 +11,7 @@ import { Spinner } from '@kathena/ui'
 import { ApolloProvider } from 'common/apollo'
 import { AuthProvider } from 'common/auth'
 
+import './App.css'
 import AppRoute from './App.route'
 
 const AutoScrollToTop = lazy(() => import('@kathena/ui/AutoScrollToTop'))

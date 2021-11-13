@@ -139,6 +139,7 @@ type File implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  codeName: String!
   size: Int!
   mimeType: String!
   storageProvider: FileLocation!
@@ -251,6 +252,54 @@ type OrgOffice implements BaseModel {
   phone: String!
 }
 
+type Question implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  scores: Float!
+  createdByAccountId: ID!
+}
+
+type QuestionChoice implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  questionId: ID!
+  isRight: Boolean!
+  createdByAccountId: ID!
+}
+
+type Quiz implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  description: String
+  courseId: ID!
+  questionIds: [ID!]!
+  duration: Float
+  createdByAccountId: ID!
+  publicationState: Publication!
+}
+
+type QuizSubmit implements BaseModel {
+  id: ID!
+  orgId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  quizId: ID!
+  scores: Float!
+  startTime: DateTime
+  questionIds: [String!]
+  questionChoiceIds: [String!]
+  createdByAccountId: ID!
+}
+
 type AuthenticatePayload {
   account: Account!
   org: Org!
@@ -321,6 +370,21 @@ type SignInPayload {
   permissions: [Permission!]!
 }
 
+type QuizzesPayload {
+  quizzes: [Quiz!]!
+  count: Int!
+}
+
+type QuizSubmitsPayload {
+  quizSubmits: [QuizSubmit!]!
+  count: Int!
+}
+
+type QuestionChoicesPayload {
+  questionChoices: [QuestionChoice!]!
+  idRight: String!
+}
+
 type CoursesPayload {
   courses: [Course!]!
   count: Int!
@@ -362,69 +426,6 @@ type NotificationPayload {
   title: String!
 }
 
-type Question implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  title: String!
-  scores: Float!
-  createdByAccountId: ID!
-}
-
-type QuestionChoice implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  title: String!
-  questionId: ID!
-  isRight: Boolean!
-  createdByAccountId: ID!
-}
-
-type Quiz implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  title: String!
-  description: String
-  courseId: ID!
-  questionIds: [ID!]!
-  duration: Float
-  createdByAccountId: ID!
-  publicationState: Publication!
-}
-
-type QuizSubmit implements BaseModel {
-  id: ID!
-  orgId: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  quizId: ID!
-  scores: Float!
-  startTime: DateTime
-  questionIds: [String!]
-  questionChoiceIds: [String!]
-  createdByAccountId: ID!
-}
-
-type QuizzesPayload {
-  quizzes: [Quiz!]!
-  count: Int!
-}
-
-type QuizSubmitsPayload {
-  quizSubmits: [QuizSubmit!]!
-  count: Int!
-}
-
-type QuestionChoicesPayload {
-  questionChoices: [QuestionChoice!]!
-  idRight: String!
-}
-
 type Rating implements BaseModel {
   id: ID!
   orgId: ID!
@@ -462,7 +463,6 @@ type Query {
   lessons(filter: LessonsFilterInput!, pageOptions: PageOptionsInput!): LessonsPayload!
   updateLessonPublicationById(input: UpdateLessonPublicationByIdInput!): Lesson!
   findLessonById(lessonId: ID!): Lesson!
-  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
   quizzes(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quizzesStudying(filter: QuizzesFilterInput!, pageOptions: PageOptionsInput!): QuizzesPayload!
   quiz(id: ID!): Quiz!
@@ -471,6 +471,7 @@ type Query {
   quizSubmit(quizId: ID!): QuizSubmit!
   findQuizSubmitById(id: ID!): QuizSubmit!
   quizSubmits(filter: QuizSubmitsFilterInput!, pageOptions: PageOptionsInput!): QuizSubmitsPayload!
+  conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
 }
 
 input AccountsFilterInput {
@@ -534,10 +535,6 @@ input UpdateLessonPublicationByIdInput {
   courseId: ID!
 }
 
-input ConversationPageOptionInput {
-  limit: Int!
-}
-
 input QuizzesFilterInput {
   courseId: ID!
   publicationState: Publication
@@ -545,6 +542,10 @@ input QuizzesFilterInput {
 
 input QuizSubmitsFilterInput {
   quizId: ID!
+}
+
+input ConversationPageOptionInput {
+  limit: Int!
 }
 
 type Mutation {
@@ -596,13 +597,13 @@ type Mutation {
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
-  createConversation(conversationInput: CreateConversationInput!): Conversation!
-  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!
+  createConversation(conversationInput: CreateConversationInput!): Conversation!
+  createRatingForTheLesson(ratingInput: RatingInput!): Rating!
 }
 
 input CreateAccountInput {
@@ -776,18 +777,6 @@ input CommentsForTheLessonByLecturerQuery {
   courseId: ID!
 }
 
-input CreateConversationInput {
-  createdByAccountId: ID!
-  roomId: ID!
-  content: String!
-  type: String
-}
-
-input RatingInput {
-  targetId: ID!
-  numberOfStars: Float = 1
-}
-
 input CreateQuizInput {
   title: String!
   courseId: String!
@@ -813,6 +802,18 @@ input SubmitQuizInput {
   quizSubmitId: String!
   questionIds: [String!]!
   questionChoiceIds: [String!]!
+}
+
+input CreateConversationInput {
+  createdByAccountId: ID!
+  roomId: ID!
+  content: String!
+  type: String
+}
+
+input RatingInput {
+  targetId: ID!
+  numberOfStars: Float = 1
 }
 
 type Subscription {

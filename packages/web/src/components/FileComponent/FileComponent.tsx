@@ -40,7 +40,7 @@ const FileComponent: FC<FileComponentProps> = (props) => {
     xhr.onload = function onLoad() {
       const a = document.createElement('a')
       a.href = window.URL.createObjectURL(xhr.response)
-      a.download = file?.name ?? 'download'
+      a.download = file?.codeName ?? 'download'
       a.style.display = 'none'
       document.body.appendChild(a)
       a.click()

@@ -137,7 +137,7 @@ const CourseList: FC<CourseListProps> = (props) => {
                       idCourse: course.id,
                     })}
                   >
-                    Clone
+                    Nhân bản
                   </Button>
                 ),
               },
