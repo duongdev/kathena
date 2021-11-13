@@ -1,6 +1,7 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState, useEffect } from 'react'
 
 import { CardContent, Grid, makeStyles } from '@material-ui/core'
+import Comment from 'components/Comment/Comment'
 import FileComponent from 'components/FileComponent'
 import { format } from 'date-fns'
 import { useParams } from 'react-router-dom'
@@ -8,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
+  Button,
   InfoBlock,
   PageContainer,
   PageContainerSkeleton,
@@ -17,8 +19,11 @@ import {
 import { WithAuth } from 'common/auth'
 import {
   Permission,
+  useConversationsQuery,
   useFindClassworkSubmissionByIdQuery,
+  Conversation as CommentModel,
 } from 'graphql/generated'
+import CreateComment from 'modules/CreateComment'
 
 export type DetailClassworkSubmissionProps = {}
 
@@ -29,11 +34,41 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
 
   const params: { id: string } = useParams()
   const idStudent = useMemo(() => params.id, [params.id])
-
   const { data, loading } = useFindClassworkSubmissionByIdQuery({
     variables: { classworkSubmissionId: idStudent },
   })
   const idSubmission = useMemo(() => data?.findClassworkSubmissionById, [data])
+
+  // Bình luận
+  const [comments, setComments] = useState<CommentModel[]>([])
+  const [totalComment, setTotalComment] = useState(0)
+  const [lastId, setLastId] = useState<string | null>(null)
+
+  const { data: dataComments, refetch } = useConversationsQuery({
+    variables: {
+      roomId: idSubmission?.id ?? '',
+      conversationPageOptionInput: {
+        limit: 5,
+      },
+      lastId,
+    },
+  })
+  const loadMoreComments = (lastCommentId: string) => {
+    setLastId(lastCommentId)
+    refetch()
+  }
+  useEffect(() => {
+    const newListComment = dataComments?.conversations.conversations ?? []
+    const listComment = [...comments, ...newListComment]
+    setComments(listComment as ANY)
+    if (dataComments?.conversations.count) {
+      setTotalComment(dataComments?.conversations.count)
+    }
+
+    // eslint-disable-next-line
+  }, [dataComments])
+  // ----
+
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
   }
@@ -79,6 +114,47 @@ const DetailClassworkSubmission: FC<DetailClassworkSubmissionProps> = (
                 )}
               </InfoBlock>
             </Grid>
+          </CardContent>
+        </SectionCard>
+        <SectionCard
+          maxContentHeight={false}
+          gridItem={{ xs: 12 }}
+          title="Bình luận"
+        >
+          <CardContent>
+            {comments?.length ? (
+              <div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+                {comments.map((comment) => (
+                  <Comment
+                    comment={{
+                      id: comment.id,
+                      createdByAccountId: comment.createdByAccountId,
+                      createdAt: comment.createdAt,
+                      content: comment.content,
+                    }}
+                  />
+                ))}
+                <Button
+                  disabled={comments.length === totalComment}
+                  onClick={() =>
+                    loadMoreComments(comments[comments.length - 1].id)
+                  }
+                >
+                  Xem thêm
+                </Button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  padding: '10px',
+                }}
+              >
+                <Typography>Không có bình luận</Typography>
+              </div>
+            )}
+            <CreateComment roomId={idSubmission.id} />
           </CardContent>
         </SectionCard>
       </Grid>
