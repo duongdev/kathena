@@ -297,8 +297,8 @@ describe('auth.service', () => {
                 "Comment_CreateComment",
                 "Rating_CreateRating",
                 "AvgGradeStatisticsOfClassworkInTheCourse",
-                "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
+                "OrgOffice_Access",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
               ]
