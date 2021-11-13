@@ -100,6 +100,7 @@ export class CourseService {
       daysOfTheWeek,
       totalNumberOfLessons,
     } = createCourseInput
+
     if (!(await this.orgService.validateOrgId(orgId))) {
       throw new Error(`Org ID is invalid`)
     }
@@ -160,9 +161,7 @@ export class CourseService {
     const currentDate = new Date()
     const startDateInput = new Date(startDate)
 
-    if (
-      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
-    ) {
+    if (startDateInput < currentDate) {
       throw new Error('START_DATE_INVALID')
     }
 
@@ -285,7 +284,7 @@ export class CourseService {
       if (startDate) {
         const currentDate = new Date()
 
-        if (startDate.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)) {
+        if (startDate < currentDate) {
           throw new Error('START_DATE_INVALID')
         }
 
@@ -762,9 +761,7 @@ export class CourseService {
     const currentDate = new Date()
     const startDateInput = new Date(startDate)
 
-    if (
-      startDateInput.setHours(7, 0, 0, 0) < currentDate.setHours(7, 0, 0, 0)
-    ) {
+    if (startDateInput < currentDate) {
       throw new Error('START_DATE_INVALID')
     }
 

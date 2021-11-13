@@ -54,6 +54,8 @@ export class LessonService {
     createdByAccountId: string,
     createLessonInput: CreateLessonInput,
   ): Promise<DocumentType<Lesson>> {
+    this.logger.log(`[${this.createLesson.name}] creating... `)
+    this.logger.verbose({ orgId, createdByAccountId, createLessonInput })
     const { lessonModel, courseModel } = this
     const { startTime, endTime, description, courseId, publicationState } =
       createLessonInput
@@ -133,6 +135,9 @@ export class LessonService {
       orgId,
       publicationState,
     })
+
+    this.logger.log(`[${this.createLesson.name}] created... `)
+    this.logger.verbose(lesson)
 
     return lesson
   }
