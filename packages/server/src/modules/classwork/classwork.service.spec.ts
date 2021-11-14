@@ -590,12 +590,16 @@ describe('classwork.service', () => {
         const listCreateClassWorkMaterial: ANY[] = []
         const createdByAccountId = lecturerAccount.id
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'FECBT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -731,12 +735,16 @@ describe('classwork.service', () => {
         const listCreateClassWorkMaterial: ANY[] = []
         const createdByAccountId = lecturerAccount.id
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'FECBT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -1053,6 +1061,10 @@ describe('classwork.service', () => {
       it(`returns the Classwork Assignment`, async () => {
         expect.assertions(2)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1060,7 +1072,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1101,7 +1113,7 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: new Date(),
+            startDate: tomorrow,
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1206,6 +1218,10 @@ describe('classwork.service', () => {
       it(`throw error if DUE_DATE_INVALID`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1213,7 +1229,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1288,6 +1304,10 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new title`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1295,7 +1315,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1329,7 +1349,7 @@ describe('classwork.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: new Date(),
+            startDate: tomorrow,
             lecturerIds: [accountLecturer.id],
           },
         )
@@ -1368,6 +1388,10 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new description`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1375,7 +1399,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1448,6 +1472,10 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new dueDate`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1455,7 +1483,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1532,6 +1560,10 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with a new dueDate if dueDate of classworkAssignment is null`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1539,7 +1571,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1685,12 +1717,16 @@ describe('classwork.service', () => {
         const date = new Date()
         const createdByAccountId = lecturerAccount.id
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -1860,12 +1896,16 @@ describe('classwork.service', () => {
         const date = new Date()
         const createdByAccountId = lecturerAccount.id
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -2036,6 +2076,10 @@ describe('classwork.service', () => {
       it(`throws error if account can't manage course`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -2043,7 +2087,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -2114,6 +2158,10 @@ describe('classwork.service', () => {
       it(`returns the classworkAssignment with new publication`, async () => {
         expect.assertions(1)
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -2121,7 +2169,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -2239,6 +2287,9 @@ describe('classwork.service', () => {
           orgId: org.id,
           phone: '0704917152',
         })
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
@@ -2247,7 +2298,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accountLecturer.id],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -2378,6 +2429,10 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
@@ -2385,7 +2440,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -3595,6 +3650,9 @@ describe('classwork.service', () => {
           orgId: org.id,
           phone: '0704917152',
         })
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
 
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
@@ -3603,7 +3661,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -3773,6 +3831,10 @@ describe('classwork.service', () => {
           phone: '0704917152',
         })
 
+        const toDay = new Date()
+        const tomorrow = new Date(toDay)
+        tomorrow.setDate(toDay.getDate() + 1)
+
         const createCourseInput: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
@@ -3780,7 +3842,7 @@ describe('classwork.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -3800,7 +3862,7 @@ describe('classwork.service', () => {
           {
             title: 'Bai tap 1',
             description: 'Day la bai tap 1',
-            dueDate: new Date(),
+            dueDate: tomorrow,
           },
         )
 
