@@ -89,11 +89,6 @@ export class LessonService {
       )
     }
 
-    this.logger.debug(startTimeInput)
-    this.logger.debug(course.startDate)
-    console.debug(startTimeInput)
-    console.debug(course.startDate)
-
     if (startTimeInput < course.startDate) {
       throw new Error(
         `START_TIME_OF_THE_LESSON_CAN'T_BE_LESS_THAN_START_DATE_OF_THE_COURSE`,
