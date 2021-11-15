@@ -164,7 +164,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
               onClick={formik.submitForm}
               loading={formik.isSubmitting}
             >
-              Clone
+              Nhân bản
             </Button>,
           ]}
         >
