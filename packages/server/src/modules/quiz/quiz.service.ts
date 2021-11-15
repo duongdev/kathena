@@ -1,17 +1,7 @@
-// import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
 import { Nullable } from 'types'
-
-// import { AccountService } from 'modules/account/account.service'
-// import { AuthService } from 'modules/auth/auth.service'
-// import { ClassworkService } from 'modules/classwork/classwork.service'
-// import { ClassworkAssignment } from 'modules/classwork/models/ClassworkAssignment'
-// import { OrgService } from 'modules/org/org.service'
-// import { OrgOfficeService } from 'modules/orgOffice/orgOffice.service'
-
-// import { ANY, Nullable, PageOptionsInput } from '../../types'
 
 import { Question } from './models/Question'
 import { QuestionChoice } from './models/QuestionChoice'
@@ -42,19 +32,24 @@ export class QuizService {
     questionChoicesTitle: string[]
     questionChoicesRight: boolean[]
     createdByAccountId: string
+    orgId: string
   }): Promise<DocumentType<Question>> {
+    this.logger.log(`[${this.createQuestion.name}] Creating Question`)
+    this.logger.verbose(questionInput)
     const {
       title,
       scores,
       questionChoicesTitle,
       questionChoicesRight,
       createdByAccountId,
+      orgId,
     } = questionInput
 
     const question = await this.questionModel.create({
       title,
       scores,
       createdByAccountId,
+      orgId,
     })
 
     const arrPromise = Promise.all(
@@ -64,6 +59,7 @@ export class QuizService {
           isRight: questionChoicesRight[index],
           createdByAccountId,
           questionId: question.id,
+          orgId,
         })
         return questionChoice
       }),
@@ -71,6 +67,8 @@ export class QuizService {
 
     await arrPromise
 
+    this.logger.log(`[${this.createQuestion.name}] Created`)
+    this.logger.verbose(question)
     return question
   }
 
@@ -79,8 +77,13 @@ export class QuizService {
     questionId: string
     isRight: boolean
     createdByAccountId: string
+    orgId: string
   }): Promise<DocumentType<QuestionChoice>> {
-    const { title, questionId, isRight, createdByAccountId } =
+    this.logger.log(
+      `[${this.createQuestionChoice.name}] Creating QuestionChoice`,
+    )
+    this.logger.verbose(questionChoiceInput)
+    const { title, questionId, isRight, createdByAccountId, orgId } =
       questionChoiceInput
 
     const questionChoice = await this.questionChoiceModel.create({
@@ -88,8 +91,11 @@ export class QuizService {
       questionId,
       isRight,
       createdByAccountId,
+      orgId,
     })
 
+    this.logger.log(`[${this.createQuestionChoice.name}] Created`)
+    this.logger.verbose(questionChoice)
     return questionChoice
   }
 
@@ -101,7 +107,10 @@ export class QuizService {
     duration?: number
     createdByAccountId: string
     publicationState?: string
+    orgId: string
   }): Promise<DocumentType<Quiz>> {
+    this.logger.log(`[${this.createQuiz.name}] Creating Quiz`)
+    this.logger.verbose(quizInput)
     const {
       title,
       questionIds,
@@ -110,6 +119,7 @@ export class QuizService {
       duration,
       createdByAccountId,
       publicationState,
+      orgId,
     } = quizInput
 
     const quiz = await this.quizModel.create({
@@ -120,8 +130,11 @@ export class QuizService {
       duration,
       createdByAccountId,
       publicationState,
+      orgId,
     })
 
+    this.logger.log(`[${this.createQuiz.name}] Created`)
+    this.logger.verbose(quiz)
     return quiz
   }
 
@@ -129,15 +142,21 @@ export class QuizService {
     quizId: string
     startTime: Date
     createdByAccountId: string
+    orgId: string
   }): Promise<DocumentType<QuizSubmit>> {
-    const { quizId, startTime, createdByAccountId } = quizInput
+    this.logger.log(`[${this.createQuizSubmit.name}] Creating QuizSubmit`)
+    this.logger.verbose(quizInput)
+    const { quizId, startTime, createdByAccountId, orgId } = quizInput
 
     const quizSubmit = await this.quizSubmitModel.create({
       quizId,
       startTime,
       createdByAccountId,
+      orgId,
     })
 
+    this.logger.log(`[${this.createQuizSubmit.name}] Created`)
+    this.logger.verbose(quizInput)
     return quizSubmit
   }
 
@@ -154,6 +173,9 @@ export class QuizService {
     quizzes: DocumentType<Quiz>[]
     count: number
   }> {
+    this.logger.log(`[${this.findAndPaginateQuiz.name}] finding `)
+    this.logger.verbose({ pageOptions, filter })
+
     const { limit, skip } = pageOptions
     const { courseId, publicationState } = filter
 
@@ -168,6 +190,9 @@ export class QuizService {
     quizModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const quizzes = await quizModel
     const count = await this.quizModel.countDocuments({ courseId })
+
+    this.logger.log(`[${this.findAndPaginateQuiz.name}] found `)
+    this.logger.verbose({ quizzes, count })
     return { quizzes, count }
   }
 
@@ -183,6 +208,9 @@ export class QuizService {
     quizSubmits: DocumentType<QuizSubmit>[]
     count: number
   }> {
+    this.logger.log(`[${this.findAndPaginateQuizSubmit.name}] finding `)
+    this.logger.verbose({ pageOptions, filter })
+
     const { limit, skip } = pageOptions
     const { quizId } = filter
 
@@ -193,6 +221,9 @@ export class QuizService {
     quizSubmitModel.sort({ _id: -1 }).skip(skip).limit(limit)
     const quizSubmits = await quizSubmitModel
     const count = await this.quizModel.countDocuments({ quizId })
+
+    this.logger.log(`[${this.findAndPaginateQuizSubmit.name}] found `)
+    this.logger.verbose({ quizSubmits, count })
     return { quizSubmits, count }
   }
 
@@ -206,27 +237,39 @@ export class QuizService {
     return this.questionModel.findById(id)
   }
 
-  async questionChoices(questionId: string): Promise<{
+  async questionChoices(
+    questionId: string,
+    orgId: string,
+  ): Promise<{
     questionChoices: DocumentType<QuestionChoice>[]
     idRight: string
   }> {
+    this.logger.log(`[${this.questionChoices.name}] finding `)
+    this.logger.verbose({ questionId, orgId })
+
     const questionChoices = await this.questionChoiceModel.find({
       questionId,
+      orgId,
     })
 
     const questionChoiceRight = await this.questionChoiceModel.findOne({
       questionId,
+      orgId,
       isRight: true,
     })
+    this.logger.log(`[${this.questionChoices.name}] finding `)
+    this.logger.verbose({ questionChoices, idRight: questionChoiceRight?.id })
     return { questionChoices, idRight: questionChoiceRight?.id }
   }
 
   async findOneQuizSubmit(
     quizId: string,
+    orgId: string,
     createdByAccountId: string,
   ): Promise<Nullable<DocumentType<QuizSubmit>>> {
     return this.quizSubmitModel.findOne({
       quizId,
+      orgId,
       createdByAccountId,
     })
   }
@@ -241,12 +284,17 @@ export class QuizService {
     id: string,
     publicationState: Publication,
   ): Promise<Nullable<DocumentType<Quiz>>> {
+    this.logger.log(`[${this.updatePublicationQuiz.name}] updating `)
+    this.logger.verbose({ id, publicationState })
+
     const quiz = await this.quizModel.findById(id)
     if (quiz) {
       quiz.publicationState = publicationState
       const update = await quiz?.save()
       return update
     }
+    this.logger.log(`[${this.updatePublicationQuiz.name}] updated `)
+    this.logger.verbose(quiz)
     return quiz
   }
 
@@ -255,6 +303,9 @@ export class QuizService {
     questionIds: string[]
     questionChoiceIds: string[]
   }): Promise<Nullable<DocumentType<QuizSubmit>>> {
+    this.logger.log(`[${this.submitQuiz.name}] doing `)
+    this.logger.verbose(input)
+
     const { quizSubmitId, questionIds, questionChoiceIds } = input
     const quizSubmits = await this.quizSubmitModel.findById(quizSubmitId)
     if (quizSubmits) {
@@ -277,6 +328,9 @@ export class QuizService {
       const data = await quizSubmits.save()
       return data
     }
+    this.logger.log(`[${this.submitQuiz.name}] done `)
+    this.logger.verbose(quizSubmits)
+
     return quizSubmits
   }
 
@@ -374,7 +428,7 @@ export class QuizService {
     this.logger.log(`[${this.cloneQuestionChoices.name}] cloning ...`)
     this.logger.log(input)
 
-    const { oldQuestionId, creatorId, newQuestionId } = input
+    const { oldQuestionId, creatorId, newQuestionId, orgId } = input
 
     const questionChoices: QuestionChoice[] =
       await this.questionChoiceModel.find({
@@ -388,6 +442,7 @@ export class QuizService {
           isRight: questionChoice.isRight,
           questionId: newQuestionId,
           title: questionChoice.title,
+          orgId,
         })
       }),
     )

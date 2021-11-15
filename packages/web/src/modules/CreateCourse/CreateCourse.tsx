@@ -118,7 +118,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
               academicSubjectId: academicSubject.id,
               code: input.code,
               name: input.name,
-              startDate: input.startDate,
+              startDate: new Date(input.startDate).toDateString(),
               tuitionFee: input.tuitionFee,
               orgOfficeId: input.orgOfficeId,
               lecturerIds,

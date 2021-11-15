@@ -2,9 +2,10 @@ import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Query, Args, ID, Mutation, Resolver } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
-import { CurrentAccount, UseAuthGuard } from 'core'
+import { CurrentAccount, UseAuthGuard, CurrentOrg } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
 
 import { QuizSubmit } from './models/QuizSubmit'
@@ -26,10 +27,12 @@ export class QuizSubmitResolver {
   async createQuizSubmit(
     @Args('input') input: CreateQuizSubmitInput,
     @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
   ): Promise<QuizSubmit | null> {
     const quizSubmit = await this.quizService.createQuizSubmit({
       ...input,
       createdByAccountId: account.id,
+      orgId: org.id,
     })
 
     return quizSubmit
@@ -51,8 +54,9 @@ export class QuizSubmitResolver {
   async quizSubmit(
     @Args('quizId', { type: () => ID }) quizId: string,
     @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
   ): Promise<Nullable<DocumentType<QuizSubmit>>> {
-    return this.quizService.findOneQuizSubmit(quizId, account.id)
+    return this.quizService.findOneQuizSubmit(quizId, org.id, account.id)
   }
 
   @Query((_return) => QuizSubmit)

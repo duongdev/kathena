@@ -35,6 +35,7 @@ export const staff: Role = {
     P.Comment_CreateComment,
     P.Rating_CreateRating,
     P.AvgGradeStatisticsOfClassworkInTheCourse,
+    P.OrgOffice_ListOrgOffices,
   ],
 }
 
@@ -97,7 +98,6 @@ export const admin: Role = {
   permissions: [
     ...staff.permissions,
     P.OrgOffice_Access,
-    P.OrgOffice_ListOrgOffices,
     P.OrgOffice_CreateOrgOffice,
     P.OrgOffice_UpdateOrgOffice,
   ],
