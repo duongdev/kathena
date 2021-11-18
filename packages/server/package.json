@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "@nestjs-modules/mailer": "1.6.0",
-    "@nestjs/common": "8.2.1",
-    "@nestjs/core": "8.2.1",
+    "@nestjs/common": "8.2.2",
+    "@nestjs/core": "8.2.2",
     "@nestjs/graphql": "7.11.0",
-    "@nestjs/platform-express": "8.2.1",
-    "@nestjs/platform-fastify": "8.2.1",
+    "@nestjs/platform-express": "8.2.2",
+    "@nestjs/platform-fastify": "8.2.2",
     "@nestjs/serve-static": "2.2.2",
-    "@nestjs/testing": "8.2.1",
+    "@nestjs/testing": "8.2.2",
     "@typegoose/typegoose": "8.3.0",
     "@types/graphql-upload": "8.0.7",
     "apollo-server-express": "2.25.3",
@@ -60,7 +60,7 @@
     "type-graphql": "1.1.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "8.1.4",
+    "@nestjs/cli": "8.1.5",
     "@nestjs/schematics": "8.0.5",
     "@types/bcrypt": "5.0.0",
     "@types/date-fns": "2.6.0",
