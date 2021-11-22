@@ -34,7 +34,7 @@
     "apollo-server-fastify": "2.25.3",
     "bcrypt": "5.0.1",
     "body-parser": "1.19.0",
-    "class-transformer": "0.5.0",
+    "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
     "cross-env": "7.0.3",
     "date-fns": "2.26.0",
