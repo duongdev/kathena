@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4000",
+  "proxy": "http://api.kathena.kmin.edu.vn",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
