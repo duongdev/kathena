@@ -21,6 +21,7 @@ jobs:
             whoami
             cd /root/kathena
             git fetch -p
+            git checkout main && git reset --hard origin/main
             git checkout $GITHUB_REF
             yarn --ignore-engines
             yarn build --ignore-engines
