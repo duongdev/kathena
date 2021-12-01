@@ -1,5 +1,6 @@
 name: remote ssh command
 on:
+  workflow_dispatch:
   release:
     types: [published]
 jobs:
