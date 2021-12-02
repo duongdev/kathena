@@ -18374,10 +18374,10 @@ react-helmet-async@*, react-helmet-async@^1.0.7:
     react-fast-compare "^3.2.0"
     shallowequal "^1.1.0"
 
-react-helmet-async@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-helmet-async/-/react-helmet-async-1.2.0.tgz#a575dee67ffca73bbcdf680faad8986c8bf57f9e"
-  integrity sha512-6xNWYwyhP3cv3mfjCEdCndu1mEMgytrqWr4HtNwAnoPweEJg+bNo+ek2swG4vNcRaRo+j8uGr1ACy5dAa4Dj4A==
+react-helmet-async@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-helmet-async/-/react-helmet-async-1.2.1.tgz#f72d13e7a96950932f1c808b0228010b06c64e34"
+  integrity sha512-tsw8kbEQuidhACHH4OYOqt+q3ey10Lz1P4QxjlX9C2As4sY/XFTeM5yc4utExyEv5Z02M3jExYR6joVoIM5D0w==
   dependencies:
     "@babel/runtime" "^7.12.5"
     invariant "^2.2.4"
