@@ -187,4 +187,35 @@ describe('rating.service', () => {
       ).resolves.toEqual((4.5 * 2 + 4) / 3)
     })
   })
+
+  describe('findOneRating', () => {
+    it('returns rating', async () => {
+      expect.assertions(1)
+
+      const accountId = objectId()
+      const orgId = objectId()
+
+      const createRatingInput: ANY = {
+        targetId: objectId(),
+        numberOfStars: 5,
+      }
+
+      jest.spyOn(authService, 'canSubmitRating').mockResolvedValueOnce(true)
+      jest
+        .spyOn(ratingService, 'calculateAvgRatingByTargetId')
+        .mockResolvedValueOnce(4.5)
+
+      await ratingService.createRating(orgId, accountId, createRatingInput)
+
+      await expect(
+        ratingService.findOneRating(
+          accountId,
+          createRatingInput.targetId,
+          orgId,
+        ),
+      ).resolves.toMatchObject({
+        numberOfStars: createRatingInput.numberOfStars,
+      })
+    })
+  })
 })

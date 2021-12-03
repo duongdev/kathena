@@ -5,6 +5,7 @@ import { ForbiddenError } from 'type-graphql'
 import { Service, InjectModel, Logger } from 'core'
 import { AuthService } from 'modules/auth/auth.service'
 import { Lesson } from 'modules/lesson/models/Lesson'
+import { Nullable } from 'types'
 
 import { Rating } from './models/Rating'
 import { RolesCanSubmitRatingForLesson } from './rating.const'
@@ -91,6 +92,18 @@ export class RatingService {
     )
 
     return createRating
+  }
+
+  async findOneRating(
+    accountId: string,
+    targetId: string,
+    orgId: string,
+  ): Promise<Nullable<DocumentType<Rating>>> {
+    return this.ratingModel.findOne({
+      orgId,
+      targetId,
+      createdByAccountId: accountId,
+    })
   }
 
   async calculateAvgRatingByTargetId(

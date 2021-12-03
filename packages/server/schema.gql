@@ -472,6 +472,7 @@ type Query {
   findQuizSubmitById(id: ID!): QuizSubmit!
   quizSubmits(filter: QuizSubmitsFilterInput!, pageOptions: PageOptionsInput!): QuizSubmitsPayload!
   conversations(conversationPageOptionInput: ConversationPageOptionInput!, lastId: ID, roomId: String!): ConversationsPayload!
+  findRating(targetId: String!): Rating!
 }
 
 input AccountsFilterInput {
