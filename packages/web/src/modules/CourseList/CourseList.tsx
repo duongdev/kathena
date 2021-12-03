@@ -83,27 +83,27 @@ const CourseList: FC<CourseListProps> = (props) => {
                   </>
                 ),
               },
-              {
-                label: 'Học phí',
-                field: 'tuitionFee',
+              // {
+              //   label: 'Học phí',
+              //   field: 'tuitionFee',
 
-                skeleton: <Skeleton />,
-                render: ({ tuitionFee }) => (
-                  <Typography>
-                    {new Intl.NumberFormat('vi-VN', {
-                      style: 'currency',
-                      currency: 'VND',
-                    }).format(tuitionFee)}
-                  </Typography>
-                ),
-              },
+              //   skeleton: <Skeleton />,
+              //   render: ({ tuitionFee }) => (
+              //     <Typography>
+              //       {new Intl.NumberFormat('vi-VN', {
+              //         style: 'currency',
+              //         currency: 'VND',
+              //       }).format(tuitionFee)}
+              //     </Typography>
+              //   ),
+              // },
               {
                 label: 'Ngày bắt đầu',
                 field: 'startDate',
                 skeleton: <Skeleton />,
                 render: ({ startDate }) => (
                   <Typography>
-                    {format(new Date(startDate), 'MM/dd/yyyy')}
+                    {format(new Date(startDate), 'dd/MM/yyyy')}
                   </Typography>
                 ),
               },
