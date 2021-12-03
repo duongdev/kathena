@@ -1934,19 +1934,19 @@ describe('lesson.service', () => {
         .spyOn(courseService['courseModel'], 'findById')
         .mockResolvedValueOnce({
           ...course,
-          startDate: new Date().setDate(date.getDate() + 5),
+          startDate: new Date().setDate(date.getDate() + 2),
         })
         .mockResolvedValueOnce({
           ...course,
-          startDate: new Date().setDate(date.getDate() + 5),
+          startDate: new Date().setDate(date.getDate() + 2),
         })
         .mockResolvedValueOnce({
           ...course,
-          startDate: new Date().setDate(date.getDate() + 5),
+          startDate: new Date().setDate(date.getDate() + 2),
         })
         .mockResolvedValueOnce({
           ...course,
-          startDate: new Date().setDate(date.getDate() + 5),
+          startDate: new Date().setDate(date.getDate() + 2),
         })
 
       const arrayDateTimeOfTheLessons =
