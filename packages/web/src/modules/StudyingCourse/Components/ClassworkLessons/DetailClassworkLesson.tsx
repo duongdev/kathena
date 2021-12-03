@@ -18,7 +18,11 @@ import {
   Typography,
 } from '@kathena/ui'
 import { WithAuth } from 'common/auth'
-import { Permission, useFindLessonByIdQuery } from 'graphql/generated'
+import {
+  Permission,
+  useFindLessonByIdQuery,
+  useFindRatingQuery,
+} from 'graphql/generated'
 import {
   buildPath,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
@@ -38,6 +42,15 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
     variables: { lessonId },
   })
   const classworkLesson = useMemo(() => data?.findLessonById, [data])
+  const { data: dataRating } = useFindRatingQuery({
+    variables: {
+      targetId: classworkLesson?.id as ANY,
+    },
+  })
+  const coreRating = useMemo(
+    () => dataRating?.findRating.numberOfStars,
+    [dataRating],
+  )
   const [ratingOpen, handleOpenRating, handleCloseRating] = useDialogState()
   if (loading && !data) {
     return <PageContainerSkeleton maxWidth="md" />
@@ -72,6 +85,7 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
         lesson={classworkLesson}
         open={ratingOpen}
         onClose={handleCloseRating}
+        coreRating={coreRating as number}
       />
       <Grid container spacing={DASHBOARD_SPACING}>
         {/* Thông tin buổi học */}
