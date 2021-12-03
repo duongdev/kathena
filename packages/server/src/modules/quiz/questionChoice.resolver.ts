@@ -1,6 +1,7 @@
 import { Args, Resolver, Query, ID } from '@nestjs/graphql'
 
-import { UseAuthGuard } from 'core'
+import { CurrentOrg, UseAuthGuard } from 'core'
+import { Org } from 'modules/org/models/Org'
 
 import { QuestionChoice } from './models/QuestionChoice'
 import { QuizService } from './quiz.service'
@@ -14,7 +15,8 @@ export class QuestionChoiceResolver {
   @UseAuthGuard()
   async questionChoices(
     @Args('questionId', { type: () => ID }) questionId: string,
+    @CurrentOrg() org: Org,
   ): Promise<QuestionChoicesPayload> {
-    return this.quizService.questionChoices(questionId)
+    return this.quizService.questionChoices(questionId, org.id)
   }
 }

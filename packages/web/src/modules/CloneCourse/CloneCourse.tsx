@@ -119,7 +119,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
             courseIdMustCopy: courseRoot.id,
             name: input.name,
             orgOfficeId: input.orgOfficeId,
-            startDate: input.startDate,
+            startDate: new Date(input.startDate).toDateString(),
             lecturerIds,
             tuitionFee: input.tuitionFee,
             daysOfTheWeek: input.daysOfTheWeek,
@@ -164,7 +164,7 @@ const CloneCourse: FC<CloneCourseProps> = (props) => {
               onClick={formik.submitForm}
               loading={formik.isSubmitting}
             >
-              Clone
+              Nhân bản
             </Button>,
           ]}
         >

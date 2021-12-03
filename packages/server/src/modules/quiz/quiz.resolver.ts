@@ -2,12 +2,11 @@ import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, Mutation, Resolver, Query, ID } from '@nestjs/graphql'
 import { DocumentType } from '@typegoose/typegoose'
 
-import { CurrentAccount, UseAuthGuard } from 'core'
+import { CurrentAccount, CurrentOrg, Publication, UseAuthGuard } from 'core'
 import { Account } from 'modules/account/models/Account'
 import { P } from 'modules/auth/models'
+import { Org } from 'modules/org/models/Org'
 import { Nullable, PageOptionsInput } from 'types'
-
-import { Publication } from '../../core/models/PublicationState'
 
 import { Quiz } from './models/Quiz'
 import { QuizService } from './quiz.service'
@@ -27,10 +26,12 @@ export class QuizResolver {
   async createQuiz(
     @Args('input') quizInput: CreateQuizInput,
     @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
   ): Promise<Quiz | null> {
     const quiz = await this.quizService.createQuiz({
       ...quizInput,
       createdByAccountId: account.id,
+      orgId: org.id,
     })
 
     return quiz

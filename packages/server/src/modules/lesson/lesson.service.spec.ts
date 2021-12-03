@@ -2101,12 +2101,16 @@ describe('lesson.service', () => {
       const creatorId = objectId()
       const orgId = objectId()
 
+      const toDay = new Date()
+      const tomorrow = new Date(toDay)
+      tomorrow.setDate(toDay.getDate() + 1)
+
       const courseData = await courseService.createCourse(creatorId, orgId, {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'NodeJS-12',
         name: 'Node Js Thang 12',
-        startDate: new Date(),
+        startDate: tomorrow,
         tuitionFee: 5000000,
         lecturerIds: [],
         daysOfTheWeek: [],

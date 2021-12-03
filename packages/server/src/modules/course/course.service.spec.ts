@@ -81,12 +81,17 @@ describe('course.service', () => {
     code: 'TEST',
   }
 
+  const toDay = new Date()
+  const tomorrow = new Date(toDay)
+  tomorrow.setDate(toDay.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
+
   const createCourseInput: CreateCourseInput = {
     academicSubjectId: academicSubjectTemplate.id,
     orgOfficeId: objectId(),
     code: 'NodeJS-12',
     name: 'Node Js Thang 12',
-    startDate: new Date(),
+    startDate: tomorrow,
     tuitionFee: 5000000,
     lecturerIds: [],
     daysOfTheWeek: [],
@@ -205,7 +210,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), org.id, {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
           lecturerIds: [id],
         }),
       ).rejects.toThrowError(`ID ${id} is not found`)
@@ -213,7 +218,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(objectId(), org.id, {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
           lecturerIds: [accountAdmin.id],
         }),
       ).rejects.toThrowError(`Thanh Canh Admin isn't a lecturer`)
@@ -239,15 +244,13 @@ describe('course.service', () => {
         .mockResolvedValueOnce(true as never)
         .mockResolvedValueOnce(true as never)
 
-      const date = new Date()
-
       // Start date less than the current date
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
           totalNumberOfLessons:
             MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE + 1,
-          startDate: date,
+          startDate: tomorrow,
         }),
       ).rejects.toThrowError(
         `Tổng số buổi học tạo tự động không được lớn hơn ${MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE} buổi!`,
@@ -276,13 +279,11 @@ describe('course.service', () => {
           publication: Publication.Draft,
         } as ANY)
 
-      const date = new Date()
-
       // Start date less than the current date
       await expect(
         courseService.createCourse(objectId(), objectId(), {
           ...createCourseInput,
-          startDate: date,
+          startDate: tomorrow,
         }),
       ).rejects.toThrowError(
         'CAN_NOT_CREATE_COURSE_WHEN_ACADEMIC_SUBJECT_IS_A_DRAFT',
@@ -311,7 +312,7 @@ describe('course.service', () => {
       await expect(
         courseService.createCourse(creatorId, orgId, {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
         }),
       ).resolves.toMatchObject({
         code: 'NODEJS-12',
@@ -454,7 +455,7 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
         },
       )
 
@@ -500,7 +501,7 @@ describe('course.service', () => {
 
       const courseTest = await courseService.createCourse(creatorId, orgId, {
         ...createCourseInput,
-        startDate: new Date(),
+        startDate: tomorrow,
       })
 
       jest
@@ -545,7 +546,7 @@ describe('course.service', () => {
 
       const courseTest = await courseService.createCourse(creatorId, orgId, {
         ...createCourseInput,
-        startDate: new Date(),
+        startDate: tomorrow,
       })
 
       jest
@@ -608,7 +609,7 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
         },
       )
 
@@ -672,17 +673,13 @@ describe('course.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: new Date(),
+          startDate: tomorrow,
         },
       )
 
       jest
         .spyOn(courseService['courseModel'], 'findOne')
         .mockResolvedValueOnce(courseTest)
-
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
 
       const updated = await courseService.updateCourse(
         {
@@ -735,7 +732,7 @@ describe('course.service', () => {
 
       const course = await courseService.createCourse(creatorId, orgId, {
         ...createCourseInput,
-        startDate: new Date(),
+        startDate: tomorrow,
       })
 
       await expect(
@@ -807,7 +804,7 @@ describe('course.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -923,12 +920,13 @@ describe('course.service', () => {
         })
 
         const listCreatedCourses: ANY[] = []
+
         const createCourse: CreateCourseInput = {
           academicSubjectId: academicSubject.id,
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount1.id],
           daysOfTheWeek: [],
@@ -1008,6 +1006,7 @@ describe('course.service', () => {
 
         const orgId = objectId()
         const creatorId = objectId()
+
         const courseInput: CreateCourseInput = {
           academicSubjectId: objectId(),
           orgOfficeId: objectId(),
@@ -1015,7 +1014,7 @@ describe('course.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -1253,7 +1252,7 @@ describe('course.service', () => {
           org.id,
           {
             ...createCourseInput,
-            startDate: new Date(),
+            startDate: tomorrow,
             academicSubjectId: academicSubject.id,
             orgOfficeId: orgOffice.id,
           },
@@ -1451,7 +1450,7 @@ describe('course.service', () => {
           org.id,
           {
             ...createCourseInput,
-            startDate: new Date(),
+            startDate: tomorrow,
             academicSubjectId: academicSubject.id,
             orgOfficeId: orgOffice.id,
           },
@@ -1648,7 +1647,7 @@ describe('course.service', () => {
           accountLecturer.orgId,
           {
             ...createCourseInput,
-            startDate: new Date(),
+            startDate: tomorrow,
             lecturerIds: [accountLecturer.id, accountLecturer2.id],
           },
         )
@@ -1855,7 +1854,7 @@ describe('course.service', () => {
           orgOfficeId: orgOffice.id,
           code: 'FEBCT1',
           name: 'Frontend cơ bản tháng 1',
-          startDate: new Date(),
+          startDate: tomorrow,
           tuitionFee: 5000000,
           lecturerIds: [lecturerAccount.id],
           daysOfTheWeek: [],
@@ -2004,7 +2003,7 @@ describe('course.service', () => {
           name: 'Node Js Thang 12',
           tuitionFee: 5000000,
           lecturerIds: [accLecturer.id],
-          startDate: new Date(),
+          startDate: tomorrow,
           daysOfTheWeek: [],
           totalNumberOfLessons: 0,
         }
@@ -2101,9 +2100,6 @@ describe('course.service', () => {
     })
     it('throws error if course must copy no found', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
 
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
@@ -2134,10 +2130,6 @@ describe('course.service', () => {
 
     it('throws error if academic subject not found', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
           dayOfWeek: DayOfWeek.Monday,
@@ -2171,10 +2163,6 @@ describe('course.service', () => {
 
     it('throws error if org office not found', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
           dayOfWeek: DayOfWeek.Monday,
@@ -2211,10 +2199,6 @@ describe('course.service', () => {
 
     it('throws error if lecturer not found', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-
       const lecturerId = objectId()
       const daysOfTheWeek: DayOfTheWeekInput[] = [
         {
@@ -2256,10 +2240,6 @@ describe('course.service', () => {
 
     it('throws error if account is not lecturer', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-
       const lecturer = {
         id: objectId(),
         displayName: 'Liêm Đặng',
@@ -2360,10 +2340,6 @@ describe('course.service', () => {
 
     it('returns new course after cloned', async () => {
       expect.assertions(1)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-
       const org = await orgService.createOrg({
         namespace: 'kmin_academic',
         name: 'kmin academic',
@@ -2452,9 +2428,6 @@ describe('course.service', () => {
 
     it('returns new course after cloned with lesson have classwork', async () => {
       expect.assertions(4)
-      const today = new Date()
-      const tomorrow = new Date(today)
-      tomorrow.setDate(tomorrow.getDate() + 1)
 
       const org = await orgService.createOrg({
         namespace: 'kmin_academic_2',

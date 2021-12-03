@@ -73,6 +73,10 @@ describe('conversation.service', () => {
     it(`return a conversation`, async () => {
       expect.assertions(1)
 
+      const toDay = new Date()
+      const tomorrow = new Date(toDay)
+      tomorrow.setDate(toDay.getDate() + 1)
+
       const createCourseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
@@ -80,7 +84,7 @@ describe('conversation.service', () => {
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [],
-        startDate: new Date(),
+        startDate: tomorrow,
         daysOfTheWeek: [],
         totalNumberOfLessons: 0,
       }
@@ -114,7 +118,6 @@ describe('conversation.service', () => {
         accountLecturer.orgId,
         {
           ...createCourseInput,
-          startDate: new Date(),
           lecturerIds: [accountLecturer.id],
         },
       )
@@ -166,6 +169,9 @@ describe('conversation.service', () => {
 
     it(`returns an array of conversations`, async () => {
       expect.assertions(3)
+      const toDay = new Date()
+      const tomorrow = new Date(toDay)
+      tomorrow.setDate(toDay.getDate() + 1)
 
       const createCourseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
@@ -174,7 +180,7 @@ describe('conversation.service', () => {
         name: 'Node Js Thang 12',
         tuitionFee: 5000000,
         lecturerIds: [],
-        startDate: new Date(),
+        startDate: tomorrow,
         daysOfTheWeek: [],
         totalNumberOfLessons: 0,
       }

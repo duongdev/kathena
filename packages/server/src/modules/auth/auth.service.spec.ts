@@ -297,8 +297,8 @@ describe('auth.service', () => {
                 "Comment_CreateComment",
                 "Rating_CreateRating",
                 "AvgGradeStatisticsOfClassworkInTheCourse",
-                "OrgOffice_Access",
                 "OrgOffice_ListOrgOffices",
+                "OrgOffice_Access",
                 "OrgOffice_CreateOrgOffice",
                 "OrgOffice_UpdateOrgOffice",
               ]
@@ -696,13 +696,16 @@ describe('auth.service', () => {
 
     it('returns true if account can manage course', async () => {
       expect.assertions(3)
+      const toDay = new Date()
+      const tomorrow = new Date(toDay)
+      tomorrow.setDate(toDay.getDate() + 1)
 
       const courseInput: CreateCourseInput = {
         academicSubjectId: objectId(),
         orgOfficeId: objectId(),
         code: 'string',
         name: 'string',
-        startDate: new Date(),
+        startDate: tomorrow,
         tuitionFee: 123123,
         lecturerIds: [],
         daysOfTheWeek: [],
