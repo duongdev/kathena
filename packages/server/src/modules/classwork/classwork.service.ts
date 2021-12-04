@@ -687,7 +687,7 @@ export class ClassworkService {
       {
         title: formClassworkMaterial.title,
         description: formClassworkMaterial.description,
-        publicationState: formClassworkMaterial.publicationState,
+        publicationState: Publication.Draft,
       },
     )
 
@@ -1344,7 +1344,7 @@ export class ClassworkService {
       {
         title: formClassworkAssignment.title,
         description: formClassworkAssignment.description,
-        publicationState: formClassworkAssignment.publicationState,
+        publicationState: Publication.Draft,
       },
     )
 
