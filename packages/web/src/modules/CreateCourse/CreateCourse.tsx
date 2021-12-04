@@ -163,6 +163,7 @@ const CreateCourse: FC<CreateCourseProps> = (props) => {
             <Button
               variant="contained"
               color="primary"
+              backgroundColorButton="primary"
               size="large"
               startIcon={<Check />}
               onClick={formik.submitForm}

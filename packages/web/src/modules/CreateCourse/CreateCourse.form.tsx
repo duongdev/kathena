@@ -57,7 +57,26 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
     setDaysOfTheWeek(arr)
     formik.setFieldValue('daysOfTheWeek', arr)
   }
-
+  const renderSwitch = (item: DayOfWeek) => {
+    switch (item) {
+      case 'Monday':
+        return 'Thứ hai'
+      case 'Tuesday':
+        return 'Thứ ba'
+      case 'Wednesday':
+        return 'Thứ tư'
+      case 'Thursday':
+        return 'Thứ năm'
+      case 'Friday':
+        return 'Thứ sáu'
+      case 'Saturday':
+        return 'Thứ bảy'
+      case 'Sunday':
+        return 'Chủ nhật'
+      default:
+        return 'None'
+    }
+  }
   const onChangeStartTime = (day: DayOfWeek, value: string) => {
     const arr = [...daysOfTheWeek]
     const index = arr.findIndex((i) => i.dayOfWeek === day)
@@ -155,7 +174,8 @@ const CreateCourseForm: FC<CreateCourseFormProps> = (props) => {
                     checked={active}
                     onChange={() => onChangeDay(item)}
                   />
-                  {item}:{' '}
+                  {/* {item}:{' '} */}
+                  {renderSwitch(item)}
                   <input
                     style={
                       active ? { margin: '0 10px' } : { marginLeft: '10px' }

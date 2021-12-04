@@ -6,7 +6,11 @@ import { useSnackbar } from 'notistack'
 import { Star } from 'phosphor-react'
 
 import { Button, Dialog } from '@kathena/ui'
-import { Lesson, useCreateRatingForTheLessonMutation } from 'graphql/generated'
+import {
+  FindLessonByIdDocument,
+  Lesson,
+  useCreateRatingForTheLessonMutation,
+} from 'graphql/generated'
 
 export type RatingLessonProps = {
   open: boolean
@@ -15,6 +19,7 @@ export type RatingLessonProps = {
     Lesson,
     'description' | 'startTime' | 'endTime' | 'courseId' | 'id'
   >
+  coreRating: number
 }
 
 const labels: { [index: string]: string } = {
@@ -26,12 +31,18 @@ const labels: { [index: string]: string } = {
 }
 const RatingLesson: FC<RatingLessonProps> = (props) => {
   const classes = useStyles(props)
-  const { open, onClose, lesson } = props
-  const [value, setValue] = React.useState<number | null>(3)
-
+  const { open, onClose, lesson, coreRating } = props
+  const [value, setValue] = React.useState<number | null>(coreRating)
   const [loading, setLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
-  const [updateRating] = useCreateRatingForTheLessonMutation()
+  const [updateRating] = useCreateRatingForTheLessonMutation({
+    refetchQueries: [
+      {
+        query: FindLessonByIdDocument,
+        variables: { lessonId: lesson.id },
+      },
+    ],
+  })
   const handleRating = async () => {
     if (lesson) {
       setLoading(true)
