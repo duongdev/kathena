@@ -167,6 +167,7 @@ Array [
       "Rating_CreateRating",
       "Classwork_CreateClassworkSubmission",
       "Classwork_ListClassworkSubmission",
+      "Classwork_UpdateClassworkSubmission",
     ],
     "priority": 4,
   },

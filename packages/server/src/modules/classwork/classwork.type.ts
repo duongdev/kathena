@@ -126,9 +126,22 @@ export class UpdateClassworkAssignmentInput {
 }
 
 @InputType()
+export class UpdateClassworkSubmissionInput {
+  @Field({ nullable: true })
+  @IsOptional()
+  description?: string
+}
+
+@InputType()
 export class AddAttachmentsToClassworkInput {
   @Field((_type) => [GraphQLUpload])
   attachments?: Promise<FileUpload>[]
+}
+
+@InputType()
+export class AddFilesToClassworkSubmissionInput {
+  @Field((_type) => [GraphQLUpload])
+  submissionFiles?: Promise<FileUpload>[]
 }
 
 @InputType()
