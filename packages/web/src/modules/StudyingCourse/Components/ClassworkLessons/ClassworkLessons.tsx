@@ -94,7 +94,9 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                             },
                           )}
                         >
-                          Buổi {page === 0 ? index + 1 : index + 1 + (page * perPage)}: {classworkLesson.description}
+                          Buổi{' '}
+                          {page === 0 ? index + 1 : index + 1 + page * perPage}:{' '}
+                          {classworkLesson.description}
                         </Link>
                       </Typography>
                     ),
@@ -127,18 +129,18 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                       </>
                     ),
                   },
-                  {
-                    label: 'Trạng thái',
-                    align: 'right',
-                    skeleton: <Skeleton />,
-                    render: ({ publicationState }) => (
-                      <PublicationChip
-                        publication={publicationState as ANY}
-                        variant="outlined"
-                        size="small"
-                      />
-                    ),
-                  },
+                  // {
+                  //   label: 'Trạng thái',
+                  //   align: 'right',
+                  //   skeleton: <Skeleton />,
+                  //   render: ({ publicationState }) => (
+                  //     <PublicationChip
+                  //       publication={publicationState as ANY}
+                  //       variant="outlined"
+                  //       size="small"
+                  //     />
+                  //   ),
+                  // },
                 ]}
                 pagination={{
                   count: totalCount,

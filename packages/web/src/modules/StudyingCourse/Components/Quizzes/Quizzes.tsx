@@ -123,18 +123,18 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                     <>{duration && <Typography>{duration} phút</Typography>}</>
                   ),
                 },
-                {
-                  label: 'Trạng thái',
-                  align: 'right',
-                  skeleton: <Skeleton />,
-                  render: ({ publicationState }) => (
-                    <PublicationChip
-                      publication={publicationState as ANY}
-                      variant="outlined"
-                      size="small"
-                    />
-                  ),
-                },
+                // {
+                //   label: 'Trạng thái',
+                //   align: 'right',
+                //   skeleton: <Skeleton />,
+                //   render: ({ publicationState }) => (
+                //     <PublicationChip
+                //       publication={publicationState as ANY}
+                //       variant="outlined"
+                //       size="small"
+                //     />
+                //   ),
+                // },
               ]}
               pagination={{
                 count: totalCount,
