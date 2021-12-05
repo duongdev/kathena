@@ -82,18 +82,18 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
                 </>
               ),
             },
-            {
-              label: 'Học phí',
-              skeleton: <Skeleton />,
-              render: ({ tuitionFee }) => (
-                <Typography className={classes.twoRows}>
-                  {new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND',
-                  }).format(tuitionFee)}
-                </Typography>
-              ),
-            },
+            // {
+            //   label: 'Học phí',
+            //   skeleton: <Skeleton />,
+            //   render: ({ tuitionFee }) => (
+            //     <Typography className={classes.twoRows}>
+            //       {new Intl.NumberFormat('vi-VN', {
+            //         style: 'currency',
+            //         currency: 'VND',
+            //       }).format(tuitionFee)}
+            //     </Typography>
+            //   ),
+            // },
             {
               label: 'Ngày bắt đầu',
               skeleton: <Skeleton />,

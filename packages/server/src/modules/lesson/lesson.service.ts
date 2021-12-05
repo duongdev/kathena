@@ -347,6 +347,9 @@ export class LessonService {
       classworkAssignmentListBeforeClass,
       classworkAssignmentListInClass,
       classworkAssignmentListAfterClass,
+      quizListBeforeClass,
+      quizListInClass,
+      quizListAfterClass,
     } = updateInput
     const { lessonModel, courseModel } = this
 
@@ -521,6 +524,18 @@ export class LessonService {
     if (classworkAssignmentListAfterClass) {
       lesson.classworkAssignmentListAfterClass =
         classworkAssignmentListAfterClass
+    }
+
+    if (quizListBeforeClass) {
+      lesson.quizListBeforeClass = quizListBeforeClass
+    }
+
+    if (quizListInClass) {
+      lesson.quizListInClass = quizListInClass
+    }
+
+    if (quizListAfterClass) {
+      lesson.quizListAfterClass = quizListAfterClass
     }
 
     lesson.updatedByAccountId = updatedByAccountId

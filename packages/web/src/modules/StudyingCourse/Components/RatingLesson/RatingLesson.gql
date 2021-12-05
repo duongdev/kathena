@@ -8,3 +8,13 @@ mutation CreateRatingForTheLesson($ratingInput: RatingInput!) {
     targetId
   }
 }
+
+#Lấy Sao đánh giá từ học viên
+query FindRating($targetId: String!) {
+  findRating(targetId: $targetId) {
+    id
+    targetId
+    createdByAccountId
+    numberOfStars
+  }
+}

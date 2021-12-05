@@ -858,6 +858,7 @@ export type Query = {
   findLessonById: Lesson
   findOneClassworkSubmission: ClassworkSubmission
   findQuizSubmitById: QuizSubmit
+  findRating: Rating
   getListOfStudentsSubmitAssignmentsByStatus: ClassworkSubmissionStatusPayload
   lessons: LessonsPayload
   listClassworkAssignmentsByStudentIdInCourse: ClassworkAssignmentByStudentIdInCourseResponsePayload
@@ -958,6 +959,10 @@ export type QueryFindOneClassworkSubmissionArgs = {
 
 export type QueryFindQuizSubmitByIdArgs = {
   id: Scalars['ID']
+}
+
+export type QueryFindRatingArgs = {
+  targetId: Scalars['String']
 }
 
 export type QueryGetListOfStudentsSubmitAssignmentsByStatusArgs = {
@@ -2057,6 +2062,19 @@ export type CreateRatingForTheLessonMutation = {
     updatedAt: any
     createdByAccountId: string
     targetId: string
+  }
+}
+
+export type FindRatingQueryVariables = Exact<{
+  targetId: Scalars['String']
+}>
+
+export type FindRatingQuery = {
+  findRating: {
+    id: string
+    targetId: string
+    createdByAccountId: string
+    numberOfStars: number
   }
 }
 
@@ -11257,6 +11275,146 @@ export type CreateRatingForTheLessonMutationOptions =
     CreateRatingForTheLessonMutation,
     CreateRatingForTheLessonMutationVariables
   >
+export const FindRatingDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindRating' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'targetId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findRating' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'targetId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'targetId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'targetId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'createdByAccountId' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'numberOfStars' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type FindRatingProps<
+  TChildProps = {},
+  TDataName extends string = 'data',
+> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FindRatingQuery,
+    FindRatingQueryVariables
+  >
+} & TChildProps
+export function withFindRating<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FindRatingQuery,
+    FindRatingQueryVariables,
+    FindRatingProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FindRatingQuery,
+    FindRatingQueryVariables,
+    FindRatingProps<TChildProps, TDataName>
+  >(FindRatingDocument, {
+    alias: 'findRating',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __useFindRatingQuery__
+ *
+ * To run a query within a React component, call `useFindRatingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindRatingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindRatingQuery({
+ *   variables: {
+ *      targetId: // value for 'targetId'
+ *   },
+ * });
+ */
+export function useFindRatingQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindRatingQuery,
+    FindRatingQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<FindRatingQuery, FindRatingQueryVariables>(
+    FindRatingDocument,
+    options,
+  )
+}
+export function useFindRatingLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindRatingQuery,
+    FindRatingQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<FindRatingQuery, FindRatingQueryVariables>(
+    FindRatingDocument,
+    options,
+  )
+}
+export type FindRatingQueryHookResult = ReturnType<typeof useFindRatingQuery>
+export type FindRatingLazyQueryHookResult = ReturnType<
+  typeof useFindRatingLazyQuery
+>
+export type FindRatingQueryResult = Apollo.QueryResult<
+  FindRatingQuery,
+  FindRatingQueryVariables
+>
 export const StudyingCourseListDocument = {
   kind: 'Document',
   definitions: [

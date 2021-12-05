@@ -247,14 +247,14 @@ const DetailCourse: FC<DetailCourseProps> = () => {
               <Grid item xs={6}>
                 <Stack spacing={2}>
                   <InfoBlock label="Ngày bắt đầu">
-                    {format(new Date(course.startDate), 'MM/dd/yyyy')}
+                    {format(new Date(course.startDate), 'dd/MM/yyyy')}
                   </InfoBlock>
-                  <InfoBlock label="Học phí">
+                  {/* <InfoBlock label="Học phí">
                     {new Intl.NumberFormat('vi-VN', {
                       style: 'currency',
                       currency: 'VND',
                     }).format(course.tuitionFee)}
-                  </InfoBlock>
+                  </InfoBlock> */}
                 </Stack>
               </Grid>
             </Grid>
