@@ -357,6 +357,7 @@ enum Permission {
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
+  Classwork_UpdateClassworkSubmission
   AvgGradeStatisticsOfClassworkInTheCourse
   Comment_CreateComment
   Rating_CreateRating
@@ -593,6 +594,9 @@ type Mutation {
   removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
+  updateClassworkSubmission(updateInput: UpdateClassworkSubmissionInput!, classworkAssignmentId: ID!): ClassworkSubmission!
+  addFilesToClassworkSubmission(submissionFilesInput: AddFilesToClassworkSubmissionInput!, classworkSubmissionId: ID!): ClassworkSubmission!
+  removeFilesFromClassworkSubmission(submissionFilesInput: [String!], classworkSubmissionId: ID!): ClassworkSubmission!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
@@ -738,6 +742,14 @@ input CreateClassworkSubmissionInput {
 input SetGradeForClassworkSubmissionInput {
   submissionId: ID!
   grade: Float!
+}
+
+input UpdateClassworkSubmissionInput {
+  description: String
+}
+
+input AddFilesToClassworkSubmissionInput {
+  submissionFiles: [Upload!]!
 }
 
 input CreateLessonInput {
