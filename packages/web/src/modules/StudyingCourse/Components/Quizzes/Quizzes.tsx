@@ -1,18 +1,17 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Skeleton } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
 import { ANY } from '@kathena/types'
 import {
-  SectionCardSkeleton,
-  SectionCard,
-  usePagination,
   DataTable,
-  Typography,
   Link,
+  SectionCard,
+  SectionCardSkeleton,
+  Typography,
+  usePagination,
 } from '@kathena/ui'
 import {
   useCourseDetailQuery,

@@ -1,12 +1,10 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Skeleton } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
 
 import { DASHBOARD_SPACING } from '@kathena/theme'
-import { ANY } from '@kathena/types'
 import {
   DataTable,
   Link,
