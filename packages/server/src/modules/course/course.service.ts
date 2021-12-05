@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { forwardRef, Inject } from '@nestjs/common'
 import { ReturnModelType, DocumentType } from '@typegoose/typegoose'
 
@@ -11,6 +12,7 @@ import {
 import { MAX_TOTAL_NUMBER_OF_LESSONS_WHEN_CREATE_COURSE } from 'core/constants'
 import { AcademicService } from 'modules/academic/academic.service'
 import { AccountService } from 'modules/account/account.service'
+import { Account } from 'modules/account/models/Account'
 import { AuthService } from 'modules/auth/auth.service'
 import { Permission, Role } from 'modules/auth/models'
 import { ClassworkService } from 'modules/classwork/classwork.service'
@@ -437,6 +439,8 @@ export class CourseService {
     },
     studentIds: string[],
   ): Promise<DocumentType<Course>> {
+    this.logger.log(`[${this.addStudentsToCourse.name}] doing ...`)
+    this.logger.verbose({ query, studentIds })
     const course = await this.courseModel.findOne({
       _id: query.courseId,
       orgId: query.orgId,
@@ -473,11 +477,52 @@ export class CourseService {
       throw new Error(err)
     })
 
-    studentIds.forEach((id) => {
-      course.studentIds.push(id)
+    course.studentIds = course.studentIds.concat(studentIds)
+    this.logger.log(studentIds)
+    this.logger.log(course.studentIds)
+
+    const listStudent: Account[] = await Promise.all(
+      course.studentIds.map(async (studentId: string): Promise<Account> => {
+        const student = await this.accountService.findAccountById(studentId)
+        if (!student) throw new Error('học viên không tồn tại')
+        return student
+      }),
+    )
+
+    // eslint-disable-next-line consistent-return
+    listStudent.sort((a: Account, b: Account): ANY => {
+      const arrayNameStudentA = a.displayName.split(' ')
+      let strTmp = arrayNameStudentA[0]
+      arrayNameStudentA[0] = arrayNameStudentA[arrayNameStudentA.length - 1]
+      // eslint-disable-next-line prefer-destructuring
+      arrayNameStudentA[arrayNameStudentA.length - 1] = arrayNameStudentA[0]
+
+      const arrayNameStudentB = b.displayName.split(' ')
+      // eslint-disable-next-line prefer-destructuring
+      strTmp = arrayNameStudentB[0]
+      arrayNameStudentB[0] = arrayNameStudentB[arrayNameStudentB.length - 1]
+      // eslint-disable-next-line prefer-destructuring
+      arrayNameStudentB[arrayNameStudentB.length - 1] = arrayNameStudentB[0]
+
+      const nameStudentA = arrayNameStudentA.join(' ')
+      const nameStudentB = arrayNameStudentB.join(' ')
+
+      return nameStudentA.localeCompare(nameStudentB)
     })
 
+    this.logger.log(listStudent)
+
+    const listStudentIdSorted = await Promise.all(
+      listStudent.map((student: Account): string => {
+        return student.id
+      }),
+    )
+    course.studentIds = listStudentIdSorted
+
     const courseAfter = await course.save()
+
+    this.logger.log(`[${this.addStudentsToCourse.name}] done !`)
+    this.logger.verbose(courseAfter)
     return courseAfter
   }
 
