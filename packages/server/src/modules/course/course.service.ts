@@ -478,8 +478,6 @@ export class CourseService {
     })
 
     course.studentIds = course.studentIds.concat(studentIds)
-    this.logger.log(studentIds)
-    this.logger.log(course.studentIds)
 
     const listStudent: Account[] = await Promise.all(
       course.studentIds.map(async (studentId: string): Promise<Account> => {
@@ -492,20 +490,17 @@ export class CourseService {
     // eslint-disable-next-line consistent-return
     listStudent.sort((a: Account, b: Account): ANY => {
       const arrayNameStudentA = a.displayName.split(' ')
-      let temp = arrayNameStudentA[0]
-      arrayNameStudentA[0] = arrayNameStudentA[arrayNameStudentA.length - 1]
-      // eslint-disable-next-line prefer-destructuring
-      arrayNameStudentA[arrayNameStudentA.length - 1] = temp
+      const nameStudentA = `${
+        arrayNameStudentA[arrayNameStudentA.length - 1]
+      } ${arrayNameStudentA.join(' ')}`
 
       const arrayNameStudentB = b.displayName.split(' ')
-      // eslint-disable-next-line prefer-destructuring
-      temp = arrayNameStudentB[0]
-      arrayNameStudentB[0] = arrayNameStudentB[arrayNameStudentB.length - 1]
-      // eslint-disable-next-line prefer-destructuring
-      arrayNameStudentB[arrayNameStudentB.length - 1] = temp
+      const nameStudentB = `${
+        arrayNameStudentB[arrayNameStudentB.length - 1]
+      } ${arrayNameStudentB.join(' ')}`
 
-      const nameStudentA = arrayNameStudentA.join(' ')
-      const nameStudentB = arrayNameStudentB.join(' ')
+      this.logger.log(nameStudentA)
+      this.logger.log(nameStudentB)
 
       return nameStudentA.localeCompare(nameStudentB)
     })
