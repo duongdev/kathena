@@ -90,6 +90,9 @@ type Lesson implements BaseModel {
   classworkAssignmentListBeforeClass: [ID!]
   classworkAssignmentListInClass: [ID!]
   classworkAssignmentListAfterClass: [ID!]
+  quizListBeforeClass: [ID!]
+  quizListInClass: [ID!]
+  quizListAfterClass: [ID!]
 }
 
 type LessonsPayload {
@@ -762,6 +765,9 @@ input UpdateLessonInput {
   classworkAssignmentListBeforeClass: [String!]
   classworkAssignmentListInClass: [String!]
   classworkAssignmentListAfterClass: [String!]
+  quizListBeforeClass: [String!]
+  quizListInClass: [String!]
+  quizListAfterClass: [String!]
 }
 
 enum UpdateLessonTimeOptions {

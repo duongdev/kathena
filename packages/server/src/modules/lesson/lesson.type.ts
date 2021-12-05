@@ -124,6 +124,15 @@ export class UpdateLessonInput {
 
   @Field((_type) => [String], { nullable: true })
   classworkAssignmentListAfterClass?: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  quizListBeforeClass?: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  quizListInClass?: string[]
+
+  @Field((_type) => [String], { nullable: true })
+  quizListAfterClass?: string[]
 }
 
 @InputType()
