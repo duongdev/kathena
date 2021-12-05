@@ -492,17 +492,17 @@ export class CourseService {
     // eslint-disable-next-line consistent-return
     listStudent.sort((a: Account, b: Account): ANY => {
       const arrayNameStudentA = a.displayName.split(' ')
-      let strTmp = arrayNameStudentA[0]
+      let temp = arrayNameStudentA[0]
       arrayNameStudentA[0] = arrayNameStudentA[arrayNameStudentA.length - 1]
       // eslint-disable-next-line prefer-destructuring
-      arrayNameStudentA[arrayNameStudentA.length - 1] = arrayNameStudentA[0]
+      arrayNameStudentA[arrayNameStudentA.length - 1] = temp
 
       const arrayNameStudentB = b.displayName.split(' ')
       // eslint-disable-next-line prefer-destructuring
-      strTmp = arrayNameStudentB[0]
+      temp = arrayNameStudentB[0]
       arrayNameStudentB[0] = arrayNameStudentB[arrayNameStudentB.length - 1]
       // eslint-disable-next-line prefer-destructuring
-      arrayNameStudentB[arrayNameStudentB.length - 1] = arrayNameStudentB[0]
+      arrayNameStudentB[arrayNameStudentB.length - 1] = temp
 
       const nameStudentA = arrayNameStudentA.join(' ')
       const nameStudentB = arrayNameStudentB.join(' ')
