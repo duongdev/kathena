@@ -43,9 +43,9 @@ export class Account extends BaseModel {
   @prop({ required: true, index: true, trim: true, validate: isEmail })
   email: string
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @prop({ trim: true })
-  displayName?: string
+  displayName: string
 
   @prop({ required: true })
   password: string

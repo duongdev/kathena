@@ -9,7 +9,7 @@ type Account implements BaseModel {
   updatedAt: DateTime!
   username: String!
   email: String!
-  displayName: String
+  displayName: String!
   avatar: ID
   otp: String
   otpExpired: DateTime
