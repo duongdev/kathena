@@ -52,6 +52,7 @@ export const student: Role = {
     P.Rating_CreateRating,
     P.Classwork_CreateClassworkSubmission,
     P.Classwork_ListClassworkSubmission,
+    P.Classwork_UpdateClassworkSubmission,
   ],
 }
 

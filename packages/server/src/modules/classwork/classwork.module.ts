@@ -7,6 +7,7 @@ import { AuthModule } from 'modules/auth/auth.module'
 import { CourseModule } from 'modules/course/course.module'
 import { Course } from 'modules/course/models/Course'
 import { FileStorageModule } from 'modules/fileStorage/fileStorage.module'
+import { File } from 'modules/fileStorage/models/File'
 import { MailModule } from 'modules/mail/mail.module'
 import { OrgModule } from 'modules/org/org.module'
 
@@ -27,6 +28,7 @@ import { ClassworkSubmission } from './models/ClassworkSubmission'
       ClassworkSubmission,
       Course,
       Account,
+      File,
     ]),
     forwardRef(() => AuthModule),
     forwardRef(() => AccountModule),
