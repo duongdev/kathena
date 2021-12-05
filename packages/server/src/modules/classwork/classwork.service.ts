@@ -1,4 +1,6 @@
 /* eslint-disable no-process-env */
+import { unlinkSync } from 'fs'
+
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
@@ -15,6 +17,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { CourseService } from 'modules/course/course.service'
 import { Course } from 'modules/course/models/Course'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
+import { File } from 'modules/fileStorage/models/File'
 import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY, Nullable, PageOptionsInput } from 'types'
@@ -70,6 +73,9 @@ export class ClassworkService {
 
     @InjectModel(Account)
     private readonly accountModel: ReturnModelType<typeof Account>,
+
+    @InjectModel(File)
+    private readonly fileModel: ReturnModelType<typeof File>,
 
     @Inject(forwardRef(() => FileStorageService))
     private readonly fileStorageService: FileStorageService,
@@ -208,11 +214,19 @@ export class ClassworkService {
       const currentSubmissionFiles = classworkSubmission.submissionFileIds
 
       // eslint-disable-next-line array-callback-return
-      submissionFileIds.map((fileId) => {
+      submissionFileIds.map(async (fileId) => {
         const index = currentSubmissionFiles?.indexOf(fileId)
+        // delete FileId in classworkSubmission
         if (index !== undefined && index >= 0) {
           currentSubmissionFiles?.splice(index, 1)
         }
+        // delete file
+        const file = await this.fileModel.findById(fileId)
+        if (file) {
+          unlinkSync(file.storageProviderIdentifier)
+        }
+        // delete model
+        await this.fileModel.deleteOne({ _id: fileId })
       })
 
       classworkSubmission.submissionFileIds = currentSubmissionFiles
