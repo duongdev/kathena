@@ -499,13 +499,8 @@ export class CourseService {
         arrayNameStudentB[arrayNameStudentB.length - 1]
       } ${arrayNameStudentB.join(' ')}`
 
-      this.logger.log(nameStudentA)
-      this.logger.log(nameStudentB)
-
       return nameStudentA.localeCompare(nameStudentB)
     })
-
-    this.logger.log(listStudent)
 
     const listStudentIdSorted = await Promise.all(
       listStudent.map((student: Account): string => {
