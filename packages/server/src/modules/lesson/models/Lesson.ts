@@ -73,4 +73,16 @@ export class Lesson extends BaseModel {
   @Field((_type) => [ID], { nullable: true })
   @prop({ type: [Types.ObjectId], required: false, default: [] })
   classworkAssignmentListAfterClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  quizListBeforeClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  quizListInClass: string[]
+
+  @Field((_type) => [ID], { nullable: true })
+  @prop({ type: [Types.ObjectId], required: false, default: [] })
+  quizListAfterClass: string[]
 }
