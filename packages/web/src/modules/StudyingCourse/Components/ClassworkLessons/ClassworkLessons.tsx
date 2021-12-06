@@ -68,6 +68,14 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
       </Grid>
     )
   }
+  const checkTime = (time: Date) => {
+    const timeBefore = new Date(time)
+    const timeNow = new Date()
+    if (timeBefore < timeNow) {
+      return true
+    }
+    return false
+  }
   return (
     <>
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -103,12 +111,17 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     label: 'Thời gian bắt đầu',
                     align: 'center',
                     skeleton: <Skeleton />,
-                    render: ({ startTime }) => (
+                    render: ({ startTime, endTime }) => (
                       <>
                         {startTime && (
-                          <Typography>
-                            {format(new Date(startTime), 'dd/MM/yyyy - h:mm a')}
-                          </Typography>
+                          <div>
+                            <Typography>
+                              {format(
+                                new Date(startTime),
+                                'dd/MM/yyyy - h:mm a',
+                              )}
+                            </Typography>
+                          </div>
                         )}
                       </>
                     ),
@@ -120,9 +133,12 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     render: ({ endTime }) => (
                       <>
                         {endTime && (
-                          <Typography>
-                            {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
-                          </Typography>
+                          <>
+                            <Typography>
+                              {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
+                            </Typography>
+                            {/* {checkTime(endTime) ? (<>Đúng</>) : (<>Sai</>)} */}
+                          </>
                         )}
                       </>
                     ),
@@ -131,7 +147,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                   //   label: 'Trạng thái',
                   //   align: 'right',
                   //   skeleton: <Skeleton />,
-                  //   render: ({ publicationState }) => (
+                  //   render: ({publicationState}) => (
                   //     <PublicationChip
                   //       publication={publicationState as ANY}
                   //       variant="outlined"
