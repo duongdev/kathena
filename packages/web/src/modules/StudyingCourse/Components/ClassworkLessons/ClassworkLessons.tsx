@@ -68,14 +68,14 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
       </Grid>
     )
   }
-  const checkTime = (time: Date) => {
-    const timeBefore = new Date(time)
-    const timeNow = new Date()
-    if (timeBefore < timeNow) {
-      return true
-    }
-    return false
-  }
+  // const checkTime = (time: Date) => {
+  //   const timeBefore = new Date(time)
+  //   const timeNow = new Date()
+  //   if (timeBefore < timeNow) {
+  //     return true
+  //   }
+  //   return false
+  // }
   return (
     <>
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -111,7 +111,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     label: 'Thời gian bắt đầu',
                     align: 'center',
                     skeleton: <Skeleton />,
-                    render: ({ startTime, endTime }) => (
+                    render: ({ startTime }) => (
                       <>
                         {startTime && (
                           <div>
