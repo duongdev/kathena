@@ -3913,6 +3913,138 @@ describe('classwork.service', () => {
         ])
       })
     })
+
+    describe('updateClassworkSubmission', () => {
+      it('throws error if classworkSubmission not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.updateClassworkSubmission(
+            {
+              classworkSubmissionId: objectId(),
+              accountId: objectId(),
+              orgId: objectId(),
+            },
+            {
+              description: 'This is updated',
+            },
+          ),
+        ).rejects.toThrowError('Could not find classworkSubmission to update')
+      })
+
+      it('throws error if classworkAssignment not found', async () => {
+        expect.assertions(1)
+
+        const classworkSubmission: ANY = {
+          description: 'This is a description',
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(classworkSubmission)
+
+        await expect(
+          classworkService.updateClassworkSubmission(
+            {
+              classworkSubmissionId: objectId(),
+              accountId: objectId(),
+              orgId: objectId(),
+            },
+            {
+              description: 'This is updated',
+            },
+          ),
+        ).rejects.toThrowError(
+          'No assignments for this submission could be found',
+        )
+      })
+
+      it('throws error if classworkAssignment has expired', async () => {
+        expect.assertions(1)
+
+        const classworkSubmission: ANY = {
+          description: 'This is a description',
+        }
+
+        const date = new Date()
+
+        const classworkAssignment: ANY = {
+          dueDate: new Date(date.setDate(date.getDate() - 1)),
+        }
+
+        jest
+          .spyOn(classworkService['classworkSubmissionModel'], 'findOne')
+          .mockResolvedValueOnce(classworkSubmission)
+        jest
+          .spyOn(classworkService, 'findClassworkAssignmentById')
+          .mockResolvedValueOnce(classworkAssignment)
+
+        await expect(
+          classworkService.updateClassworkSubmission(
+            {
+              classworkSubmissionId: objectId(),
+              accountId: objectId(),
+              orgId: objectId(),
+            },
+            {
+              description: 'This is updated',
+            },
+          ),
+        ).rejects.toThrowError('classworkAssignment has expired. Not be edited')
+      })
+
+      it('returns classworkSubmission', async () => {
+        expect.assertions(1)
+
+        const createClassWorkSubmissionInput: CreateClassworkSubmissionInput = {
+          classworkId: objectId(),
+          description: 'This is a description of the classworkSubmission',
+        }
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'isAccountStudentFormCourse')
+          .mockResolvedValueOnce(true as ANY)
+
+        const createdByAccountId = objectId()
+
+        const classworkSubmission =
+          await classworkService.createClassworkSubmission(
+            objectId(),
+            objectId(),
+            createdByAccountId,
+            createClassWorkSubmissionInput,
+          )
+
+        const date = new Date()
+
+        const classworkAssignment: ANY = {
+          dueDate: new Date(date.setDate(date.getDate() + 1)),
+        }
+
+        jest
+          .spyOn(classworkService, 'findClassworkAssignmentById')
+          .mockResolvedValueOnce(classworkAssignment)
+
+        await expect(
+          classworkService.updateClassworkSubmission(
+            {
+              classworkSubmissionId: classworkSubmission.id,
+              accountId: classworkSubmission.createdByAccountId,
+              orgId: classworkSubmission.orgId,
+            },
+            {
+              description: 'This is updated',
+            },
+          ),
+        ).resolves.toMatchObject({
+          description: 'This is updated',
+        })
+      })
+    })
   })
 
   /**

@@ -1,4 +1,6 @@
 /* eslint-disable no-process-env */
+import { unlinkSync } from 'fs'
+
 import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, mongoose, ReturnModelType } from '@typegoose/typegoose'
 import { FileUpload } from 'graphql-upload'
@@ -15,6 +17,7 @@ import { AuthService } from 'modules/auth/auth.service'
 import { CourseService } from 'modules/course/course.service'
 import { Course } from 'modules/course/models/Course'
 import { FileStorageService } from 'modules/fileStorage/fileStorage.service'
+import { File } from 'modules/fileStorage/models/File'
 import { MailService } from 'modules/mail/mail.service'
 import { OrgService } from 'modules/org/org.service'
 import { ANY, Nullable, PageOptionsInput } from 'types'
@@ -34,6 +37,8 @@ import {
   ClassworkAssignmentByStudentIdInCourseResponsePayload,
   UpdateClassworkAssignmentInput,
   AddVideoToClassworkInput,
+  UpdateClassworkSubmissionInput,
+  AddFilesToClassworkSubmissionInput,
 } from './classwork.type'
 import { Classwork, ClassworkType, Video } from './models/Classwork'
 import { ClassworkAssignment } from './models/ClassworkAssignment'
@@ -68,6 +73,9 @@ export class ClassworkService {
 
     @InjectModel(Account)
     private readonly accountModel: ReturnModelType<typeof Account>,
+
+    @InjectModel(File)
+    private readonly fileModel: ReturnModelType<typeof File>,
 
     @Inject(forwardRef(() => FileStorageService))
     private readonly fileStorageService: FileStorageService,
@@ -120,6 +128,112 @@ export class ClassworkService {
     await classwork.save()
 
     return classwork
+  }
+
+  async addSubmissionFiles(
+    orgId: string,
+    classworkSubmissionId: string,
+    submissionFileIds?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const { classworkSubmissionModel } = this
+
+    const classworkSubmission = await classworkSubmissionModel.findOne({
+      _id: classworkSubmissionId,
+      orgId,
+    })
+
+    if (!classworkSubmission) {
+      throw new Error('classworkSubmission not found!')
+    }
+
+    const classworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      classworkSubmission.classworkId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(`No assignments for this submission could be found`)
+    }
+
+    const currentDate = new Date()
+    const dueDateOfClassworkAssignment = classworkAssignment.dueDate
+
+    if (
+      dueDateOfClassworkAssignment.setHours(7, 0, 0, 0) <
+      currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error(`classworkAssignment has expired. Not be edited`)
+    }
+
+    if (submissionFileIds) {
+      submissionFileIds.forEach((fileIds) => {
+        classworkSubmission.submissionFileIds?.push(fileIds)
+      })
+    }
+
+    await classworkSubmission.save()
+    return classworkSubmission
+  }
+
+  async removeSubmissionFiles(
+    orgId: string,
+    classworkSubmissionId: string,
+    submissionFileIds?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const { classworkSubmissionModel } = this
+
+    const classworkSubmission = await classworkSubmissionModel.findOne({
+      _id: classworkSubmissionId,
+      orgId,
+    })
+
+    if (!classworkSubmission) {
+      throw new Error('classworkSubmission not found!')
+    }
+
+    const classworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      classworkSubmission.classworkId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(`No assignments for this submission could be found`)
+    }
+
+    const currentDate = new Date()
+    const dueDateOfClassworkAssignment = classworkAssignment.dueDate
+
+    if (
+      dueDateOfClassworkAssignment.setHours(7, 0, 0, 0) <
+      currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error(`classworkAssignment has expired. Not be edited`)
+    }
+
+    if (submissionFileIds) {
+      const currentSubmissionFiles = classworkSubmission.submissionFileIds
+
+      // eslint-disable-next-line array-callback-return
+      submissionFileIds.map(async (fileId) => {
+        const index = currentSubmissionFiles?.indexOf(fileId)
+        // delete FileId in classworkSubmission
+        if (index !== undefined && index >= 0) {
+          currentSubmissionFiles?.splice(index, 1)
+        }
+        // delete file
+        const file = await this.fileModel.findById(fileId)
+        if (file) {
+          unlinkSync(file.storageProviderIdentifier)
+        }
+        // delete model
+        await this.fileModel.deleteOne({ _id: fileId })
+      })
+
+      classworkSubmission.submissionFileIds = currentSubmissionFiles
+    }
+
+    await classworkSubmission.save()
+    return classworkSubmission
   }
 
   async removeAttachmentsFromClasswork(
@@ -1508,6 +1622,84 @@ export class ClassworkService {
     this.logger.verbose(res.toObject())
 
     return res
+  }
+
+  async updateClassworkSubmission(
+    query: {
+      classworkSubmissionId: string
+      accountId: string
+      orgId: string
+    },
+    update: UpdateClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    const { classworkSubmissionId, orgId, accountId } = query
+    const { description } = update
+
+    const classworkSubmission = await this.classworkSubmissionModel.findOne({
+      _id: classworkSubmissionId,
+      orgId,
+      createdByAccountId: accountId,
+    })
+
+    if (!classworkSubmission) {
+      throw new Error(`Could not find classworkSubmission to update`)
+    }
+
+    const classworkAssignment = await this.findClassworkAssignmentById(
+      orgId,
+      classworkSubmission.classworkId,
+    )
+
+    if (!classworkAssignment) {
+      throw new Error(`No assignments for this submission could be found`)
+    }
+
+    const currentDate = new Date()
+    const dueDateOfClassworkAssignment = classworkAssignment.dueDate
+
+    if (
+      dueDateOfClassworkAssignment.setHours(7, 0, 0, 0) <
+      currentDate.setHours(7, 0, 0, 0)
+    ) {
+      throw new Error(`classworkAssignment has expired. Not be edited`)
+    }
+
+    if (description) {
+      classworkSubmission.description = description
+    }
+
+    const updated = await classworkSubmission.save()
+    return updated
+  }
+
+  async addFilesToClassworkSubmission(
+    orgId: string,
+    classworkSubmissionId: string,
+    submissionFilesInput: AddFilesToClassworkSubmissionInput,
+    uploadedByAccountId: string,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    const submissionFiles = await this.uploadFilesAttachments(
+      orgId,
+      uploadedByAccountId,
+      submissionFilesInput.submissionFiles,
+    )
+    return this.addSubmissionFiles(
+      orgId,
+      classworkSubmissionId,
+      submissionFiles,
+    )
+  }
+
+  async removeFilesFromClassworkSubmission(
+    orgId: string,
+    classworkSubmissionId: string,
+    submissionFiles?: string[],
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    return this.removeSubmissionFiles(
+      orgId,
+      classworkSubmissionId,
+      submissionFiles,
+    )
   }
 
   async setGradeForClassworkSubmission(
