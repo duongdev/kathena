@@ -613,6 +613,7 @@ type Mutation {
   publishAllLessonsOfTheCourse(courseId: ID!): [Lesson!]!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
+  publishAllQuizOfTheCourse(courseId: ID!): [Quiz!]!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!
