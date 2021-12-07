@@ -1570,6 +1570,47 @@ export class ClassworkService {
       videoId,
     ) as Promise<Nullable<DocumentType<ClassworkAssignment>>>
   }
+
+  async publishAllClassworkAssignmentsOfTheCourse(
+    courseId: string,
+    orgId: string,
+    updatedByAccountId: string,
+  ): Promise<DocumentType<ClassworkAssignment>[]> {
+    const { classworkAssignmentsModel } = this
+
+    const course = await this.courseService.findCourseById(courseId, orgId)
+
+    if (!course) {
+      throw new Error('Khoá học không tồn tại!')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`Tài khoản của bạn không có quyền quản lý khoá hoc này!`)
+    }
+
+    const listClassworkAssignments = await classworkAssignmentsModel.find({
+      courseId,
+    })
+
+    const listClassworkAssignmentsAfterUpdating = listClassworkAssignments.map(
+      async (classworkAssignmentElement) => {
+        const classworkAssignment = classworkAssignmentElement
+        classworkAssignment.publicationState = Publication.Published
+        await classworkAssignment.save()
+      },
+    )
+
+    await Promise.all(listClassworkAssignmentsAfterUpdating).catch((err) => {
+      throw new Error(err)
+    })
+
+    return listClassworkAssignments
+  }
   /**
    * END CLASSWORK ASSIGNMENT
    */

@@ -1041,12 +1041,12 @@ describe('classwork.service', () => {
       jest.restoreAllMocks()
     })
 
-    describe('createClassworkAssignment', () => {
-      const classworkAssignmentInput: ANY = {
-        createdByAccountId: objectId(),
-        title: 'Bai tap so 1',
-      }
+    const classworkAssignmentInput: ANY = {
+      createdByAccountId: objectId(),
+      title: 'Bai tap so 1',
+    }
 
+    describe('createClassworkAssignment', () => {
       it(`throws error "Org ID is invalid" if org id is not valid`, async () => {
         expect.assertions(1)
 
@@ -3029,6 +3029,112 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toMatchObject(classwork)
+      })
+    })
+
+    describe('publishAllClassworkAssignmentsOfTheCourse', () => {
+      it('throws error if course not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.publishAllClassworkAssignmentsOfTheCourse(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError('Khoá học không tồn tại!')
+      })
+
+      it(`throws error if account doesn't permission`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce(courseGlobal)
+
+        await expect(
+          classworkService.publishAllClassworkAssignmentsOfTheCourse(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(
+          'Tài khoản của bạn không có quyền quản lý khoá hoc này!',
+        )
+      })
+
+      it('returns list classworkAssignments', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce(courseGlobal)
+
+        const input = {
+          ...classworkAssignmentInput,
+        }
+
+        await classworkService.createClassworkAssignment(
+          objectId(),
+          courseGlobal.id,
+          objectId(),
+          {
+            ...input,
+            title: 'Bài 1',
+          },
+        )
+        await classworkService.createClassworkAssignment(
+          objectId(),
+          courseGlobal.id,
+          objectId(),
+          {
+            ...input,
+            title: 'Bài 2',
+          },
+        )
+        await classworkService.createClassworkAssignment(
+          objectId(),
+          courseGlobal.id,
+          objectId(),
+          {
+            ...input,
+            title: 'Bài 3',
+          },
+        )
+
+        await expect(
+          classworkService.publishAllClassworkAssignmentsOfTheCourse(
+            courseGlobal.id,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([
+          {
+            title: 'Bài 1',
+            publicationState: Publication.Published,
+          },
+          {
+            title: 'Bài 2',
+            publicationState: Publication.Published,
+          },
+          {
+            title: 'Bài 3',
+            publicationState: Publication.Published,
+          },
+        ])
       })
     })
   })

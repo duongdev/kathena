@@ -359,7 +359,7 @@ enum Permission {
   Classwork_SetGradeForClassworkSubmission
   Classwork_AddVideoToClassworkMaterial
   Classwork_RemoveVideoToClassworkMaterial
-  Classwork_PublishAlkClassworkMaterial
+  Classwork_PublishAllClassworkMaterial
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
@@ -599,6 +599,7 @@ type Mutation {
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   addVideoToClassworkAssignment(videoInput: AddVideoToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
+  publishAllClassworkAssignmentsOfTheCourse(courseId: ID!): [ClassworkAssignment!]!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
   updateClassworkSubmission(updateInput: UpdateClassworkSubmissionInput!, classworkAssignmentId: ID!): ClassworkSubmission!
