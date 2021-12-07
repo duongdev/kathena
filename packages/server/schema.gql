@@ -334,6 +334,7 @@ enum Permission {
   Academic_AddAbsentStudentsToLesson
   Academic_RemoveAbsentStudentsFromLesson
   Academic_CommentsForTheLesson
+  Academic_PublishAllLessons
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -348,6 +349,7 @@ enum Permission {
   Classwork_RemoveAttachmentsFromClassworkAssignment
   Classwork_AddVideoToClassworkAssignment
   Classwork_RemoveVideoToClassworkAssignment
+  Classwork_PublishAllClassworkAssignments
   Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
@@ -357,6 +359,7 @@ enum Permission {
   Classwork_SetGradeForClassworkSubmission
   Classwork_AddVideoToClassworkMaterial
   Classwork_RemoveVideoToClassworkMaterial
+  Classwork_PublishAlkClassworkMaterial
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
@@ -605,6 +608,7 @@ type Mutation {
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
+  publishAllLessonsOfTheCourse(courseId: ID!): [Lesson!]!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
   createQuestion(input: CreateQuestionInput!): Question!

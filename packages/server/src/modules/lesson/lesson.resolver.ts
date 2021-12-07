@@ -174,4 +174,22 @@ export class LessonResolver {
       commentsForTheLessonByLecturerInput,
     )
   }
+
+  @Mutation((_returns) => [Lesson])
+  @UseAuthGuard(P.Academic_PublishAllLessons)
+  @UsePipes(ValidationPipe)
+  async publishAllLessonsOfTheCourse(
+    @Args('courseId', {
+      type: () => ID,
+    })
+    courseId: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<DocumentType<Lesson>[]> {
+    return this.lessonService.publishAllLessonsOfTheCourse(
+      courseId,
+      org.id,
+      account.id,
+    )
+  }
 }

@@ -2164,4 +2164,113 @@ describe('lesson.service', () => {
       expect(result).toBeTruthy()
     })
   })
+
+  describe('publishAllLessonsOfTheCourse', () => {
+    it('throws error if course not found', async () => {
+      expect.assertions(1)
+
+      await expect(
+        lessonService.publishAllLessonsOfTheCourse(
+          objectId(),
+          objectId(),
+          objectId(),
+        ),
+      ).rejects.toThrowError('Khoá học không tồn tại!')
+    })
+
+    it(`throws error if account doesn't permission`, async () => {
+      expect.assertions(1)
+
+      jest.spyOn(courseService, 'findCourseById').mockResolvedValueOnce(course)
+
+      await expect(
+        lessonService.publishAllLessonsOfTheCourse(
+          objectId(),
+          objectId(),
+          objectId(),
+        ),
+      ).rejects.toThrowError(
+        'Tài khoản của bạn không có quyền quản lý khoá hoc này!',
+      )
+    })
+
+    it('returns list lessons', async () => {
+      expect.assertions(1)
+
+      jest
+        .spyOn(orgService, 'validateOrgId')
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+        .mockResolvedValueOnce(true as never)
+
+      jest
+        .spyOn(authService, 'canAccountManageCourse')
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+        .mockResolvedValueOnce(true)
+
+      jest
+        .spyOn(courseService['courseModel'], 'findById')
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+        .mockResolvedValueOnce(course)
+
+      const createLesson: ANY = {
+        ...createLessonInput,
+      }
+
+      const date = new Date()
+
+      createLesson.startTime = date.setDate(date.getDate() + 1)
+      createLesson.endTime = date.setDate(date.getDate() + 1)
+
+      await lessonService.createLesson(createLesson.orgId, objectId(), {
+        ...createLesson,
+        description: 'Buổi 1',
+        publicationState: Publication.Draft,
+      })
+
+      createLesson.startTime = date.setDate(date.getDate() + 1)
+      createLesson.endTime = date.setDate(date.getDate() + 1)
+
+      await lessonService.createLesson(createLesson.orgId, objectId(), {
+        ...createLesson,
+        description: 'Buổi 2',
+        publicationState: Publication.Draft,
+      })
+
+      createLesson.startTime = date.setDate(date.getDate() + 1)
+      createLesson.endTime = date.setDate(date.getDate() + 1)
+
+      await lessonService.createLesson(createLesson.orgId, objectId(), {
+        ...createLesson,
+        description: 'Buổi 3',
+        publicationState: Publication.Draft,
+      })
+
+      jest.spyOn(courseService, 'findCourseById').mockResolvedValueOnce(course)
+
+      await expect(
+        lessonService.publishAllLessonsOfTheCourse(
+          course.id,
+          createLesson.orgId,
+          objectId(),
+        ),
+      ).resolves.toMatchObject([
+        {
+          description: 'Buổi 1',
+          publicationState: Publication.Published,
+        },
+        {
+          description: 'Buổi 2',
+          publicationState: Publication.Published,
+        },
+        {
+          description: 'Buổi 3',
+          publicationState: Publication.Published,
+        },
+      ])
+    })
+  })
 })

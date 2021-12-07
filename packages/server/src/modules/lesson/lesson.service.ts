@@ -943,4 +943,41 @@ export class LessonService {
     await course.save()
     return lesson
   }
+
+  async publishAllLessonsOfTheCourse(
+    courseId: string,
+    orgId: string,
+    updatedByAccountId: string,
+  ): Promise<DocumentType<Lesson>[]> {
+    const { lessonModel } = this
+
+    const course = await this.courseService.findCourseById(courseId, orgId)
+
+    if (!course) {
+      throw new Error('Khoá học không tồn tại!')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`Tài khoản của bạn không có quyền quản lý khoá hoc này!`)
+    }
+
+    const listLessons = await lessonModel.find({ courseId })
+
+    const listLessonsAfterUpdating = listLessons.map(async (lessonElement) => {
+      const lesson = lessonElement
+      lesson.publicationState = Publication.Published
+      await lesson.save()
+    })
+
+    await Promise.all(listLessonsAfterUpdating).catch((err) => {
+      throw new Error(err)
+    })
+
+    return listLessons
+  }
 }
