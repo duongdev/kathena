@@ -591,6 +591,7 @@ type Mutation {
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
   addVideoToClassworkMaterial(videoInput: AddVideoToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
   removeVideoFromClassworkMaterial(videoId: String!, classworkMaterialId: ID!): ClassworkMaterial!
+  publishAllClassworkMaterialsOfTheCourse(courseId: ID!): [ClassworkMaterial!]!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!

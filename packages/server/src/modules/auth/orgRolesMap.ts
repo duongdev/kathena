@@ -80,7 +80,7 @@ export const lecturer: Role = {
     P.Classwork_AddVideoToClassworkMaterial,
     P.Classwork_RemoveVideoToClassworkAssignment,
     P.Classwork_RemoveVideoToClassworkMaterial,
-    P.Classwork_PublishAlkClassworkMaterial,
+    P.Classwork_PublishAllClassworkMaterial,
     P.Classwork_PublishAllClassworkAssignments,
     P.Academic_CreateLesson,
     P.Academic_ListLesson,

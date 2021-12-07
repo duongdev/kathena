@@ -872,6 +872,47 @@ export class ClassworkService {
       videoId,
     ) as Promise<Nullable<DocumentType<ClassworkMaterial>>>
   }
+
+  async publishAllClassworkMaterialsOfTheCourse(
+    courseId: string,
+    orgId: string,
+    updatedByAccountId: string,
+  ): Promise<DocumentType<ClassworkMaterial>[]> {
+    const { classworkMaterialModel } = this
+
+    const course = await this.courseService.findCourseById(courseId, orgId)
+
+    if (!course) {
+      throw new Error('Khoá học không tồn tại!')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`Tài khoản của bạn không có quyền quản lý khoá hoc này!`)
+    }
+
+    const listClassworkMaterials = await classworkMaterialModel.find({
+      courseId,
+    })
+
+    const listClassworkMaterialsAfterUpdating = listClassworkMaterials.map(
+      async (classworkMaterialElement) => {
+        const classworkMaterial = classworkMaterialElement
+        classworkMaterial.publicationState = Publication.Published
+        await classworkMaterial.save()
+      },
+    )
+
+    await Promise.all(listClassworkMaterialsAfterUpdating).catch((err) => {
+      throw new Error(err)
+    })
+
+    return listClassworkMaterials
+  }
   /**
    * END CLASSWORK MATERIAL
    */

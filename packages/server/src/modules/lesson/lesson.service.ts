@@ -971,6 +971,7 @@ export class LessonService {
     const listLessonsAfterUpdating = listLessons.map(async (lessonElement) => {
       const lesson = lessonElement
       lesson.publicationState = Publication.Published
+      lesson.updatedByAccountId = updatedByAccountId
       await lesson.save()
     })
 

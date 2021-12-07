@@ -62,7 +62,7 @@ export enum Permission {
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
   Classwork_AddVideoToClassworkMaterial = 'Classwork_AddVideoToClassworkMaterial',
   Classwork_RemoveVideoToClassworkMaterial = 'Classwork_RemoveVideoToClassworkMaterial',
-  Classwork_PublishAlkClassworkMaterial = 'Classwork_PublishAllClassworkMaterial',
+  Classwork_PublishAllClassworkMaterial = 'Classwork_PublishAllClassworkMaterial',
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',

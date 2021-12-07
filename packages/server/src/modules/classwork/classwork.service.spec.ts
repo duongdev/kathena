@@ -79,6 +79,14 @@ describe('classwork.service', () => {
       iframe: 'iframe 3',
     },
   ]
+
+  const courseGlobal: ANY = {
+    id: objectId(),
+    orgId: objectId(),
+    name: 'NodeJs',
+    code: 'NODEJS',
+    startDate: new Date('2021-08-15'),
+  }
   /**
    * START CLASSWORK MATERIAL
    */
@@ -89,13 +97,13 @@ describe('classwork.service', () => {
       jest.restoreAllMocks()
     })
 
-    describe('CreateClassworkMaterial', () => {
-      const createClassworkMaterialInput: CreateClassworkMaterialInput = {
-        title: 'NodeJs tutorial',
-        description: 'string',
-        publicationState: Publication.Draft,
-      }
+    const createClassworkMaterialInput: CreateClassworkMaterialInput = {
+      title: 'NodeJs tutorial',
+      description: 'string',
+      publicationState: Publication.Draft,
+    }
 
+    describe('CreateClassworkMaterial', () => {
       it('throws error if OrgId invalid', async () => {
         expect.assertions(2)
 
@@ -908,6 +916,113 @@ describe('classwork.service', () => {
             objectId(),
           ),
         ).resolves.toMatchObject(classwork)
+      })
+    })
+
+    describe('publishAllClassworkMaterialsOfTheCourse', () => {
+      it('throws error if course not found', async () => {
+        expect.assertions(1)
+
+        await expect(
+          classworkService.publishAllClassworkMaterialsOfTheCourse(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError('Khoá học không tồn tại!')
+      })
+
+      it(`throws error if account doesn't permission`, async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce(courseGlobal)
+
+        await expect(
+          classworkService.publishAllClassworkMaterialsOfTheCourse(
+            objectId(),
+            objectId(),
+            objectId(),
+          ),
+        ).rejects.toThrowError(
+          'Tài khoản của bạn không có quyền quản lý khoá hoc này!',
+        )
+      })
+
+      it('returns list classworkMaterials', async () => {
+        expect.assertions(1)
+
+        jest
+          .spyOn(classworkService['orgService'], 'validateOrgId')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(classworkService['authService'], 'canAccountManageCourse')
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+          .mockResolvedValueOnce(true as never)
+
+        jest
+          .spyOn(courseService, 'findCourseById')
+          .mockResolvedValueOnce(courseGlobal)
+
+        const input = {
+          ...createClassworkMaterialInput,
+        }
+
+        await classworkService.createClassworkMaterial(
+          objectId(),
+          objectId(),
+          courseGlobal.id,
+          {
+            ...input,
+            title: 'Bài 1',
+          },
+        )
+        await classworkService.createClassworkMaterial(
+          objectId(),
+          objectId(),
+          courseGlobal.id,
+          {
+            ...input,
+            title: 'Bài 2',
+          },
+        )
+
+        await classworkService.createClassworkMaterial(
+          objectId(),
+          objectId(),
+          courseGlobal.id,
+          {
+            ...input,
+            title: 'Bài 3',
+          },
+        )
+
+        await expect(
+          classworkService.publishAllClassworkMaterialsOfTheCourse(
+            courseGlobal.id,
+            objectId(),
+            objectId(),
+          ),
+        ).resolves.toMatchObject([
+          {
+            title: 'Bài 1',
+            publicationState: Publication.Published,
+          },
+          {
+            title: 'Bài 2',
+            publicationState: Publication.Published,
+          },
+          {
+            title: 'Bài 3',
+            publicationState: Publication.Published,
+          },
+        ])
       })
     })
   })
