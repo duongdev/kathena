@@ -239,6 +239,24 @@ export class ClassworkAssignmentsResolver {
     )
   }
 
+  @Mutation((_returns) => [ClassworkAssignment])
+  @UseAuthGuard(P.Classwork_PublishAllClassworkAssignments)
+  @UsePipes(ValidationPipe)
+  async publishAllClassworkAssignmentsOfTheCourse(
+    @Args('courseId', {
+      type: () => ID,
+    })
+    courseId: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<DocumentType<ClassworkAssignment>[]> {
+    return this.classworkService.publishAllClassworkAssignmentsOfTheCourse(
+      courseId,
+      org.id,
+      account.id,
+    )
+  }
+
   /**
    * END ASSIGNMENTS RESOLVER
    */
