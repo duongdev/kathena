@@ -76,4 +76,22 @@ export class QuizResolver {
   ): Promise<Nullable<DocumentType<Quiz>>> {
     return this.quizService.findQuizById(quizId)
   }
+
+  @Mutation((_returns) => [Quiz])
+  @UseAuthGuard(P.Teaching_Course_Access)
+  @UsePipes(ValidationPipe)
+  async publishAllQuizOfTheCourse(
+    @Args('courseId', {
+      type: () => ID,
+    })
+    courseId: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<DocumentType<Quiz>[]> {
+    return this.quizService.publishAllQuizOfTheCourse(
+      courseId,
+      org.id,
+      account.id,
+    )
+  }
 }

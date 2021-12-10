@@ -220,6 +220,23 @@ export class ClassworkMaterialResolver {
     )
   }
 
+  @Mutation((_returns) => [ClassworkMaterial])
+  @UseAuthGuard(P.Classwork_PublishAllClassworkMaterial)
+  @UsePipes(ValidationPipe)
+  async publishAllClassworkMaterialsOfTheCourse(
+    @Args('courseId', {
+      type: () => ID,
+    })
+    courseId: string,
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+  ): Promise<DocumentType<ClassworkMaterial>[]> {
+    return this.classworkService.publishAllClassworkMaterialsOfTheCourse(
+      courseId,
+      org.id,
+      account.id,
+    )
+  }
   /**
    * END MATERIAL RESOLVER
    */
