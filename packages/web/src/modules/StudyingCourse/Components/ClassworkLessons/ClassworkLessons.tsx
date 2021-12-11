@@ -111,38 +111,71 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     label: 'Thời gian bắt đầu',
                     align: 'center',
                     skeleton: <Skeleton />,
-                    render: ({ startTime }) => (
+                    render: ({ startTime, endTime }) => (
                       <>
-                        {startTime && (
-                          <div>
-                            <Typography>
-                              {format(
-                                new Date(startTime),
-                                'dd/MM/yyyy - h:mm a',
-                              )}
-                            </Typography>
-                          </div>
-                        )}
-                      </>
-                    ),
-                  },
-                  {
-                    label: 'Thời gian kết thúc',
-                    align: 'center',
-                    skeleton: <Skeleton />,
-                    render: ({ endTime }) => (
-                      <>
-                        {endTime && (
+                        {format(new Date(startTime), 'dd/MM/yyyy - h:mm a') ===
+                        format(new Date(endTime), 'dd/MM/yyyy - h:mm a') ? (
                           <>
-                            <Typography>
-                              {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
-                            </Typography>
-                            {/* {checkTime(endTime) ? (<>Đúng</>) : (<>Sai</>)} */}
+                            {startTime && (
+                              <Typography>
+                                {format(
+                                  new Date(startTime),
+                                  'h:mm a - dd/MM/yyyy',
+                                )}
+                              </Typography>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {format(new Date(startTime), 'dd/MM/yyyy') ===
+                            format(new Date(endTime), 'dd/MM/yyyy') ? (
+                              <>
+                                {startTime && (
+                                  <Typography>
+                                    {format(new Date(startTime), 'h:mm a')} -{' '}
+                                    {format(new Date(endTime), 'h:mm a')}{' '}
+                                    {format(new Date(startTime), 'dd/MM/yyyy')}
+                                  </Typography>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                {startTime && (
+                                  <Typography>
+                                    {format(
+                                      new Date(startTime),
+                                      'h:mm a - dd/MM/yyyy',
+                                    )}{' '}
+                                    {format(
+                                      new Date(endTime),
+                                      'h:mm a - dd/MM/yyyy',
+                                    )}
+                                  </Typography>
+                                )}
+                              </>
+                            )}
                           </>
                         )}
                       </>
                     ),
                   },
+                  // {
+                  //   label: 'Thời gian kết thúc',
+                  //   align: 'center',
+                  //   skeleton: <Skeleton />,
+                  //   render: ({ endTime }) => (
+                  //     <>
+                  //       {endTime && (
+                  //         <>
+                  //           <Typography>
+                  //             {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
+                  //           </Typography>
+                  //           {/* {checkTime(endTime) ? (<>Đúng</>) : (<>Sai</>)} */}
+                  //         </>
+                  //       )}
+                  //     </>
+                  //   ),
+                  // },
                   // {
                   //   label: 'Trạng thái',
                   //   align: 'right',
