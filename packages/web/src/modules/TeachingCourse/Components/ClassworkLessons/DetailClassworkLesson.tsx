@@ -43,7 +43,9 @@ import AddClassworkAssignmentListInClass from './AddRemoveAssignmentMaterialToLe
 import AddClassworkMaterialListAfterClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListAfterClass'
 import AddClassworkMaterialListBeforeClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListBeforeClass'
 import AddClassworkMaterialListInClass from './AddRemoveAssignmentMaterialToLesson/AddClassworkMaterialListInClass'
+import AddQuizListAfterClass from './AddRemoveAssignmentMaterialToLesson/AddQuizListAfterClass'
 import AddQuizListBeforeClass from './AddRemoveAssignmentMaterialToLesson/AddQuizListBeforeClass'
+import AddQuizListInClass from './AddRemoveAssignmentMaterialToLesson/AddQuizListInClass'
 import Attendance from './Attendance'
 import AssignmentDisplayName from './LessonDisplayName/AssignmentDisplayName'
 import MaterialDisplayName from './LessonDisplayName/MaterialDisplayName'
@@ -86,6 +88,18 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
     addQuizListBeforeClass,
     handleOpenAddQuizListBeforeClass,
     handleCloseAddQuizListBeforeClass,
+  ] = useDialogState()
+  // Trong
+  const [
+    addQuizListInClass,
+    handleOpenAddQuizListInClass,
+    handleCloseAddQuizListInClass,
+  ] = useDialogState()
+  // Sau
+  const [
+    addQuizListAfterClass,
+    handleOpenAddQuizListAfterClass,
+    handleCloseAddQuizListAfterClass,
   ] = useDialogState()
   // Thêm tài liệu trước/ trong/ sau buổi học
   // Trước
@@ -241,6 +255,20 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
           idCourse={classworkLesson.courseId}
           open={addQuizListBeforeClass}
           onClose={handleCloseAddQuizListBeforeClass}
+        />
+        {/* Modal Thêm bài tập trắc nghiệm trong buổi học */}
+        <AddQuizListInClass
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={addQuizListInClass}
+          onClose={handleCloseAddQuizListInClass}
+        />
+        {/* Modal Thêm bài tập trắc nghiệm sau buổi học */}
+        <AddQuizListAfterClass
+          lesson={classworkLesson}
+          idCourse={classworkLesson.courseId}
+          open={addQuizListAfterClass}
+          onClose={handleCloseAddQuizListAfterClass}
         />
         {/* Modal Thêm tài liệu trước buổi học */}
         <AddClassworkMaterialListBeforeClass
@@ -636,6 +664,60 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       : 'Không có bài tập'}
                   </CardContent>
                 </Grid>
+                {/* -- */}
+                {/* Danh sách bài tập trắc nghiệm trong buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập trắc nghiệm
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            className={classes.buttonTextColor}
+                            endIcon={<FilePlus />}
+                            onClick={handleOpenAddQuizListInClass}
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.quizListInClass?.length
+                      ? classworkLesson.quizListInClass.map(
+                          (quizListInClass) => (
+                            <>
+                              <Link
+                                to={buildPath(TEACHING_COURSE_QUIZ, {
+                                  id: quizListInClass,
+                                })}
+                              >
+                                <QuizDisplayName quizId={quizListInClass} />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có bài tập trắc nghiệm'}
+                  </CardContent>
+                </Grid>
+                {/* ----- */}
               </CardContent>
             </SectionCard>
             {/* Danh sách sau buổi học */}
@@ -765,6 +847,60 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = (props) => {
                       : 'Không có bài tập'}
                   </CardContent>
                 </Grid>
+                {/* -- */}
+                {/* Danh sách bài tập trắc nghiệm sau buổi học */}
+                <Grid item xs={12}>
+                  <Stack spacing={2} style={{ display: 'flex' }}>
+                    <Grid
+                      item
+                      container
+                      xs={12}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Grid item xs={11}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập trắc nghiệm
+                        </Typography>
+                      </Grid>
+                      <RequiredPermission
+                        permission={
+                          Permission.Classwork_UpdateClassworkMaterial
+                        }
+                      >
+                        <Grid item xs={1}>
+                          <Button
+                            className={classes.buttonTextColor}
+                            endIcon={<FilePlus />}
+                            onClick={handleOpenAddQuizListAfterClass}
+                          >
+                            Thêm
+                          </Button>
+                        </Grid>
+                      </RequiredPermission>
+                    </Grid>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <CardContent>
+                    {classworkLesson.quizListAfterClass?.length
+                      ? classworkLesson.quizListAfterClass.map(
+                          (quizListAfterClass) => (
+                            <>
+                              <Link
+                                to={buildPath(TEACHING_COURSE_QUIZ, {
+                                  id: quizListAfterClass,
+                                })}
+                              >
+                                <QuizDisplayName quizId={quizListAfterClass} />
+                              </Link>
+                            </>
+                          ),
+                        )
+                      : 'Không có bài tập trắc nghiệm'}
+                  </CardContent>
+                </Grid>
+                {/* ----- */}
               </CardContent>
             </SectionCard>
           </Grid>
