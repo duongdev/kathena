@@ -23,9 +23,11 @@ import {
   useFindLessonByIdQuery,
   useFindRatingQuery,
 } from 'graphql/generated'
+import QuizDisplayName from 'modules/TeachingCourse/Components/ClassworkLessons/LessonDisplayName/QuizDisplayName'
 import {
   buildPath,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
+  STUDYING_COURSE_QUIZ,
   STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_MATERIALS,
 } from 'utils/path-builder'
 
@@ -154,7 +156,8 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
           </SectionCard>
           {/* Trước buổi học */}
           {classworkLesson.classworkAssignmentListBeforeClass?.length === 0 &&
-          classworkLesson.classworkMaterialListBeforeClass?.length === 0 ? (
+          classworkLesson.classworkMaterialListBeforeClass?.length === 0 &&
+          classworkLesson.quizListBeforeClass?.length === 0 ? (
             ''
           ) : (
             <SectionCard
@@ -247,12 +250,50 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                     </Grid>
                   </>
                 )}
+                {/* --- */}
+                {classworkLesson.quizListBeforeClass?.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    {/* Danh sách bài tập trắc nghiệm trước buổi học */}
+                    <Grid item xs={12}>
+                      <Stack spacing={2} style={{ display: 'flex' }}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập trắc nghiệm
+                        </Typography>
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CardContent>
+                        {classworkLesson.quizListBeforeClass?.length
+                          ? classworkLesson.quizListBeforeClass.map(
+                              (quizListBeforeClass) => (
+                                <>
+                                  <Link
+                                    to={buildPath(STUDYING_COURSE_QUIZ, {
+                                      id: quizListBeforeClass,
+                                    })}
+                                  >
+                                    <QuizDisplayName
+                                      quizId={quizListBeforeClass}
+                                    />
+                                  </Link>
+                                </>
+                              ),
+                            )
+                          : 'Không có bài tập'}
+                      </CardContent>
+                    </Grid>
+                  </>
+                )}
+                {/* -- */}
               </CardContent>
             </SectionCard>
           )}
           {/* Thông tin trong buổi học */}
           {classworkLesson.classworkAssignmentListInClass?.length === 0 &&
-          classworkLesson.classworkMaterialListInClass?.length === 0 ? (
+          classworkLesson.classworkMaterialListInClass?.length === 0 &&
+          classworkLesson.quizListInClass?.length === 0 ? (
             ''
           ) : (
             <SectionCard
@@ -342,12 +383,48 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                     </Grid>
                   </>
                 )}
+                {/* --- */}
+                {classworkLesson.quizListInClass?.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    {/* Danh sách bài tập trắc nghiệm trong buổi học */}
+                    <Grid item xs={12}>
+                      <Stack spacing={2} style={{ display: 'flex' }}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập trắc nghiệm
+                        </Typography>
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CardContent>
+                        {classworkLesson.quizListInClass?.length
+                          ? classworkLesson.quizListInClass.map(
+                              (quizListInClass) => (
+                                <>
+                                  <Link
+                                    to={buildPath(STUDYING_COURSE_QUIZ, {
+                                      id: quizListInClass,
+                                    })}
+                                  >
+                                    <QuizDisplayName quizId={quizListInClass} />
+                                  </Link>
+                                </>
+                              ),
+                            )
+                          : 'Không có bài tập'}
+                      </CardContent>
+                    </Grid>
+                  </>
+                )}
+                {/* -- */}
               </CardContent>
             </SectionCard>
           )}
           {/* Danh sách sau buổi học */}
           {classworkLesson.classworkAssignmentListAfterClass?.length === 0 &&
-          classworkLesson.classworkMaterialListAfterClass?.length === 0 ? (
+          classworkLesson.classworkMaterialListAfterClass?.length === 0 &&
+          classworkLesson.quizListAfterClass?.length === 0 ? (
             ''
           ) : (
             <SectionCard
@@ -439,6 +516,43 @@ const DetailClassworkLesson: FC<DetailClassworkLessonProps> = () => {
                     </Grid>
                   </>
                 )}
+                {/* --- */}
+                {classworkLesson.quizListAfterClass?.length === 0 ? (
+                  <></>
+                ) : (
+                  <>
+                    {/* Danh sách bài tập trắc nghiệm sau buổi học */}
+                    <Grid item xs={12}>
+                      <Stack spacing={2} style={{ display: 'flex' }}>
+                        <Typography variant="subtitle2">
+                          Danh sách bài tập trắc nghiệm
+                        </Typography>
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CardContent>
+                        {classworkLesson.quizListAfterClass?.length
+                          ? classworkLesson.quizListAfterClass.map(
+                              (quizListAfterClass) => (
+                                <>
+                                  <Link
+                                    to={buildPath(STUDYING_COURSE_QUIZ, {
+                                      id: quizListAfterClass,
+                                    })}
+                                  >
+                                    <QuizDisplayName
+                                      quizId={quizListAfterClass}
+                                    />
+                                  </Link>
+                                </>
+                              ),
+                            )
+                          : 'Không có bài tập'}
+                      </CardContent>
+                    </Grid>
+                  </>
+                )}
+                {/* -- */}
               </CardContent>
             </SectionCard>
           )}
