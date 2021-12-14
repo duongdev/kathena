@@ -143,7 +143,9 @@ const Quiz: FC<QuizProps> = () => {
                   <Stack spacing={2}>
                     <InfoBlock label="Tiêu đề">{quiz.title}</InfoBlock>
                     <InfoBlock label="Mô tả">{quiz.description}</InfoBlock>
-                    <InfoBlock label="Duration">{quiz.duration} phút</InfoBlock>
+                    <InfoBlock label="Thời gian">
+                      {quiz.duration} phút
+                    </InfoBlock>
                   </Stack>
                 </Grid>
               </Grid>
