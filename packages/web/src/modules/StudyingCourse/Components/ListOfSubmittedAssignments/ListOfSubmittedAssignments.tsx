@@ -70,7 +70,7 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
         const current = new Date()
         const duaDateSubmit = new Date(item.dueDate)
         const beforeSubmitDueDate = classworkOfSubmits[index - 1]
-          ? new Date(classworkOfSubmits[index - 1]?.dueDate)
+          ? new Date(classworkOfSubmits[index - 1].dueDate)
           : current
         if (
           duaDateSubmit.getTime() > current.getTime() &&
@@ -179,6 +179,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                       >
                         <Typography variant="body1" fontWeight="bold">
                           {classworkOfSubmit.classworkAssignmentsTitle}
+                          {classworkOfSubmit.isNext
+                            ? ' (Bài tập tiếp theo)'
+                            : ''}
                         </Typography>
                       </Link>
                     </>
@@ -237,6 +240,35 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                                 }
                               />
                             )}
+                          </>
+                        )}
+                      </Typography>
+                    </>
+                  ),
+                },
+                {
+                  label: 'Trạng thái',
+                  align: 'right',
+                  skeleton: <Skeleton />,
+                  render: (classworkOfSubmit) => (
+                    <>
+                      <Typography>
+                        {classworkOfSubmit.classworkSubmissionUpdatedAt ===
+                        null ? (
+                          <>
+                            <Chip
+                              variant="outlined"
+                              color="default"
+                              label="Chưa làm"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Chip
+                              variant="outlined"
+                              color="primary"
+                              label="Đã nộp"
+                            />
                           </>
                         )}
                       </Typography>

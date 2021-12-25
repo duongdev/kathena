@@ -7,7 +7,6 @@ query ListClassworkAssignmentsByStudentIdInCourse(
       classworkAssignmentsTitle
       dueDate
       classworkSubmissionGrade
-      classworkSubmissionGrade
       classworkSubmissionUpdatedAt
       classworkSubmissionDescription
     }
