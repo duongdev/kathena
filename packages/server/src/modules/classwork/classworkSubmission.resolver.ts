@@ -1,5 +1,6 @@
 import { UsePipes, ValidationPipe } from '@nestjs/common'
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { DocumentType } from '@typegoose/typegoose'
 
 import { CurrentAccount, CurrentOrg, UseAuthGuard } from 'core'
 import pubSub from 'core/utils/pubSub'
@@ -11,10 +12,12 @@ import { Nullable } from 'types'
 
 import { ClassworkService } from './classwork.service'
 import {
+  AddFilesToClassworkSubmissionInput,
   ClassworkSubmissionStatusPayload,
   CreateClassworkSubmissionInput,
   SetGradeForClassworkSubmissionInput,
   SubmissionStatusStatistics,
+  UpdateClassworkSubmissionInput,
 } from './classwork.type'
 import {
   ClassworkSubmission,
@@ -178,6 +181,61 @@ export class ClassworkSubmissionResolver {
   ): Promise<SubmissionStatusStatistics[]> {
     return this.classworkService.submissionStatusStatistics(
       classworkAssignmentId,
+    )
+  }
+
+  @Mutation((_return) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_UpdateClassworkSubmission)
+  @UsePipes(ValidationPipe)
+  async updateClassworkSubmission(
+    @CurrentAccount() account: Account,
+    @CurrentOrg() org: Org,
+    @Args('classworkAssignmentId', { type: () => ID })
+    classworkAssignmentId: string,
+    @Args('updateInput', { type: () => UpdateClassworkSubmissionInput })
+    updateInput: UpdateClassworkSubmissionInput,
+  ): Promise<DocumentType<ClassworkSubmission>> {
+    return this.classworkService.updateClassworkSubmission(
+      {
+        classworkSubmissionId: classworkAssignmentId,
+        accountId: account.id,
+        orgId: org.id,
+      },
+      updateInput,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_UpdateClassworkSubmission)
+  async addFilesToClassworkSubmission(
+    @CurrentOrg() org: Org,
+    @CurrentAccount() account: Account,
+    @Args('classworkSubmissionId', { type: () => ID })
+    classworkSubmissionId: string,
+    @Args('submissionFilesInput')
+    submissionFilesInput: AddFilesToClassworkSubmissionInput,
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    return this.classworkService.addFilesToClassworkSubmission(
+      org.id,
+      classworkSubmissionId,
+      submissionFilesInput,
+      account.id,
+    )
+  }
+
+  @Mutation((_returns) => ClassworkSubmission)
+  @UseAuthGuard(P.Classwork_UpdateClassworkSubmission)
+  async removeFilesFromClassworkSubmission(
+    @CurrentOrg() org: Org,
+    @Args('classworkSubmissionId', { type: () => ID })
+    classworkSubmissionId: string,
+    @Args('submissionFilesInput', { type: () => [String], nullable: true })
+    submissionFilesInput: string[],
+  ): Promise<Nullable<DocumentType<ClassworkSubmission>>> {
+    return this.classworkService.removeFilesFromClassworkSubmission(
+      org.id,
+      classworkSubmissionId,
+      submissionFilesInput,
     )
   }
 }

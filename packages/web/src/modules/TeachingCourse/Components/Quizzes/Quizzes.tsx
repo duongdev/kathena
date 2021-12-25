@@ -116,6 +116,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                 },
                 {
                   label: 'Mô tả',
+                  width: 400,
                   skeleton: <Skeleton />,
                   render: ({ description }) => (
                     <div
@@ -123,7 +124,7 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
                       dangerouslySetInnerHTML={{ __html: description as ANY }}
                       style={{
                         display: '-webkit-box',
-                        maxWidth: 250,
+                        maxWidth: 300,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         WebkitLineClamp: 1,

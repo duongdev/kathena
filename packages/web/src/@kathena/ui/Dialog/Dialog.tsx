@@ -21,6 +21,7 @@ export type DialogProps = {
   width?: number | string
   classes?: Partial<Record<'dialogPaper', string>>
   children?: React.ReactNode
+  right?: number | string
 }
 
 const Dialog = (props: DialogProps) => {
@@ -43,7 +44,11 @@ const Dialog = (props: DialogProps) => {
         <DialogContentMUI>{children}</DialogContentMUI>
         <DialogActionsMUI>
           {extraDialogActions}
-          <Button onClick={handleClose} type="button">
+          <Button
+            onClick={handleClose}
+            type="button"
+            className={classes.rightPaper}
+          >
             Đóng
           </Button>
         </DialogActionsMUI>
@@ -52,10 +57,13 @@ const Dialog = (props: DialogProps) => {
   )
 }
 
-const useStyles = makeStyles<Theme, DialogProps, 'dialogPaper'>(() => ({
+const useStyles = makeStyles<Theme, DialogProps>(() => ({
   dialogPaper: {
     maxWidth: '95vw',
     width: ({ width }) => width,
+  },
+  rightPaper: {
+    paddingRight: ({ right }) => right,
   },
 }))
 

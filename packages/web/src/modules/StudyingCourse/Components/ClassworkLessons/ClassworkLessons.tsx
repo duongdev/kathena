@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react'
 
 import { CardContent, Grid, Skeleton } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
 
@@ -49,7 +48,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
         },
       },
     })
-  const classworkLessons = useMemo(
+  const classworkLessonsProps = useMemo(
     () => dataClasswork?.lessons.lessons ?? [],
     [dataClasswork?.lessons.lessons],
   )
@@ -58,6 +57,32 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
     () => dataClasswork?.lessons.count ?? 0,
     [dataClasswork?.lessons.count],
   )
+
+  const classworkLessons: ANY[] = useMemo(
+    () =>
+      classworkLessonsProps.map((item: ANY, index: ANY) => {
+        const current = new Date()
+        const startTime = new Date(item.startTime)
+        const beforeLessonStartTime = classworkLessonsProps[index - 1]
+          ? new Date(classworkLessonsProps[index - 1]?.startTime)
+          : current
+        if (
+          startTime.getTime() > current.getTime() &&
+          beforeLessonStartTime.getTime() <= current.getTime()
+        ) {
+          return {
+            ...item,
+            isNext: true,
+          }
+        }
+        return {
+          ...item,
+          isNext: false,
+        }
+      }),
+    [classworkLessonsProps],
+  )
+
   if (!courseId) {
     return <div>Course not found</div>
   }
@@ -70,6 +95,14 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
       </Grid>
     )
   }
+  // const checkTime = (time: Date) => {
+  //   const timeBefore = new Date(time)
+  //   const timeNow = new Date()
+  //   if (timeBefore < timeNow) {
+  //     return true
+  //   }
+  //   return false
+  // }
   return (
     <>
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -86,6 +119,9 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     render: (classworkLesson, index) => (
                       <Typography variant="body1" fontWeight="bold">
                         <Link
+                          className={
+                            classworkLesson.isNext ? 'title-hightlight' : ''
+                          }
                           to={buildPath(
                             STUDYING_COURSE_DETAIL_CLASSWORK_LESSON,
                             {
@@ -94,7 +130,10 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                             },
                           )}
                         >
-                          Buổi {page === 0 ? index + 1 : index + 1 + (page * perPage)}: {classworkLesson.description}
+                          Buổi{' '}
+                          {page === 0 ? index + 1 : index + 1 + page * perPage}:{' '}
+                          {classworkLesson.description}
+                          {classworkLesson.isNext ? ' (Buổi tiếp theo)' : ''}
                         </Link>
                       </Typography>
                     ),
@@ -103,42 +142,83 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     label: 'Thời gian bắt đầu',
                     align: 'center',
                     skeleton: <Skeleton />,
-                    render: ({ startTime }) => (
+                    render: ({ startTime, endTime }) => (
                       <>
-                        {startTime && (
-                          <Typography>
-                            {format(new Date(startTime), 'dd/MM/yyyy - h:mm a')}
-                          </Typography>
+                        {format(new Date(startTime), 'dd/MM/yyyy - h:mm a') ===
+                        format(new Date(endTime), 'dd/MM/yyyy - h:mm a') ? (
+                          <>
+                            {startTime && (
+                              <Typography>
+                                {format(
+                                  new Date(startTime),
+                                  'h:mm a - dd/MM/yyyy',
+                                )}
+                              </Typography>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {format(new Date(startTime), 'dd/MM/yyyy') ===
+                            format(new Date(endTime), 'dd/MM/yyyy') ? (
+                              <>
+                                {startTime && (
+                                  <Typography>
+                                    {format(new Date(startTime), 'h:mm a')} -{' '}
+                                    {format(new Date(endTime), 'h:mm a')}{' '}
+                                    {format(new Date(startTime), 'dd/MM/yyyy')}
+                                  </Typography>
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                {startTime && (
+                                  <Typography>
+                                    {format(
+                                      new Date(startTime),
+                                      'h:mm a - dd/MM/yyyy',
+                                    )}{' '}
+                                    {format(
+                                      new Date(endTime),
+                                      'h:mm a - dd/MM/yyyy',
+                                    )}
+                                  </Typography>
+                                )}
+                              </>
+                            )}
+                          </>
                         )}
                       </>
                     ),
                   },
-                  {
-                    label: 'Thời gian kết thúc',
-                    align: 'center',
-                    skeleton: <Skeleton />,
-                    render: ({ endTime }) => (
-                      <>
-                        {endTime && (
-                          <Typography>
-                            {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
-                          </Typography>
-                        )}
-                      </>
-                    ),
-                  },
-                  {
-                    label: 'Trạng thái',
-                    align: 'right',
-                    skeleton: <Skeleton />,
-                    render: ({ publicationState }) => (
-                      <PublicationChip
-                        publication={publicationState as ANY}
-                        variant="outlined"
-                        size="small"
-                      />
-                    ),
-                  },
+                  // {
+                  //   label: 'Thời gian kết thúc',
+                  //   align: 'center',
+                  //   skeleton: <Skeleton />,
+                  //   render: ({ endTime }) => (
+                  //     <>
+                  //       {endTime && (
+                  //         <>
+                  //           <Typography>
+                  //             {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
+                  //           </Typography>
+                  //           {/* {checkTime(endTime) ? (<>Đúng</>) : (<>Sai</>)} */}
+                  //         </>
+                  //       )}
+                  //     </>
+                  //   ),
+                  // },
+                  // {
+                  //   label: 'Trạng thái',
+                  //   align: 'right',
+                  //   skeleton: <Skeleton />,
+                  //   render: ({publicationState}) => (
+                  //     <PublicationChip
+                  //       publication={publicationState as ANY}
+                  //       variant="outlined"
+                  //       size="small"
+                  //     />
+                  //   ),
+                  // },
                 ]}
                 pagination={{
                   count: totalCount,

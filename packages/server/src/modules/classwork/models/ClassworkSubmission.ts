@@ -29,8 +29,8 @@ export class ClassworkSubmission extends BaseModel {
   @prop({ default: null, min: 0, max: 100 })
   grade: number
 
-  @Field((_type) => [ID])
-  @prop({ type: [Types.ObjectId] })
+  @Field((_type) => [ID], { defaultValue: [] })
+  @prop({ type: [Types.ObjectId], default: [] })
   submissionFileIds?: string[]
 
   @Field()

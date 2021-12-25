@@ -1,6 +1,9 @@
+import { forwardRef, Inject } from '@nestjs/common'
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose'
 
 import { InjectModel, Logger, Publication, Service } from 'core'
+import { AuthService } from 'modules/auth/auth.service'
+import { CourseService } from 'modules/course/course.service'
 import { Nullable } from 'types'
 
 import { Question } from './models/Question'
@@ -24,6 +27,12 @@ export class QuizService {
     private readonly quizModel: ReturnModelType<typeof Quiz>, // @Inject(forwardRef(() => OrgService)) // private readonly orgService: OrgService, // @Inject(forwardRef(() => AuthService)) // private readonly authService: AuthService, // @Inject(forwardRef(() => AccountService)) // private readonly accountService: AccountService, // @Inject(forwardRef(() => OrgOfficeService)) // private readonly orgOfficeService: OrgOfficeService, // @Inject(forwardRef(() => ClassworkService)) // private readonly classworkService: ClassworkService,
     @InjectModel(QuizSubmit)
     private readonly quizSubmitModel: ReturnModelType<typeof QuizSubmit>,
+
+    @Inject(forwardRef(() => CourseService))
+    private readonly courseService: CourseService,
+
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
   async createQuestion(questionInput: {
@@ -450,5 +459,42 @@ export class QuizService {
     this.logger.log(`[${this.cloneQuestionChoices.name}] cloned !`)
     this.logger.verbose(newQuestionChoices)
     return newQuestionChoices
+  }
+
+  async publishAllQuizOfTheCourse(
+    courseId: string,
+    orgId: string,
+    updatedByAccountId: string,
+  ): Promise<DocumentType<Quiz>[]> {
+    const { quizModel } = this
+
+    const course = await this.courseService.findCourseById(courseId, orgId)
+
+    if (!course) {
+      throw new Error('Khoá học không tồn tại!')
+    }
+
+    if (
+      !(await this.authService.canAccountManageCourse(
+        updatedByAccountId,
+        courseId,
+      ))
+    ) {
+      throw new Error(`Tài khoản của bạn không có quyền quản lý khoá hoc này!`)
+    }
+
+    const listQuizzes = await quizModel.find({ courseId })
+
+    const listQuizzesAfterUpdating = listQuizzes.map(async (quizElement) => {
+      const quiz = quizElement
+      quiz.publicationState = Publication.Published
+      await quiz.save()
+    })
+
+    await Promise.all(listQuizzesAfterUpdating).catch((err) => {
+      throw new Error(err)
+    })
+
+    return listQuizzes
   }
 }

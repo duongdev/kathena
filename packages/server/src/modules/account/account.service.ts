@@ -238,7 +238,8 @@ export class AccountService {
     }
 
     if (update.displayName) {
-      account.displayName = removeExtraSpaces(update.displayName)
+      const newDisplayName = removeExtraSpaces(update.displayName)
+      if (newDisplayName) account.displayName = newDisplayName
     }
     if (update.email) {
       account.email = update.email

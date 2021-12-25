@@ -14,7 +14,7 @@ export const usePagination = (initialValues?: Partial<PaginationState>) => {
   } = useLocationQuery()
   const [{ page, perPage }, $setPagination] = useState<PaginationState>({
     page: initialValues?.page ?? +(qPage ?? '0'),
-    perPage: initialValues?.perPage ?? +(qPerPage ?? '10'),
+    perPage: initialValues?.perPage ?? +(qPerPage ?? '25'),
   })
   const dirtyRef = useRef(false)
 
@@ -58,7 +58,7 @@ export const usePagination = (initialValues?: Partial<PaginationState>) => {
 
   return {
     page: +((qPage ?? '0') as string),
-    perPage: +((qPerPage ?? '10') as string),
+    perPage: +((qPerPage ?? '25') as string),
     setPage,
     setPerPage,
   }

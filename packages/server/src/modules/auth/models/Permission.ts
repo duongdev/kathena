@@ -33,6 +33,7 @@ export enum Permission {
   Academic_AddAbsentStudentsToLesson = 'Academic_AddAbsentStudentsToLesson',
   Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
   Academic_CommentsForTheLesson = 'Academic_CommentsForTheLesson',
+  Academic_PublishAllLessons = 'Academic_PublishAllLessons',
 
   OrgOffice_Access = 'OrgOffice_Access',
   OrgOffice_CreateOrgOffice = 'OrgOffice_CreateOrgOffice',
@@ -50,6 +51,7 @@ export enum Permission {
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
   Classwork_AddVideoToClassworkAssignment = 'Classwork_AddVideoToClassworkAssignment',
   Classwork_RemoveVideoToClassworkAssignment = 'Classwork_RemoveVideoToClassworkAssignment',
+  Classwork_PublishAllClassworkAssignments = 'Classwork_PublishAllClassworkAssignments',
 
   Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
@@ -60,10 +62,12 @@ export enum Permission {
   Classwork_SetGradeForClassworkSubmission = 'Classwork_SetGradeForClassworkSubmission',
   Classwork_AddVideoToClassworkMaterial = 'Classwork_AddVideoToClassworkMaterial',
   Classwork_RemoveVideoToClassworkMaterial = 'Classwork_RemoveVideoToClassworkMaterial',
+  Classwork_PublishAllClassworkMaterial = 'Classwork_PublishAllClassworkMaterial',
 
   Classwork_CreateClassworkSubmission = 'Classwork_CreateClassworkSubmission',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
   Classwork_ShowSubmissionStatusList = 'Classwork_ShowSubmissionStatusList',
+  Classwork_UpdateClassworkSubmission = 'Classwork_UpdateClassworkSubmission',
 
   AvgGradeStatisticsOfClassworkInTheCourse = 'AvgGradeStatisticsOfClassworkInTheCourse',
 

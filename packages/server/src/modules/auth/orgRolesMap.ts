@@ -52,6 +52,7 @@ export const student: Role = {
     P.Rating_CreateRating,
     P.Classwork_CreateClassworkSubmission,
     P.Classwork_ListClassworkSubmission,
+    P.Classwork_UpdateClassworkSubmission,
   ],
 }
 
@@ -79,12 +80,15 @@ export const lecturer: Role = {
     P.Classwork_AddVideoToClassworkMaterial,
     P.Classwork_RemoveVideoToClassworkAssignment,
     P.Classwork_RemoveVideoToClassworkMaterial,
+    P.Classwork_PublishAllClassworkMaterial,
+    P.Classwork_PublishAllClassworkAssignments,
     P.Academic_CreateLesson,
     P.Academic_ListLesson,
     P.Academic_UpdateLesson,
     P.Academic_AddAbsentStudentsToLesson,
     P.Academic_RemoveAbsentStudentsFromLesson,
     P.Academic_CommentsForTheLesson,
+    P.Academic_PublishAllLessons,
     P.Comment_CreateComment,
     P.Rating_CreateRating,
     P.Classwork_ListClassworkSubmission,

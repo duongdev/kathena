@@ -1,7 +1,6 @@
 import { FC, useMemo } from 'react'
 
 import { Grid, Skeleton, CardContent } from '@material-ui/core'
-import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
 import { useParams } from 'react-router-dom'
 
@@ -139,18 +138,18 @@ const ClassworkMaterials: FC<ClassworkMaterialsProps> = () => {
                     </>
                   ),
                 },
-                {
-                  label: 'Trạng thái',
-                  align: 'right',
-                  skeleton: <Skeleton />,
-                  render: ({ publicationState }) => (
-                    <PublicationChip
-                      publication={publicationState as ANY}
-                      variant="outlined"
-                      size="small"
-                    />
-                  ),
-                },
+                // {
+                //   label: 'Trạng thái',
+                //   align: 'right',
+                //   skeleton: <Skeleton />,
+                //   render: ({ publicationState }) => (
+                //     <PublicationChip
+                //       publication={publicationState as ANY}
+                //       variant="outlined"
+                //       size="small"
+                //     />
+                //   ),
+                // },
               ]}
               pagination={{
                 count: totalCount,

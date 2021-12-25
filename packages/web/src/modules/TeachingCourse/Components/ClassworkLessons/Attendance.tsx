@@ -135,7 +135,7 @@ const Attendance: FC<AttendanceProps> = (props) => {
               className={`${classes.item} ${absent ? classes.active : ''}`}
             >
               <AccountAvatar accountId={item} />
-              <AccountDisplayName maxWidth={100} accountId={item} />
+              <AccountDisplayName maxWidth={250} accountId={item} />
             </div>
           )
         })}
@@ -155,7 +155,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 110,
+    width: '23.6%',
     height: 80,
     margin: '5px',
     borderRadius: '5px',
