@@ -2439,6 +2439,17 @@ export type RemoveVideoFromClassworkMaterialMutation = {
   removeVideoFromClassworkMaterial: { id: string }
 }
 
+export type PublishAllClassworkMaterialsOfTheCourseMutationVariables = Exact<{
+  courseId: Scalars['ID']
+}>
+
+export type PublishAllClassworkMaterialsOfTheCourseMutation = {
+  publishAllClassworkMaterialsOfTheCourse: Array<{
+    id: string
+    courseId: string
+  }>
+}
+
 export type SetGradeForClassworkSubmissionMutationVariables = Exact<{
   setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput
 }>
@@ -14387,6 +14398,133 @@ export type RemoveVideoFromClassworkMaterialMutationOptions =
   Apollo.BaseMutationOptions<
     RemoveVideoFromClassworkMaterialMutation,
     RemoveVideoFromClassworkMaterialMutationVariables
+  >
+export const PublishAllClassworkMaterialsOfTheCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PublishAllClassworkMaterialsOfTheCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'publishAllClassworkMaterialsOfTheCourse',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type PublishAllClassworkMaterialsOfTheCourseMutationFn =
+  Apollo.MutationFunction<
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables
+  >
+export type PublishAllClassworkMaterialsOfTheCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables
+  >
+} & TChildProps
+export function withPublishAllClassworkMaterialsOfTheCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables,
+    PublishAllClassworkMaterialsOfTheCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables,
+    PublishAllClassworkMaterialsOfTheCourseProps<TChildProps, TDataName>
+  >(PublishAllClassworkMaterialsOfTheCourseDocument, {
+    alias: 'publishAllClassworkMaterialsOfTheCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __usePublishAllClassworkMaterialsOfTheCourseMutation__
+ *
+ * To run a mutation, you first call `usePublishAllClassworkMaterialsOfTheCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishAllClassworkMaterialsOfTheCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishAllClassworkMaterialsOfTheCourseMutation, { data, loading, error }] = usePublishAllClassworkMaterialsOfTheCourseMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function usePublishAllClassworkMaterialsOfTheCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables
+  >(PublishAllClassworkMaterialsOfTheCourseDocument, options)
+}
+export type PublishAllClassworkMaterialsOfTheCourseMutationHookResult =
+  ReturnType<typeof usePublishAllClassworkMaterialsOfTheCourseMutation>
+export type PublishAllClassworkMaterialsOfTheCourseMutationResult =
+  Apollo.MutationResult<PublishAllClassworkMaterialsOfTheCourseMutation>
+export type PublishAllClassworkMaterialsOfTheCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    PublishAllClassworkMaterialsOfTheCourseMutation,
+    PublishAllClassworkMaterialsOfTheCourseMutationVariables
   >
 export const SetGradeForClassworkSubmissionDocument = {
   kind: 'Document',

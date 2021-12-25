@@ -148,3 +148,10 @@ mutation RemoveVideoFromClassworkMaterial(
     id
   }
 }
+#Công khai tất cả các tài liệu
+mutation PublishAllClassworkMaterialsOfTheCourse($courseId: ID!) {
+  publishAllClassworkMaterialsOfTheCourse(courseId: $courseId) {
+    id
+    courseId
+  }
+}
