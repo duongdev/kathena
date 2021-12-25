@@ -107,13 +107,13 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                     label: 'Tiêu đề',
                     render: (classworkLesson, index) => (
                       <Typography
-                        className={
-                          classworkLesson.isNext ? 'title-hightlight' : ''
-                        }
-                        variant="body1"
-                        fontWeight="bold"
+                      variant="body1"
+                      fontWeight="bold"
                       >
                         <Link
+                          className={
+                            classworkLesson.isNext ? 'title-hightlight' : ''
+                          }
                           to={buildPath(
                             STUDYING_COURSE_DETAIL_CLASSWORK_LESSON,
                             {
@@ -124,7 +124,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                         >
                           Buổi{' '}
                           {page === 0 ? index + 1 : index + 1 + page * perPage}:{' '}
-                          {classworkLesson.description}
+                          {classworkLesson.description}{classworkLesson.isNext ? ' (Buổi tiếp theo)' : ''}
                         </Link>
                       </Typography>
                     ),
