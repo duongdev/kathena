@@ -2641,6 +2641,14 @@ export type FindQuizSubmitByIdQuery = {
   }
 }
 
+export type PublishAllQuizOfTheCourseMutationVariables = Exact<{
+  courseId: Scalars['ID']
+}>
+
+export type PublishAllQuizOfTheCourseMutation = {
+  publishAllQuizOfTheCourse: Array<{ id: string; courseId: string }>
+}
+
 export type TeachingCourseListQueryVariables = Exact<{
   orgId: Scalars['ID']
   skip: Scalars['Int']
@@ -16346,6 +16354,130 @@ export type FindQuizSubmitByIdQueryResult = Apollo.QueryResult<
   FindQuizSubmitByIdQuery,
   FindQuizSubmitByIdQueryVariables
 >
+export const PublishAllQuizOfTheCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PublishAllQuizOfTheCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publishAllQuizOfTheCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type PublishAllQuizOfTheCourseMutationFn = Apollo.MutationFunction<
+  PublishAllQuizOfTheCourseMutation,
+  PublishAllQuizOfTheCourseMutationVariables
+>
+export type PublishAllQuizOfTheCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables
+  >
+} & TChildProps
+export function withPublishAllQuizOfTheCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables,
+    PublishAllQuizOfTheCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables,
+    PublishAllQuizOfTheCourseProps<TChildProps, TDataName>
+  >(PublishAllQuizOfTheCourseDocument, {
+    alias: 'publishAllQuizOfTheCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __usePublishAllQuizOfTheCourseMutation__
+ *
+ * To run a mutation, you first call `usePublishAllQuizOfTheCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishAllQuizOfTheCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishAllQuizOfTheCourseMutation, { data, loading, error }] = usePublishAllQuizOfTheCourseMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function usePublishAllQuizOfTheCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables
+  >(PublishAllQuizOfTheCourseDocument, options)
+}
+export type PublishAllQuizOfTheCourseMutationHookResult = ReturnType<
+  typeof usePublishAllQuizOfTheCourseMutation
+>
+export type PublishAllQuizOfTheCourseMutationResult =
+  Apollo.MutationResult<PublishAllQuizOfTheCourseMutation>
+export type PublishAllQuizOfTheCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    PublishAllQuizOfTheCourseMutation,
+    PublishAllQuizOfTheCourseMutationVariables
+  >
 export const TeachingCourseListDocument = {
   kind: 'Document',
   definitions: [

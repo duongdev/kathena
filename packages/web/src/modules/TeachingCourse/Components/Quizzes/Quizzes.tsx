@@ -1,7 +1,8 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useCallback } from 'react'
 
 import { CardContent, Grid, Skeleton, makeStyles } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
+import { useSnackbar } from 'notistack'
 import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
@@ -16,7 +17,12 @@ import {
   Link,
   Button,
 } from '@kathena/ui'
-import { useCourseDetailQuery, useQuizzesQuery } from 'graphql/generated'
+import {
+  useCourseDetailQuery,
+  useQuizzesQuery,
+  QuizDocument,
+  usePublishAllQuizOfTheCourseMutation,
+} from 'graphql/generated'
 import {
   buildPath,
   TEACHING_COURSE_CREATE_QUIZ,
@@ -52,7 +58,28 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
     () => dataQuizzes?.quizzes.count ?? 0,
     [dataQuizzes?.quizzes.count],
   )
-
+  // Công khai tất cả ----
+  const { enqueueSnackbar } = useSnackbar()
+  const [publishAll] = usePublishAllQuizOfTheCourseMutation({
+    refetchQueries: [{ query: QuizDocument }],
+  })
+  const handlePublishAll = useCallback(async () => {
+    try {
+      await publishAll({
+        variables: {
+          courseId,
+        },
+      })
+      enqueueSnackbar(`Tất cả đã được công khai`, {
+        variant: 'success',
+      })
+    } catch (error) {
+      enqueueSnackbar(`Công khai thất bại`, {
+        variant: 'warning',
+      })
+    }
+  }, [courseId, publishAll, enqueueSnackbar])
+  // Công khai tất cả ----
   if (loadingCourse) {
     return (
       <Grid container spacing={DASHBOARD_SPACING}>
@@ -82,15 +109,23 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
         title="Thử thách trắc nghiệm"
         gridItem={{ xs: 12 }}
         action={
-          <Button
-            className={classes.buttonTextColor}
-            link={buildPath(TEACHING_COURSE_CREATE_QUIZ, {
-              id: courseId,
-            })}
-            startIcon={<FilePlus size={24} />}
-          >
-            Thêm trắc nghiệm
-          </Button>
+          <>
+            <Button
+              onClick={handlePublishAll}
+              className={classes.buttonTextColor}
+            >
+              Công khai tất cả
+            </Button>
+            <Button
+              className={classes.buttonTextColor}
+              link={buildPath(TEACHING_COURSE_CREATE_QUIZ, {
+                id: courseId,
+              })}
+              startIcon={<FilePlus size={24} />}
+            >
+              Thêm trắc nghiệm
+            </Button>
+          </>
         }
       >
         <CardContent>
