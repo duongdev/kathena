@@ -2280,6 +2280,14 @@ export type UpdateLessonMutation = {
   }
 }
 
+export type PublishAllLessonsOfTheCourseMutationVariables = Exact<{
+  courseId: Scalars['ID']
+}>
+
+export type PublishAllLessonsOfTheCourseMutation = {
+  publishAllLessonsOfTheCourse: Array<{ id: string; courseId: string }>
+}
+
 export type ClassworkMaterialsListQueryVariables = Exact<{
   courseId: Scalars['String']
   skip: Scalars['Int']
@@ -12688,6 +12696,130 @@ export type UpdateLessonMutationOptions = Apollo.BaseMutationOptions<
   UpdateLessonMutation,
   UpdateLessonMutationVariables
 >
+export const PublishAllLessonsOfTheCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'PublishAllLessonsOfTheCourse' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'publishAllLessonsOfTheCourse' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type PublishAllLessonsOfTheCourseMutationFn = Apollo.MutationFunction<
+  PublishAllLessonsOfTheCourseMutation,
+  PublishAllLessonsOfTheCourseMutationVariables
+>
+export type PublishAllLessonsOfTheCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables
+  >
+} & TChildProps
+export function withPublishAllLessonsOfTheCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables,
+    PublishAllLessonsOfTheCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables,
+    PublishAllLessonsOfTheCourseProps<TChildProps, TDataName>
+  >(PublishAllLessonsOfTheCourseDocument, {
+    alias: 'publishAllLessonsOfTheCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __usePublishAllLessonsOfTheCourseMutation__
+ *
+ * To run a mutation, you first call `usePublishAllLessonsOfTheCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishAllLessonsOfTheCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishAllLessonsOfTheCourseMutation, { data, loading, error }] = usePublishAllLessonsOfTheCourseMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function usePublishAllLessonsOfTheCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables
+  >(PublishAllLessonsOfTheCourseDocument, options)
+}
+export type PublishAllLessonsOfTheCourseMutationHookResult = ReturnType<
+  typeof usePublishAllLessonsOfTheCourseMutation
+>
+export type PublishAllLessonsOfTheCourseMutationResult =
+  Apollo.MutationResult<PublishAllLessonsOfTheCourseMutation>
+export type PublishAllLessonsOfTheCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    PublishAllLessonsOfTheCourseMutation,
+    PublishAllLessonsOfTheCourseMutationVariables
+  >
 export const ClassworkMaterialsListDocument = {
   kind: 'Document',
   definitions: [

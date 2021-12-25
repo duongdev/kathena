@@ -88,3 +88,11 @@ mutation UpdateLesson(
     courseId
   }
 }
+
+#Công khai tất cả các buổi học
+mutation PublishAllLessonsOfTheCourse($courseId: ID!) {
+  publishAllLessonsOfTheCourse(courseId: $courseId) {
+    id
+    courseId
+  }
+}
