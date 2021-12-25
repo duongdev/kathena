@@ -2182,6 +2182,17 @@ export type ClassworkAssignmentListQuery = {
   }
 }
 
+export type PublishAllClassworkAssignmentsOfTheCourseMutationVariables = Exact<{
+  courseId: Scalars['ID']
+}>
+
+export type PublishAllClassworkAssignmentsOfTheCourseMutation = {
+  publishAllClassworkAssignmentsOfTheCourse: Array<{
+    id: string
+    courseId: string
+  }>
+}
+
 export type CreateLessonMutationVariables = Exact<{
   createLessonInput: CreateLessonInput
 }>
@@ -11949,6 +11960,136 @@ export type ClassworkAssignmentListQueryResult = Apollo.QueryResult<
   ClassworkAssignmentListQuery,
   ClassworkAssignmentListQueryVariables
 >
+export const PublishAllClassworkAssignmentsOfTheCourseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: {
+        kind: 'Name',
+        value: 'PublishAllClassworkAssignmentsOfTheCourse',
+      },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'courseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'publishAllClassworkAssignmentsOfTheCourse',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'courseId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'courseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'courseId' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export type PublishAllClassworkAssignmentsOfTheCourseMutationFn =
+  Apollo.MutationFunction<
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables
+  >
+export type PublishAllClassworkAssignmentsOfTheCourseProps<
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables
+  >
+} & TChildProps
+export function withPublishAllClassworkAssignmentsOfTheCourse<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'mutate',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables,
+    PublishAllClassworkAssignmentsOfTheCourseProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables,
+    PublishAllClassworkAssignmentsOfTheCourseProps<TChildProps, TDataName>
+  >(PublishAllClassworkAssignmentsOfTheCourseDocument, {
+    alias: 'publishAllClassworkAssignmentsOfTheCourse',
+    ...operationOptions,
+  })
+}
+
+/**
+ * __usePublishAllClassworkAssignmentsOfTheCourseMutation__
+ *
+ * To run a mutation, you first call `usePublishAllClassworkAssignmentsOfTheCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishAllClassworkAssignmentsOfTheCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishAllClassworkAssignmentsOfTheCourseMutation, { data, loading, error }] = usePublishAllClassworkAssignmentsOfTheCourseMutation({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function usePublishAllClassworkAssignmentsOfTheCourseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables
+  >(PublishAllClassworkAssignmentsOfTheCourseDocument, options)
+}
+export type PublishAllClassworkAssignmentsOfTheCourseMutationHookResult =
+  ReturnType<typeof usePublishAllClassworkAssignmentsOfTheCourseMutation>
+export type PublishAllClassworkAssignmentsOfTheCourseMutationResult =
+  Apollo.MutationResult<PublishAllClassworkAssignmentsOfTheCourseMutation>
+export type PublishAllClassworkAssignmentsOfTheCourseMutationOptions =
+  Apollo.BaseMutationOptions<
+    PublishAllClassworkAssignmentsOfTheCourseMutation,
+    PublishAllClassworkAssignmentsOfTheCourseMutationVariables
+  >
 export const CreateLessonDocument = {
   kind: 'Document',
   definitions: [

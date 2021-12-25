@@ -1,8 +1,9 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useCallback } from 'react'
 
 import { CardContent, Grid, Skeleton, makeStyles } from '@material-ui/core'
 import PublicationChip from 'components/PublicationChip'
 import format from 'date-fns/format'
+import { useSnackbar } from 'notistack'
 import { FilePlus } from 'phosphor-react'
 import { useParams } from 'react-router-dom'
 
@@ -20,6 +21,8 @@ import {
 import {
   useCourseDetailQuery,
   useClassworkAssignmentListQuery,
+  ClassworkAssignmentListDocument,
+  usePublishAllClassworkAssignmentsOfTheCourseMutation,
 } from 'graphql/generated'
 import {
   buildPath,
@@ -57,6 +60,28 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
     () => dataClasswork?.classworkAssignments.count ?? 0,
     [dataClasswork?.classworkAssignments.count],
   )
+  // Công khai tất cả ----
+  const { enqueueSnackbar } = useSnackbar()
+  const [publishAll] = usePublishAllClassworkAssignmentsOfTheCourseMutation({
+    refetchQueries: [{ query: ClassworkAssignmentListDocument }],
+  })
+  const handlePublishAll = useCallback(async () => {
+    try {
+      await publishAll({
+        variables: {
+          courseId,
+        },
+      })
+      enqueueSnackbar(`Tất cả đã được công khai`, {
+        variant: 'success',
+      })
+    } catch (error) {
+      enqueueSnackbar(`Công khai thất bại`, {
+        variant: 'warning',
+      })
+    }
+  }, [courseId, publishAll, enqueueSnackbar])
+  // Công khai tất cả ----
 
   if (loadingCourse) {
     return (
@@ -87,15 +112,23 @@ const ClassworkAssignments: FC<ClassworkAssignmentsProps> = () => {
         title="Bài tập"
         gridItem={{ xs: 12 }}
         action={
-          <Button
-            className={classes.buttonTextColor}
-            startIcon={<FilePlus size={24} />}
-            link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT, {
-              id: courseId,
-            })}
-          >
-            Thêm bài tập
-          </Button>
+          <>
+            <Button
+              onClick={handlePublishAll}
+              className={classes.buttonTextColor}
+            >
+              Công khai tất cả
+            </Button>
+            <Button
+              className={classes.buttonTextColor}
+              startIcon={<FilePlus size={24} />}
+              link={buildPath(TEACHING_COURSE_CREATE_CLASSWORK_ASSIGNMENT, {
+                id: courseId,
+              })}
+            >
+              Thêm bài tập
+            </Button>
+          </>
         }
       >
         <CardContent>
