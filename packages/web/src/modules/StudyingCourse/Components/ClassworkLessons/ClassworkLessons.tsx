@@ -49,7 +49,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
         },
       },
     })
-  const classworkLessons = useMemo(
+  const classworkLessonsProps = useMemo(
     () => dataClasswork?.lessons.lessons ?? [],
     [dataClasswork?.lessons.lessons],
   )
@@ -58,6 +58,28 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
     () => dataClasswork?.lessons.count ?? 0,
     [dataClasswork?.lessons.count],
   )
+
+  const classworkLessons: ANY[] = useMemo(() => classworkLessonsProps.map((item: ANY, index: ANY) => {
+      const current = new Date()
+      const startTime = new Date(item.startTime)
+      const beforeLessonStartTime = classworkLessonsProps[index - 1]
+        ? new Date(classworkLessonsProps[index - 1]?.startTime)
+        : current
+      if (
+        startTime.getTime() > current.getTime() &&
+        beforeLessonStartTime.getTime() <= current.getTime()
+      ) {
+        return {
+          ...item,
+          isNext: true,
+        }
+      }
+      return {
+        ...item,
+        isNext: false,
+      }
+    }), [classworkLessonsProps])
+
   if (!courseId) {
     return <div>Course not found</div>
   }
@@ -84,8 +106,14 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                   {
                     label: 'Tiêu đề',
                     render: (classworkLesson, index) => (
-                      <Typography variant="body1" fontWeight="bold">
+                      <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      >
                         <Link
+                          className={
+                            classworkLesson.isNext ? 'title-hightlight' : ''
+                          }
                           to={buildPath(
                             STUDYING_COURSE_DETAIL_CLASSWORK_LESSON,
                             {
@@ -94,7 +122,9 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
                             },
                           )}
                         >
-                          Buổi {page === 0 ? index + 1 : index + 1 + (page * perPage)}: {classworkLesson.description}
+                          Buổi{' '}
+                          {page === 0 ? index + 1 : index + 1 + page * perPage}:{' '}
+                          {classworkLesson.description}{classworkLesson.isNext ? ' (Buổi tiếp theo)' : ''}
                         </Link>
                       </Typography>
                     ),
