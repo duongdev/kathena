@@ -111,14 +111,14 @@ const StudyingCourseList: FC<StudyingCourseListProps> = (props) => {
                   <AccountDisplayName accountId={lecturerId} />
                 )),
             },
-            {
-              label: 'Số lượng học viên',
-              skeleton: <Skeleton />,
-              align: 'center',
-              render: ({ studentIds }) => (
-                <Typography>{studentIds.length} học viên</Typography>
-              ),
-            },
+            // {
+            //   label: 'Số lượng học viên',
+            //   skeleton: <Skeleton />,
+            //   align: 'center',
+            //   render: ({ studentIds }) => (
+            //     <Typography>{studentIds.length} học viên</Typography>
+            //   ),
+            // },
           ]}
           pagination={{
             count: totalCount,

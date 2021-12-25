@@ -124,40 +124,80 @@ const ClassworkLesson: FC<ClassworkLessonProps> = () => {
                           courseDetailId: classworkLesson.courseId,
                         })}
                       >
-                        Buổi {page === 0 ? index + 1 : index + 1 + (page * perPage)}: {classworkLesson.description}
+                        Buổi{' '}
+                        {page === 0 ? index + 1 : index + 1 + page * perPage}:{' '}
+                        {classworkLesson.description}
                       </Link>
                     </Typography>
                   ),
                 },
 
                 {
-                  label: 'Thời gian bắt đầu',
+                  label: 'Thời gian',
                   align: 'center',
                   skeleton: <Skeleton />,
-                  render: ({ startTime }) => (
+                  render: ({ startTime, endTime }) => (
                     <>
-                      {startTime && (
-                        <Typography>
-                          {format(new Date(startTime), 'dd/MM/yyyy - h:mm a')}
-                        </Typography>
+                      {format(new Date(startTime), 'dd/MM/yyyy - h:mm a') ===
+                      format(new Date(endTime), 'dd/MM/yyyy - h:mm a') ? (
+                        <>
+                          {startTime && (
+                            <Typography>
+                              {format(
+                                new Date(startTime),
+                                'h:mm a - dd/MM/yyyy',
+                              )}
+                            </Typography>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {format(new Date(startTime), 'dd/MM/yyyy') ===
+                          format(new Date(endTime), 'dd/MM/yyyy') ? (
+                            <>
+                              {startTime && (
+                                <Typography>
+                                  {format(new Date(startTime), 'h:mm a')} -{' '}
+                                  {format(new Date(endTime), 'h:mm a')}{' '}
+                                  {format(new Date(startTime), 'dd/MM/yyyy')}
+                                </Typography>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {startTime && (
+                                <Typography>
+                                  {format(
+                                    new Date(startTime),
+                                    'h:mm a - dd/MM/yyyy',
+                                  )}{' '}
+                                  {format(
+                                    new Date(endTime),
+                                    'h:mm a - dd/MM/yyyy',
+                                  )}
+                                </Typography>
+                              )}
+                            </>
+                          )}
+                        </>
                       )}
                     </>
                   ),
                 },
-                {
-                  label: 'Thời gian kết thúc',
-                  align: 'center',
-                  skeleton: <Skeleton />,
-                  render: ({ endTime }) => (
-                    <>
-                      {endTime && (
-                        <Typography>
-                          {format(new Date(endTime), 'dd/MM/yyyy - h:mm a')}
-                        </Typography>
-                      )}
-                    </>
-                  ),
-                },
+                // {
+                //   label: 'Thời gian kết thúc',
+                //   align: 'center',
+                //   skeleton: <Skeleton />,
+                //   render: ({ endTime }) => (
+                //     <>
+                //       {endTime && (
+                //         <Typography>
+                //           {format(new Date(endTime), 'h:mm a - dd/MM/yyyy')}
+                //         </Typography>
+                //       )}
+                //     </>
+                //   ),
+                // },
                 {
                   label: 'Trạng thái',
                   align: 'right',

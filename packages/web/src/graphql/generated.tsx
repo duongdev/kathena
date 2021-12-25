@@ -53,7 +53,7 @@ export type Account = BaseModel & {
   availability: AccountAvailability
   avatar?: Maybe<Scalars['ID']>
   createdAt: Scalars['DateTime']
-  displayName?: Maybe<Scalars['String']>
+  displayName: Scalars['String']
   email: Scalars['String']
   id: Scalars['ID']
   orgId: Scalars['ID']
@@ -86,6 +86,10 @@ export type AccountsFilterInput = {
 
 export type AddAttachmentsToClassworkInput = {
   attachments: Array<Scalars['Upload']>
+}
+
+export type AddFilesToClassworkSubmissionInput = {
+  submissionFiles: Array<Scalars['Upload']>
 }
 
 export type AddVideoToClassworkInput = {
@@ -428,6 +432,9 @@ export type Lesson = BaseModel & {
   lecturerComment?: Maybe<Scalars['String']>
   orgId: Scalars['ID']
   publicationState: Publication
+  quizListAfterClass?: Maybe<Array<Scalars['ID']>>
+  quizListBeforeClass?: Maybe<Array<Scalars['ID']>>
+  quizListInClass?: Maybe<Array<Scalars['ID']>>
   startTime: Scalars['DateTime']
   updatedAt: Scalars['DateTime']
   updatedByAccountId: Scalars['ID']
@@ -457,6 +464,7 @@ export type Mutation = {
   addAbsentStudentsToLesson: Lesson
   addAttachmentsToClassworkAssignment: ClassworkAssignment
   addAttachmentsToClassworkMaterial: ClassworkMaterial
+  addFilesToClassworkSubmission: ClassworkSubmission
   addLecturesToCourse: Course
   addStudentsToCourse: Course
   addVideoToClassworkAssignment: ClassworkAssignment
@@ -478,9 +486,14 @@ export type Mutation = {
   createQuizSubmit: QuizSubmit
   createRatingForTheLesson: Rating
   findOrgOffices: Array<OrgOffice>
+  publishAllClassworkAssignmentsOfTheCourse: Array<ClassworkAssignment>
+  publishAllClassworkMaterialsOfTheCourse: Array<ClassworkMaterial>
+  publishAllLessonsOfTheCourse: Array<Lesson>
+  publishAllQuizOfTheCourse: Array<Quiz>
   removeAbsentStudentsFromLesson: Lesson
   removeAttachmentsFromClassworkAssignments: ClassworkAssignment
   removeAttachmentsFromClassworkMaterial: ClassworkMaterial
+  removeFilesFromClassworkSubmission: ClassworkSubmission
   removeLecturersFromCourse: Course
   removeStudentsFromCourse: Course
   removeVideoFromClassworkAssignment: ClassworkAssignment
@@ -497,6 +510,7 @@ export type Mutation = {
   updateClassworkAssignmentPublication: ClassworkAssignment
   updateClassworkMaterial: ClassworkMaterial
   updateClassworkMaterialPublication: ClassworkMaterial
+  updateClassworkSubmission: ClassworkSubmission
   updateCourse: Course
   updateCoursePublicationById: Course
   updateFile: File
@@ -519,6 +533,11 @@ export type MutationAddAttachmentsToClassworkAssignmentArgs = {
 export type MutationAddAttachmentsToClassworkMaterialArgs = {
   attachmentsInput: AddAttachmentsToClassworkInput
   classworkMaterialId: Scalars['ID']
+}
+
+export type MutationAddFilesToClassworkSubmissionArgs = {
+  classworkSubmissionId: Scalars['ID']
+  submissionFilesInput: AddFilesToClassworkSubmissionInput
 }
 
 export type MutationAddLecturesToCourseArgs = {
@@ -615,6 +634,22 @@ export type MutationFindOrgOfficesArgs = {
   searchText?: Maybe<Scalars['String']>
 }
 
+export type MutationPublishAllClassworkAssignmentsOfTheCourseArgs = {
+  courseId: Scalars['ID']
+}
+
+export type MutationPublishAllClassworkMaterialsOfTheCourseArgs = {
+  courseId: Scalars['ID']
+}
+
+export type MutationPublishAllLessonsOfTheCourseArgs = {
+  courseId: Scalars['ID']
+}
+
+export type MutationPublishAllQuizOfTheCourseArgs = {
+  courseId: Scalars['ID']
+}
+
 export type MutationRemoveAbsentStudentsFromLessonArgs = {
   absentStudentIds: Array<Scalars['String']>
   courseId: Scalars['ID']
@@ -629,6 +664,11 @@ export type MutationRemoveAttachmentsFromClassworkAssignmentsArgs = {
 export type MutationRemoveAttachmentsFromClassworkMaterialArgs = {
   attachments: Array<Scalars['String']>
   classworkMaterialId: Scalars['ID']
+}
+
+export type MutationRemoveFilesFromClassworkSubmissionArgs = {
+  classworkSubmissionId: Scalars['ID']
+  submissionFilesInput?: Maybe<Array<Scalars['String']>>
 }
 
 export type MutationRemoveLecturersFromCourseArgs = {
@@ -711,6 +751,11 @@ export type MutationUpdateClassworkMaterialPublicationArgs = {
   publicationState: Publication
 }
 
+export type MutationUpdateClassworkSubmissionArgs = {
+  classworkAssignmentId: Scalars['ID']
+  updateInput: UpdateClassworkSubmissionInput
+}
+
 export type MutationUpdateCourseArgs = {
   id: Scalars['ID']
   updateInput: UpdateCourseInput
@@ -788,6 +833,7 @@ export enum Permission {
   Academic_ListAcademicSubjects = 'Academic_ListAcademicSubjects',
   Academic_ListCourses = 'Academic_ListCourses',
   Academic_ListLesson = 'Academic_ListLesson',
+  Academic_PublishAllLessons = 'Academic_PublishAllLessons',
   Academic_RemoveAbsentStudentsFromLesson = 'Academic_RemoveAbsentStudentsFromLesson',
   Academic_RemoveLecturersFromCourse = 'Academic_RemoveLecturersFromCourse',
   Academic_RemoveStudentsFromCourse = 'Academic_RemoveStudentsFromCourse',
@@ -806,6 +852,8 @@ export enum Permission {
   Classwork_ListClassworkAssignment = 'Classwork_ListClassworkAssignment',
   Classwork_ListClassworkMaterial = 'Classwork_ListClassworkMaterial',
   Classwork_ListClassworkSubmission = 'Classwork_ListClassworkSubmission',
+  Classwork_PublishAllClassworkAssignments = 'Classwork_PublishAllClassworkAssignments',
+  Classwork_PublishAllClassworkMaterial = 'Classwork_PublishAllClassworkMaterial',
   Classwork_RemoveAttachmentsFromClassworkAssignment = 'Classwork_RemoveAttachmentsFromClassworkAssignment',
   Classwork_RemoveAttachmentsFromClassworkMaterial = 'Classwork_RemoveAttachmentsFromClassworkMaterial',
   Classwork_RemoveVideoToClassworkAssignment = 'Classwork_RemoveVideoToClassworkAssignment',
@@ -816,6 +864,7 @@ export enum Permission {
   Classwork_ShowSubmissionStatusList = 'Classwork_ShowSubmissionStatusList',
   Classwork_UpdateClassworkAssignment = 'Classwork_UpdateClassworkAssignment',
   Classwork_UpdateClassworkMaterial = 'Classwork_UpdateClassworkMaterial',
+  Classwork_UpdateClassworkSubmission = 'Classwork_UpdateClassworkSubmission',
   Comment_CreateComment = 'Comment_CreateComment',
   Hr_Access = 'Hr_Access',
   Hr_CreateOrgAccount = 'Hr_CreateOrgAccount',
@@ -1175,6 +1224,10 @@ export type UpdateClassworkMaterialInput = {
   title?: Maybe<Scalars['String']>
 }
 
+export type UpdateClassworkSubmissionInput = {
+  description?: Maybe<Scalars['String']>
+}
+
 export type UpdateCourseInput = {
   daysOfTheWeek?: Maybe<Array<DayOfTheWeekInput>>
   lecturerIds?: Maybe<Array<Scalars['ID']>>
@@ -1196,6 +1249,9 @@ export type UpdateLessonInput = {
   numberOfLessonsPostponed?: Maybe<Scalars['Float']>
   options?: Maybe<UpdateLessonTimeOptions>
   publicationState?: Maybe<Publication>
+  quizListAfterClass?: Maybe<Array<Scalars['String']>>
+  quizListBeforeClass?: Maybe<Array<Scalars['String']>>
+  quizListInClass?: Maybe<Array<Scalars['String']>>
   startTime?: Maybe<Scalars['DateTime']>
 }
 
@@ -1237,7 +1293,7 @@ export type AuthAccountFragment = {
   otp?: string | null | undefined
   otpExpired?: any | null | undefined
   username: string
-  displayName?: string | null | undefined
+  displayName: string
 }
 
 export type AuthOrgFragment = { id: string; name: string; namespace: string }
@@ -1259,7 +1315,7 @@ export type SignInMutation = {
       otp?: string | null | undefined
       otpExpired?: any | null | undefined
       username: string
-      displayName?: string | null | undefined
+      displayName: string
     }
     org: { id: string; name: string; namespace: string }
   }
@@ -1278,7 +1334,7 @@ export type AuthenticateQuery = {
       otp?: string | null | undefined
       otpExpired?: any | null | undefined
       username: string
-      displayName?: string | null | undefined
+      displayName: string
     }
     org: { id: string; name: string; namespace: string }
   }
@@ -1304,7 +1360,7 @@ export type CallOtpMutation = {
     otp?: string | null | undefined
     otpExpired?: any | null | undefined
     username: string
-    displayName?: string | null | undefined
+    displayName: string
   }
 }
 
@@ -1323,7 +1379,7 @@ export type SetPasswordMutation = {
     otp?: string | null | undefined
     otpExpired?: any | null | undefined
     username: string
-    displayName?: string | null | undefined
+    displayName: string
   }
 }
 
@@ -1337,7 +1393,7 @@ export type AccountAvatarQuery = {
         id: string
         email: string
         username: string
-        displayName?: string | null | undefined
+        displayName: string
         availability: AccountAvailability
       }
     | null
@@ -1350,7 +1406,7 @@ export type AccountDisplayNameQueryVariables = Exact<{
 
 export type AccountDisplayNameQuery = {
   account?:
-    | { id: string; username: string; displayName?: string | null | undefined }
+    | { id: string; username: string; displayName: string }
     | null
     | undefined
 }
@@ -1502,7 +1558,7 @@ export type AccountProfileQuery = {
         id: string
         email: string
         username: string
-        displayName?: string | null | undefined
+        displayName: string
         roles: Array<string>
         status: AccountStatus
         availability: AccountAvailability
@@ -1521,7 +1577,7 @@ export type UpdateAccountStatusMutation = {
     id: string
     email: string
     username: string
-    displayName?: string | null | undefined
+    displayName: string
     roles: Array<string>
     status: AccountStatus
   }
@@ -1535,7 +1591,7 @@ export type UpdateAccountMutationVariables = Exact<{
 export type UpdateAccountMutation = {
   updateAccount: {
     id: string
-    displayName?: string | null | undefined
+    displayName: string
     email: string
     roles: Array<string>
   }
@@ -1549,7 +1605,7 @@ export type UpdateSelfAccountMutationVariables = Exact<{
 export type UpdateSelfAccountMutation = {
   updateAccount: {
     id: string
-    displayName?: string | null | undefined
+    displayName: string
     email: string
     roles: Array<string>
   }
@@ -1797,7 +1853,7 @@ export type CreateAccountMutationVariables = Exact<{
 export type CreateAccountMutation = {
   createOrgAccount: {
     id: string
-    displayName?: string | null | undefined
+    displayName: string
     username: string
     email: string
   }
@@ -1886,7 +1942,7 @@ export type OrgAccountListQuery = {
     accounts: Array<{
       id: string
       email: string
-      displayName?: string | null | undefined
+      displayName: string
       username: string
       roles: Array<string>
       availability: AccountAvailability
@@ -2199,6 +2255,9 @@ export type FindLessonByIdQuery = {
     classworkAssignmentListBeforeClass?: Array<string> | null | undefined
     classworkAssignmentListInClass?: Array<string> | null | undefined
     classworkAssignmentListAfterClass?: Array<string> | null | undefined
+    quizListAfterClass?: Array<string> | null | undefined
+    quizListInClass?: Array<string> | null | undefined
+    quizListBeforeClass?: Array<string> | null | undefined
   }
 }
 
@@ -12351,6 +12410,18 @@ export const FindLessonByIdDocument = {
                     kind: 'Name',
                     value: 'classworkAssignmentListAfterClass',
                   },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizListAfterClass' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizListInClass' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'quizListBeforeClass' },
                 },
               ],
             },
