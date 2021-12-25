@@ -59,7 +59,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
     [dataClasswork?.lessons.count],
   )
 
-  const classworkLessons: any[] = useMemo(() => classworkLessonsProps.map((item: any, index: any) => {
+  const classworkLessons: ANY[] = useMemo(() => classworkLessonsProps.map((item: ANY, index: ANY) => {
       const current = new Date()
       const startTime = new Date(item.startTime)
       const beforeLessonStartTime = classworkLessonsProps[index - 1]
