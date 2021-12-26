@@ -73,6 +73,15 @@ export class CreateQuizInput {
 
   @Field((_type) => Publication, { nullable: true })
   publicationState?: string
+
+  @Field({ nullable: true })
+  detailQuiz?: string
+
+  @Field({ nullable: true })
+  explainTheAnswer?: string
+
+  @Field({ nullable: true })
+  duDate?: Date
 }
 @InputType()
 export class CreateQuizSubmitInput {

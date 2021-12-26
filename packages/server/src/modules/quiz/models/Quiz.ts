@@ -14,6 +14,18 @@ export class Quiz extends BaseModel {
   @prop({ trim: true })
   description?: string
 
+  @Field({ nullable: true })
+  @prop({ required: false, trim: true })
+  detailQuiz?: string
+
+  @Field({ nullable: true })
+  @prop({ required: false, trim: true })
+  explainTheAnswer?: string
+
+  @Field({ nullable: true })
+  @prop({ default: null })
+  duDate?: Date
+
   @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true, index: true })
   courseId: string
