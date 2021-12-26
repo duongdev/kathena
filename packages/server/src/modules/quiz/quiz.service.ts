@@ -118,7 +118,7 @@ export class QuizService {
     publicationState?: string
     detailQuiz?: string
     explainTheAnswer?: string
-    duDate?: Date
+    dueDate?: Date
     orgId: string
   }): Promise<DocumentType<Quiz>> {
     this.logger.log(`[${this.createQuiz.name}] Creating Quiz`)
@@ -133,13 +133,13 @@ export class QuizService {
       publicationState,
       detailQuiz,
       explainTheAnswer,
-      duDate,
+      dueDate,
       orgId,
     } = quizInput
 
     const dateNow: Date = new Date()
 
-    if (duDate && duDate <= dateNow) {
+    if (dueDate && dueDate <= dateNow) {
       throw new Error('Ngày hết hạng không hợp lệ !')
     }
 
@@ -153,7 +153,7 @@ export class QuizService {
       publicationState,
       detailQuiz,
       explainTheAnswer,
-      duDate,
+      dueDate,
       orgId,
     })
 

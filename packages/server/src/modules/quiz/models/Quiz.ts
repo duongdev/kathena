@@ -24,7 +24,7 @@ export class Quiz extends BaseModel {
 
   @Field({ nullable: true })
   @prop({ default: null })
-  duDate?: Date
+  dueDate?: Date
 
   @Field((_type) => ID)
   @prop({ type: Types.ObjectId, required: true, index: true })

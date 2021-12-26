@@ -81,7 +81,7 @@ export class CreateQuizInput {
   explainTheAnswer?: string
 
   @Field({ nullable: true })
-  duDate?: Date
+  dueDate?: Date
 }
 @InputType()
 export class CreateQuizSubmitInput {
