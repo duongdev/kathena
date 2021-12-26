@@ -66,19 +66,23 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
   )
   const classworkSubmit: ANY[] = useMemo(
     () =>
-      classworkOfSubmits.map((item: ANY, index: ANY) => {
+      classworkOfSubmits.map((item: ANY) => {
         const current = new Date()
         const duaDateSubmit = new Date(item.dueDate)
-        const beforeSubmitDueDate = classworkOfSubmits[index - 1]
-          ? new Date(classworkOfSubmits[index - 1].dueDate)
-          : current
+
         if (
-          duaDateSubmit.getTime() > current.getTime() &&
-          beforeSubmitDueDate.getTime() <= current.getTime()
+          item.classworkSubmissionUpdatedAt === null &&
+          current.getMonth() === duaDateSubmit.getMonth() &&
+          current.getFullYear() === duaDateSubmit.getFullYear()
         ) {
-          return {
-            ...item,
-            isNext: true,
+          if (
+            current.getDate() === duaDateSubmit.getDate() ||
+            current.getDate() + 1 === duaDateSubmit.getDate()
+          ) {
+            return {
+              ...item,
+              isNext: true,
+            }
           }
         }
         return {
@@ -179,9 +183,7 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                       >
                         <Typography variant="body1" fontWeight="bold">
                           {classworkOfSubmit.classworkAssignmentsTitle}
-                          {classworkOfSubmit.isNext
-                            ? ' (Bài tập tiếp theo)'
-                            : ''}
+                          {classworkOfSubmit.isNext ? ' (Bài tập cần làm)' : ''}
                         </Typography>
                       </Link>
                     </>
@@ -259,7 +261,7 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                             <Chip
                               variant="outlined"
                               color="default"
-                              label="Chưa làm"
+                              label="Chưa nộp"
                             />
                           </>
                         ) : (
