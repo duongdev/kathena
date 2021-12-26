@@ -9,7 +9,7 @@ type Account implements BaseModel {
   updatedAt: DateTime!
   username: String!
   email: String!
-  displayName: String!
+  displayName: String
   avatar: ID
   otp: String
   otpExpired: DateTime
@@ -90,9 +90,6 @@ type Lesson implements BaseModel {
   classworkAssignmentListBeforeClass: [ID!]
   classworkAssignmentListInClass: [ID!]
   classworkAssignmentListAfterClass: [ID!]
-  quizListBeforeClass: [ID!]
-  quizListInClass: [ID!]
-  quizListAfterClass: [ID!]
 }
 
 type LessonsPayload {
@@ -261,6 +258,9 @@ type Question implements BaseModel {
   createdAt: DateTime!
   updatedAt: DateTime!
   title: String!
+  detailQuiz: String
+  explainTheAnswer: String
+  duDate: DateTime
   scores: Float!
   createdByAccountId: ID!
 }
@@ -334,7 +334,6 @@ enum Permission {
   Academic_AddAbsentStudentsToLesson
   Academic_RemoveAbsentStudentsFromLesson
   Academic_CommentsForTheLesson
-  Academic_PublishAllLessons
   OrgOffice_Access
   OrgOffice_CreateOrgOffice
   OrgOffice_ListOrgOffices
@@ -349,7 +348,6 @@ enum Permission {
   Classwork_RemoveAttachmentsFromClassworkAssignment
   Classwork_AddVideoToClassworkAssignment
   Classwork_RemoveVideoToClassworkAssignment
-  Classwork_PublishAllClassworkAssignments
   Classwork_ListClassworkMaterial
   Classwork_UpdateClassworkMaterial
   Classwork_CreateClassworkMaterial
@@ -359,11 +357,9 @@ enum Permission {
   Classwork_SetGradeForClassworkSubmission
   Classwork_AddVideoToClassworkMaterial
   Classwork_RemoveVideoToClassworkMaterial
-  Classwork_PublishAllClassworkMaterial
   Classwork_CreateClassworkSubmission
   Classwork_ListClassworkSubmission
   Classwork_ShowSubmissionStatusList
-  Classwork_UpdateClassworkSubmission
   AvgGradeStatisticsOfClassworkInTheCourse
   Comment_CreateComment
   Rating_CreateRating
@@ -591,7 +587,6 @@ type Mutation {
   removeAttachmentsFromClassworkMaterial(attachments: [String!]!, classworkMaterialId: ID!): ClassworkMaterial!
   addVideoToClassworkMaterial(videoInput: AddVideoToClassworkInput!, classworkMaterialId: ID!): ClassworkMaterial!
   removeVideoFromClassworkMaterial(videoId: String!, classworkMaterialId: ID!): ClassworkMaterial!
-  publishAllClassworkMaterialsOfTheCourse(courseId: ID!): [ClassworkMaterial!]!
   createClassworkAssignment(courseId: ID!, input: CreateClassworkAssignmentInput!): ClassworkAssignment!
   updateClassworkAssignment(updateInput: UpdateClassworkAssignmentInput!, id: ID!): ClassworkAssignment!
   updateClassworkAssignmentPublication(publication: String!, id: ID!): ClassworkAssignment!
@@ -599,21 +594,15 @@ type Mutation {
   removeAttachmentsFromClassworkAssignments(attachments: [String!]!, classworkAssignmentId: ID!): ClassworkAssignment!
   addVideoToClassworkAssignment(videoInput: AddVideoToClassworkInput!, classworkAssignmentId: ID!): ClassworkAssignment!
   removeVideoFromClassworkAssignment(videoId: ID!, classworkAssignmentId: ID!): ClassworkAssignment!
-  publishAllClassworkAssignmentsOfTheCourse(courseId: ID!): [ClassworkAssignment!]!
   createClassworkSubmission(createClassworkSubmissionInput: CreateClassworkSubmissionInput!, courseId: ID!): ClassworkSubmission!
   setGradeForClassworkSubmission(setGradeForClassworkSubmissionInput: SetGradeForClassworkSubmissionInput!): ClassworkSubmission!
-  updateClassworkSubmission(updateInput: UpdateClassworkSubmissionInput!, classworkAssignmentId: ID!): ClassworkSubmission!
-  addFilesToClassworkSubmission(submissionFilesInput: AddFilesToClassworkSubmissionInput!, classworkSubmissionId: ID!): ClassworkSubmission!
-  removeFilesFromClassworkSubmission(submissionFilesInput: [String!], classworkSubmissionId: ID!): ClassworkSubmission!
   createLesson(createLessonInput: CreateLessonInput!): Lesson!
   updateLesson(updateInput: UpdateLessonInput!, lessonId: ID!, courseId: ID!): Lesson!
   addAbsentStudentsToLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   removeAbsentStudentsFromLesson(absentStudentIds: [String!]!, lessonId: ID!, courseId: ID!): Lesson!
   commentsByLecturer(commentsForTheLessonByLecturerInput: CommentsForTheLessonByLecturerInput!, commentsForTheLessonByLecturerQuery: CommentsForTheLessonByLecturerQuery!): Lesson!
-  publishAllLessonsOfTheCourse(courseId: ID!): [Lesson!]!
   createQuiz(input: CreateQuizInput!): Quiz!
   updatePublicationQuiz(publicationState: String!, id: String!): Quiz!
-  publishAllQuizOfTheCourse(courseId: ID!): [Quiz!]!
   createQuestion(input: CreateQuestionInput!): Question!
   createQuizSubmit(input: CreateQuizSubmitInput!): QuizSubmit!
   submitQuiz(input: SubmitQuizInput!): QuizSubmit!
@@ -754,14 +743,6 @@ input SetGradeForClassworkSubmissionInput {
   grade: Float!
 }
 
-input UpdateClassworkSubmissionInput {
-  description: String
-}
-
-input AddFilesToClassworkSubmissionInput {
-  submissionFiles: [Upload!]!
-}
-
 input CreateLessonInput {
   startTime: DateTime!
   endTime: DateTime!
@@ -784,9 +765,6 @@ input UpdateLessonInput {
   classworkAssignmentListBeforeClass: [String!]
   classworkAssignmentListInClass: [String!]
   classworkAssignmentListAfterClass: [String!]
-  quizListBeforeClass: [String!]
-  quizListInClass: [String!]
-  quizListAfterClass: [String!]
 }
 
 enum UpdateLessonTimeOptions {
@@ -805,6 +783,9 @@ input CommentsForTheLessonByLecturerQuery {
 
 input CreateQuizInput {
   title: String!
+  detailQuiz: String
+  explainTheAnswer: String
+  duDate: DateTime
   courseId: String!
   questionIds: [String!] = []
   duration: Float
