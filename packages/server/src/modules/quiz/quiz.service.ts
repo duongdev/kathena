@@ -116,6 +116,9 @@ export class QuizService {
     duration?: number
     createdByAccountId: string
     publicationState?: string
+    detailQuiz?: string
+    explainTheAnswer?: string
+    dueDate?: Date
     orgId: string
   }): Promise<DocumentType<Quiz>> {
     this.logger.log(`[${this.createQuiz.name}] Creating Quiz`)
@@ -128,8 +131,17 @@ export class QuizService {
       duration,
       createdByAccountId,
       publicationState,
+      detailQuiz,
+      explainTheAnswer,
+      dueDate,
       orgId,
     } = quizInput
+
+    const dateNow: Date = new Date()
+
+    if (dueDate && dueDate <= dateNow) {
+      throw new Error('Ngày hết hạng không hợp lệ !')
+    }
 
     const quiz = await this.quizModel.create({
       title,
@@ -139,6 +151,9 @@ export class QuizService {
       duration,
       createdByAccountId,
       publicationState,
+      detailQuiz,
+      explainTheAnswer,
+      dueDate,
       orgId,
     })
 
