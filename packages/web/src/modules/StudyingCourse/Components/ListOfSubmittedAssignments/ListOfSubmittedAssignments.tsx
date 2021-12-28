@@ -64,6 +64,34 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
       dataOfSubmitted?.listClassworkAssignmentsByStudentIdInCourse.list ?? [],
     [dataOfSubmitted?.listClassworkAssignmentsByStudentIdInCourse.list],
   )
+  const classworkSubmit: ANY[] = useMemo(
+    () =>
+      classworkOfSubmits.map((item: ANY) => {
+        const current = new Date()
+        const duaDateSubmit = new Date(item.dueDate)
+
+        if (
+          item.classworkSubmissionUpdatedAt === null &&
+          current.getMonth() === duaDateSubmit.getMonth() &&
+          current.getFullYear() === duaDateSubmit.getFullYear()
+        ) {
+          if (
+            current.getDate() === duaDateSubmit.getDate() ||
+            current.getDate() + 1 === duaDateSubmit.getDate()
+          ) {
+            return {
+              ...item,
+              isNext: true,
+            }
+          }
+        }
+        return {
+          ...item,
+          isNext: false,
+        }
+      }),
+    [classworkOfSubmits],
+  )
   const totalCount = useMemo(
     () =>
       dataOfSubmitted?.listClassworkAssignmentsByStudentIdInCourse.count ?? 0,
@@ -131,9 +159,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
         ]}
       >
         <CardContent>
-          {classworkOfSubmits.length ? (
+          {classworkSubmit.length ? (
             <DataTable
-              data={classworkOfSubmits}
+              data={classworkSubmit}
               rowKey="id"
               loading={loadingOfSubmitted}
               columns={[
@@ -143,6 +171,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                   render: (classworkOfSubmit) => (
                     <>
                       <Link
+                        className={
+                          classworkOfSubmit.isNext ? 'title-hightlight' : ''
+                        }
                         to={buildPath(
                           STUDYING_COURSE_DETAIL_CONTENT_CLASSWORK_ASSIGNMENTS,
                           {
@@ -150,8 +181,9 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                           },
                         )}
                       >
-                        <Typography variant="body1">
+                        <Typography variant="body1" fontWeight="bold">
                           {classworkOfSubmit.classworkAssignmentsTitle}
+                          {classworkOfSubmit.isNext ? ' (Bài tập cần làm)' : ''}
                         </Typography>
                       </Link>
                     </>
@@ -210,6 +242,35 @@ const ListOfSubmittedAssignments: FC<ListOfSubmittedAssignmentsProps> = (
                                 }
                               />
                             )}
+                          </>
+                        )}
+                      </Typography>
+                    </>
+                  ),
+                },
+                {
+                  label: 'Trạng thái',
+                  align: 'right',
+                  skeleton: <Skeleton />,
+                  render: (classworkOfSubmit) => (
+                    <>
+                      <Typography>
+                        {classworkOfSubmit.classworkSubmissionUpdatedAt ===
+                        null ? (
+                          <>
+                            <Chip
+                              variant="outlined"
+                              color="default"
+                              label="Chưa nộp"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Chip
+                              variant="outlined"
+                              color="primary"
+                              label="Đã nộp"
+                            />
                           </>
                         )}
                       </Typography>

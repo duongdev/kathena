@@ -95,14 +95,7 @@ const ClassworkLessons: FC<ClassworkLessonsProps> = () => {
       </Grid>
     )
   }
-  // const checkTime = (time: Date) => {
-  //   const timeBefore = new Date(time)
-  //   const timeNow = new Date()
-  //   if (timeBefore < timeNow) {
-  //     return true
-  //   }
-  //   return false
-  // }
+
   return (
     <>
       <Grid container spacing={DASHBOARD_SPACING}>

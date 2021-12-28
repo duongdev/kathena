@@ -274,7 +274,9 @@ const DetailCourse: FC<DetailCourseProps> = () => {
                 Thêm giảng viên
               </Button>
               <Popover
-                style={{ width: '89%' }}
+                style={{
+                  right: 50,
+                }}
                 id={idOpenLecturer}
                 open={openLec}
                 anchorEl={openLecturer}
@@ -348,7 +350,9 @@ const DetailCourse: FC<DetailCourseProps> = () => {
                 Thêm học viên
               </Button>
               <Popover
-                style={{ width: '89%' }}
+                style={{
+                  right: 50,
+                }}
                 id={idOpenStudent}
                 open={openStu}
                 anchorEl={openStudent}
