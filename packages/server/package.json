@@ -20,7 +20,7 @@
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "1.6.0",
+    "@nestjs-modules/mailer": "1.9.1",
     "@nestjs/common": "8.2.4",
     "@nestjs/core": "8.2.4",
     "@nestjs/graphql": "7.11.0",
